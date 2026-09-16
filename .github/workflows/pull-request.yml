@@ -1,0 +1,36 @@
+# This workflow runs checks on pull requests to ensure code quality and prevent regressions.
+name: Pull Request Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-pull-request:
+    # Don't run on changeset-release branches
+    if: ${{ !startsWith(github.head_ref, 'changeset-release') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          # This prevents husky from installing git hooks during the CI process
+          HUSKY: 0
+
+      - name: Check types
+        run: npm run check-types
+
+      - name: Lint
+        run: npm run lint
+
+      # TODO: add "Build" and "Test" steps once this adapter has real source and
+      # the build/test scripts exist (see docs/CREATING_AN_ADAPTER.md step 4+).

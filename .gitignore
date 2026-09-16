@@ -1,0 +1,30 @@
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+node_modules
+dist
+dist-ssr
+*.local
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+token-analysis.json
+*.tsbuildinfo
+.turbo
+
+# recursica.json and the recursica_*.{css,json} theme files ARE checked in — see
+# docs/CREATING_AN_ADAPTER.md. @recursica/official-release's postinstall script
+# generates them into the project root on first `npm install`; that generated
+# state is committed so the repo has a reviewable, versioned copy of the design
+# tokens it's building against, and so a fresh clone doesn't need a fresh
+# `npm install` to have them present. Do NOT add them here.

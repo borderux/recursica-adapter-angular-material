@@ -1,0 +1,99 @@
+# Release Workflow
+#
+# Standalone-package version of the release workflow used by @recursica/adapter-mantine-v8
+# in the recursica monorepo, ported for this repo. This repo is a single npm package
+# (no Turborepo, no figma-plugin zip/upload steps) so the workflow is simpler: build,
+# then let Changesets version and publish.
+#
+# How it works:
+# 1. Triggers on changes to .changeset/, src/, or package files on main
+# 2. Uses Changesets to detect whether there's a version bump pending
+# 3. If changesets are present, opens/updates a "Version Packages" PR
+# 4. When that PR is merged, runs `npm run release` (`changeset publish`), which
+#    bumps the version, publishes to npm, and creates a GitHub release
+#
+# Requires a repo secret named RELEASE_PAT (a GitHub PAT with contents+PR write
+# access) and npm Trusted Publishing (OIDC) configured for this package — neither
+# is set up yet for this repo.
+
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".changeset/**"
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # To create releases and tags
+      pull-requests: write # To create pull requests
+      id-token: write # Required for NPM OIDC Trusted Publishing
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      # Build before publishing so releases fail fast if the build is broken,
+      # and so dist/ is up to date for `npm run release` (changeset publish).
+      - name: Build
+        run: npm run build
+
+      # Changesets Action - The Core of Our Release System
+      #
+      # This action has two modes:
+      # 1. If changesets are present, it creates a "Version Packages" pull request.
+      # 2. When the "Version Packages" PR is merged, it runs the `publish` command.
+      #
+      # The `publish` command executes `npm run release` (`changeset publish`), which:
+      # - Bumps the version number in package.json based on changeset files
+      # - Publishes to npm with proper authentication
+      # - Creates a GitHub release automatically with changelog and links to PRs
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+          NPM_CONFIG_PROVENANCE: true
+
+      # changesets/action tags a single-package repo's release as `v<version>`.
+      # @recursica/adapter-tester's source-of-truth divergence check fetches this
+      # repo's golden baseline from a `<package.json name>@<version>` tag instead
+      # (the multi-package-monorepo tag format), so every adapter's divergence
+      # check silently no-ops until this second tag also exists.
+      - name: Tag release for adapter-tester compatibility
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          git remote set-url origin "https://x-access-token:${{ secrets.RELEASE_PAT }}@github.com/${{ github.repository }}.git"
+          echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -c '.[]' | while read -r pkg; do
+            name=$(echo "$pkg" | jq -r '.name')
+            version=$(echo "$pkg" | jq -r '.version')
+            tag="${name}@${version}"
+            git tag "$tag"
+            git push origin "$tag"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
