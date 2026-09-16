@@ -32,5 +32,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # TODO: add "Build" and "Test" steps once this adapter has real source and
-      # the build/test scripts exist (see docs/CREATING_AN_ADAPTER.md step 4+).
+      - name: Build
+        run: npm run build
+
+      # TODO: add a "Test" step once this adapter has real components and a
+      # test script exists (see docs/CREATING_AN_ADAPTER.md step 4+).

@@ -1,4 +1,6 @@
 dist
+.angular
+out-tsc
 recursica.json
 recursica_variables_scoped.css
 recursica_brand.json

@@ -17,26 +17,67 @@
     "access": "public"
   },
   "type": "module",
+  "sideEffects": false,
+  "main": "./dist/fesm2022/recursica-adapter-angular-material.mjs",
+  "module": "./dist/fesm2022/recursica-adapter-angular-material.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/fesm2022/recursica-adapter-angular-material.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
+    "ng": "ng",
+    "build": "ng build adapter-angular-material",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --noEmit --sourceMap -p projects/adapter-angular-material/tsconfig.lib.json",
     "format": "prettier --write \"**/*.{js,ts,json,md,css,scss,html}\"",
     "prepare": "node .husky/install.mjs",
     "precommit": "npm run check-types && npm run lint && npm run format",
     "version": "changeset version",
     "release": "changeset publish"
   },
+  "peerDependencies": {
+    "@angular/cdk": "^20.2.14",
+    "@angular/common": "^20.0.0 || ^21.0.0",
+    "@angular/core": "^20.0.0 || ^21.0.0",
+    "@angular/forms": "^20.0.0 || ^21.0.0",
+    "@angular/material": "^20.2.14",
+    "@angular/platform-browser": "^20.0.0 || ^21.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.6.3"
+  },
   "devDependencies": {
+    "@angular/build": "^20.3.16",
+    "@angular/cdk": "20.2.14",
+    "@angular/cli": "^20.3.16",
+    "@angular/common": "20.3.16",
+    "@angular/compiler": "20.3.16",
+    "@angular/compiler-cli": "20.3.16",
+    "@angular/core": "20.3.16",
+    "@angular/forms": "20.3.16",
+    "@angular/material": "20.2.14",
+    "@angular/platform-browser": "20.3.16",
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.25.0",
     "@types/node": "^24.0.0",
+    "angular-eslint": "^22.5.0",
     "eslint": "^9.25.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "ng-packagr": "^20.3.0",
     "prettier": "3.5.3",
+    "rxjs": "~7.8.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1"
   }
