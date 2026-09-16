@@ -22,6 +22,10 @@ token-analysis.json
 *.tsbuildinfo
 .turbo
 
+# Angular CLI / ng-packagr build caches and intermediates
+.angular
+out-tsc
+
 # recursica.json and the recursica_*.{css,json} theme files ARE checked in — see
 # docs/CREATING_AN_ADAPTER.md. @recursica/official-release's postinstall script
 # generates them into the project root on first `npm install`; that generated

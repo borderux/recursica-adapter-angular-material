@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "adapter-angular-material": {
+      "projectType": "library",
+      "root": "projects/adapter-angular-material",
+      "sourceRoot": "projects/adapter-angular-material/src",
+      "prefix": "rec",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/adapter-angular-material/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/adapter-angular-material/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
+    }
+  }
+}
