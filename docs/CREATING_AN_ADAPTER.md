@@ -2,14 +2,13 @@
 
 This document is the repeatable process for turning a third-party React UI kit into a Recursica adapter: a standalone, independently-published npm package that lets application developers use that UI kit through Recursica's unified component API and design tokens.
 
-It's written so anyone — human or AI agent — can follow it for a **new** UI kit, in a **new**, empty repository. It doesn't assume access to any particular person's machine; the only adapter it references is **the genesis adapter, `mantine-adapter`** — the original, most complete, actively-maintained Recursica adapter, published in the public `recursica` monorepo (`https://github.com/borderux/recursica/tree/main/packages/mantine-adapter`). Every other adapter, including this one, is built by following this document against that single reference.
+It's written so anyone — human or AI agent — can follow it for a **new** UI kit, in a **new**, empty repository. It doesn't assume access to any particular person's machine; the only adapter it references is **the genesis adapter, `mantine-adapter`** — the original, most complete, actively-maintained Recursica adapter, published as its own standalone repository, **not** a package inside the `recursica` monorepo (`https://github.com/borderux/recursica-adapter-mantine-v8`). Every other adapter, including this one, is built by following this document against that single reference.
 
 ## 0. Prerequisites
 
 - A UI kit that ships React components and can be installed as an npm peer dependency.
-- Read access to the `recursica` monorepo (`https://github.com/borderux/recursica`), which hosts:
-  - **The genesis adapter**: `packages/mantine-adapter`. Use it as the structural reference for every step below.
-  - **`packages/adapter-common`** (published as `@recursica/adapter-common`) — the framework-agnostic shared layer every adapter depends on: prop-contract types (`RecursicaOverStyled`, `RecursicaSpacing`, etc.), `RecursicaThemeProvider`, `Layer`, and the **canonical** component/Storybook dev guides.
+- Read access to **the genesis adapter**, `recursica-adapter-mantine-v8` (`https://github.com/borderux/recursica-adapter-mantine-v8`) — a standalone repository, not a package inside the `recursica` monorepo. Use it as the structural reference for every step below.
+- Read access to the `recursica` monorepo (`https://github.com/borderux/recursica`), which hosts **`packages/adapter-common`** (published as `@recursica/adapter-common`) — the framework-agnostic shared layer every adapter depends on: prop-contract types (`RecursicaOverStyled`, `RecursicaSpacing`, etc.), `RecursicaThemeProvider`, `Layer`, and the **canonical** component/Storybook dev guides. (Open question, not yet resolved: whether a given UI kit's adapter actually needs `adapter-common` as a real dependency — treat it as required until that's confirmed one way or another.)
 - A new, empty GitHub repository for the adapter (e.g. `recursica-<ui-kit>-adapter`), created under whichever org will own it.
 - Node.js >=20, npm.
 
@@ -20,9 +19,9 @@ Read, in order:
 1. `packages/adapter-common/src/types.ts` and `packages/adapter-common/src/index.ts` in the monorepo — this is the actual contract an adapter implements (`RecursicaOverStyled<T>`, `RECURSICA_COMPONENTS`/`RecursicaComponent`, `RecursicaThemeProvider`).
 2. `packages/adapter-common/docs/PIPELINE.md` — how doc and code changes flow from `adapter-common` through an adapter to Storybook.
 3. `packages/adapter-common/docs/COMPONENT_DEV_GUIDE.md` and `docs/COMPONENT_STORYBOOK_GUIDE.md` — the canonical rules every adapter's components must follow.
-4. `packages/mantine-adapter/`'s own root docs (`README.md`, `ARCHITECTURE.md`, `SETUP.md`, `CONTRIBUTING.md`, `USAGE.md`, `OVERSTYLING.md`, `AGENT.md`, `docs/PHILOSOPHY.md`) and its `package.json`, `tsconfig.json`, `eslint.config.mjs`, `vite.config.ts`, `.storybook/`.
+4. The genesis adapter's (`recursica-adapter-mantine-v8`) own root docs (`README.md`, `ARCHITECTURE.md`, `SETUP.md`, `CONTRIBUTING.md`, `USAGE.md`, `OVERSTYLING.md`, `AGENT.md`, `docs/PHILOSOPHY.md`) and its `package.json`, `tsconfig.json`, `eslint.config.mjs`, `vite.config.ts`, `.storybook/`.
 
-Do not skip straight to copying files — several things in the genesis adapter are monorepo-specific and must **not** be replicated as-is in a standalone repo (see step 3).
+Do not skip straight to copying files — step 3 covers what's still worth deciding deliberately rather than copying on autopilot (real vs. placeholder dependencies, which docs are published vs. contributor-only).
 
 ## 2. Write `docs/ADAPTER_INTEGRATION_REPORT.md`
 
