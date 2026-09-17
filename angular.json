@@ -23,6 +23,36 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": "projects/adapter-angular-material/.storybook",
+            "browserTarget": "adapter-angular-material:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/adapter-angular-material"
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": "projects/adapter-angular-material/.storybook",
+            "browserTarget": "adapter-angular-material:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/adapter-angular-material"
+            ],
+            "outputDir": "storybook-static"
+          }
         }
       }
     }
