@@ -1,0 +1,16 @@
+/*
+ * Placeholder styling for the shared in-development stub. This is not one
+ * of the 47 stubbed components' own (currently empty) stylesheets — it's
+ * the one real, intentional stylesheet in this batch, since it exists to
+ * make "not yet implemented" visually obvious wherever it's rendered.
+ */
+.in-development-stub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+  font-style: italic;
+  opacity: 0.75;
+}
