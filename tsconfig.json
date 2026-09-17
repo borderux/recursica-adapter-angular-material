@@ -30,6 +30,7 @@
   },
   "files": [],
   "references": [
-    { "path": "./projects/adapter-angular-material/tsconfig.lib.json" }
+    { "path": "./projects/adapter-angular-material/tsconfig.lib.json" },
+    { "path": "./projects/adapter-angular-material/.storybook/tsconfig.json" }
   ]
 }

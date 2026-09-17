@@ -32,3 +32,11 @@ out-tsc
 # state is committed so the repo has a reviewable, versioned copy of the design
 # tokens it's building against, and so a fresh clone doesn't need a fresh
 # `npm install` to have them present. Do NOT add them here.
+
+*storybook.log
+storybook-static
+
+# compodoc output that @storybook/angular's storybook/build-storybook
+# architect targets (angular.json) regenerate on every run via
+# `compodoc: true`/`compodocArgs` — a build artifact, not source.
+projects/adapter-angular-material/documentation.json

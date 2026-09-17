@@ -43,7 +43,9 @@
     "prepare": "node .husky/install.mjs",
     "precommit": "npm run check-types && npm run lint && npm run format",
     "version": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "storybook": "ng run adapter-angular-material:storybook",
+    "build-storybook": "ng run adapter-angular-material:build-storybook"
   },
   "peerDependencies": {
     "@angular/cdk": "^20.2.14",
@@ -58,6 +60,7 @@
     "tslib": "^2.6.3"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "20.3.16",
     "@angular/build": "^20.3.16",
     "@angular/cdk": "20.2.14",
     "@angular/cli": "^20.3.16",
@@ -68,17 +71,25 @@
     "@angular/forms": "20.3.16",
     "@angular/material": "20.2.14",
     "@angular/platform-browser": "20.3.16",
+    "@angular/platform-browser-dynamic": "^20.3.16",
     "@changesets/cli": "^2.29.7",
+    "@compodoc/compodoc": "^2.0.0",
     "@eslint/js": "^9.25.0",
+    "@storybook/addon-docs": "9.1.20",
+    "@storybook/addon-onboarding": "9.1.20",
+    "@storybook/angular": "9.1.20",
     "@types/node": "^24.0.0",
     "angular-eslint": "^22.5.0",
     "eslint": "^9.25.0",
+    "eslint-plugin-storybook": "9.1.20",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "ng-packagr": "^20.3.0",
     "prettier": "3.5.3",
     "rxjs": "~7.8.0",
+    "storybook": "9.1.20",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.30.1"
+    "typescript-eslint": "^8.30.1",
+    "zone.js": "^0.15.1"
   }
 }
