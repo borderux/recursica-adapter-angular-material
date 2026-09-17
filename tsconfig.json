@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": ".",
     "target": "ES2022",
     "module": "preserve",
     "moduleResolution": "bundler",

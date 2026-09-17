@@ -64,5 +64,21 @@ export default tseslint.config(
       "@angular-eslint/component-selector": "off",
     },
   },
+  {
+    // Same exemption as `.storybook/**/*.ts` above, for the same reason:
+    // `src/storybook-demos/**` holds the ported generic Recursica
+    // token/theme/brand demo stories (see any `*.stories.ts` there for the
+    // full rationale) — Storybook-only tooling, not real, published
+    // Recursica components, so not subject to the "rec" selector prefix
+    // rule's intent. Unlike `storybook-theme-sync.component.ts`, these live
+    // under `src/` (required so Storybook's own `../src/**/*.stories.*`
+    // glob in `.storybook/main.ts` can discover their `*.stories.ts`
+    // files), so the rule's default `files: ["**/*.ts"]` glob would
+    // otherwise flag them.
+    files: ["projects/adapter-angular-material/src/storybook-demos/**/*.ts"],
+    rules: {
+      "@angular-eslint/component-selector": "off",
+    },
+  },
   storybook.configs["flat/recommended"],
 );

@@ -39,7 +39,7 @@
     "dev": "npm run storybook",
     "build": "ng build adapter-angular-material",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit --sourceMap -p projects/adapter-angular-material/tsconfig.lib.json",
+    "check-types": "tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json",
     "format": "prettier --write \"**/*.{js,ts,json,md,css,scss,html}\"",
     "prepare": "node .husky/install.mjs",
     "precommit": "npm run check-types && npm run lint && npm run format",
