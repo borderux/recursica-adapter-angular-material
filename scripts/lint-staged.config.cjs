@@ -9,10 +9,12 @@ module.exports = {
   // For all non-JS/TS files, just format them
   "*.{json,md,css,scss,html}": ["prettier --write"],
 
-  // For JS/TS files, format, lint, and type-check the whole package
-  "*.{js,ts}": () => [
-    "prettier --write .",
-    "eslint --fix .",
+  // For JS/TS files: format and lint only the staged files, but type-check
+  // the whole package (check-types isn't meaningful scoped to a subset of
+  // files in TS project mode).
+  "*.{js,ts}": (filenames) => [
+    `prettier --write ${filenames.join(" ")}`,
+    `eslint --fix ${filenames.join(" ")}`,
     "npm run check-types",
   ],
 };
