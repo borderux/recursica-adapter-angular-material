@@ -1,0 +1,72 @@
+# @recursica/adapter-angular-material
+
+> Reusable Angular components for Recursica applications based on Angular Material 20+.
+
+This adapter converts Recursica design tokens into Angular Material-specific theming and components.
+
+## Usage Guidelines
+
+- Relies on the `@angular/material`/`@angular/cdk` peer dependencies (`^20.2.14`).
+- When building UI in consumer applications, prioritize using components exported by this package to adhere to the Recursica design system.
+- No `@recursica/adapter-common` dependency — see `ARCHITECTURE.md` and `docs/ADAPTER_INTEGRATION_REPORT.md` Crosscutting Finding A.
+
+## Reference Documentation
+
+- [USAGE](USAGE.md): Detailed usage instructions, import rules, and layout/token conventions.
+- [OVERSTYLING](OVERSTYLING.md): The `overStyled` escape hatch — status (not yet implemented for this adapter) and what's already decided vs. still open.
+- [SETUP](SETUP.md): Installation and integration steps, including Angular Material's required Sass theming setup.
+- [ARCHITECTURE](ARCHITECTURE.md): Package architecture and dependencies.
+- [README](README.md)
+
+## Components
+
+Only `Layer` and `RecursicaThemeProvider` are real implementations (✅) — everything else below is a `🚧` in-development stub (see [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/ADAPTER_INTEGRATION_REPORT.md](docs/ADAPTER_INTEGRATION_REPORT.md) §9 for the build order). No component in this adapter has a per-component `USAGE.md` yet (a known gap — see `CONTRIBUTING.md`), so entries below link to each component's implementation folder (which does have an `IMPLEMENTATION_NOTES.md`) rather than a `USAGE.md` that doesn't exist yet; update these links to point at `USAGE.md` as each one is written.
+
+- 🚧 [AssistiveElement](projects/adapter-angular-material/src/lib/assistive-element)
+- 🚧 [AutoComplete](projects/adapter-angular-material/src/lib/auto-complete)
+- 🚧 [Avatar](projects/adapter-angular-material/src/lib/avatar)
+- 🚧 [Badge](projects/adapter-angular-material/src/lib/badge)
+- 🚧 [Breadcrumb](projects/adapter-angular-material/src/lib/breadcrumb)
+- 🚧 [Button](projects/adapter-angular-material/src/lib/button)
+- 🚧 [Card](projects/adapter-angular-material/src/lib/card)
+- 🚧 [Checkbox](projects/adapter-angular-material/src/lib/checkbox)
+- 🚧 [Chip](projects/adapter-angular-material/src/lib/chip)
+- 🚧 [Container](projects/adapter-angular-material/src/lib/container)
+- 🚧 [DatePicker](projects/adapter-angular-material/src/lib/date-picker)
+- 🚧 [Dropdown](projects/adapter-angular-material/src/lib/dropdown)
+- 🚧 [FileInput](projects/adapter-angular-material/src/lib/file-input)
+- 🚧 [FileUpload](projects/adapter-angular-material/src/lib/file-upload)
+- 🚧 [Flex](projects/adapter-angular-material/src/lib/flex)
+- 🚧 [FormControlLayout](projects/adapter-angular-material/src/lib/form-control-layout)
+- 🚧 [FormControlWrapper](projects/adapter-angular-material/src/lib/form-control-wrapper)
+- 🚧 [Grid](projects/adapter-angular-material/src/lib/grid)
+- 🚧 [Group](projects/adapter-angular-material/src/lib/group)
+- 🚧 [Heading](projects/adapter-angular-material/src/lib/heading)
+- 🚧 [HoverCard](projects/adapter-angular-material/src/lib/hover-card)
+- 🚧 [Label](projects/adapter-angular-material/src/lib/label)
+- ✅ [Layer](projects/adapter-angular-material/src/lib/layer)
+- 🚧 [Loader](projects/adapter-angular-material/src/lib/loader)
+- 🚧 [Menu](projects/adapter-angular-material/src/lib/menu)
+- 🚧 [Modal](projects/adapter-angular-material/src/lib/modal)
+- 🚧 [NumberInput](projects/adapter-angular-material/src/lib/number-input)
+- 🚧 [Pagination](projects/adapter-angular-material/src/lib/pagination)
+- 🚧 [Panel](projects/adapter-angular-material/src/lib/panel)
+- 🚧 [Popover](projects/adapter-angular-material/src/lib/popover)
+- 🚧 [Radio](projects/adapter-angular-material/src/lib/radio)
+- 🚧 [ReadOnlyField](projects/adapter-angular-material/src/lib/read-only-field)
+- ✅ [RecursicaThemeProvider](projects/adapter-angular-material/src/lib/theme-provider)
+- 🚧 [SegmentedControl](projects/adapter-angular-material/src/lib/segmented-control)
+- 🚧 [Slider](projects/adapter-angular-material/src/lib/slider)
+- 🚧 [Stack](projects/adapter-angular-material/src/lib/stack)
+- 🚧 [Stepper](projects/adapter-angular-material/src/lib/stepper)
+- 🚧 [Switch](projects/adapter-angular-material/src/lib/switch)
+- 🚧 [Table](projects/adapter-angular-material/src/lib/table)
+- 🚧 [Tabs](projects/adapter-angular-material/src/lib/tabs)
+- 🚧 [Text](projects/adapter-angular-material/src/lib/text)
+- 🚧 [TextArea](projects/adapter-angular-material/src/lib/text-area)
+- 🚧 [TextField](projects/adapter-angular-material/src/lib/text-field)
+- 🚧 [TimePicker](projects/adapter-angular-material/src/lib/time-picker)
+- 🚧 [Timeline](projects/adapter-angular-material/src/lib/timeline)
+- 🚧 [Tooltip](projects/adapter-angular-material/src/lib/tooltip)
+- 🚧 [TransferList](projects/adapter-angular-material/src/lib/transfer-list)
+- 🚧 [Tree](projects/adapter-angular-material/src/lib/tree)

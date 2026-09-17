@@ -29,7 +29,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "docs/PHILOSOPHY.md"
   ],
   "engines": {
     "node": ">=20"
@@ -42,7 +43,6 @@
     "check-types": "tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json",
     "format": "prettier --write \"**/*.{js,ts,json,md,css,scss,html}\"",
     "prepare": "node .husky/install.mjs",
-    "precommit": "npm run check-types && npm run lint && npm run format",
     "version": "changeset version",
     "release": "changeset publish",
     "storybook": "ng run adapter-angular-material:storybook",
