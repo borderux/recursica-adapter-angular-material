@@ -54,5 +54,15 @@ export default tseslint.config(
       ...angular.configs.templateAccessibility,
     ],
   },
+  {
+    // Storybook-only tooling (`.storybook/storybook-theme-sync.component.ts`)
+    // is deliberately not part of the public adapter API, so it's exempt
+    // from the "rec" selector prefix reserved for real, published Recursica
+    // component selectors — see that file's own header comment.
+    files: ["projects/adapter-angular-material/.storybook/**/*.ts"],
+    rules: {
+      "@angular-eslint/component-selector": "off",
+    },
+  },
   storybook.configs["flat/recommended"],
 );

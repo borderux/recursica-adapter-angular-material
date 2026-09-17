@@ -6,6 +6,12 @@
     "resolveJsonModule": true
   },
   "exclude": ["../src/test.ts", "../src/**/*.spec.ts"],
-  "include": ["../src/**/*.stories.*", "./preview.ts", "./main.ts"],
+  "include": [
+    "../src/**/*.stories.*",
+    "./preview.ts",
+    "./main.ts",
+    "./storybook-theme-sync.component.ts",
+    "./RecursicaTheme.ts"
+  ],
   "files": ["./typings.d.ts"]
 }
