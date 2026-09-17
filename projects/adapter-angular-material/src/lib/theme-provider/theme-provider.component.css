@@ -1,0 +1,10 @@
+/*
+ * RecursicaThemeProvider has no styling of its own — the React source
+ * (packages/adapter-common/src/RecursicaThemeProvider/RecursicaThemeProvider.tsx)
+ * only sets an attribute on document.documentElement and composes <Layer>;
+ * it has no CSS module either. This file exists to match this adapter's
+ * established per-component file convention (a styleUrl every real
+ * component declares); all visible styling comes from the composed
+ * <rec-layer> (see ../layer/layer.component.css) and from
+ * recursica_variables_scoped.css's [data-recursica-theme] blocks.
+ */

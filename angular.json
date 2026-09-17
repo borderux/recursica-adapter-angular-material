@@ -37,7 +37,8 @@
               "-d",
               "projects/adapter-angular-material"
             ],
-            "port": 6006
+            "port": 6006,
+            "styles": ["recursica_variables_scoped.css"]
           }
         },
         "build-storybook": {
@@ -52,7 +53,8 @@
               "-d",
               "projects/adapter-angular-material"
             ],
-            "outputDir": "storybook-static"
+            "outputDir": "storybook-static",
+            "styles": ["recursica_variables_scoped.css"]
           }
         }
       }

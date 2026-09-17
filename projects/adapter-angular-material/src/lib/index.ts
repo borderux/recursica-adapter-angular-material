@@ -1,4 +1,6 @@
 export { InDevelopmentStubComponent } from "./in-development-stub/in-development-stub.component";
+export { LayerComponent } from "./layer/layer.component";
+export { ThemeProviderComponent } from "./theme-provider/theme-provider.component";
 export { ButtonComponent } from "./button/button.component";
 export { LoaderComponent } from "./loader/loader.component";
 export { TooltipComponent } from "./tooltip/tooltip.component";
