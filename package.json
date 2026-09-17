@@ -36,6 +36,7 @@
   },
   "scripts": {
     "ng": "ng",
+    "dev": "npm run storybook",
     "build": "ng build adapter-angular-material",
     "lint": "eslint .",
     "check-types": "tsc --noEmit --sourceMap -p projects/adapter-angular-material/tsconfig.lib.json",
