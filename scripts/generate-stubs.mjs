@@ -52,7 +52,10 @@ const COMPONENTS = [
     notes:
       "Direct match: `appearance` (`text/filled/elevated/outlined/tonal`), `disabled`, `disableRipple`, `disabledInteractive`. Attribute-directive pattern (Crosscutting Finding C) — Recursica's wrapper renders a real `<button matButton>` internally. `color` input confirmed no-op under M3 theming — filter it anyway.",
     inputs: [
-      { name: "appearance", type: "'text' | 'filled' | 'elevated' | 'outlined' | 'tonal'" },
+      {
+        name: "appearance",
+        type: "'text' | 'filled' | 'elevated' | 'outlined' | 'tonal'",
+      },
       { name: "disabled", type: "boolean" },
       { name: "disableRipple", type: "boolean" },
       { name: "disabledInteractive", type: "boolean" },
@@ -181,7 +184,8 @@ const COMPONENTS = [
   {
     name: "TextField",
     category: "EASY–REQUIRES WORK",
-    equivalent: "`matInput` directive + `MatFormField` (`form-field.d.ts`, `input.d.ts`)",
+    equivalent:
+      "`matInput` directive + `MatFormField` (`form-field.d.ts`, `input.d.ts`)",
     notes:
       "From the report's additional findings: `TextField` ≈ `matInput` + `MatFormField` (same composition tax as AutoComplete). `MatFormField` gives `appearance` (`fill`/`outline`), `floatLabel`, `subscriptSizing`, and content-projected `<mat-label>`/`<mat-hint>`/`<mat-error>` slots (Q7). Real form controls implement `ControlValueAccessor`/`Validator` and are meant to be driven by `ReactiveFormsModule` (Crosscutting Finding D) — a real per-component design decision for step 10, not resolved here.",
     inputs: [
@@ -195,7 +199,8 @@ const COMPONENTS = [
   {
     name: "TextArea",
     category: "EASY–REQUIRES WORK",
-    equivalent: "`matInput` on a `<textarea>` + `MatFormField`, `cdkTextareaAutosize` (`@angular/cdk/text-field`)",
+    equivalent:
+      "`matInput` on a `<textarea>` + `MatFormField`, `cdkTextareaAutosize` (`@angular/cdk/text-field`)",
     notes:
       "Same composition tax as TextField, with `cdkTextareaAutosize` available for auto-growing height — a built-in Recursica's own `TextArea` can lean on (per the report's additional findings).",
     inputs: [
@@ -248,7 +253,8 @@ const COMPONENTS = [
     category: "REQUIRES WORK",
     equivalent: "`MatCheckbox` (`checkbox.d.ts`)",
     notes:
-      "No `description`/`helperText`/`error` input at all (Q7) — Mantine's native `Checkbox` supports `description` directly, a real parity gap. Needs `FormControlWrapper`-style composition (Q8) for anything beyond a bare checkbox+label. Same gap pattern as Radio/Switch — the label is bare projected content (`ngProjectAs: "*"`), no description/error slot on the bare control.",
+      "No `description`/`helperText`/`error` input at all (Q7) — Mantine's native `Checkbox` supports `description` directly, a real parity gap. Needs `FormControlWrapper`-style composition (Q8) for anything beyond a bare checkbox+label. Same gap pattern as Radio/Switch — the label is bare projected content (`ngProjectAs: " *
+      "`), no description/error slot on the bare control.",
     inputs: [
       { name: "label", type: "string" },
       { name: "description", type: "string" },
@@ -339,7 +345,8 @@ const COMPONENTS = [
   {
     name: "Text",
     category: "DOES NOT EXIST",
-    equivalent: "_(none — Sass typography mixins only, not a component; see Q6)_",
+    equivalent:
+      "_(none — Sass typography mixins only, not a component; see Q6)_",
     notes:
       "Material's typography system (`_typography.scss`'s `body-small`/`title-large`/etc. mixins) is 100% a build-time Sass authoring convenience for an app's own stylesheets, not a UI-kit component Recursica could wrap. There is no `<mat-text>` element, no `matText` directive, nothing importable at the TS/component level. `Text`/`Heading` need to be built as genuinely new Angular components from scratch, rendering a native element with Recursica's own `recursica_brand_typography_*` classes applied directly.",
     inputs: [
@@ -350,7 +357,8 @@ const COMPONENTS = [
   {
     name: "Heading",
     category: "DOES NOT EXIST",
-    equivalent: "_(none — Sass typography mixins only, not a component; see Q6)_",
+    equivalent:
+      "_(none — Sass typography mixins only, not a component; see Q6)_",
     notes:
       "Same conclusion as Text (Q6) — no component-level typography primitive exists in Material at all. Build `<rec-heading [order]>` rendering a native `<h1>`–`<h6>` with Recursica's own typography classes, from scratch.",
     inputs: [{ name: "order", type: "1 | 2 | 3 | 4 | 5 | 6" }],
@@ -504,7 +512,7 @@ const COMPONENTS = [
     category: "DOES NOT EXIST",
     equivalent: "_(none)_",
     notes:
-      "No file-upload/file-input component anywhere in `@angular/material` or `@angular/cdk`. Native `<input type=\"file\">` + custom styling/behavior, same conclusion Beam reached for its own kit (Beam at least had `FileUpload`; Material has nothing).",
+      'No file-upload/file-input component anywhere in `@angular/material` or `@angular/cdk`. Native `<input type="file">` + custom styling/behavior, same conclusion Beam reached for its own kit (Beam at least had `FileUpload`; Material has nothing).',
     inputs: [
       { name: "accept", type: "string" },
       { name: "multiple", type: "boolean" },
@@ -528,7 +536,7 @@ const COMPONENTS = [
     category: "DOES NOT EXIST",
     equivalent: "_(none)_",
     notes:
-      "No numeric input component anywhere. `matInput` + `type=\"number\"` on a native `<input>` gets basic browser numeric input; Mantine's clamping/formatting/increment-decrement-button parity needs full custom building.",
+      'No numeric input component anywhere. `matInput` + `type="number"` on a native `<input>` gets basic browser numeric input; Mantine\'s clamping/formatting/increment-decrement-button parity needs full custom building.',
     inputs: [
       { name: "min", type: "number" },
       { name: "max", type: "number" },
