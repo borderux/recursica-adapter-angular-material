@@ -20,14 +20,22 @@ This adapter converts Recursica design tokens into Angular Material-specific the
 
 ## Components
 
-Only `Layer` and `RecursicaThemeProvider` are real implementations (✅) — everything else below is a `🚧` in-development stub (see [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/ADAPTER_INTEGRATION_REPORT.md](docs/ADAPTER_INTEGRATION_REPORT.md) §9 for the build order). No component in this adapter has a per-component `USAGE.md` yet (a known gap — see `CONTRIBUTING.md`), so entries below link to each component's implementation folder (which does have an `IMPLEMENTATION_NOTES.md`) rather than a `USAGE.md` that doesn't exist yet; update these links to point at `USAGE.md` as each one is written.
+`Layer`, `RecursicaThemeProvider`, `Button`, and `Loader` are real
+implementations (✅) — everything else below is a `🚧` in-development stub
+(see [CONTRIBUTING.md](CONTRIBUTING.md) and
+[docs/ADAPTER_INTEGRATION_REPORT.md](docs/ADAPTER_INTEGRATION_REPORT.md) §9
+for the build order). No component in this adapter has a per-component
+`USAGE.md` yet (a known gap — see `CONTRIBUTING.md`), so entries below link
+to each component's implementation folder (which does have an
+`IMPLEMENTATION_NOTES.md`) rather than a `USAGE.md` that doesn't exist yet;
+update these links to point at `USAGE.md` as each one is written.
 
 - 🚧 [AssistiveElement](projects/adapter-angular-material/src/lib/assistive-element)
 - 🚧 [AutoComplete](projects/adapter-angular-material/src/lib/auto-complete)
 - 🚧 [Avatar](projects/adapter-angular-material/src/lib/avatar)
 - 🚧 [Badge](projects/adapter-angular-material/src/lib/badge)
 - 🚧 [Breadcrumb](projects/adapter-angular-material/src/lib/breadcrumb)
-- 🚧 [Button](projects/adapter-angular-material/src/lib/button)
+- ✅ [Button](projects/adapter-angular-material/src/lib/button)
 - 🚧 [Card](projects/adapter-angular-material/src/lib/card)
 - 🚧 [Checkbox](projects/adapter-angular-material/src/lib/checkbox)
 - 🚧 [Chip](projects/adapter-angular-material/src/lib/chip)
@@ -45,7 +53,7 @@ Only `Layer` and `RecursicaThemeProvider` are real implementations (✅) — eve
 - 🚧 [HoverCard](projects/adapter-angular-material/src/lib/hover-card)
 - 🚧 [Label](projects/adapter-angular-material/src/lib/label)
 - ✅ [Layer](projects/adapter-angular-material/src/lib/layer)
-- 🚧 [Loader](projects/adapter-angular-material/src/lib/loader)
+- ✅ [Loader](projects/adapter-angular-material/src/lib/loader)
 - 🚧 [Menu](projects/adapter-angular-material/src/lib/menu)
 - 🚧 [Modal](projects/adapter-angular-material/src/lib/modal)
 - 🚧 [NumberInput](projects/adapter-angular-material/src/lib/number-input)

@@ -1,1 +1,181 @@
-/* Styling not yet implemented. */
+/*
+ * `oval` is ported conceptually from the React source of truth's
+ * Loader.module.css (recursica-adapter-mantine-v8) — same Recursica token
+ * names (`recursica_ui-kit_components_loader_*`), adapted to Angular
+ * Material's `--mat-progress-spinner-*` custom-property surface (confirmed
+ * by reading node_modules/@angular/material/fesm2022/progress-spinner.mjs's
+ * compiled `styles: [...]` array).
+ *
+ * `bars`/`dots` have no Angular Material equivalent and no
+ * `recursica_variables_scoped.css` token backing (confirmed — see
+ * IMPLEMENTATION_NOTES.md). Built from scratch, directly matching the real
+ * underlying Mantine primitive's own compiled markup/CSS
+ * (`@mantine/core`'s `Bars.mjs`/`Dots.mjs`/`styles/Loader.css`, read
+ * directly, not guessed): 3 `.bar`/`.dot` spans, identical keyframes,
+ * identical stagger timings, identical `calc(var(--loader-size) / N)`
+ * proportional sizing — fed by this component's own
+ * `--loader-size`/`--loader-color` instead of Mantine's.
+ *
+ * Selectors are unprefixed (`.root`, `.root[data-variant="..."]`) —
+ * ViewEncapsulation.Emulated (docs/STYLING_SYSTEM.md §3) scopes them per
+ * build automatically. Token-reading overrides are prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4's
+ * specificity convention.
+ */
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle; /* HARDCODE: aligns with adjacent inline text baseline; no token. */
+}
+
+.oval {
+  display: inline-block;
+}
+
+:host-context([data-recursica-theme]) .root {
+  --loader-color: var(
+    --recursica_ui-kit_components_loader_properties_indicator-color
+  );
+}
+
+/* data-size → --loader-size (drives bars/dots sizing directly in CSS; also
+ * what Button's internal composition and this file's oval override read). */
+:host-context([data-recursica-theme]) .root[data-size="small"] {
+  --loader-size: var(
+    --recursica_ui-kit_components_loader_variants_sizes_small_properties_size
+  );
+}
+:host-context([data-recursica-theme]) .root[data-size="default"] {
+  --loader-size: var(
+    --recursica_ui-kit_components_loader_variants_sizes_default_properties_size
+  );
+}
+:host-context([data-recursica-theme]) .root[data-size="large"] {
+  --loader-size: var(
+    --recursica_ui-kit_components_loader_variants_sizes_large_properties_size
+  );
+}
+
+/* ===== oval =====
+ * `!important` on `--mat-progress-spinner-active-indicator-width`: Material's
+ * own compiled component metadata inline-binds this same custom property to
+ * `diameter + "px"` on the host element (confirmed by reading
+ * fesm2022/progress-spinner.mjs's compiled host bindings — see
+ * IMPLEMENTATION_NOTES.md). An inline `style` attribute always outranks a
+ * normal-weight external stylesheet rule, so `!important` is the only way
+ * this component's own real `thickness-size` token can win. */
+.oval {
+  --mat-progress-spinner-active-indicator-color: var(--loader-color);
+}
+:host-context([data-recursica-theme]) .root[data-size="small"] .oval {
+  --mat-progress-spinner-active-indicator-width: var(
+    --recursica_ui-kit_components_loader_variants_sizes_small_properties_thickness-size
+  ) !important;
+}
+:host-context([data-recursica-theme]) .root[data-size="default"] .oval {
+  --mat-progress-spinner-active-indicator-width: var(
+    --recursica_ui-kit_components_loader_variants_sizes_default_properties_thickness-size
+  ) !important;
+}
+:host-context([data-recursica-theme]) .root[data-size="large"] .oval {
+  --mat-progress-spinner-active-indicator-width: var(
+    --recursica_ui-kit_components_loader_variants_sizes_large_properties_thickness-size
+  ) !important;
+}
+
+/* `animate={false}`, oval: `::ng-deep` (real, verified necessity — see
+ * IMPLEMENTATION_NOTES.md). The actually-animated elements are rendered by
+ * `MatProgressSpinner`'s own `ViewEncapsulation.None` template, which a
+ * plain descendant selector under our own `ViewEncapsulation.Emulated`
+ * cannot reach (Angular requires our own `_ngcontent-<hash>` attribute on
+ * both sides of the selector, which Material's own child-rendered elements
+ * never carry). `::ng-deep` drops that requirement for everything after it
+ * while `.root[data-animate="false"]` itself still requires it, so this
+ * still only takes effect on a real instance of this component. */
+.root[data-animate="false"] ::ng-deep * {
+  animation: none !important;
+}
+
+/* ===== bars =====
+ * Matches @mantine/core's real Bars.mjs/Loader.css exactly (verified by
+ * reading its compiled source): 3 flex-1 bars, scale+opacity keyframe,
+ * 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite, staggered -240ms/-120ms/0ms. */
+.barsLoader {
+  position: relative;
+  width: var(--loader-size);
+  height: var(--loader-size);
+  display: flex;
+  gap: calc(var(--loader-size) / 5);
+}
+.bar {
+  flex: 1;
+  background: var(--loader-color);
+  border-radius: 2px; /* HARDCODE: matches Mantine's own Bars loader exactly (not a design-token value in the React reference either). */
+  animation: recBarsScale 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.bar:nth-of-type(1) {
+  animation-delay: -240ms;
+}
+.bar:nth-of-type(2) {
+  animation-delay: -120ms;
+}
+.bar:nth-of-type(3) {
+  animation-delay: 0ms;
+}
+@keyframes recBarsScale {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  50%,
+  100% {
+    transform: scale(1);
+  }
+}
+.root[data-animate="false"] .bar {
+  animation: none !important;
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ===== dots =====
+ * Matches @mantine/core's real Dots.mjs/Loader.css exactly: 3 dots,
+ * scale+opacity keyframe, 0.8s linear infinite, only the middle dot delayed
+ * 0.4s (Mantine's own `.dot:nth-child(2)` rule — not all three staggered). */
+.dotsLoader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(var(--loader-size) / 10);
+  position: relative;
+  width: var(--loader-size);
+  height: var(--loader-size);
+}
+.dot {
+  width: calc(var(--loader-size) / 3 - var(--loader-size) / 15);
+  height: calc(var(--loader-size) / 3 - var(--loader-size) / 15);
+  border-radius: 50%;
+  background: var(--loader-color);
+  animation: recDotsScale 0.8s infinite linear;
+}
+.dot:nth-child(2) {
+  animation-delay: 0.4s;
+}
+@keyframes recDotsScale {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+}
+.root[data-animate="false"] .dot {
+  animation: none !important;
+  transform: scale(1);
+  opacity: 1;
+}

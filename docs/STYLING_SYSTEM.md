@@ -101,12 +101,12 @@ Every prior adapter's generic escape hatch is a React prop object: `className`/`
 ```ts
 export interface RecursicaOverStyled {
   overStyled?: boolean;
-  overStyleClass?: string;
-  overStyleStyle?: Record<string, string>;
+  overClass?: string;
+  overStyle?: Record<string, string>;
 }
 ```
 
-`overStyleClass`/`overStyleStyle` are forwarded onto the component's own wrapped Material element **only** when `overStyled` is `true` — the shared `resolveOverStyle()` helper centralizes that one check so every component enforces it identically. If `overStyled` is `false` or unset (the default), both are **discarded entirely**, even if a caller set them — mirroring the React adapters' "blocked unless explicitly unlocked" default exactly, just enforced via a dedicated input pair instead of runtime prop-object filtering. The name is deliberately greppable (`grep -r overStyled`) so every place a consumer reaches past Recursica's own design surface is a visible, auditable signal in the codebase, not a quiet one — same intent as every prior adapter's `overStyled`, translated to Angular's own idiom rather than copied verbatim.
+`overClass`/`overStyle` are forwarded onto the component's own wrapped Material element **only** when `overStyled` is `true` — the shared `resolveOverStyle()` helper centralizes that one check so every component enforces it identically. If `overStyled` is `false` or unset (the default), both are **discarded entirely**, even if a caller set them — mirroring the React adapters' "blocked unless explicitly unlocked" default exactly, just enforced via a dedicated input pair instead of runtime prop-object filtering. The name is deliberately greppable (`grep -r overStyled`) so every place a consumer reaches past Recursica's own design surface is a visible, auditable signal in the codebase, not a quiet one — same intent as every prior adapter's `overStyled`, translated to Angular's own idiom rather than copied verbatim.
 
 Not every component needs this: `Layer`/`RecursicaThemeProvider` are Recursica's own styling plumbing, not a wrapped Material element with a protected look (same precedent as `Flex`/`Stack`/`Group`/`Grid` in the React adapters, which also skip the `RecursicaOverStyled` gatekeeper) — they already accept `class`/`style` unconditionally and don't implement this interface.
 
@@ -116,6 +116,6 @@ One narrower point was already settled, and remains simpler than any prior adapt
 
 1. **TypeScript**: this adapter hand-copies the portable, framework-agnostic parts of `@recursica/adapter-common`'s types (`RecursicaSpacing`, `RECURSICA_COMPONENTS`, etc. — see `ADAPTER_INTEGRATION_REPORT.md` Crosscutting Finding A) into this adapter's own `src/lib/utils`, since the real npm package can't be a dependency here (it hard-requires `react`/`react-dom` as peers). Each component's own `@Input()` surface is declared explicitly, not spread from an arbitrary object — see §6.
 2. **Runtime, component-specific appearance props**: not applicable the way it is for React — see §6's point on Angular not spreading unknown props. Simply not declaring an `@Input()` for a blocked Material prop is sufficient; there's no equivalent of `omitUnsupportedProps()` needed for this layer.
-3. **Runtime, generic styling vectors (`[ngClass]`/`[style]`/`[class]` host bindings)**: **resolved, per §6** — `RecursicaOverStyled`'s `overStyled`/`overStyleClass`/`overStyleStyle` trio, forwarded only when `overStyled` is `true`, via the shared `resolveOverStyle()` helper.
+3. **Runtime, generic styling vectors (`[ngClass]`/`[style]`/`[class]` host bindings)**: **resolved, per §6** — `RecursicaOverStyled`'s `overStyled`/`overClass`/`overStyle` trio, forwarded only when `overStyled` is `true`, via the shared `resolveOverStyle()` helper.
 
 Verification for a new component isn't complete until this is checked against real rendered output — reading the code and confirming it "looks right" is not the same as forcing `overStyled` both ways through a running app and confirming the computed DOM/styles behave correctly in each case (discarded when `false`/unset, applied when `true`).

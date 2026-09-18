@@ -1,8 +1,8 @@
 # Over Styling (`overStyled`) — status: resolved, Angular-native mechanism
 
-Every Recursica adapter sandboxes its components against arbitrary styling by default, with a single, explicit, auditable escape hatch. In React (`mantine-adapter`, `beam-adapter`) that's `overStyled={true}`, backed by a `RecursicaOverStyled<T>` TypeScript type and runtime prop-stripping (`filterStylingProps()`/`omitUnsupportedProps()`). **This adapter uses a different mechanism**, because Angular's own component model doesn't give it the same runtime hook to work with — see [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6 for the full design writeup this document summarizes.
+Every Recursica adapter sandboxes its components against arbitrary styling by default, with a single, explicit, auditable escape hatch. In the genesis adapter (`recursica-adapter-mantine-v8`) that's `overStyled={true}`, backed by a `RecursicaOverStyled<T>` TypeScript type and runtime prop-stripping (`filterStylingProps()`/`omitUnsupportedProps()`). **This adapter uses a different mechanism**, because Angular's own component model doesn't give it the same runtime hook to work with — see [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6 for the full design writeup this document summarizes.
 
-## Why this doesn't just port over from Mantine/Beam
+## Why this doesn't just port over from the genesis adapter
 
 Both React-based adapters' escape hatch works because `className`/`style` arrive as ordinary props on a plain JavaScript object — a runtime function can inspect that object and delete keys from it before they reach the underlying component.
 
@@ -15,12 +15,12 @@ Every component that wraps a Material element with a protected look implements `
 ```ts
 export interface RecursicaOverStyled {
   overStyled?: boolean;
-  overStyleClass?: string;
-  overStyleStyle?: Record<string, string>;
+  overClass?: string;
+  overStyle?: Record<string, string>;
 }
 ```
 
-`overStyleClass`/`overStyleStyle` are forwarded onto the component's own wrapped Material element **only** when `overStyled` is `true`, via the shared `resolveOverStyle()` helper — every component enforces the same rule identically instead of hand-rolling it. If `overStyled` is `false` or unset (the default), both are **discarded entirely**, even if a caller set them. This is the direct Angular-native translation of React's "blocked unless explicitly unlocked" default: since Angular gives us no way to intercept an ambient host binding, the mechanism is a component-declared input pair instead of a prop-object filter — but the actual policy (quiet by default, loud and auditable when overridden) is identical. The name is deliberately greppable: `grep -r overStyled` finds every place a consumer is reaching past Recursica's own design surface.
+`overClass`/`overStyle` are forwarded onto the component's own wrapped Material element **only** when `overStyled` is `true`, via the shared `resolveOverStyle()` helper — every component enforces the same rule identically instead of hand-rolling it. If `overStyled` is `false` or unset (the default), both are **discarded entirely**, even if a caller set them. This is the direct Angular-native translation of React's "blocked unless explicitly unlocked" default: since Angular gives us no way to intercept an ambient host binding, the mechanism is a component-declared input pair instead of a prop-object filter — but the actual policy (quiet by default, loud and auditable when overridden) is identical. The name is deliberately greppable: `grep -r overStyled` finds every place a consumer is reaching past Recursica's own design surface.
 
 ## What's already true, without needing a runtime step
 
@@ -44,8 +44,10 @@ Angular Material has no native margin/padding/gap props on any component — spa
 
 ## Primitive layout components exemption
 
-`Layer`/`RecursicaThemeProvider` (already built) and, once built, `Flex`/`Stack`/`Group`/`Grid` are exempt from `RecursicaOverStyled` — the same precedent `mantine-adapter`/`beam-adapter` already set (a layout/plumbing primitive has no internal "look" to protect, so its own native `class`/`style` inputs pass through freely, unconditionally).
+`Layer`/`RecursicaThemeProvider` (already built) and, once built, `Flex`/`Stack`/`Group`/`Grid` are exempt from `RecursicaOverStyled` — the same precedent the genesis adapter already set (a layout/plumbing primitive has no internal "look" to protect, so its own native `class`/`style` inputs pass through freely, unconditionally).
 
-## Visual auditing (`recursica.toggleOverStyled()`) — not ported
+## Do not do this: bypassing `overStyled` with native bindings + global CSS
 
-`mantine-adapter`'s and `beam-adapter`'s `RecursicaThemeProvider` unconditionally call `injectOverStyledStyles()`/`registerOverStyledConsoleCommand()` dev-tooling, which lets a developer run `recursica.toggleOverStyled()` in the browser console to highlight every over-styled component on the page. This adapter's `RecursicaThemeProvider`/`rec-theme-provider` still deliberately omits both calls — that tooling assumes the React version's runtime prop-filtering mechanism, and porting it now that `RecursicaOverStyled` exists here in a different shape would mean re-deriving what "highlight every over-styled component" even means for a compiler-enforced `@Input()` gate rather than a runtime-stripped prop object. Worth a real design pass of its own, not assumed to carry over unchanged; flagged as a genuine follow-up, not forgotten.
+Verified directly against the real `Button` component: a native `[class]`/`[style]` binding written straight onto `<rec-button>` lands on the host tag and has **no visible effect on its own** — the real `<button matButton>` inside is untouched. But combined with a real global stylesheet rule using a descendant selector (`.some-class button { ... }`), it **does** reach in and restyle the actual button — Angular's `ViewEncapsulation.Emulated` is attribute-based scoping, not a Shadow DOM boundary, so nothing stops an external stylesheet from targeting a native element by tag name once it has a host-level class to hook onto.
+
+**Getting past this default takes real, deliberate effort — a native binding alone does nothing.** That's the intended design, not an oversight to close further. Application developers should not do this: it bypasses Recursica's design system silently from this component's own perspective (no `overStyled` in sight, nothing to `grep` for) and will break without warning the moment this component's internal markup changes. Use `overStyled`/`overClass`/`overStyle` instead — it's the only path that stays visible in the codebase and stable across implementation changes.

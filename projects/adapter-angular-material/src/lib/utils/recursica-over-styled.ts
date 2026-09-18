@@ -16,7 +16,7 @@
  *
  * The resolution (confirmed with Matt, 2026-09): every component that wraps a Material
  * element accepts three explicit `@Input()`s, implementing this interface, and forwards
- * `overStyleClass`/`overStyleStyle` onto its wrapped element **only** when `overStyled`
+ * `overClass`/`overStyle` onto its wrapped element **only** when `overStyled`
  * is `true`. If `overStyled` is `false` or unset (the default), both are discarded
  * entirely — never forwarded, even if a caller set them. This is a deliberate,
  * auditable, greppable escape hatch (`grep -r overStyled` finds every place a consumer
@@ -32,17 +32,17 @@
  */
 export interface RecursicaOverStyled {
   /**
-   * Explicit, greppable escape hatch. `false` or unset (the default): `overStyleClass`/
-   * `overStyleStyle` are ignored entirely, regardless of whether they were set. `true`:
+   * Explicit, greppable escape hatch. `false` or unset (the default): `overClass`/
+   * `overStyle` are ignored entirely, regardless of whether they were set. `true`:
    * both are forwarded onto this component's wrapped Material element.
    */
   overStyled?: boolean;
 
   /** Only forwarded when `overStyled` is `true`. Discarded otherwise. */
-  overStyleClass?: string;
+  overClass?: string;
 
   /** Only forwarded when `overStyled` is `true`. Discarded otherwise. */
-  overStyleStyle?: Record<string, string>;
+  overStyle?: Record<string, string>;
 }
 
 /**
@@ -59,7 +59,7 @@ export function resolveOverStyle(input: RecursicaOverStyled): {
     return { class: null, style: null };
   }
   return {
-    class: input.overStyleClass ?? null,
-    style: input.overStyleStyle ?? null,
+    class: input.overClass ?? null,
+    style: input.overStyle ?? null,
   };
 }
