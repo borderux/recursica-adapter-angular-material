@@ -1,3 +1,5 @@
+export type { RecursicaOverStyled } from "./utils/recursica-over-styled";
+export { resolveOverStyle } from "./utils/recursica-over-styled";
 export { InDevelopmentStubComponent } from "./in-development-stub/in-development-stub.component";
 export { LayerComponent } from "./layer/layer.component";
 export { ThemeProviderComponent } from "./theme-provider/theme-provider.component";

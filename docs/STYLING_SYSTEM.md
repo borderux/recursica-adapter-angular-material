@@ -45,6 +45,20 @@ This is the same category of decision Beam-adapter made, and follows from the sa
 
 **Practical rule for future components**: before writing a component's own styles, check the relevant Material component's compiled CSS (`node_modules/@angular/material/fesm2022/<component>.mjs`'s `styles: [...]` array) for the `--mat-<component>-*`/`--mat-sys-*` variables it reads. Override those, redeclared under this adapter's own scoped selector (which, per §3, Angular's compiler further scopes with `_ngcontent-<hash>` automatically — no extra work needed to combine the two). Fall back to direct property overrides only for whatever Material doesn't expose as a variable.
 
+**Specificity-boosting convention (confirmed with Matt, 2026-09): prefix every override selector with `:host-context([data-recursica-theme])`.** `RecursicaThemeProvider` always sets `data-recursica-theme` on `document.documentElement`, so requiring that attribute costs nothing in real usage — it's always true — but adds a real specificity qualifier a casual consumer override (e.g. a plain `.some-class button { ... }` in their own global stylesheet) is unlikely to replicate. `:host-context()` is Angular's own purpose-built mechanism for exactly this ("style this component differently based on an ancestor attribute/class" — the canonical example in Angular's own docs is a dark-mode class on an ancestor), so it composes correctly with `ViewEncapsulation.Emulated`'s scoping rather than requiring a hand-rolled `html[data-recursica-theme] .root ...` selector:
+
+```css
+:host-context([data-recursica-theme]) .root[data-variant="solid"] {
+  --mat-button-text-label-text-color: var(
+    --recursica_ui-kit_components_button_variants_solid_properties_colors_text
+  );
+}
+```
+
+**Verified live, not just "it compiles"**: added this exact pattern to a real component's CSS, booted the real Storybook instance (every story is already wrapped in the real `RecursicaThemeProvider` via the global decorator — see `.storybook/preview.ts` — so `data-recursica-theme` is genuinely present on `<html>` in every running story, no separate consuming app needed to test this), and confirmed via `getComputedStyle()` that the rule actually matched and applied in the real rendered output. This is not a guaranteed win against a determined consumer (nothing is — see §6/`OVERSTYLING.md`'s honest framing on specificity and injection order), but it raises the bar for the casual/accidental case, which is the actual goal.
+
+This does **not** apply to `Layer`/`RecursicaThemeProvider` themselves — they don't have a "look" to protect the way a real UI component does (same precedent as §6's `RecursicaOverStyled` exemption), so there's no reason to retrofit this onto their existing selectors. Apply it starting with the first component that actually redeclares Material variables (`Button`, per the build order).
+
 **Theming, decided (`ADAPTER_INTEGRATION_REPORT.md` Q10, Path B)**: rather than Material's default single `mat.theme(...)` call relying on the CSS `color-scheme` property + `light-dark()` function, this adapter's consuming app calls `mat.theme()` **twice**, each scoped under an explicit selector matching the attribute the ported `RecursicaThemeProvider` already sets on `document.documentElement`:
 
 ```scss
@@ -76,20 +90,32 @@ Confirmed directly from `_system.scss`: the `theme()` mixin emits its variables 
 
 No tension to document: Angular's own build tooling has no CSS-in-JS story at all (styles are always static CSS/Sass compiled ahead of time, per §1/§3), and Angular Material follows the same convention for its own components. Both this adapter and its underlying kit already point the same direction — there was never a choice to make here.
 
-## 6. The generic styling escape hatch is architecturally different from every prior adapter — open design item, not yet resolved
+## 6. The generic styling escape hatch — resolved (2026-09, confirmed with Matt)
 
-**This is the one place this adapter cannot simply copy Mantine/Beam's `filterStylingProps()` pattern, and it's flagged here explicitly rather than glossed over.**
+**This is the one place this adapter couldn't simply copy Mantine/Beam's `filterStylingProps()` pattern — Angular's own template bindings bypass it by construction — but it now has a deliberate, Angular-native resolution.**
 
-Every prior adapter's generic escape hatch is a React prop object: `className`/`style` arrive as ordinary props, so `filterStylingProps()` can strip them from a plain JS object at runtime, and TypeScript can `Omit<>` them from the public type. In Angular, `[class]`/`[ngClass]`/`[style]`/`[ngStyle]` are **template-level host bindings that operate on any element or component host regardless of the component's own declared `@Input()`s** — a caller writing `<rec-button [ngClass]="...">` is binding onto _this adapter's_ component selector using Angular's own template syntax, not passing a prop `RecButton` chose to accept. Blocking this isn't a matter of typing `Omit<>` on a props interface; it depends on how this adapter's own component template is structured (specifically, whether/how a binding on the Recursica host element propagates to the underlying `matButton`-decorated element inside it).
+Every prior adapter's generic escape hatch is a React prop object: `className`/`style` arrive as ordinary props, so `filterStylingProps()` can strip them from a plain JS object at runtime unless `overStyled: true` unlocks them, and TypeScript can `Omit<>` them from the public type otherwise. In Angular, `[class]`/`[ngClass]`/`[style]`/`[ngStyle]` are **template-level host bindings that operate on any element or component host regardless of the component's own declared `@Input()`s** — a caller writing `<rec-button [ngClass]="...">` is binding onto _this adapter's_ component selector using Angular's own template syntax, not passing a prop `RecButton` chose to accept, and even if it were interceptable, the binding lands on `<rec-button>`'s host element, not automatically on the `<button matButton>` nested inside its template (CSS inheritance only carries a handful of properties — color, font — not background/border/padding).
 
-**Not resolved here — this needs its own design pass at step 10, per component**, starting with `Layer`/`RecursicaThemeProvider`/`Button` (the first three in the build order). Whatever mechanism is chosen there should get written up as an addendum to this section, not left implicit in each component's own code.
+**Resolved: an explicit, greppable `@Input()` trio, not ambient host bindings.** Every component that wraps a Material element with a "look" to protect implements `RecursicaOverStyled` (`src/lib/utils/recursica-over-styled.ts`):
 
-One narrower point _is_ settled, and simpler than any prior adapter: Angular components don't spread unknown caller props onto their rendered output the way a React component can with JSX rest-prop spreading. This adapter's own components will declare an explicit `@Input()` for exactly the props Recursica's contract exposes — an appearance-affecting Material `@Input()` this adapter doesn't want to expose (e.g. `MatButton`'s `color`, which the integration report's Q4 notes is already a no-op under M3 theming) is blocked simply **by never declaring it**, with no runtime deletion step needed the way `omitUnsupportedProps()` provides for React's prop-spreading model. The generic-escape-hatch problem above is specifically about `[ngClass]`/`[style]`/`[class]`, which bypass this by construction — that's the part still open.
+```ts
+export interface RecursicaOverStyled {
+  overStyled?: boolean;
+  overStyleClass?: string;
+  overStyleStyle?: Record<string, string>;
+}
+```
 
-## 7. Conclusion: how overstyling is prevented, end to end (partial — one layer open)
+`overStyleClass`/`overStyleStyle` are forwarded onto the component's own wrapped Material element **only** when `overStyled` is `true` — the shared `resolveOverStyle()` helper centralizes that one check so every component enforces it identically. If `overStyled` is `false` or unset (the default), both are **discarded entirely**, even if a caller set them — mirroring the React adapters' "blocked unless explicitly unlocked" default exactly, just enforced via a dedicated input pair instead of runtime prop-object filtering. The name is deliberately greppable (`grep -r overStyled`) so every place a consumer reaches past Recursica's own design surface is a visible, auditable signal in the codebase, not a quiet one — same intent as every prior adapter's `overStyled`, translated to Angular's own idiom rather than copied verbatim.
 
-1. **TypeScript**: this adapter hand-copies the portable, framework-agnostic parts of `@recursica/adapter-common`'s types (`RecursicaOverStyled<T>`, `RecursicaSpacing`, `RECURSICA_COMPONENTS`, etc. — see `ADAPTER_INTEGRATION_REPORT.md` Crosscutting Finding A) into this adapter's own `src/utils`/`src/types`, since the real npm package can't be a dependency here (it hard-requires `react`/`react-dom` as peers). Each component's own `@Input()` surface is declared explicitly, not spread from an arbitrary object — see §6.
+Not every component needs this: `Layer`/`RecursicaThemeProvider` are Recursica's own styling plumbing, not a wrapped Material element with a protected look (same precedent as `Flex`/`Stack`/`Group`/`Grid` in the React adapters, which also skip the `RecursicaOverStyled` gatekeeper) — they already accept `class`/`style` unconditionally and don't implement this interface.
+
+One narrower point was already settled, and remains simpler than any prior adapter: Angular components don't spread unknown caller props onto their rendered output the way a React component can with JSX rest-prop spreading. This adapter's own components declare an explicit `@Input()` for exactly the props Recursica's contract exposes — an appearance-affecting Material `@Input()` this adapter doesn't want to expose (e.g. `MatButton`'s `color`, which the integration report's Q4 notes is already a no-op under M3 theming) is blocked simply **by never declaring it**, with no runtime deletion step needed the way `omitUnsupportedProps()` provides for React's prop-spreading model.
+
+## 7. Conclusion: how overstyling is prevented, end to end
+
+1. **TypeScript**: this adapter hand-copies the portable, framework-agnostic parts of `@recursica/adapter-common`'s types (`RecursicaSpacing`, `RECURSICA_COMPONENTS`, etc. — see `ADAPTER_INTEGRATION_REPORT.md` Crosscutting Finding A) into this adapter's own `src/lib/utils`, since the real npm package can't be a dependency here (it hard-requires `react`/`react-dom` as peers). Each component's own `@Input()` surface is declared explicitly, not spread from an arbitrary object — see §6.
 2. **Runtime, component-specific appearance props**: not applicable the way it is for React — see §6's point on Angular not spreading unknown props. Simply not declaring an `@Input()` for a blocked Material prop is sufficient; there's no equivalent of `omitUnsupportedProps()` needed for this layer.
-3. **Runtime, generic styling vectors (`[ngClass]`/`[style]`/`[class]` host bindings)**: **open, per §6.** This is the layer every future component's implementation needs to close deliberately, and the first real component built should settle the mechanism for all the rest to follow.
+3. **Runtime, generic styling vectors (`[ngClass]`/`[style]`/`[class]` host bindings)**: **resolved, per §6** — `RecursicaOverStyled`'s `overStyled`/`overStyleClass`/`overStyleStyle` trio, forwarded only when `overStyled` is `true`, via the shared `resolveOverStyle()` helper.
 
-Verification for a new component isn't complete until this is checked against real rendered output — reading the code and confirming it "looks right" is not the same as forcing a blocked binding through a running app and confirming the computed DOM/styles didn't change.
+Verification for a new component isn't complete until this is checked against real rendered output — reading the code and confirming it "looks right" is not the same as forcing `overStyled` both ways through a running app and confirming the computed DOM/styles behave correctly in each case (discarded when `false`/unset, applied when `true`).
