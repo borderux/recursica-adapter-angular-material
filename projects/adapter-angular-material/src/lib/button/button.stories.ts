@@ -40,34 +40,48 @@ export default meta;
 
 type Story = StoryObj<ButtonComponent>;
 
-const labelTemplate = `
-  <rec-button
-    [variant]="variant"
-    [size]="size"
-    [loading]="loading"
-    [loaderVariant]="loaderVariant"
-    [useRecursicaLoader]="useRecursicaLoader"
-    [disabled]="disabled"
-    [disableRipple]="disableRipple"
-    [disabledInteractive]="disabledInteractive"
-  >
-    Button
-  </rec-button>
-`;
+/**
+ * `label` isn't a real `@Input()` on `ButtonComponent` (text is projected via
+ * `<ng-content>`, not bound) — so it can't live in a `StoryObj<ButtonComponent>`'s
+ * strictly-typed `args`. This generates a template with the label baked in as
+ * a literal, keeping every other control (`variant`/`size`/etc.) real-args-bound.
+ */
+function withLabel(label: string): string {
+  return `
+    <rec-button
+      [variant]="variant"
+      [size]="size"
+      [loading]="loading"
+      [loaderVariant]="loaderVariant"
+      [useRecursicaLoader]="useRecursicaLoader"
+      [disabled]="disabled"
+      [disableRipple]="disableRipple"
+      [disabledInteractive]="disabledInteractive"
+    >
+      ${label}
+    </rec-button>
+  `;
+}
 
-export const Solid: Story = {
-  args: { variant: "solid" },
-  render: (args) => ({ props: args, template: labelTemplate }),
+/**
+ * Story names/text/args mirror the genesis adapter's own
+ * `Button.stories.tsx` exactly (`Default`, `SolidDefault`, `OutlineSmall`,
+ * `TextWithIcon`, `IconOnly`) — a direct visual comparison between the two
+ * adapters only means anything if both are rendering the same content.
+ */
+export const Default: Story = {
+  args: { variant: "solid", size: "default" },
+  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
-export const Outline: Story = {
-  args: { variant: "outline" },
-  render: (args) => ({ props: args, template: labelTemplate }),
+export const SolidDefault: Story = {
+  args: { variant: "solid", size: "default" },
+  render: (args) => ({ props: args, template: withLabel("Solid Default") }),
 };
 
-export const Text: Story = {
-  args: { variant: "text" },
-  render: (args) => ({ props: args, template: labelTemplate }),
+export const OutlineSmall: Story = {
+  args: { variant: "outline", size: "small" },
+  render: (args) => ({ props: args, template: withLabel("Outline Small") }),
 };
 
 /** All three variants side by side, for a direct visual comparison. */
@@ -83,14 +97,9 @@ export const AllVariants: Story = {
   }),
 };
 
-export const Small: Story = {
-  args: { size: "small" },
-  render: (args) => ({ props: args, template: labelTemplate }),
-};
-
 export const Disabled: Story = {
   args: { disabled: true },
-  render: (args) => ({ props: args, template: labelTemplate }),
+  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
 /**
@@ -101,12 +110,12 @@ export const Disabled: Story = {
  */
 export const Loading: Story = {
   args: { loading: true },
-  render: (args) => ({ props: args, template: labelTemplate }),
+  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
 export const LoadingOutline: Story = {
   args: { loading: true, variant: "outline" },
-  render: (args) => ({ props: args, template: labelTemplate }),
+  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
 /**
@@ -116,19 +125,28 @@ export const LoadingOutline: Story = {
  */
 export const LoadingWithoutRecursicaLoader: Story = {
   args: { loading: true, useRecursicaLoader: false },
-  render: (args) => ({ props: args, template: labelTemplate }),
+  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
-/** `icon`: a `TemplateRef` rendered via `*ngTemplateOutlet` — see class doc comment. */
-export const WithIcon: Story = {
+/**
+ * `icon`: a `TemplateRef` rendered via `*ngTemplateOutlet` — see class doc
+ * comment. Same magnifying-glass SVG as the genesis adapter's own
+ * `TextWithIcon`/`IconOnly` stories, for a direct visual comparison.
+ */
+const searchIconTemplate = `
+  <ng-template #searchIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  </ng-template>
+`;
+
+export const TextWithIcon: Story = {
   render: () => ({
     template: `
-      <ng-template #star>
-        <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor" aria-hidden="true">
-          <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" />
-        </svg>
-      </ng-template>
-      <rec-button [icon]="star">With icon</rec-button>
+      ${searchIconTemplate}
+      <rec-button variant="text" [icon]="searchIcon">Text With Icon</rec-button>
     `,
   }),
 };
@@ -137,12 +155,8 @@ export const WithIcon: Story = {
 export const IconOnly: Story = {
   render: () => ({
     template: `
-      <ng-template #star>
-        <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor" aria-hidden="true">
-          <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" />
-        </svg>
-      </ng-template>
-      <rec-button [icon]="star" [iconOnly]="true" ariaLabel="Favorite"></rec-button>
+      ${searchIconTemplate}
+      <rec-button [icon]="searchIcon" [iconOnly]="true" ariaLabel="Search"></rec-button>
     `,
   }),
 };
