@@ -46,7 +46,10 @@
     "version": "changeset version",
     "release": "changeset publish",
     "storybook": "ng run adapter-angular-material:storybook",
-    "build-storybook": "ng run adapter-angular-material:build-storybook"
+    "build-storybook": "ng run adapter-angular-material:build-storybook",
+    "adapter-tester": "adapter-tester --serve",
+    "adapter-tester:automated": "adapter-tester",
+    "adapter-tester:source-of-truth": "adapter-tester --divergence-only"
   },
   "peerDependencies": {
     "@angular/cdk": "^20.2.14",
@@ -76,6 +79,8 @@
     "@changesets/cli": "^2.29.7",
     "@compodoc/compodoc": "^2.0.0",
     "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.63.0",
+    "@recursica/adapter-tester": "^5.1.4",
     "@storybook/addon-docs": "9.1.20",
     "@storybook/addon-onboarding": "9.1.20",
     "@storybook/angular": "9.1.20",

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/borderux/recursica/main/packages/adapter-tester/src/adapter-tester.schema.json",
+  "storybook": {
+    "port": 6007,
+    "command": "npx ng run adapter-angular-material:storybook --port 6007"
+  }
+}

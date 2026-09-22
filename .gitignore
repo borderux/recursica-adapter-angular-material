@@ -40,3 +40,9 @@ storybook-static
 # architect targets (angular.json) regenerate on every run via
 # `compodoc: true`/`compodocArgs` — a build artifact, not source.
 projects/adapter-angular-material/documentation.json
+
+# `adapter-tester` (the CLI) regenerates a throwaway Playwright config/harness under
+# .adapter-tester/ on every run, and writes its own report/results dirs
+.adapter-tester/
+playwright-report/
+test-results/
