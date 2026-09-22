@@ -18,25 +18,36 @@ import { LayerComponent } from "../src/lib/layer/layer.component";
  * reference's own `MantineProvider > ColorSchemeWrapper > Layer` nesting
  * order.
  *
- * `<ng-content>` appearing in both the `@if` and `@else` branches is valid
- * Angular (confirmed via a real `ng build`, not assumed) — content
- * projection resolves once regardless of how many `<ng-content>` markers
- * reference it; this is unrelated to the old, genuinely-unsupported
- * `<ng-content *ngIf="...">` structural-directive-on-ng-content
- * restriction.
+ * ## Real, live-caught bug: `<ng-content>` split across `@if`/`@else` renders nothing
+ *
+ * A first draft put `<ng-content>` in both the `@if` and `@else` branches
+ * (one inside `<rec-layer>`, one bare) — this compiled cleanly (`ng build`
+ * is a static/AOT check, not proof of correct runtime projection) but
+ * broke at runtime: `@storybook/angular`'s own `componentWrapperDecorator`
+ * generates this wrapper's real template by string-composing the story's
+ * own template as this component's projected content (confirmed by reading
+ * `componentWrapperDecorator`'s compiled source directly, not assumed) —
+ * with two conditionally-included `<ng-content>` outlets, every story
+ * rendered as a bare `rec-layer` with nothing inside it, live-confirmed by
+ * the repo owner. Fixed by using a single, always-present, unconditional
+ * `<ng-content>` — `rec-layer` always renders, toggling its own existing
+ * `contentsOnly` input (already a real `@Input()` on `LayerComponent` —
+ * `display: contents`, no box, no `data-recursica-layer` attribute) for the
+ * `withLayer: false` case instead of conditionally omitting `<rec-layer>`/
+ * `<ng-content>` from the render tree at all.
  */
 @Component({
   selector: "storybook-layer-wrapper",
   imports: [LayerComponent],
   encapsulation: ViewEncapsulation.None,
   template: `
-    @if (withLayer) {
-      <rec-layer [layer]="layer" style="padding: 48px; display: block;">
-        <ng-content />
-      </rec-layer>
-    } @else {
+    <rec-layer
+      [layer]="layer"
+      [contentsOnly]="!withLayer"
+      [style]="withLayer ? 'padding: 48px; display: block;' : null"
+    >
       <ng-content />
-    }
+    </rec-layer>
   `,
 })
 export class StorybookLayerWrapperComponent {
