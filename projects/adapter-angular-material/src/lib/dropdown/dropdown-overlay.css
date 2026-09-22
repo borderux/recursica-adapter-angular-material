@@ -1,0 +1,188 @@
+/*
+ * Recursica Dropdown — global overlay styling.
+ *
+ * The options panel renders via `@angular/cdk/overlay`'s
+ * `CdkConnectedOverlay` (see `dropdown.component.ts`'s class doc comment),
+ * appended into `cdk-overlay-container` at the end of `<body>`. The initial
+ * assumption — that because the `<ng-template cdkConnectedOverlay>` is
+ * declared inside `DropdownComponent`'s own template, its stamped content
+ * would carry `DropdownComponent`'s own `_ngcontent-<hash>` attribute and
+ * be reachable by normal `Emulated`-scoped CSS — was wrong, confirmed live
+ * (Playwright DOM inspection: `.root` and the open panel's `.dropdown`/
+ * `.option` carried two *different* `_ngcontent-*` attributes). So this
+ * needs the same real, global, unscoped stylesheet treatment as
+ * `menu-overlay.css`/`tooltip-overlay.css` — a consuming app imports it
+ * once (see `SETUP.md`).
+ *
+ * Every selector is scoped under `.rec-dropdown-panel` (applied directly
+ * in `dropdown.component.ts`'s template, alongside `.dropdown`) and gated
+ * behind `[data-recursica-theme]`, so these rules never affect a plain,
+ * non-Recursica CDK overlay panel elsewhere in the consuming app.
+ */
+
+[data-recursica-theme] .rec-dropdown-panel {
+  overflow: auto;
+  max-height: 320px;
+  box-sizing: border-box;
+  background-color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_background-color
+  );
+  border: 1px solid
+    var(--recursica_ui-kit_components_dropdown_properties_colors_border-color);
+  border-radius: var(
+    --recursica_ui-kit_components_dropdown_properties_border-radius
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_dropdown_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_dropdown_properties_vertical-padding
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .option {
+  cursor: pointer;
+  font-family: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-weight
+  );
+  color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_text-color
+  );
+  padding: var(
+      --recursica_ui-kit_components_menu-item_properties_vertical-padding
+    )
+    var(--recursica_ui-kit_components_menu-item_properties_horizontal-padding);
+  margin-bottom: var(--recursica_ui-kit_components_menu_properties_item-gap);
+}
+
+[data-recursica-theme] .rec-dropdown-panel .option:last-of-type {
+  margin-bottom: 0;
+}
+
+[data-recursica-theme] .rec-dropdown-panel .option[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .option[data-hovered="true"] {
+  background-color: color-mix(
+    in srgb,
+    var(--recursica_brand_states_hover_color)
+      calc(var(--recursica_brand_states_hover_opacity) * 100%),
+    transparent
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .option[data-selected="true"] {
+  background-color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_text-color
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionContent {
+  display: flex;
+  align-items: center;
+  gap: var(--recursica_ui-kit_components_menu-item_properties_icon-text-gap);
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionIcon {
+  display: flex;
+  flex-shrink: 0;
+  width: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  height: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_leading-icon-color
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+[data-recursica-theme]
+  .rec-dropdown-panel
+  .option[data-selected="true"]
+  .optionIcon {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_leading-icon-color
+  );
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--recursica_ui-kit_components_menu-item_properties_text-gap);
+}
+
+/* `overflow-clip-margin` gives ink a small bleed allowance — see Chip's IMPLEMENTATION_NOTES.md for why plain `hidden` clips descenders (e.g. "g"). */
+[data-recursica-theme] .rec-dropdown-panel .optionLabel {
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionTextWrap .optionLabel,
+[data-recursica-theme]
+  .rec-dropdown-panel
+  .optionTextWrap
+  .optionSupportingText {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+[data-recursica-theme] .rec-dropdown-panel .optionSupportingText {
+  font-family: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_line-height
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_supporting-text-color
+  );
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-recursica-theme]
+  .rec-dropdown-panel
+  .option[data-selected="true"]
+  .optionSupportingText {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_supporting-text-color
+  );
+}

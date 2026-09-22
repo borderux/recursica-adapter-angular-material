@@ -1,1 +1,12 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Text.module.css`. Same shape as
+ * `heading.component.css` — see that file's own header comment for why the
+ * actual typography comes from a pre-existing global utility-class family
+ * applied in the template, not scoped component CSS.
+ */
+
+.root {
+  /* HARDCODE: balances wrapped line lengths (product decision, not a design token — matches the
+     genesis reference's own identical hardcode). */
+  text-wrap: balance;
+}

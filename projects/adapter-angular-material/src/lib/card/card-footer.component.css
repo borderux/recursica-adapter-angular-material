@@ -1,0 +1,23 @@
+.root {
+  box-sizing: border-box;
+  border-top-style: solid;
+}
+
+:host-context([data-recursica-theme]) .root {
+  /* Bleeds to the card's edges — see card.component.ts's `--card-padding` doc comment. */
+  margin: 0 calc(var(--card-padding, 0px) * -1)
+    calc(var(--card-padding, 0px) * -1);
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+
+  background-color: var(
+    --recursica_ui-kit_components_card_properties_colors_footer-background-color
+  );
+  padding: var(--recursica_ui-kit_components_card_properties_footer-padding);
+  border-top-width: var(
+    --recursica_ui-kit_components_card_properties_divider-size
+  );
+  border-top-color: var(
+    --recursica_ui-kit_components_card_properties_colors_divider-color
+  );
+}

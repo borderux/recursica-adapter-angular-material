@@ -1,1 +1,226 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `TimePicker.module.css`, adapted for a
+ * single plain masked `<input>` instead of Mantine's 3-way
+ * hour/minute/second `SpinInput` group — no `.fieldsGroup` height-collapse
+ * workaround needed here as a result (there's only ever one input, its own
+ * padding/height live directly on `.timeWrapper`). See
+ * `time-picker-control.component.ts`'s class doc comment for the full
+ * masking-scope reasoning.
+ *
+ * Structural rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ * The AM/PM `rec-dropdown` draws its own border/background/padding entirely
+ * from its own component CSS — `.amPmSelect` here only controls its size/
+ * alignment within this flex row (its actual width override is applied via
+ * `overStyled`/`overStyle` in the control component's template, not here).
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in TimePicker.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_time-picker_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  width: fit-content;
+}
+
+:host-context([data-recursica-theme]) .root {
+  gap: var(
+    --recursica_ui-kit_components_time-picker_properties_horizontal-padding
+  );
+}
+
+.timeWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  width: fit-content;
+}
+
+:host-context([data-recursica-theme]) .timeWrapper {
+  min-width: var(--recursica_ui-kit_components_time-picker_properties_width);
+  min-height: var(
+    --recursica_ui-kit_globals_form_field_size_single-line-input-height
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_time-picker_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_time-picker_properties_border-size
+  );
+  border-style: solid;
+  border-color: var(
+    --recursica_ui-kit_components_time-picker_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_time-picker_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_time-picker_properties_colors_text-color
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_time-picker_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_time-picker_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_time-picker_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_time-picker_properties_horizontal-padding
+  );
+}
+
+.timeField {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+}
+
+.timeField::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .timeField::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_time-picker_properties_placeholder-opacity
+  );
+}
+
+:host-context([data-recursica-theme]) .timeField {
+  font-family: var(
+    --recursica_ui-kit_components_time-picker_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_time-picker_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_time-picker_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_time-picker_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_time-picker_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_time-picker_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_time-picker_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_time-picker_properties_text_text-transform
+  );
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+:host-context([data-recursica-theme]) .section {
+  left: var(
+    --recursica_ui-kit_components_time-picker_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_time-picker_properties_icon-size);
+  height: var(--recursica_ui-kit_components_time-picker_properties_icon-size);
+}
+
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: 100%;
+  height: 100%;
+  color: var(
+    --recursica_ui-kit_components_time-picker_properties_colors_icon-color
+  );
+}
+
+/* Reserves room in the text flow for the absolutely-positioned leading icon — same technique
+   text-field.component.css/number-input.component.css already use. */
+:host-context([data-recursica-theme]) .timeWrapper[data-with-left-section] {
+  padding-left: calc(
+    var(
+        --recursica_ui-kit_components_time-picker_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_time-picker_properties_icon-size) +
+      var(--recursica_ui-kit_components_time-picker_properties_icon-text-gap)
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .timeWrapper:focus-within {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error="true"] .timeWrapper {
+  border-color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-error="true"] .section svg {
+  color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_error_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled="true"] .timeWrapper {
+  border-color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_opacity
+  );
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled="true"] .section svg {
+  color: var(
+    --recursica_ui-kit_components_time-picker_variants_states_disabled_properties_colors_icon-color
+  );
+}
+
+.timeField:disabled {
+  cursor: not-allowed;
+}

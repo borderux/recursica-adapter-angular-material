@@ -1,1 +1,7 @@
-/* Styling not yet implemented. */
+/*
+ * Intentionally empty. `rec-modal`'s own template renders nothing directly
+ * (`<ng-template>` only, instantiated elsewhere via `MatDialog.open()`) —
+ * every real visual rule lives in `modal-overlay.css`, the global
+ * stylesheet the dialog's portaled content actually needs (see
+ * modal.component.ts's class doc comment for the reachability reasoning).
+ */

@@ -1,0 +1,34 @@
+/*
+ * Ported from the reference's `Panel.module.css`'s `.footer` rule. Real,
+ * normal `Emulated`-scoped component CSS — see
+ * `panel-footer.component.ts`'s class doc comment for why this component
+ * doesn't need the global overlay-CSS treatment `PanelComponent`'s own
+ * chrome does. The reference's own sticky/negative-margin "break out of
+ * body padding" technique isn't needed here: `PanelComponent`'s own
+ * `.bodyWrapper`/`.scrollArea` split (mirroring `Modal`'s) already keeps
+ * the footer outside the scrolling area as a normal sibling, not nested
+ * inside the padded scroll container the way the reference's own
+ * `Drawer.Body` does.
+ */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+
+:host-context([data-recursica-theme]) .footer {
+  padding: var(
+      --recursica_ui-kit_components_panel_properties_header-footer-vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_panel_properties_header-footer-horizontal-padding
+    );
+  background-color: var(
+    --recursica_ui-kit_components_panel_properties_colors_footer-background-color
+  );
+  border-top: var(--recursica_ui-kit_components_panel_properties_divider-size)
+    solid
+    var(--recursica_ui-kit_components_panel_properties_colors_divider-color);
+  gap: var(--recursica_ui-kit_components_panel_properties_footer-button-gap);
+}

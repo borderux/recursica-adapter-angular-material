@@ -1,22 +1,36 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { InDevelopmentStubComponent } from "../in-development-stub/in-development-stub.component";
+import { resolveSpacing } from "../utils/recursica-spacing";
 
 /**
  * Recursica `Stack` — Angular Material adapter.
  *
- * STUB (docs/CREATING_AN_ADAPTER.md step 9): no real behavior is
- * implemented yet. Renders the shared `<rec-in-development-stub>`
- * placeholder. See IMPLEMENTATION_NOTES.md in this folder for the
- * integration-report findings this stub was seeded from.
+ * REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10). Same "does
+ * not exist, no design-system CSS at all" finding as `Flex`/`Group` (see
+ * `flex.component.ts`'s class doc comment for the full reasoning — not
+ * repeated here). `Stack` is Mantine's fixed-column-direction layout
+ * primitive, with its own real default CSS (confirmed directly in
+ * `@mantine/core`'s compiled `styles.css`): `align-items: stretch`,
+ * `justify-content: flex-start` — reproduced here as this component's own
+ * defaults.
  */
 @Component({
   selector: "rec-stack",
-  imports: [InDevelopmentStubComponent],
   encapsulation: ViewEncapsulation.Emulated,
-  styleUrl: "./stack.component.css",
-  template: `<rec-in-development-stub componentName="Stack" />`,
+  host: {
+    "[style.display]": "'flex'",
+    "[style.flex-direction]": "'column'",
+    "[style.align-items]": "align",
+    "[style.justify-content]": "justify",
+    "[style.gap]": "resolvedGap",
+  },
+  template: `<ng-content />`,
 })
 export class StackComponent {
-  @Input() gap?: string;
-  @Input() align?: string;
+  @Input() align = "stretch";
+  @Input() justify = "flex-start";
+  @Input() gap = "rec-default";
+
+  get resolvedGap(): string | undefined {
+    return resolveSpacing(this.gap);
+  }
 }

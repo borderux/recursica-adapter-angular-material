@@ -1,1 +1,59 @@
-/* Styling not yet implemented. */
+/*
+ * Ported directly from the genesis adapter's own real Card.module.css
+ * `.root` — same Recursica token names
+ * (`recursica_ui-kit_components_card_properties_*`). Unconditional (no
+ * `appearance` variant) — see card.component.ts's class doc comment.
+ *
+ * Selectors are unprefixed (`.root`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ */
+
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .root {
+  /*
+   * Exposed so CardHeader/CardFooter can bleed edge-to-edge via negative
+   * margins — same technique as the genesis adapter's real
+   * `Card.Section`/`.header`/`.footer` (Mantine's own compiled `Card.css`:
+   * `margin-inline: calc(var(--card-padding) * -1)`), ported here since
+   * this adapter builds Header/Footer from scratch rather than wrapping a
+   * Material sub-component (see card.component.ts's class doc comment).
+   */
+  --card-padding: var(--recursica_ui-kit_components_card_properties_padding);
+
+  --mat-card-elevated-container-color: var(
+    --recursica_ui-kit_components_card_properties_colors_background-color
+  );
+  --mat-card-elevated-container-shape: var(
+    --recursica_ui-kit_components_card_properties_borders_border-radius
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_card_properties_colors_background-color
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_card_properties_borders_border-radius
+  );
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_card_properties_borders_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_card_properties_colors_border-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_card_properties_elevations_elevation
+  );
+
+  padding: var(--recursica_ui-kit_components_card_properties_padding);
+  min-width: var(--recursica_ui-kit_components_card_properties_min-width);
+  max-width: var(--recursica_ui-kit_components_card_properties_max-width);
+  color: var(--recursica_ui-kit_components_card_properties_colors_content);
+  gap: var(--recursica_ui-kit_components_card_properties_section-gap);
+}

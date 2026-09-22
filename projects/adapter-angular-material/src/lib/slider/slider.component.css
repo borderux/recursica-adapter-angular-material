@@ -1,1 +1,435 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the reference's own `Slider.module.css`, hand-built — this
+ * component wraps no Material `mat-slider` (see
+ * `slider-control.component.ts`'s own class doc comment for the rejection
+ * reasoning), so tokens are consumed directly, no `--mat-*` bridging.
+ *
+ * Structural rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ */
+
+.root {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .root {
+  gap: var(--recursica_ui-kit_components_slider_properties_input-gap);
+  margin-top: var(
+    --recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin
+  );
+}
+
+.root[data-disabled] {
+  cursor: not-allowed;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+:host-context([data-recursica-theme]) .icon {
+  width: var(--recursica_ui-kit_components_slider_properties_icon-size);
+  height: var(--recursica_ui-kit_components_slider_properties_icon-size);
+  color: var(--recursica_ui-kit_components_slider_properties_colors_icon-color);
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .icon {
+  color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_icon-color
+  );
+}
+
+.icon > * {
+  width: 100%;
+  height: 100%;
+}
+
+.sliderWrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==== TRACK ==== */
+
+.track {
+  position: relative;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .track {
+  height: var(--recursica_ui-kit_components_slider_properties_track-height);
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_track-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_track
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .track {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track
+  );
+}
+
+.trackFill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+:host-context([data-recursica-theme]) .trackFill {
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_track-active
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_track-border-radius
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .trackFill {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track-active
+  );
+}
+
+/* Step indicators (marks) */
+.stepIndicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .stepIndicator {
+  width: var(
+    --recursica_ui-kit_components_slider_properties_step-indicator-width
+  );
+  height: var(
+    --recursica_ui-kit_components_slider_properties_step-indicator-width
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_step-indicator-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_step-indicator-color
+  );
+}
+
+:host-context([data-recursica-theme]) .stepIndicator[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_active_properties_colors_step-indicator-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .stepIndicator {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_step-indicator-color
+  );
+}
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .stepIndicator[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_step-indicator-color-active
+  );
+}
+
+/* ==== NATIVE RANGE THUMB(S) ====
+ * Made fully transparent except a styled ::-webkit-slider-thumb/::-moz-range-thumb — real
+ * native <input type="range"> semantics (role=slider, keyboard stepping, aria-value* for free)
+ * underneath a fully custom visual thumb. `pointer-events: none` on the input itself (with
+ * `pointer-events: auto` scoped back onto the thumb pseudo-element) lets two overlapping range
+ * inputs coexist for range mode — see slider-control.component.ts's class doc comment for the
+ * documented "click empty track between thumbs doesn't seek" trade-off this implies.
+ */
+.thumbInput {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.thumbInput::-webkit-slider-runnable-track {
+  background: transparent;
+}
+.thumbInput::-moz-range-track {
+  background: transparent;
+}
+
+.thumbInput::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-style: solid;
+}
+.thumbInput::-moz-range-thumb {
+  pointer-events: auto;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-style: solid;
+}
+
+:host-context([data-recursica-theme]) .thumbInput::-webkit-slider-thumb {
+  width: var(--recursica_ui-kit_components_slider_properties_thumb-size);
+  height: var(--recursica_ui-kit_components_slider_properties_thumb-size);
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_thumb-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_thumb
+  );
+  border-width: 0;
+  box-shadow: var(
+    --recursica_ui-kit_components_slider_properties_thumb-elevation
+  );
+}
+:host-context([data-recursica-theme]) .thumbInput::-moz-range-thumb {
+  width: var(--recursica_ui-kit_components_slider_properties_thumb-size);
+  height: var(--recursica_ui-kit_components_slider_properties_thumb-size);
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_thumb-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_thumb
+  );
+  border-width: 0;
+  box-shadow: var(
+    --recursica_ui-kit_components_slider_properties_thumb-elevation
+  );
+}
+
+.thumbInput:focus-visible::-webkit-slider-thumb {
+  outline: none;
+}
+:host-context([data-recursica-theme])
+  .thumbInput:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme])
+  .thumbInput:disabled::-webkit-slider-thumb,
+:host-context([data-recursica-theme]) .thumbInput:disabled::-moz-range-thumb {
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_thumb
+  );
+  cursor: not-allowed;
+}
+
+/* ==== MARK LABELS / MIN-MAX LABELS ==== */
+
+.markLabels,
+.minMaxLabels {
+  position: relative;
+  display: flex;
+}
+
+.minMaxLabels {
+  justify-content: space-between;
+}
+
+:host-context([data-recursica-theme]) .markLabels,
+:host-context([data-recursica-theme]) .minMaxLabels {
+  margin-top: var(
+    --recursica_ui-kit_components_slider_properties_step-indicator-width
+  );
+  font-family: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_slider_properties_min-max-label_text-transform
+  );
+}
+
+.markLabel {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* ==== NUMERIC INPUT(S) ==== */
+
+.numberInput {
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  flex-shrink: 0;
+}
+
+.numberInput::-webkit-outer-spin-button,
+.numberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .numberInput {
+  width: var(--recursica_ui-kit_components_slider_properties_input-width);
+  height: var(--recursica_ui-kit_components_slider_properties_input-height);
+  padding: var(
+      --recursica_ui-kit_components_slider_properties_input-padding-vertical
+    )
+    var(--recursica_ui-kit_components_slider_properties_input-padding-right)
+    var(--recursica_ui-kit_components_slider_properties_input-padding-vertical)
+    var(--recursica_ui-kit_components_slider_properties_input-padding-left);
+  border-width: var(
+    --recursica_ui-kit_components_slider_properties_input-border-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_slider_properties_input-border-radius
+  );
+  border-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_input-border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_properties_colors_input-background-color
+  );
+  color: var(--recursica_ui-kit_components_slider_properties_colors_input-text);
+  font-family: var(
+    --recursica_ui-kit_components_slider_properties_input-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_slider_properties_input-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_slider_properties_input-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_slider_properties_input-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_slider_properties_input-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_slider_properties_input-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_slider_properties_input-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_slider_properties_input-text_text-transform
+  );
+}
+
+.numberInput:focus-visible {
+  outline: none;
+}
+:host-context([data-recursica-theme]) .numberInput:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .numberInput:disabled {
+  border-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-text
+  );
+  border-width: var(
+    --recursica_ui-kit_components_slider_variants_states_disabled_properties_input-border-size
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .numberInput {
+  border-color: var(
+    --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-text
+  );
+  border-width: var(
+    --recursica_ui-kit_components_slider_variants_states_error_properties_input-border-size
+  );
+}
+
+/* ==== READ-ONLY VALUE ==== */
+
+.readOnlyValue {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .readOnlyValue {
+  font-family: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_slider_properties_read-only-value_text-transform
+  );
+}

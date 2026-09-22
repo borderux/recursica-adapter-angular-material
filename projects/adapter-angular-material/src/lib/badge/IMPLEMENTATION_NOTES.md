@@ -1,29 +1,49 @@
-# Badge — Implementation Notes (pre-implementation stub)
+# Badge — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Genuinely does not exist — re-confirmed, not carried over
 
-## Integration report findings
+The stub's own `IMPLEMENTATION_NOTES.md` already flagged `Category: DOES
+NOT EXIST` (`MatBadge` is an overlay _directive_ — `[matBadge]="'4'"`
+decorates a host element with a small corner dot/number, e.g. a
+notification count on an icon — not a freestanding colored label/pill).
+Re-confirmed at build time; no adoption/rejection decision to make since
+nothing exists to adopt or reject. Full custom build, ported directly from
+`Badge.module.css`.
 
-- **Category**: DOES NOT EXIST
-- **Angular Material / CDK candidate**: `MatBadge` (`badge.d.ts`)
-- **Notes**: `MatBadge` is an overlay directive (`[matBadge]="'4'"` decorates a host element with a small corner dot/number, e.g. a notification count on an icon) — not a freestanding colored label/pill component the way Mantine's `Badge` is. There is no Material component for 'a standalone badge/tag element' at all; needs a full custom build.
+## `content`/`color` from the stub's own guess: not built
 
-## First-pass `@Input()` surface (this stub only — not audited)
+The pre-implementation stub guessed `content: string`/`color: string`
+inputs. The real reference takes plain `children` for the label and a
+fixed `variant` union (`"alert" | "primary-color" | "success" | "warning"`,
+driving `data-variant`-gated token colors), not a freeform color string —
+confirmed by reading `Badge.tsx`/`Badge.module.css` directly. This
+component uses `<ng-content>` for the label and a `variant` `@Input()`
+instead, matching the real API.
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## No `leftSection`/`rightSection`
 
-- `content`: `string`
-- `color`: `string`
+Mantine's `Badge` technically accepts them via inherited passthrough, but
+`Badge.module.css` has no styling for either (no icon-size/gap/color token
+wiring at all), and no golden story exercises one. Not built — would be
+unstyled, unexercised scope creep beyond what the reference itself
+supports in practice.
+
+## No polymorphism
+
+Same reasoning as `Avatar`'s identical omission — the reference wraps
+itself in Mantine's `createPolymorphicComponent`; Angular has no direct
+equivalent, and no other component in this adapter offers one either.
+
+## Verification
+
+**Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and
+`eslint` all clean. All 6 golden-matching stories (Default, StaticAlert,
+StaticPrimary, StaticSuccess, StaticWarning, LayerOneAlert) confirmed
+registered and compiling with zero webpack errors in a live Storybook dev
+server (port 6007, isolated from the developer's own 6006 instance).
+
+**Not done, same flag as every component built this session**: no
+browser/Playwright tooling available, so the actual rendered token colors
+were reasoned from the code, not visually verified.

@@ -1,0 +1,156 @@
+/*
+ * Ported from the reference's own `Table.module.css` §3 ("Table Headers").
+ * `:host` is `rec-table-th` itself, styled as `display: table-cell` (see
+ * `table-th.component.ts`'s class doc comment) — selectors here replace
+ * the reference's own `.root thead th` descendant chain, which cannot
+ * reach across this adapter's own component boundaries.
+ */
+
+:host {
+  display: table-cell;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+:host-context([data-recursica-theme]) :host {
+  background-color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_text-color
+  );
+  padding: var(
+      --recursica_ui-kit_components_table-header_properties_padding-vertical
+    )
+    var(
+      --recursica_ui-kit_components_table-header_properties_padding-horizontal
+    );
+  margin-top: var(
+    --recursica_ui-kit_components_table-header_properties_vertical-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_table-header_properties_vertical-margin
+  );
+  border-bottom: var(
+      --recursica_ui-kit_components_table-header_properties_horizontal-divider-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_table-header_properties_colors_horizontal-divider-color
+    );
+
+  font-family: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-header_properties_unsorted-text-style_text-transform
+  );
+}
+
+/* Reproduces the reference's own `.root thead th + th` adjacent-sibling divider —
+   `:host()` accepts a pseudo-class tested against the host itself, so `:not(:first-child)`
+   matches every `<th>` except the row's first, the same set `th + th` would select. */
+:host-context([data-recursica-theme]) :host(:not(:first-child)) {
+  border-left: var(
+      --recursica_ui-kit_components_table-header_properties_vertical-divider-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_table-header_properties_colors_vertical-divider-color
+    );
+}
+
+:host-context([data-recursica-theme]) :host:not([data-sorted="true"]) {
+  background-color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_unsorted-cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_unsorted-text-color
+  );
+}
+
+:host-context([data-recursica-theme]) :host([data-sorted="true"]) {
+  background-color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_sorted-cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-header_properties_colors_sorted-text-color
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-header_properties_sorted-text-style_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]) :host([data-disabled="true"]) {
+  background-color: var(
+    --recursica_ui-kit_components_table-header_variants_states_disabled_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-header_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_table-header_variants_states_disabled_properties_opacity
+  );
+}
+
+/* Currency column header alignment override — no dedicated table-header currency-style
+   text-align token exists, so this reuses the table-cell one, matching the reference's own
+   identical reuse (see Table.module.css's own comment for this exact rule). */
+:host-context([data-recursica-theme]) :host([data-currency="true"]) {
+  text-align: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_text-align
+  );
+}
+
+.sortIcon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+:host-context([data-recursica-theme]) .sortIcon {
+  width: var(--recursica_ui-kit_components_table-header_properties_icon-size);
+  height: var(--recursica_ui-kit_components_table-header_properties_icon-size);
+  margin-left: var(
+    --recursica_ui-kit_components_table-header_properties_label-sort-gap
+  );
+}

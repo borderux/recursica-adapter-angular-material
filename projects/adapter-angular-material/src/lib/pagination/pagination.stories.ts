@@ -2,18 +2,33 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { PaginationComponent } from "./pagination.component";
 
 /**
- * STUB story (docs/CREATING_AN_ADAPTER.md step 9). The "🚧 " title prefix
- * is what makes in-development components visually distinct in Storybook's
- * sidebar — remove it (and rename the title to "UI-Kit/Pagination") only
- * once this component is implemented for real, per step 9 item 7 / step 10
- * item 3.
+ * REAL implementation. 3 golden stories, matching `Pagination.stories.tsx`
+ * exactly — all use only the top-level `<Pagination total ...>` shape (see
+ * the component's own class doc comment for why the reference's granular
+ * `Pagination.Root`/`.Items`/etc. composition isn't built here).
  */
 const meta: Meta<PaginationComponent> = {
-  title: "Components/🚧 Pagination",
+  title: "Components/Pagination",
   component: PaginationComponent,
+  args: {
+    total: 10,
+  },
 };
 export default meta;
 
 type Story = StoryObj<PaginationComponent>;
 
 export const Default: Story = {};
+
+export const WithEdges: Story = {
+  args: {
+    withEdges: true,
+  },
+};
+
+export const WithTextLabels: Story = {
+  args: {
+    withEdges: true,
+    withLabels: true,
+  },
+};

@@ -1,19 +1,57 @@
 import type { Meta, StoryObj } from "@storybook/angular";
+import { moduleMetadata } from "@storybook/angular";
 import { TextComponent } from "./text.component";
 
 /**
- * STUB story (docs/CREATING_AN_ADAPTER.md step 9). The "🚧 " title prefix
- * is what makes in-development components visually distinct in Storybook's
- * sidebar — remove it (and rename the title to "UI-Kit/Text") only
- * once this component is implemented for real, per step 9 item 7 / step 10
- * item 3.
+ * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
+ * stub, so the title uses the `"UI-Kit/<Name>"` convention. Mirrors the
+ * genesis adapter's own `Text.stories.tsx` / `test/golden/ui-kit-text--*.png`.
  */
 const meta: Meta<TextComponent> = {
-  title: "Components/🚧 Text",
+  title: "UI-Kit/Text",
   component: TextComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [TextComponent],
+    }),
+  ],
+  argTypes: {
+    variant: {
+      control: "select",
+      options: [
+        "body",
+        "body-small",
+        "caption",
+        "overline",
+        "subtitle",
+        "subtitle-small",
+      ],
+    },
+  },
 };
 export default meta;
 
 type Story = StoryObj<TextComponent>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: () => ({
+    template: `
+      <rec-text variant="body">This is standard body typography controlled by the central UI-kit boundaries exclusively.</rec-text>
+    `,
+  }),
+};
+
+export const StaticVariations: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <rec-text variant="body">Body (Base paragraph and generic information flow)</rec-text>
+        <rec-text variant="body-small">Body Small (Compacted list items and helper blocks)</rec-text>
+        <rec-text variant="caption">Caption (Data table descriptions or micro-labels)</rec-text>
+        <rec-text variant="overline">Overline (Card contextual pre-headers and categorical tags)</rec-text>
+        <rec-text variant="subtitle">Subtitle (Minor sub-headers avoiding heavy display weights)</rec-text>
+        <rec-text variant="subtitle-small">Subtitle Small (Section anchors deep in hierarchy)</rec-text>
+      </div>
+    `,
+  }),
+};

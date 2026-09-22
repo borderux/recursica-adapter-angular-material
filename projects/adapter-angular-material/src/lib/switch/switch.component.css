@@ -1,1 +1,309 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Switch.module.css` — primitive
+ * (single-switch) rules only. `SwitchGroup`'s own `.groupRoot` rules live
+ * in `switch-group.component.css`.
+ *
+ * Structural rules (position/display/flex) are left ungated; every
+ * token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ *
+ * ## `.input` visually-hidden, not visibly styled — unlike `Checkbox`'s/`Radio`'s own `<input>`
+ *
+ * `Checkbox`/`Radio` style their real `<input>` directly (`appearance: none`
+ * plus a full token-driven box) since the input itself *is* the visible
+ * glyph. `Switch`'s visible look is two separate decorative `<span>`s
+ * (`.track`/`.thumb`) — the reference `Switch.module.css` never declares an
+ * `.input` rule at all (Mantine's own base stylesheet hides/positions the
+ * real `<input>` internally, the same "no Mantine base to inherit" gap
+ * category `checkbox.component.css`'s own header comment already
+ * documents for `.inner`/`.icon`). `.input` here uses the standard
+ * visually-hidden clip-rect technique instead: zero visible footprint,
+ * still real, focusable, and in the tab order, so `:focus-visible + .track`
+ * below still fires from genuine keyboard focus, and Space still natively
+ * toggles a real `<input type="checkbox">` with no custom keydown handler.
+ * Click delegation needs no absolute-positioning hit-test hack either: the
+ * `<label class="body">` wrapper natively forwards any click within it
+ * (track, thumb, label text) to its nested `<input>` — same delegation
+ * `Checkbox`'s/`Radio`'s own `<label class="body">` already relies on.
+ */
+
+.root {
+  display: inline-block;
+  cursor: pointer;
+}
+
+:host-context([data-recursica-theme]) .root {
+  --switch-track-padding: var(
+    --recursica_ui-kit_components_switch_properties_track-inner-padding
+  );
+  --switch-thumb-width: var(
+    --recursica_ui-kit_components_switch_properties_thumb-width
+  );
+  --switch-thumb-height: var(
+    --recursica_ui-kit_components_switch_properties_thumb-height
+  );
+  --switch-track-width: var(
+    --recursica_ui-kit_components_switch_properties_track-width
+  );
+}
+
+.root:has(input:disabled) {
+  cursor: not-allowed;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+}
+
+:host-context([data-recursica-theme]) .body {
+  gap: var(--recursica_ui-kit_components_switch-item_properties_label-gap);
+}
+
+.body.readOnlyDisplay {
+  cursor: default;
+}
+
+.input {
+  /* Standard visually-hidden clip-rect: zero visible footprint, still real
+     and focusable — see class doc comment. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  outline: none;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 150ms ease;
+  cursor: inherit;
+}
+
+:host-context([data-recursica-theme]) .track {
+  width: var(--switch-track-width);
+  height: calc(var(--switch-thumb-height) + (var(--switch-track-padding) * 2));
+  border-radius: var(
+    --recursica_ui-kit_components_switch_properties_track-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_track-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_switch_properties_track-elevation
+  );
+  padding: var(--switch-track-padding);
+  border: none; /* HARDCODE: matches Switch.module.css's own documented hardcode — no border token for the track. */
+}
+
+:host-context([data-recursica-theme]) .root input:checked + .track,
+:host-context([data-recursica-theme]) .track.trackChecked {
+  background-color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_track-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root input:focus-visible + .track {
+  outline: var(--recursica_brand_states_focus_border-size) solid
+    var(--recursica_brand_states_focus_color);
+  outline-offset: var(--recursica_brand_states_focus_margin);
+  box-shadow: 0 0 var(--recursica_brand_states_focus_blur)
+    var(--recursica_brand_states_focus_color);
+}
+
+/* Track/thumb dim per selection state when disabled — mirrors Switch.module.css's `:has()`-based rules. */
+:host-context([data-recursica-theme]) .root:has(input:checked:disabled) .track {
+  opacity: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_selected_variants_states_disabled_properties_opacity
+  );
+}
+:host-context([data-recursica-theme])
+  .root:has(input:disabled):not(:has(input:checked))
+  .track {
+  opacity: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+  );
+}
+
+/*
+ * `.readOnlyDisplay`'s static track/thumb reuse the disabled-state color/
+ * opacity tokens — the honest approximation documented in
+ * switch.component.ts's class doc comment and IMPLEMENTATION_NOTES.md's
+ * "ReadOnlyField gap" section (no dedicated read-only color tokens exist in
+ * the schema either, same gap `Checkbox`'s/`Radio`'s own readOnly
+ * approximation already flagged). Class-driven (`.trackChecked`), not
+ * `:checked`-driven, since the read-only branch renders no real `<input>`.
+ */
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .track:not(.trackChecked) {
+  opacity: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+  );
+}
+:host-context([data-recursica-theme]) .readOnlyDisplay .track.trackChecked {
+  opacity: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_selected_variants_states_disabled_properties_opacity
+  );
+}
+
+.thumb {
+  transition: background-color 150ms ease;
+}
+
+:host-context([data-recursica-theme]) .thumb {
+  width: var(--switch-thumb-width);
+  height: var(--switch-thumb-height);
+  border-radius: var(
+    --recursica_ui-kit_components_switch_properties_thumb-border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_thumb-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_switch_properties_thumb-elevation
+  );
+  border: none; /* HARDCODE: matches Switch.module.css's own documented hardcode — no border token for the thumb. */
+}
+
+:host-context([data-recursica-theme]) .root input:checked + .track .thumb,
+:host-context([data-recursica-theme]) .thumb.thumbChecked {
+  background-color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_thumb-color
+  );
+}
+
+.thumbIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.checkIcon,
+.closeIcon {
+  position: absolute;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+:host-context([data-recursica-theme]) .checkIcon,
+:host-context([data-recursica-theme]) .closeIcon {
+  width: var(--recursica_ui-kit_components_switch_properties_thumb-icon-size);
+  height: var(--recursica_ui-kit_components_switch_properties_thumb-icon-size);
+}
+
+/* Unchecked state: close icon visible, check icon hidden. */
+:host-context([data-recursica-theme]) .checkIcon {
+  opacity: 0;
+  transform: scale(0.5);
+  color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_icon-color
+  );
+}
+:host-context([data-recursica-theme]) .closeIcon {
+  opacity: 1;
+  transform: scale(1);
+  color: var(
+    --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_icon-color
+  );
+}
+
+/* Checked state: check icon visible, close icon hidden. */
+:host-context([data-recursica-theme])
+  .root
+  input:checked
+  + .track
+  .thumb
+  .checkIcon,
+:host-context([data-recursica-theme]) .thumb.thumbChecked .checkIcon {
+  opacity: 1;
+  transform: scale(1);
+}
+:host-context([data-recursica-theme])
+  .root
+  input:checked
+  + .track
+  .thumb
+  .closeIcon,
+:host-context([data-recursica-theme]) .thumb.thumbChecked .closeIcon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.labelWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .labelWrapper {
+  max-width: var(
+    --recursica_ui-kit_components_switch-item_properties_label-max-width
+  );
+}
+
+:host-context([data-recursica-theme]) .root:has(input:disabled) .labelWrapper,
+:host-context([data-recursica-theme]) .readOnlyDisplay .labelWrapper {
+  opacity: var(
+    --recursica_ui-kit_components_switch-item_variants_states_disabled_properties_opacity
+  );
+}
+
+.label {
+  cursor: pointer;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.readOnlyDisplay .label {
+  cursor: default;
+}
+
+:host-context([data-recursica-theme]) .label {
+  font-family: var(
+    --recursica_ui-kit_components_switch-item_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_switch-item_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_switch-item_properties_text_font-weight
+  );
+  font-style: var(
+    --recursica_ui-kit_components_switch-item_properties_text_font-style
+  );
+  line-height: var(
+    --recursica_ui-kit_components_switch-item_properties_text_line-height
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_switch-item_properties_text_letter-spacing
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_switch-item_properties_text_text-transform
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_switch-item_properties_text_text-decoration
+  );
+  color: var(
+    --recursica_ui-kit_components_switch-item_properties_colors_text-color
+  );
+  cursor: inherit;
+}
+
+:host-context([data-recursica-theme]) .root:has(input:disabled) .label,
+:host-context([data-recursica-theme]) .readOnlyDisplay .label {
+  color: var(
+    --recursica_ui-kit_components_switch-item_properties_colors_disabled-text
+  );
+}

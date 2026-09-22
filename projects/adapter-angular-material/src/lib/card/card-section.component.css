@@ -1,0 +1,48 @@
+/*
+ * Ported from the genesis adapter's real behavior: `CardSection` there
+ * composes Mantine's own generic `Card.Section` (real compiled CSS,
+ * `@mantine/core/styles/Card.css`: unconditional `margin-inline:
+ * calc(var(--card-padding) * -1)`, plus conditional negative
+ * `margin-top`/`margin-bottom` on `:first-child`/`:last-child`) with
+ * Recursica's own `.section` class (just a `margin-top` gutter) applied
+ * alongside it — not a replacement. Since there's no Material equivalent
+ * to compose with here, both behaviors are reproduced directly in this
+ * one file. See card.component.ts's `--card-padding` doc comment.
+ */
+.root {
+  box-sizing: border-box;
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .root {
+  margin-inline: calc(var(--card-padding, 0px) * -1);
+  margin-top: var(
+    --recursica_ui-kit_components_card_properties_vertical-gutter
+  );
+}
+
+/*
+ * `:first-child`/`:last-child` on `.root` itself would always match — it's
+ * the only ever child of this component's own single-element template, not
+ * a sibling among other `<rec-card-section>`s. `:host(:first-child)`/
+ * `:host(:last-child)` correctly test this component's own host element's
+ * position among *its* siblings inside `<rec-card>`'s projected content.
+ *
+ * Not `:host-context`-gated: verified live that combining
+ * `:host-context([data-recursica-theme]):host(:first-child)` compiles to a
+ * selector requiring the theme attribute on *this same host element*
+ * (`[data-recursica-theme][_nghost-*]:first-child`) rather than the
+ * intended ancestor-matching form (`data-recursica-theme` only ever lives
+ * on `<html>`, never on `<rec-card-section>` itself) — a real Angular
+ * compiler limitation combining `:host-context()` with `:host()`, distinct
+ * from the separate 3-level-flat-chain quirk documented in
+ * `docs/STYLING_SYSTEM.md` §4. `var(--card-padding, 0px)`'s own fallback
+ * already degrades gracefully with no theme present, so the gate isn't
+ * needed for correctness here anyway.
+ */
+:host(:first-child) .root {
+  margin-top: calc(var(--card-padding, 0px) * -1);
+}
+:host(:last-child) .root {
+  margin-bottom: calc(var(--card-padding, 0px) * -1);
+}

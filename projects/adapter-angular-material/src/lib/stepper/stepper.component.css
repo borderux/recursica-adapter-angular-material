@@ -1,1 +1,171 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the source-of-truth `Stepper.module.css`'s `.root`/`.steps`
+ * rules. Unlike `Tabs`'s per-component CSS split (`.tab`/`.section` need
+ * `:host-context()` to reach a *different* component's `.root`), `.root`
+ * and `.steps` are both rendered by *this* component's own template — no
+ * cross-view boundary here, so `[data-size]`/`[data-orientation]` are
+ * plain attribute selectors, not `:host-context()`. `:host-context(
+ * [data-recursica-theme])` is still needed wherever a rule reads a
+ * `--recursica_*` token (per docs/STYLING_SYSTEM.md §4) — that attribute
+ * lives on `<html>`, a genuine ancestor outside this component either way.
+ *
+ * The `--stepper-*` custom properties declared here (icon/indicator size,
+ * border, font, step-gap, max-text-width, ...) are consumed directly by
+ * `stepper-step.component.css`'s `.step`/`.stepIcon`/`.separator`/etc.
+ * rules with **no** `:host-context()` needed at the consuming end — CSS
+ * custom-property *inheritance* is a real-DOM-tree mechanism, unaffected by
+ * `ViewEncapsulation.Emulated`'s attribute-selector rewriting, the same way
+ * `card.component.css`'s `--card-padding` already reaches `CardHeader`/
+ * `CardFooter` across a component boundary (see `tabs/IMPLEMENTATION_NOTES.md`'s
+ * `leftSection`/`rightSection` section for where that same precedent is
+ * cited). `:host-context()` is only for *conditional selector matching*
+ * (does an ancestor have attribute X), not for consuming an inherited
+ * value — `stepper-step.component.css` only reaches for it where it needs
+ * to know `[data-orientation]` to choose different *structural* CSS, not
+ * to read a token value.
+ */
+
+.root {
+  display: block;
+}
+
+/* ---------------------------------
+   SIZES — mirrors the source-of-truth's `.large`/`.small` blocks.
+--------------------------------- */
+:host-context([data-recursica-theme]) .root[data-size="large"] {
+  --stepper-icon-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size
+  );
+  --stepper-indicator-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size
+  );
+  --stepper-border-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-border-size
+  );
+  --stepper-border-radius: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-border-radius
+  );
+  --stepper-font-family: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_font-family
+  );
+  --stepper-font-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_font-size
+  );
+  --stepper-font-style: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_font-style
+  );
+  --stepper-font-weight: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_font-weight
+  );
+  --stepper-letter-spacing: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_letter-spacing
+  );
+  --stepper-line-height: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_line-height
+  );
+  --stepper-text-decoration: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_text-decoration
+  );
+  --stepper-text-transform: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_text-transform
+  );
+  --stepper-svg-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_completed-icon-size
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-size="small"] {
+  --stepper-icon-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size
+  );
+  --stepper-indicator-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size
+  );
+  --stepper-border-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-border-size
+  );
+  --stepper-border-radius: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-border-radius
+  );
+  --stepper-font-family: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_font-family
+  );
+  --stepper-font-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_font-size
+  );
+  --stepper-font-style: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_font-style
+  );
+  --stepper-font-weight: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_font-weight
+  );
+  --stepper-letter-spacing: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_letter-spacing
+  );
+  --stepper-line-height: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_line-height
+  );
+  --stepper-text-decoration: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_text-decoration
+  );
+  --stepper-text-transform: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_text-transform
+  );
+  --stepper-svg-size: var(
+    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_completed-icon-size
+  );
+}
+
+/* ---------------------------------
+   ORIENTATION — layout of `.steps` + the shared gap/text-width tokens
+   `stepper-step.component.css` consumes for `.separator`/`.stepBody`.
+--------------------------------- */
+.steps {
+  display: flex;
+}
+
+/*
+ * Native CSS nesting (`&`), not a flat `:host-context(...) .root[...] .steps`
+ * chain — per docs/STYLING_SYSTEM.md §4's documented compiler quirk, a flat
+ * 3+-level `:host-context()` descendant chain compiles to a selector
+ * requiring an extra intermediate `[_ngcontent-*]`-only compound that no
+ * real element occupies when `.steps` is `.root`'s *direct* child, so the
+ * rule silently never matches. Nesting avoids it, same fix
+ * `form-control-layout.component.css` already established.
+ */
+:host-context([data-recursica-theme]) .root[data-orientation="horizontal"] {
+  .steps {
+    flex-direction: row;
+    align-items: flex-start;
+    --stepper-step-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_step-gap
+    );
+    --stepper-max-text-width: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_max-text-width
+    );
+    --stepper-indicator-label-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_indicator-label-gap
+    );
+    --stepper-label-description-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_label-description-gap
+    );
+  }
+}
+
+:host-context([data-recursica-theme]) .root[data-orientation="vertical"] {
+  .steps {
+    flex-direction: column;
+    --stepper-step-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_step-gap
+    );
+    --stepper-max-text-width: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_max-text-width
+    );
+    --stepper-indicator-label-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_indicator-label-gap
+    );
+    --stepper-label-description-gap: var(
+      --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_label-description-gap
+    );
+  }
+}

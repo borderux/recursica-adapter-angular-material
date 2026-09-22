@@ -1,1 +1,13 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the reference's own `Timeline.module.css`'s `.root` rule.
+ * `.item`'s own spacing (`margin-top`) lives on `TimelineItemComponent`'s
+ * own stylesheet (`timeline-item.component.css`) — see that file's own
+ * comment for why no shared `--mantine-spacing-xl`-style custom property
+ * is needed here (this component hand-builds the connector directly,
+ * unlike the reference which syncs it with Mantine's own internals).
+ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,290 @@
+/*
+ * Ported from the reference's own `Table.module.css` §1/§2/§4. `:host` is
+ * `rec-table-td` itself, styled as `display: table-cell` (see
+ * `table-td.component.ts`'s class doc comment for why an element selector
+ * with an explicit `display` override, not a real `<td>` tag, is both
+ * required by this repo's eslint config and sufficient for correct table
+ * layout). `:host-context()` rules reach up to the ancestor
+ * `rec-table-tr`'s own state, crossing the `TableTrComponent` component
+ * boundary the same way this adapter's `[data-recursica-theme]` gating
+ * already crosses `RecursicaThemeProvider`'s.
+ */
+
+:host {
+  display: table-cell;
+  box-sizing: border-box;
+  max-width: var(--recursica_ui-kit_components_table-cell_properties_max-width);
+}
+
+:host-context([data-recursica-theme]) :host {
+  padding: var(--recursica_ui-kit_components_table_properties_row-padding)
+    var(--recursica_ui-kit_components_table_properties_padding);
+  border-bottom: var(
+      --recursica_ui-kit_components_table_properties_row-divider-size
+    )
+    solid
+    var(--recursica_ui-kit_components_table_properties_colors_row-divider-color);
+
+  background-color: var(
+    --recursica_ui-kit_components_table-cell_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-cell_properties_colors_text-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_line-height
+  );
+  text-align: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_text-align
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-cell_properties_text-style_text-transform
+  );
+}
+
+/* Reproduces the reference's own `.root th + th`/`.root td + td` adjacent-sibling divider —
+   see table-th.component.css's identical rule for why `:not(:first-child)` on `:host()`
+   is the right translation of a same-component adjacent-sibling selector. */
+:host-context([data-recursica-theme]) :host(:not(:first-child)) {
+  border-left: var(
+      --recursica_ui-kit_components_table_properties_column-divider-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_table_properties_colors_column-divider-color
+    );
+}
+
+/* Currency formatted cell */
+:host-context([data-recursica-theme]) :host([data-currency="true"]) {
+  font-family: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_line-height
+  );
+  text-align: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_text-align
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_text-transform
+  );
+}
+
+/* Disabled — either this cell's own [disabled], or the ancestor <tr>'s [data-disabled].
+   Two chained :host-context() calls (not one compound selector) — each is tested
+   independently against the ancestor chain, so this matches when both an ancestor with
+   [data-recursica-theme] AND an ancestor <tr> with [data-disabled] exist, regardless of
+   their relative position to each other. */
+:host-context([data-recursica-theme]) :host([data-disabled="true"]),
+:host-context([data-recursica-theme]):host-context(
+    rec-table-tr[data-disabled]
+  ) {
+  background-color: var(
+    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_opacity
+  );
+}
+
+/* Striped (even) rows — ancestor <tr> position, crossing TableTrComponent's own boundary. */
+:host-context(rec-table-tr:nth-of-type(even)) {
+  background-color: color-mix(
+    in srgb,
+    var(--recursica_ui-kit_components_table_properties_colors_striped-color)
+      calc(
+        var(
+            --recursica_ui-kit_components_table_properties_opacities_striped-opacity
+          ) *
+          100%
+      ),
+    transparent
+  );
+}
+
+/* Selected row — ancestor <tr>'s own [data-selected]. */
+:host-context(rec-table-tr[data-selected]) {
+  background-color: color-mix(
+    in srgb,
+    var(--recursica_ui-kit_components_table_properties_colors_selected-color)
+      calc(
+        var(
+            --recursica_ui-kit_components_table_properties_opacities_selected-opacity
+          ) *
+          100%
+      ),
+    transparent
+  );
+}
+
+/* Hover row — generic cross-component overlay tokens, matching the reference's own identical
+   choice (Table's dedicated highlight-on-hover token was removed from its schema). */
+:host-context(rec-table-tr:hover) {
+  background-color: color-mix(
+    in srgb,
+    var(--recursica_brand_states_hover_color)
+      calc(var(--recursica_brand_states_hover_opacity) * 100%),
+    transparent
+  );
+}
+
+/* ==========================================
+   FOOTER CELLS — TableTdComponent is reused inside Table.Tfoot (confirmed by reading
+   Table.stories.tsx's own CurrencyColumnWithFooter story directly), so every rule above
+   this point is a body-cell default; :host-context(rec-table-tfoot) below overrides it for footer
+   cells specifically, reproducing the reference's own `.root tfoot td` rule set.
+   ========================================== */
+
+:host-context([data-recursica-theme]):host-context(rec-table-tfoot) {
+  background-color: var(
+    --recursica_ui-kit_components_table-footer_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-footer_properties_colors_text-color
+  );
+  padding: var(
+      --recursica_ui-kit_components_table-footer_properties_padding-vertical
+    )
+    var(
+      --recursica_ui-kit_components_table-footer_properties_padding-horizontal
+    );
+  margin-top: var(
+    --recursica_ui-kit_components_table-footer_properties_vertical-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_table-footer_properties_vertical-margin
+  );
+  border-bottom: none;
+  border-top: var(
+      --recursica_ui-kit_components_table-footer_properties_horizontal-divider-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_table-footer_properties_colors_horizontal-divider-color
+    );
+
+  font-family: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-footer_properties_text-style_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
+    :not(:first-child)
+  ) {
+  border-left: var(
+      --recursica_ui-kit_components_table-footer_properties_vertical-divider-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_table-footer_properties_colors_vertical-divider-color
+    );
+}
+
+:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
+    [data-currency="true"]
+  ) {
+  font-family: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_line-height
+  );
+  /* No table-footer currency-style text-align token exists; reuse the table-cell one, matching
+     the reference's own identical reuse (see Table.module.css's own comment for this rule). */
+  text-align: var(
+    --recursica_ui-kit_components_table-cell_properties_currency-style_text-align
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_table-footer_properties_currency-style_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
+    [data-disabled="true"]
+  ),
+:host-context([data-recursica-theme]):host-context(
+    rec-table-tfoot
+  ):host-context(rec-table-tr[data-disabled]) {
+  background-color: var(
+    --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_colors_cell-color
+  );
+  color: var(
+    --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_opacity
+  );
+}

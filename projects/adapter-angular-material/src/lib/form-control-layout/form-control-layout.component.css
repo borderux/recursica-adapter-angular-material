@@ -1,1 +1,111 @@
-/* Styling not yet implemented. */
+/*
+ * Ported directly from the genesis adapter's own real
+ * FormControlLayout.tsx/.module.css — same Recursica token names
+ * (`recursica_ui-kit_components_label_variants_layouts_*`, note: layout
+ * tokens for this component live under the `label` token tree, not a
+ * `form-control-layout` tree of their own — matching the React reference
+ * exactly, not a mistake here).
+ *
+ * Selectors are unprefixed (`.root`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ *
+ * Nested (native CSS nesting via `&`), not written as flat multi-level
+ * descendant chains: verified live that a flat
+ * `:host-context(...) .root[...] .leftSection[...]` 3-compound chain
+ * compiles to a selector Angular's `ViewEncapsulation.Emulated` rewriter
+ * cannot ever match (it inserts an extra required intermediate
+ * `[_ngcontent-*]`-only compound between `.root` and `.leftSection` that no
+ * element actually sits at, since `.leftSection` is `.root`'s *direct*
+ * child) — a real compiler quirk specific to 3+-level flat chains combined
+ * with `:host-context()`, not present in the 2-level chains this adapter's
+ * other components use. Nesting sidesteps it entirely.
+ */
+
+.root {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  max-width: var(--form-control-max-width, 100%);
+  min-width: var(--form-control-min-width, auto);
+}
+
+:host-context([data-recursica-theme]) .root {
+  margin-bottom: var(
+    --recursica_ui-kit_globals_form_properties_vertical-item-gap
+  );
+}
+
+.root[data-form-layout="stacked"] {
+  flex-direction: column;
+}
+
+.root[data-form-layout="side-by-side"] {
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.leftSection {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+:host-context([data-recursica-theme]) .root[data-form-layout="stacked"] {
+  .leftSection {
+    padding-bottom: var(
+      --recursica_ui-kit_components_label_variants_layouts_stacked_properties_bottom-padding
+    );
+    min-height: var(
+      --recursica_ui-kit_components_label_variants_layouts_stacked_properties_min-height
+    );
+
+    &[data-size="default"] {
+      width: var(
+        --recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_default_properties_width
+      );
+    }
+    &[data-size="small"] {
+      width: var(
+        --recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_small_properties_width
+      );
+    }
+  }
+}
+
+:host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] {
+  .leftSection {
+    padding-top: var(
+      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding
+    );
+    padding-bottom: var(
+      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding
+    );
+    min-height: var(
+      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_min-height
+    );
+    margin-right: var(
+      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_gutter
+    );
+
+    &[data-size="default"] {
+      width: var(
+        --recursica_ui-kit_components_label_variants_layouts_side-by-side_variants_sizes_default_properties_width
+      );
+    }
+    &[data-size="small"] {
+      width: var(
+        --recursica_ui-kit_components_label_variants_layouts_side-by-side_variants_sizes_small_properties_width
+      );
+    }
+  }
+}

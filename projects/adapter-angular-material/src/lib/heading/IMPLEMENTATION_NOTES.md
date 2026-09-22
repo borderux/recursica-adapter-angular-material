@@ -1,28 +1,50 @@
-# Heading — Implementation Notes (pre-implementation stub)
+# Heading — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Genuinely does not exist — the stub's own suggested shape is what got built
 
-## Integration report findings
+The stub's own `IMPLEMENTATION_NOTES.md` confirmed `Category: DOES NOT
+EXIST` (Sass typography mixins only, no component-level typography
+primitive in Material at all) and suggested "`<rec-heading [order]>`
+rendering a native `<h1>`–`<h6>` with Recursica's own typography classes" —
+re-confirmed at build time, and exactly what this component does.
 
-- **Category**: DOES NOT EXIST
-- **Angular Material / CDK candidate**: _(none — Sass typography mixins only, not a component; see Q6)_
-- **Notes**: Same conclusion as Text (Q6) — no component-level typography primitive exists in Material at all. Build `<rec-heading [order]>` rendering a native `<h1>`–`<h6>` with Recursica's own typography classes, from scratch.
+## `.recursica_brand_typography_h{order}` — a pre-existing global utility class
 
-## First-pass `@Input()` surface (this stub only — not audited)
+`Heading.tsx` applies `recursica_brand_typography_h${order}` as a plain
+class name, not a component-scoped CSS variable. Confirmed these classes
+already exist in this adapter's own `recursica_variables_scoped.css`
+(`.recursica_brand_typography_h1` through `h6`) — real rules already
+shipping globally, nothing this component needs to define itself. The one
+real exception to this adapter's usual `:host-context([data-recursica-theme])`-gated
+per-component token-CSS pattern, because that's genuinely what the
+reference does too — not a shortcut taken here.
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## Six `@switch` branches instead of a dynamic tag name
 
-- `order`: `1 | 2 | 3 | 4 | 5 | 6`
+Angular templates can't bind an element's tag name dynamically. Same
+category of constraint `Avatar`'s three mutually-exclusive display-mode
+branches document for itself — six near-identical `<h1>`–`<h6>` branches
+are the direct translation.
+
+## `text-wrap: balance`, nothing else — no margin reset added
+
+Ported the reference's own single hardcoded declaration
+(`text-wrap: balance`, a UX decision per its own doc comment, not a design
+token) exactly. Deliberately did **not** add a `margin: 0` reset even
+though native `<h1>`–`<h6>` carry real browser default margins — the
+reference's own `Heading.module.css` doesn't reset it either, so adding
+one here would be an unrequested embellishment beyond what's being ported.
+
+## Verification
+
+**Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and
+`eslint` all clean. Both golden-matching stories (Default,
+StaticVariations) confirmed registered and compiling with zero webpack
+errors in a live Storybook dev server (port 6007, isolated from the
+developer's own 6006 instance).
+
+**Not done, same flag as every component built this session**: no
+browser/Playwright tooling available, so the actual rendered typography
+was reasoned from the CSS, not visually verified.

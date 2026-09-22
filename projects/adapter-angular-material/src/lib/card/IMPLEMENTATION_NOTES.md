@@ -1,28 +1,43 @@
-# Card — Implementation Notes (pre-implementation stub)
+# Card — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: real implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+Wraps `mat-card` for the root only — its real compiled template is just
+`<ng-content></ng-content>` (confirmed in `@angular/material/fesm2022/card.mjs`),
+no CDK Overlay involved, so this adapter's scoped CSS reaches it normally
+like any plain element.
 
-## Integration report findings
+`appearance` (`outlined`/`filled`/`raised`) is never exposed — Recursica's
+Card always applies its own border/background/elevation tokens
+unconditionally, matching the genesis adapter's own `UNSUPPORTED_PROPS`
+strip of the equivalent Mantine knobs.
 
-- **Category**: EASY
-- **Angular Material / CDK candidate**: `MatCard` (+ `.Header`/`.Title`/`.Subtitle`/`.Content`/`.Actions`/`.Footer`, `MatCardTitleGroup`) (`card.d.ts`)
-- **Notes**: Real compound match: `appearance` (`outlined`/`raised`), sub-components for header/title/content/actions/footer/avatar slotting. Notes flag building this should resolve two known `Grid` `adapter-tester` failures as a side effect (per the decisions log) — worth checking once `Grid` is real too.
+## `Header`/`Footer`/`Content`/`Section`: built from scratch, not `mat-card-*`
 
-## First-pass `@Input()` surface (this stub only — not audited)
+Material's `mat-card-header`/`mat-card-content`/`mat-card-actions` carry
+fixed structural assumptions (an avatar + title-group split, hardcoded
+16px paddings not token-driven) that don't match Recursica's flat
+header/footer/content/section model — same reasoning the genesis adapter
+already applies (its own `CardHeader`/`CardFooter`/`CardContent` are styled
+wrappers around Mantine's generic `Card.Section`/a plain `<div>`, not any
+Mantine-specific header/title/avatar sub-components).
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## Edge-to-edge bleed: replicated from Mantine's real compiled CSS
 
-- `appearance`: `'outlined' | 'raised'`
+The genesis adapter's `CardHeader`/`CardFooter`/`CardSection` all compose
+Mantine's own generic `Card.Section`, which bleeds edge-to-edge via
+negative margins (confirmed in the real compiled
+`@mantine/core/styles/Card.css`: `margin-inline: calc(var(--card-padding) * -1)`,
+plus conditional negative `margin-top`/`margin-bottom` on
+`:first-child`/`:last-child`). Since there's no Material equivalent to
+compose with here, this behavior is reproduced directly: `card.component.ts`
+declares a `--card-padding` custom property (inherited by any real DOM
+descendant regardless of Angular component boundaries), and
+Header/Footer/Section each apply the matching negative margins.
+
+`CardSection` specifically needs `:host(:first-child)`/`:host(:last-child)`,
+not plain `:first-child`/`:last-child` on its own inner `.root` — `.root` is
+always the sole child of its own component's single-element template, never
+a sibling among other `<rec-card-section>`s; `:host()` correctly tests this
+component's own host element's position among _its_ siblings inside
+`<rec-card>`'s projected content.

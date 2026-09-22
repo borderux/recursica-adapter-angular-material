@@ -1,0 +1,375 @@
+/*
+ * Ported from the source-of-truth `Stepper.module.css`'s `.step`/`.stepIcon`/
+ * `.stepCompletedIcon`/`.stepBody`/`.stepLabel`/`.stepDescription`/
+ * `.separator`/`.verticalSeparator` rules. `[data-completed]`/
+ * `[data-progress]`/`[data-allow-click]`/`[data-last]` are this component's
+ * *own* attributes (set directly in `stepper-step.component.ts`), so those
+ * need no `:host-context()` — plain selectors reach them normally, same
+ * convention as `tabs-tab.component.css`'s `[data-active]`/`:disabled`.
+ * `[data-orientation]`/`[data-size]` live on `<rec-stepper>`'s `.root`, a
+ * different component's view, so rules that need to know either use
+ * `:host-context()` to cross that boundary — but only where a genuinely
+ * different *structural* rule is needed; `--stepper-*` custom-property
+ * *values* (icon size, gaps, ...) are already available here via plain CSS
+ * inheritance with no gating at all (see `stepper.component.css`'s header
+ * comment).
+ *
+ * `:host { display: contents; }` below is this component's own answer to
+ * the same "how does a hand-built compound component's separate pieces end
+ * up in the right flex container" problem `Tabs` solved differently
+ * (`TabsListComponent` owns a real `.list` wrapper) — see
+ * `stepper-step.component.ts`'s class doc comment for the full reasoning.
+ */
+
+:host {
+  display: contents;
+}
+
+/* ---------------------------------
+   STEP BUTTON
+--------------------------------- */
+.step {
+  display: flex;
+  flex-direction: row;
+  cursor: default;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-align: start;
+  appearance: none;
+}
+
+.step[data-allow-click] {
+  cursor: pointer;
+}
+
+:host-context([data-orientation="horizontal"]) .step {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--stepper-indicator-label-gap);
+}
+
+:host-context([data-orientation="vertical"]) .step {
+  gap: var(--stepper-indicator-label-gap);
+  padding-bottom: var(--stepper-step-gap);
+}
+
+.step[data-last] {
+  padding-bottom: 0;
+}
+
+/* Focus ring, same convention as tabs-tab.component.css. */
+.step:focus-visible {
+  outline: none;
+}
+:host-context([data-recursica-theme]) .step:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+/* ---------------------------------
+   STEP WRAPPER + INDICATOR
+   `position: relative` is what makes `.verticalSeparator`'s `top`/`bottom`
+   absolute positioning (below) measure from this element; default
+   `align-items: stretch` on `.step` (never overridden) is what gives this
+   wrapper a *stretched* height matching the tallest sibling in the row
+   (`.stepBody`, when its description wraps) — see `stepper-step.component.ts`'s
+   class doc comment / `IMPLEMENTATION_NOTES.md` for why that's load-bearing
+   for the vertical connector line's height.
+--------------------------------- */
+.stepWrapper {
+  position: relative;
+}
+
+.stepIcon {
+  width: var(--stepper-indicator-size);
+  height: var(--stepper-indicator-size);
+  min-width: var(--stepper-indicator-size);
+  min-height: var(--stepper-indicator-size);
+  border-style: solid;
+  border-width: var(--stepper-border-size);
+  border-radius: 50%;
+
+  font-family: var(--stepper-font-family);
+  font-size: var(--stepper-font-size);
+  font-style: var(--stepper-font-style);
+  font-weight: var(--stepper-font-weight);
+  letter-spacing: var(--stepper-letter-spacing);
+  line-height: var(--stepper-line-height);
+  text-decoration: var(--stepper-text-decoration);
+  text-transform: var(--stepper-text-transform);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .stepIcon {
+  background-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-text
+  );
+}
+
+:host-context([data-recursica-theme]) .stepIcon[data-completed] {
+  background-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .stepIcon[data-progress] {
+  background-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-text
+  );
+}
+
+.stepCompletedIcon svg {
+  width: var(--stepper-svg-size);
+  height: var(--stepper-svg-size);
+}
+
+:host-context([data-recursica-theme]) .stepCompletedIcon {
+  color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-text
+  );
+}
+
+/* ---------------------------------
+   CONNECTORS
+--------------------------------- */
+
+/* Horizontal — a sibling flex item between two `.step` buttons (rendered
+   only for horizontal orientation, and only when this isn't the last step
+   — see the `@if` in stepper-step.component.ts's template). */
+.separator {
+  border: none;
+  flex: 1;
+  min-width: 20px;
+  align-self: flex-start;
+  margin-top: calc(var(--stepper-indicator-size) / 2 - 1px);
+  margin-bottom: 0;
+  /* Pulls the line in from the full `--stepper-max-text-width` step-body
+     width down to the narrower indicator's own width, so it visually
+     connects at the *icon's* horizontal edges rather than the wider label
+     column's — ported directly from the source-of-truth's identical
+     negative-margin technique (which fully replaces, not adds to, its own
+     base `margin: 0 var(--stepper-step-gap)` rule — this component only
+     ever renders `.separator` for horizontal orientation, so that base
+     rule's left/right values would always be dead code here and are
+     omitted rather than ported literally). */
+  margin-left: calc(
+    -1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2
+  );
+  margin-right: calc(
+    -1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2
+  );
+}
+
+:host-context([data-recursica-theme]) .separator {
+  background-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color
+  );
+  height: var(
+    --recursica_ui-kit_components_stepper_properties_upcoming-connector-size
+  );
+}
+
+:host-context([data-recursica-theme]) .separator[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_stepper_properties_colors_completed-connector-color
+  );
+  height: var(
+    --recursica_ui-kit_components_stepper_properties_completed-connector-size
+  );
+}
+
+/* Vertical — lives *inside* this step's own `.stepWrapper`, spanning from
+   this step's own indicator down to the top of the next step's indicator
+   (only rendered when this isn't the last step). `top`/`bottom` both set on
+   an absolutely-positioned element with `height: auto` computes the height
+   from the containing block (`.stepWrapper`, stretched to the row's tallest
+   sibling — see that rule's own comment above): `top: var(--stepper-icon-size)`
+   starts the line at the bottom of the indicator, `bottom:
+   calc(-1 * var(--stepper-step-gap))` extends it *below* `.stepWrapper`'s
+   own stretched bottom edge by exactly one step-gap, landing it at the top
+   of the next step's indicator — confirmed against the live rendered
+   output, see IMPLEMENTATION_NOTES.md. */
+.verticalSeparator {
+  position: absolute;
+  top: var(--stepper-icon-size);
+  bottom: calc(-1 * var(--stepper-step-gap));
+  left: calc(var(--stepper-indicator-size) / 2);
+  width: 0;
+}
+
+:host-context([data-recursica-theme]) .verticalSeparator {
+  border-inline-start: var(
+      --recursica_ui-kit_components_stepper_properties_upcoming-connector-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color
+    );
+}
+
+:host-context([data-recursica-theme]) .verticalSeparator[data-active] {
+  border-inline-start: var(
+      --recursica_ui-kit_components_stepper_properties_completed-connector-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_stepper_properties_colors_completed-connector-color
+    );
+}
+
+/* ---------------------------------
+   STEP BODY (label + description)
+--------------------------------- */
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--stepper-max-text-width);
+}
+
+:host-context([data-orientation="horizontal"]) .stepBody {
+  width: var(--stepper-max-text-width);
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 0;
+  gap: var(--stepper-label-description-gap);
+}
+
+:host-context([data-orientation="vertical"]) .stepBody {
+  margin-left: var(--stepper-indicator-label-gap, 0px);
+  gap: var(--stepper-label-description-gap);
+}
+
+:host-context([data-orientation="horizontal"]) .stepLabel,
+:host-context([data-orientation="horizontal"]) .stepDescription {
+  width: max-content;
+  max-width: var(--stepper-max-text-width);
+  text-align: center;
+  white-space: normal;
+}
+
+.stepLabel {
+  font-family: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_stepper_properties_label-text_text-transform
+  );
+}
+
+.stepDescription {
+  font-family: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_stepper_properties_description-text_text-transform
+  );
+}
+
+/* State colors — `[data-completed]`/`[data-progress]` live on `.step`
+   itself (this component's own root button), and `.stepLabel`/
+   `.stepDescription` are its own descendants too — no `:host-context()`
+   would be needed for the selector to *match* at all (unlike Tabs's
+   cross-component-view cases), it's used here purely for the
+   `[data-recursica-theme]` specificity-boost per docs/STYLING_SYSTEM.md §4.
+   Written with native CSS nesting (`&`), not a flat 3-compound
+   `:host-context(theme) .step[...] .stepLabel` descendant chain, per that
+   same doc's documented compiler quirk — see stepper.component.css's
+   header comment for the identical fix applied there. */
+:host-context([data-recursica-theme]) {
+  .step[data-completed] {
+    .stepLabel {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_completed-label-color
+      );
+    }
+    .stepDescription {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_completed-description-color
+      );
+    }
+  }
+  .step[data-progress] {
+    .stepLabel {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_current-label-color
+      );
+    }
+    .stepDescription {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_current-description-color
+      );
+    }
+  }
+  .step:not([data-completed]):not([data-progress]) {
+    .stepLabel {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_upcoming-label-color
+      );
+    }
+    .stepDescription {
+      color: var(
+        --recursica_ui-kit_components_stepper_properties_colors_upcoming-description-color
+      );
+    }
+  }
+}

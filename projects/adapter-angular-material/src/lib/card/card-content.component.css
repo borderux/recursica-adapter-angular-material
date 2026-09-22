@@ -1,0 +1,36 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0;
+}
+
+:host-context([data-recursica-theme]) .root {
+  gap: var(--recursica_ui-kit_components_card_properties_vertical-gutter);
+
+  font-family: var(
+    --recursica_ui-kit_components_card_properties_content-style_fontFamily
+  );
+  font-size: var(
+    --recursica_ui-kit_components_card_properties_content-style_fontSize
+  );
+  font-style: var(
+    --recursica_ui-kit_components_card_properties_content-style_fontStyle
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_card_properties_content-style_fontWeight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_card_properties_content-style_letterSpacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_card_properties_content-style_lineHeight
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_card_properties_content-style_textCase
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_card_properties_content-style_textDecoration
+  );
+}

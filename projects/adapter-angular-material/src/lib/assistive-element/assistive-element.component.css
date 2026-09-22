@@ -1,1 +1,124 @@
-/* Styling not yet implemented. */
+/*
+ * Ported directly from the genesis adapter's own real
+ * AssistiveElement.module.css (same Recursica token names,
+ * `recursica_ui-kit_components_assistive-element_*` — no underlying-kit
+ * translation needed here, since there's no underlying Material component
+ * to map onto in the first place, see assistive-element.component.ts's
+ * class doc comment).
+ *
+ * Selectors are unprefixed (`.root`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ */
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+:host-context([data-recursica-theme]) .root {
+  gap: var(
+    --recursica_ui-kit_components_assistive-element_properties_icon-text-gap
+  );
+  margin-top: var(
+    --recursica_ui-kit_components_assistive-element_properties_top-margin
+  );
+  max-width: var(
+    --recursica_ui-kit_components_assistive-element_properties_max-width
+  );
+}
+
+.textWrapper {
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+:host-context([data-recursica-theme]) .textWrapper {
+  font-family: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_assistive-element_properties_text_text-transform
+  );
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .iconWrapper {
+  width: var(
+    --recursica_ui-kit_components_assistive-element_properties_icon-size
+  );
+  height: calc(
+    var(
+        --recursica_ui-kit_components_assistive-element_properties_text_line-height
+      ) *
+      var(
+        --recursica_ui-kit_components_assistive-element_properties_text_font-size
+      )
+  );
+}
+
+:host-context([data-recursica-theme]) .iconWrapper svg {
+  width: var(
+    --recursica_ui-kit_components_assistive-element_properties_icon-size
+  );
+  height: var(
+    --recursica_ui-kit_components_assistive-element_properties_icon-size
+  );
+}
+
+/* ==== VARIANTS ==== */
+
+:host-context([data-recursica-theme]) .root[data-variant="help"] .textWrapper {
+  color: var(
+    --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_text-color
+  );
+}
+:host-context([data-recursica-theme])
+  .root[data-variant="help"]
+  .iconWrapper
+  svg {
+  color: var(
+    --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-variant="error"] .textWrapper {
+  color: var(
+    --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_text-color
+  );
+}
+:host-context([data-recursica-theme])
+  .root[data-variant="error"]
+  .iconWrapper
+  svg {
+  color: var(
+    --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_icon-color
+  );
+}

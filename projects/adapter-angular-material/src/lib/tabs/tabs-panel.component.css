@@ -1,0 +1,16 @@
+/*
+ * The source-of-truth `Tabs.module.css`'s own `.panel` rule is
+ * intentionally empty ("Recursica doesn't define panel colors
+ * intrinsically, leaves it to child content") — this file only adds the
+ * one bit of structural layout Mantine's own base (non-Recursica) Tabs
+ * styling provides for free and this adapter has no equivalent base for:
+ * letting the panel fill the remaining space next to a vertical tab list.
+ */
+.panel {
+  box-sizing: border-box;
+}
+
+:host-context([data-orientation="vertical"]) .panel {
+  flex: 1;
+  min-width: 0;
+}

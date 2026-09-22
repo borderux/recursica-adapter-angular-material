@@ -1,0 +1,6 @@
+/* See table-thead.component.ts's class doc comment for why an explicit `display:
+   table-header-group` (not the real `<thead>` tag) is both necessary and sufficient for
+   correct CSS table layout participation. */
+:host {
+  display: table-header-group;
+}

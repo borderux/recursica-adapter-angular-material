@@ -1,0 +1,269 @@
+/*
+ * Recursica DatePicker — global calendar-popup styling.
+ *
+ * `mat-datepicker`'s calendar (`MatDatepickerContent` → `MatCalendar` →
+ * `MatMonthView`/`MatCalendarHeader`/`MatCalendarBody`) is genuinely
+ * `ViewEncapsulation.None` (confirmed against the compiled source, see
+ * `date-picker-control.component.ts`'s class doc comment) — appended into
+ * `cdk-overlay-container` at the end of `<body>`, same portal mechanism
+ * `Dropdown`/`Menu`/`Tooltip` already needed a global stylesheet for.
+ *
+ * **Real scoping gap, narrower than `Dropdown`/`Menu`/`Tooltip`'s own
+ * overlay CSS**: those components render their own portaled content from
+ * their own template (`<ng-template cdkConnectedOverlay>`), so they can
+ * stamp a custom marker class (`.rec-dropdown-panel`, etc.) directly onto
+ * it — every selector in their overlay CSS is scoped under that marker,
+ * gated by `[data-recursica-theme]`, so a plain non-Recursica CDK overlay
+ * elsewhere is never touched. `MatDatepickerContent` offers no equivalent
+ * hook: I don't own its template, and `MatDatepicker.panelClass` only
+ * reaches `<mat-calendar>` itself, not the `mat-datepicker-content` host
+ * (confirmed by reading `MatDatepickerContent`'s compiled template).
+ *
+ * So this file is split in two:
+ *   - `.rec-date-picker-calendar` — a real marker class, applied via
+ *     `panelClass` in `date-picker-control.component.ts`'s template. Every
+ *     calendar-*interior* selector (header, day cells) is safely scoped
+ *     under it, exactly like the other overlay stylesheets.
+ *   - `mat-datepicker-content` itself (the popup surface — background/
+ *     border/shadow/padding) has no such hook, so it's styled by that real,
+ *     stable Angular Material class name directly, gated only by
+ *     `[data-recursica-theme]` — meaning a plain, non-Recursica
+ *     `<mat-datepicker>` used elsewhere inside a Recursica-themed subtree
+ *     would pick up this surface styling too. Documented as a real,
+ *     narrower-than-usual limitation of this one component, not a bug.
+ *
+ * Range-selection states (`data-in-range`/`data-comparison-*`/`data-preview-*`)
+ * are intentionally not styled — matching the reference's own scope limit
+ * (`RecursicaDatePickerProps` doesn't discriminate on `type`, so range mode
+ * isn't reachable through the public API on either adapter; see
+ * DATEPICKER_IMPLEMENTATION_NOTES.md §3 in the genesis reference).
+ *
+ * "Outside month" day dimming (present in the Mantine reference) has no
+ * Angular equivalent to style: `MatMonthView` only renders the current
+ * month's real day cells, filling the leading/trailing offset with blank
+ * label cells, not dimmed adjacent-month day numbers — a real, structural
+ * difference from Mantine's calendar, not a simplification made here.
+ */
+
+[data-recursica-theme] mat-datepicker-content {
+  background-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_background-color
+  );
+  border: var(
+      --recursica_ui-kit_components_hover-card-popover_properties_border-size
+    )
+    solid
+    var(
+      --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+    );
+  border-radius: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_border-radius
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_elevation
+  );
+  font-family: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-family
+  );
+}
+
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-header,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-table-header {
+  color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_content
+  );
+}
+
+/* Month/year label + prev/next nav: functionally buttons, styled with Button's own
+   text-variant (small size) tokens — same mapping as the reference's own
+   .calendarHeaderControl/.calendarHeaderLevel. */
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-previous-button,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button {
+  position: relative;
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_elevation
+  );
+  color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing
+  );
+  height: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
+  );
+  transition: all 0.2s ease;
+}
+
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-previous-button,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button {
+  min-width: var(
+    --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_min-width
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_border-radius
+  );
+  color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color
+  );
+}
+
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button {
+  border-radius: var(
+    --recursica_ui-kit_components_button_variants_content_label_variants_sizes_small_properties_border-radius
+  );
+  padding: 0
+    var(
+      --recursica_ui-kit_components_button_variants_content_label_variants_sizes_small_properties_horizontal-padding
+    );
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-period-button:hover:not(:disabled),
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-previous-button:hover:not(:disabled),
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-next-button:hover:not(:disabled) {
+  background-color: var(--recursica_brand_states_hover_color);
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-period-button:disabled,
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-previous-button:disabled,
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-next-button:disabled {
+  opacity: var(
+    --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_opacity
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_elevation
+  );
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-period-button:focus-visible,
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-previous-button:focus-visible,
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-next-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+/* Day cells: `.mat-calendar-body-cell` is the real <button>; `.mat-calendar-body-cell-content`
+   (a span inside it) is where Material toggles `-selected`/`-today` — see
+   date-picker-control.component.ts's class doc comment for how this was confirmed. */
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell-content {
+  position: relative;
+  color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_content
+  );
+  border-radius: var(--recursica_brand_dimensions_border-radii_default);
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell:disabled
+  .mat-calendar-body-cell-content,
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-disabled
+  .mat-calendar-body-cell-content {
+  opacity: var(--recursica_brand_states_disabled);
+  cursor: not-allowed;
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell:not(:disabled):hover
+  .mat-calendar-body-cell-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--recursica_brand_states_hover_color);
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+/* Today marker: no dedicated token, reuses the popover's own border tokens (same as the reference). */
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell-content.mat-calendar-body-today:not(
+    .mat-calendar-body-selected
+  ) {
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell-content.mat-calendar-body-selected {
+  background-color: var(
+    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color
+  );
+  opacity: 1;
+}
+
+[data-recursica-theme]
+  .rec-date-picker-calendar
+  .mat-calendar-body-cell:focus-visible
+  .mat-calendar-body-cell-content {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}

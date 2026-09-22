@@ -57,7 +57,21 @@ This is the same category of decision Beam-adapter made, and follows from the sa
 
 **Verified live, not just "it compiles"**: added this exact pattern to a real component's CSS, booted the real Storybook instance (every story is already wrapped in the real `RecursicaThemeProvider` via the global decorator — see `.storybook/preview.ts` — so `data-recursica-theme` is genuinely present on `<html>` in every running story, no separate consuming app needed to test this), and confirmed via `getComputedStyle()` that the rule actually matched and applied in the real rendered output. This is not a guaranteed win against a determined consumer (nothing is — see §6/`OVERSTYLING.md`'s honest framing on specificity and injection order), but it raises the bar for the casual/accidental case, which is the actual goal.
 
+**Known compiler quirk: avoid flat 3+-level descendant chains with `:host-context()`.** Verified live on `FormControlLayout`: a flat chain like `:host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] .leftSection[data-size="default"]` compiles to a selector requiring an extra intermediate `[_ngcontent-*]`-only compound between `.root` and `.leftSection` that no element actually occupies when `.leftSection` is `.root`'s _direct_ child — confirmed against the real compiled CSSOM selector text, not guessed. The rule silently never matches (`getComputedStyle` showed the referenced CSS variable resolving fine, but the property itself never applied). 2-level chains (`:host-context(...) .root[...]`) are unaffected — this only bites 3+ levels. Fix: use native CSS nesting (`&`) instead of a flat multi-line chain, matching `button.component.css`'s existing convention:
+
+```css
+:host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] {
+  .leftSection {
+    &[data-size="default"] {
+      width: var(...);
+    }
+  }
+}
+```
+
 This does **not** apply to `Layer`/`RecursicaThemeProvider` themselves — they don't have a "look" to protect the way a real UI component does (same precedent as §6's `RecursicaOverStyled` exemption), so there's no reason to retrofit this onto their existing selectors. Apply it starting with the first component that actually redeclares Material variables (`Button`, per the build order).
+
+**Second known compiler quirk: `:host-context(X):host(Y)` doesn't generate the ancestor-matching form.** Verified live on `CardSection`: `:host-context([data-recursica-theme]):host(:first-child) .root` compiles to `[data-recursica-theme][_nghost-*]:first-child .root[_ngcontent-*]` — requiring the theme attribute on _this same host element_, not the intended ancestor (`data-recursica-theme` only ever lives on `<html>`, never on a component's own host), unlike plain `:host-context([data-recursica-theme]) .root` alone, which correctly generates both the same-element _and_ ancestor comma-separated forms. The rule silently never matched. Distinct from the 3-level-chain quirk above — this one is specific to combining `:host-context()` with `:host()` on the same compound selector. Fix: don't gate structural rules like this behind `:host-context()` at all when the referenced custom property already has a sensible fallback (`var(--foo, <fallback>)`) — the gate isn't needed for correctness once the fallback degrades gracefully with no theme present.
 
 **Theming, decided (`ADAPTER_INTEGRATION_REPORT.md` Q10, Path B)**: rather than Material's default single `mat.theme(...)` call relying on the CSS `color-scheme` property + `light-dark()` function, this adapter's consuming app calls `mat.theme()` **twice**, each scoped under an explicit selector matching the attribute the ported `RecursicaThemeProvider` already sets on `document.documentElement`:
 

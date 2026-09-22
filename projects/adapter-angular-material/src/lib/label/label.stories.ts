@@ -1,19 +1,86 @@
 import type { Meta, StoryObj } from "@storybook/angular";
+import { moduleMetadata } from "@storybook/angular";
 import { LabelComponent } from "./label.component";
 
 /**
- * STUB story (docs/CREATING_AN_ADAPTER.md step 9). The "🚧 " title prefix
- * is what makes in-development components visually distinct in Storybook's
- * sidebar — remove it (and rename the title to "UI-Kit/Label") only
- * once this component is implemented for real, per step 9 item 7 / step 10
- * item 3.
+ * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
+ * stub, so the title uses the `"UI-Kit/<Name>"` convention.
  */
 const meta: Meta<LabelComponent> = {
-  title: "Components/🚧 Label",
+  title: "UI-Kit/Label",
   component: LabelComponent,
+  decorators: [moduleMetadata({ imports: [LabelComponent] })],
+  argTypes: {
+    labelSize: { control: "radio", options: ["default", "small"] },
+    labelAlignment: { control: "radio", options: ["left", "right"] },
+    required: { control: "boolean" },
+    labelWithEditIcon: { control: "boolean" },
+  },
+  args: {
+    labelSize: "default",
+    labelAlignment: "left",
+    required: false,
+    labelWithEditIcon: false,
+  },
 };
 export default meta;
 
 type Story = StoryObj<LabelComponent>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (args) => ({
+    props: args,
+    template: `<rec-label [labelSize]="labelSize" [labelAlignment]="labelAlignment">Email address</rec-label>`,
+  }),
+};
+
+export const Required: Story = {
+  args: { required: true },
+  render: (args) => ({
+    props: args,
+    template: `<rec-label [required]="required">Email address</rec-label>`,
+  }),
+};
+
+export const Optional: Story = {
+  render: (args) => ({
+    props: args,
+    template: `<rec-label [labelOptionalText]="true">Email address</rec-label>`,
+  }),
+};
+
+export const WithEditIcon: Story = {
+  args: { labelWithEditIcon: true },
+  render: (args) => ({
+    props: args,
+    template: `<rec-label [labelWithEditIcon]="labelWithEditIcon">Email address</rec-label>`,
+  }),
+};
+
+export const RightAligned: Story = {
+  args: { labelAlignment: "right" },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="width: 224px;">
+        <rec-label [labelAlignment]="labelAlignment">Email address</rec-label>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * `overStyled` escape hatch: `overClass`/`overStyle` are only forwarded
+ * onto this component's own root `<label>` when `overStyled` is `true` —
+ * see `docs/STYLING_SYSTEM.md` §6.
+ */
+export const OverStyledEscapeHatch: Story = {
+  args: {
+    overStyled: true,
+    overStyle: { color: "#2962ff" },
+  },
+  render: (args) => ({
+    props: args,
+    template: `<rec-label [overStyled]="overStyled" [overStyle]="overStyle">Over-styled label</rec-label>`,
+  }),
+};

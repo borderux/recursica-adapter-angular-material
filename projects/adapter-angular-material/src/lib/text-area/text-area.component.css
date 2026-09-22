@@ -1,1 +1,156 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `TextArea.module.css`. Same box-geometry/
+ * text/state token family as `TextField` (a separate `textarea` token tree,
+ * not a re-use of the `text-field` tree — the reference's own
+ * TEXTAREA_IMPLEMENTATION_NOTES.md calls this out explicitly), plus a
+ * `rows`-token-driven `min-height` formula `TextField` has no equivalent of.
+ *
+ * Structural rules (position/display/flex/box-sizing) are left ungated;
+ * every token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ *
+ * No left/right icon sections — the genesis reference's own `TextArea.tsx`
+ * has no `leftSection`/`rightSection` props (unlike `TextField`), so this
+ * component doesn't need `text-field.component.css`'s `.section` rules.
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in TextArea.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_textarea_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_textarea_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  background: none;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .input {
+  min-height: calc(
+    var(--recursica_ui-kit_components_textarea_properties_rows) *
+      var(--recursica_ui-kit_components_textarea_properties_text_line-height) +
+      2 *
+      var(--recursica_ui-kit_components_textarea_properties_vertical-padding) +
+      2px
+  );
+
+  padding-top: var(
+    --recursica_ui-kit_components_textarea_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_textarea_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_textarea_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_textarea_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_textarea_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_textarea_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_textarea_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_textarea_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_textarea_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_textarea_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_textarea_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_textarea_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_textarea_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_textarea_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_textarea_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_textarea_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_textarea_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_textarea_properties_placeholder-opacity
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_textarea_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_textarea_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_textarea_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_textarea_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_textarea_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_textarea_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_textarea_variants_states_disabled_properties_opacity
+  );
+}

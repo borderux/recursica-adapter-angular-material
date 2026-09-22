@@ -1,29 +1,33 @@
-# Label — Implementation Notes (pre-implementation stub)
+# Label — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: real implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+`MatLabel` (`selector: "mat-label"`) is not a usable standalone component —
+confirmed against its real declaration (`form-field2.mjs`): it's a bare
+marker directive with no template or `for`-handling logic of its own,
+meant only to be placed inside `<mat-form-field>` so `MatFormField`'s own
+`ContentChild` query relocates its projected content into Material's
+internal floating-label slot. Same conclusion as `AssistiveElement` — no
+real Material component to wrap. Built from scratch as a plain `<label>`,
+matching the genesis adapter's real `Label.tsx`/`.module.css` structure and
+tokens (flex + `order`-based layout for text/asterisk/optional-text/action
+area) exactly.
 
-## Integration report findings
+`labelActionArea` is a `TemplateRef`, not a projected-content slot — same
+translation as `Button`'s `icon` (no Angular equivalent for "pass a
+renderable node as a plain `@Input()` value").
 
-- **Category**: REQUIRES WORK
-- **Angular Material / CDK candidate**: `MatLabel` (`form-field.d.ts`)
-- **Notes**: `MatLabel` is real, but it's a directive meant to live inside `<mat-form-field>`'s content projection, not a freestanding component usable next to an arbitrary control the way Recursica's `Label` is used with e.g. `Checkbox`/`Radio`/`Switch` (which don't use `MatFormField` at all — Q8). Needs an independent, freestanding implementation.
+`data-size` is set on the host but this component's own CSS never reads
+it — it's a DOM hook for `FormControlLayout`'s own CSS (`.leftSection[data-size=...]`
+drives the label column's width), not for anything `Label` does to itself.
 
-## First-pass `@Input()` surface (this stub only — not audited)
+## Whether `MatFormField` could replace `FormControlWrapper`/`FormControlLayout` — investigated, no
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
-
-- `text`: `string`
-- `required`: `boolean`
+`MatFormField`'s real compiled template (`form-field2.mjs`) renders its
+label only inside `.mat-mdc-form-field-infix` (or the notched outline) —
+the same flex container as the actual input, per Material's floating-label
+model. There's no supported way to place it as an independent left column
+(the side-by-side layout's requirement) — doing so would mean overriding
+Material's internal DOM structure via `::ng-deep` with no stability
+contract, the same class of fragility that led the genesis adapter to build
+its own `FormControlWrapper` instead of Mantine's `Input.Wrapper`.

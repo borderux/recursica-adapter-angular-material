@@ -1,31 +1,40 @@
-# Tooltip — Implementation Notes (pre-implementation stub)
+# Tooltip — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: real implementation (`docs/CREATING_AN_ADAPTER.md` step 10). Wraps `MatTooltip`.
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Why this component is architecturally different from Button/Loader
 
-## Integration report findings
+`matTooltip` is an attribute directive (`<button [matTooltip]="...">`), not a
+component with its own template — this component's root is a
+`<span class="root" [matTooltip]="label">` wrapping the projected trigger
+(`display: contents`, so it's layout-transparent).
 
-- **Category**: EASY
-- **Angular Material / CDK candidate**: `MatTooltip` (`tooltip.d.ts`)
-- **Notes**: `position`, `showDelay`/`hideDelay`, `disabled`, `touchGestures` — built on CDK Overlay, full-featured.
+`MatTooltip`'s floating panel renders through CDK Overlay, appended outside
+this adapter's own component tree — `ViewEncapsulation.Emulated`-scoped CSS
+in `tooltip.component.css` can never reach it. Real token/beak styling lives
+in `tooltip-overlay.css`, a global stylesheet shipped as a package asset
+(`ng-package.json`'s `assets`) that a consuming app imports once (`SETUP.md`
+step 3). Every rule there is scoped under `.rec-tooltip` (applied via
+`matTooltipClass`) and gated behind `[data-recursica-theme]`.
 
-## First-pass `@Input()` surface (this stub only — not audited)
+## `position`
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+Recursica's `top`/`bottom`/`left`/`right` maps onto `MatTooltip`'s own
+`above`/`below`/`left`/`right` (`TooltipPosition`). No `-start`/`-end`
+alignment variants — `MatTooltip` doesn't have them, a real gap against
+Mantine's full `FloatingPosition` union.
 
-- `position`: `string`
-- `showDelay`: `number`
-- `hideDelay`: `number`
-- `disabled`: `boolean`
+## `withBeak`
+
+`MatTooltip` has no arrow/beak of its own — built from scratch as a rotated
+square `::after` on the outer `.mat-mdc-tooltip` div, oriented via the CDK
+overlay panel's own `.mat-mdc-tooltip-panel-{above,below,left,right}` class.
+
+## `overStyled`
+
+`overClass` only — no `overStyle`. There's no safe way to get a live
+`ElementRef` to the overlay panel to apply inline styles to (it's created/
+destroyed by CDK on every show/hide; the only reference is the private
+`MatTooltip._tooltipInstance`, which this adapter won't depend on).
+`overClass` is forwarded into the same `matTooltipClass` binding used for
+`.rec-tooltip`/the beak.

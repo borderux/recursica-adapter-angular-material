@@ -1,1 +1,263 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `FileInput.module.css`. Structural
+ * rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ * `--form-field-border-selected` (dragging-state border) is the same
+ * bridge custom property `form-control-wrapper.component.css` already
+ * defines — it reaches this component's `.root` via ordinary CSS custom
+ * property inheritance through the DOM (not Shadow DOM, so `Emulated`
+ * encapsulation doesn't block it), since `rec-form-control-wrapper` is
+ * this component's own ancestor in the DOM (composed internally, not
+ * externally — see file-input.component.ts's class doc comment).
+ *
+ * No `max-width`/`min-width` rule here at all — unlike the reference's own
+ * `.root`, which sets both directly from a `--file-input-control-*` bridge
+ * var. `.root`'s own `width: 100%` already fills whatever box
+ * `FormControlLayoutComponent` constrains it to via `controlMaxWidth`/
+ * `controlMinWidth`, resolved per `formLayout` in `file-input.component.ts`'s
+ * own `resolvedControlMaxWidth`/`resolvedControlMinWidth` getters — the same
+ * pattern `TextArea`/`NumberInput`/etc. already use, simpler than
+ * reproducing the reference's own separate CSS-variable bridge.
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in FileInput.module.css.
+   - trailing-icon color tokens are ignored — the trailing icon is a nested rec-button that owns
+     its own color tokens per state; this component never recolors it directly. */
+/* recursica-ignore: --recursica_ui-kit_components_file-input_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_file-input_variants_states_error_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_file-input_properties_colors_trailing-icon */
+/* recursica-ignore: --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_trailing-icon */
+/* recursica-ignore: --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_trailing-icon */
+
+.root {
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+
+.root[data-disabled="true"],
+.root[data-readonly="true"] {
+  cursor: default;
+}
+
+.root > * {
+  position: relative;
+}
+
+:host-context([data-recursica-theme]) .root {
+  min-height: var(
+    --recursica_ui-kit_components_file-input_properties_min-height
+  );
+  gap: var(--recursica_ui-kit_components_file-input_properties_icon-text-gap);
+  padding-top: var(
+    --recursica_ui-kit_components_file-input_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_file-input_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_file-input_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_file-input_properties_horizontal-padding
+  );
+  border-width: var(
+    --recursica_ui-kit_components_file-input_properties_border-size
+  );
+  border-style: solid;
+  border-radius: var(
+    --recursica_ui-kit_components_file-input_properties_border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_file-input_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_file-input_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_file-input_properties_colors_text-color
+  );
+}
+
+/* Dragging-over state: reuses the generic hover overlay recipe (same as Button) for the
+   background, and the shared "selected" border bridge var FormControlWrapper exposes —
+   file-input has no color tokens of its own for this state. */
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  opacity: 0;
+}
+
+:host-context([data-recursica-theme]) .root::after {
+  background-color: var(--recursica_brand_states_hover_color);
+}
+
+.root[data-dragging="true"] {
+  border-color: var(--form-field-border-selected);
+}
+
+:host-context([data-recursica-theme]) .root[data-dragging="true"]::after {
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+.leadingIcon {
+  display: flex;
+  flex: none;
+}
+
+:host-context([data-recursica-theme]) .leadingIcon {
+  width: var(--recursica_ui-kit_components_file-input_properties_icon-size);
+  height: var(--recursica_ui-kit_components_file-input_properties_icon-size);
+  color: var(
+    --recursica_ui-kit_components_file-input_properties_colors_leading-icon
+  );
+}
+
+.leadingIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.value {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+:host-context([data-recursica-theme]) .value {
+  font-family: var(
+    --recursica_ui-kit_components_file-input_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_file-input_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_file-input_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_file-input_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_file-input_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_file-input_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_file-input_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_file-input_properties_text_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]) .value[data-placeholder="true"] {
+  opacity: var(
+    --recursica_ui-kit_components_file-input_properties_placeholder-opacity
+  );
+}
+
+.chipRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+:host-context([data-recursica-theme]) .chipRow {
+  gap: var(--recursica_ui-kit_components_file-input_properties_icon-text-gap);
+}
+
+.chipRow::-webkit-scrollbar {
+  display: none;
+}
+
+.chipWrapper {
+  display: flex;
+  min-width: 0;
+  flex: none;
+}
+
+.trailingIcon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+
+/* -------------------------------------
+   STATE CASCADE ARCHITECTURE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .root:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error="true"] {
+  border-color: var(
+    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-error="true"] .leadingIcon {
+  color: var(
+    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled="true"] {
+  border-color: var(
+    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_opacity
+  );
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled="true"] .leadingIcon {
+  color: var(
+    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_leading-icon
+  );
+}

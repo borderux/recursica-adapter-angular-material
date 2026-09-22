@@ -1,0 +1,10 @@
+/*
+ * `<tr>` itself carries no visible styling of its own in the reference —
+ * every `tr[data-selected]`/`tr[data-disabled]`/`tr:hover`/`tr:nth-of-type(even)`
+ * rule in `Table.module.css` targets the *cell* background, not the row
+ * element. `TableTdComponent`'s own CSS reproduces those via
+ * `:host-context()` (see `table-tr.component.ts`'s class doc comment).
+ */
+:host {
+  display: table-row;
+}

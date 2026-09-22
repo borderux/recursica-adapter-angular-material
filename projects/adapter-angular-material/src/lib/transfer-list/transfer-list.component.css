@@ -1,1 +1,227 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the reference's own `TransferList.module.css`. Hand-built —
+ * this component wraps no single Material widget (see
+ * `transfer-list.component.ts`'s own class doc comment), so tokens are
+ * consumed directly.
+ *
+ * TOKEN INTERPRETATION NOTES (matches the reference's own identical
+ * comment): `properties_gap` is the row holding [source pane, transfer
+ * buttons, target pane]; `properties_title-filter-gap` sits between each
+ * pane's header and its search field; `properties_filter-items-gap` sits
+ * between the search field and the item list.
+ */
+
+/* EXEMPTIONS (matching the reference's own identical exemptions):
+   - border-size is constant across disabled/error states — only border-color changes. */
+/* recursica-ignore: --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_transfer-list_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .root[data-form-layout="stacked"] {
+  margin-top: var(
+    --recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin
+  );
+}
+:host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] {
+  margin-top: var(
+    --recursica_ui-kit_components_transfer-list_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_transfer-list_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+}
+
+.panes {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .panes {
+  gap: var(--recursica_ui-kit_components_transfer-list_properties_gap);
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+:host-context([data-recursica-theme]) .pane {
+  width: var(--recursica_ui-kit_components_transfer-list_properties_width);
+  height: var(--recursica_ui-kit_components_transfer-list_properties_height);
+  padding: var(
+      --recursica_ui-kit_components_transfer-list_properties_vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_transfer-list_properties_horizontal-padding
+    );
+  border-width: var(
+    --recursica_ui-kit_components_transfer-list_properties_border-size
+  );
+  border-style: solid;
+  border-radius: var(
+    --recursica_ui-kit_components_transfer-list_properties_border-radius
+  );
+  border-color: var(
+    --recursica_ui-kit_components_transfer-list_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_transfer-list_properties_colors_background-color
+  );
+}
+
+.paneHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:host-context([data-recursica-theme]) .paneHeader {
+  margin-bottom: var(
+    --recursica_ui-kit_components_transfer-list_properties_title-filter-gap
+  );
+  font-family: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_fontFamily
+  );
+  font-size: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_fontSize
+  );
+  font-style: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_fontStyle
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_fontWeight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_letterSpacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_lineHeight
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_textDecoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_transfer-list_properties_header-style_textCase
+  );
+  color: var(
+    --recursica_ui-kit_components_transfer-list_properties_colors_header-color
+  );
+}
+
+:host-context([data-recursica-theme]) .paneSearch {
+  margin-bottom: var(
+    --recursica_ui-kit_components_transfer-list_properties_filter-items-gap
+  );
+}
+
+.paneList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* No token exists for the gap between stacked group blocks — the transfer-list schema
+     only defines gaps at the header/search/pane level, matching the reference's own
+     identical hardcode (see its own comment for this exact rule). */
+  gap: 2px;
+}
+
+.groupBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.groupLabel {
+  font-weight: 600;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  opacity: 0.6;
+  font-size: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.transferColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* No token exists for spacing between the four transfer buttons, matching the
+     reference's own identical hardcode. */
+  gap: 4px;
+}
+
+.chevron {
+  width: 1em;
+  height: 1em;
+}
+.chevron[data-direction="left"] {
+  transform: scaleX(-1);
+}
+
+/* Standard visually-hidden clip-rect — same technique switch.component.css's own `.input`
+   rule documents: zero visible footprint, still real and reachable by assistive tech. */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------------------------
+   STATE CASCADE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .root[data-error] .pane {
+  border-color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_background-color
+  );
+}
+:host-context([data-recursica-theme]) .root[data-error] .paneHeader {
+  color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_header-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .pane {
+  border-color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_background-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_opacity
+  );
+}
+:host-context([data-recursica-theme]) .root[data-disabled] .paneHeader {
+  color: var(
+    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_header-color
+  );
+}

@@ -1,0 +1,191 @@
+/*
+ * Recursica AutoComplete — global overlay styling.
+ *
+ * Same real finding as `dropdown-overlay.css` (see that file's own header
+ * comment and `dropdown.component.ts`'s class doc comment for the full
+ * live-verified reasoning, not repeated here): a `<ng-template
+ * cdkConnectedOverlay>` declared inside this component's own template still
+ * gets a *different* `_ngcontent-*` attribute once CDK Overlay reparents it
+ * into `cdk-overlay-container`, so normal `Emulated`-scoped CSS in
+ * `auto-complete.component.css` cannot reach the panel. Every selector here
+ * is scoped under `.rec-autocomplete-panel` (applied directly in
+ * `auto-complete-control.component.ts`'s template) and gated behind
+ * `[data-recursica-theme]`.
+ *
+ * Panel-level tokens (background/border/radius) are `autocomplete`'s own;
+ * per-option padding/icon/gap/selected-state tokens reuse `menu`/`menu-item`
+ * tokens instead of an `autocomplete`-specific option namespace — this is
+ * not a simplification made here, it's the genesis reference's own token
+ * mapping (confirmed by reading `AutoComplete.module.css` directly: its
+ * `.option` rule reuses `--recursica_ui-kit_components_menu-item_*`
+ * verbatim), the same reuse `dropdown-overlay.css` already makes for
+ * `Dropdown`'s own option rows.
+ */
+
+[data-recursica-theme] .rec-autocomplete-panel {
+  overflow: auto;
+  max-height: 320px;
+  box-sizing: border-box;
+  background-color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_background-color
+  );
+  border: 1px solid
+    var(
+      --recursica_ui-kit_components_autocomplete_properties_colors_border-color
+    );
+  border-radius: var(
+    --recursica_ui-kit_components_autocomplete_properties_border-radius
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_autocomplete_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_autocomplete_properties_vertical-padding
+  );
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .option {
+  cursor: pointer;
+  font-family: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-weight
+  );
+  color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_text-color
+  );
+  padding: var(
+      --recursica_ui-kit_components_menu-item_properties_vertical-padding
+    )
+    var(--recursica_ui-kit_components_menu-item_properties_horizontal-padding);
+  margin-bottom: var(--recursica_ui-kit_components_menu_properties_item-gap);
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .option:last-of-type {
+  margin-bottom: 0;
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .option[data-hovered="true"] {
+  background-color: color-mix(
+    in srgb,
+    var(--recursica_brand_states_hover_color)
+      calc(var(--recursica_brand_states_hover_opacity) * 100%),
+    transparent
+  );
+}
+
+/*
+ * `data-active` — the option whose label exactly matches the field's current typed value (the
+ * "this is what you've already typed/selected" state), distinct from `data-hovered`'s transient
+ * keyboard/mouse highlight. Same distinction the reference's own AutoComplete.module.css draws
+ * between `data-combobox-active` (real match) and `data-combobox-selected` (hover-bucket).
+ */
+[data-recursica-theme] .rec-autocomplete-panel .option[data-active="true"] {
+  background-color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_text-color
+  );
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionContent {
+  display: flex;
+  align-items: center;
+  gap: var(--recursica_ui-kit_components_menu-item_properties_icon-text-gap);
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionIcon {
+  display: flex;
+  flex-shrink: 0;
+  width: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  height: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_leading-icon-color
+  );
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+[data-recursica-theme]
+  .rec-autocomplete-panel
+  .option[data-active="true"]
+  .optionIcon {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_leading-icon-color
+  );
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--recursica_ui-kit_components_menu-item_properties_text-gap);
+}
+
+/* `overflow-clip-margin` gives ink a small bleed allowance — see Chip's IMPLEMENTATION_NOTES.md for why plain `hidden` clips descenders (e.g. "g"). */
+[data-recursica-theme] .rec-autocomplete-panel .optionLabel {
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionTextWrap .optionLabel,
+[data-recursica-theme]
+  .rec-autocomplete-panel
+  .optionTextWrap
+  .optionSupportingText {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+[data-recursica-theme] .rec-autocomplete-panel .optionSupportingText {
+  font-family: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_line-height
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_supporting-text-color
+  );
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-recursica-theme]
+  .rec-autocomplete-panel
+  .option[data-active="true"]
+  .optionSupportingText {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_supporting-text-color
+  );
+}

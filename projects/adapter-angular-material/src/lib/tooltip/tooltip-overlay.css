@@ -1,0 +1,155 @@
+/*
+ * Recursica Tooltip — global overlay styling.
+ *
+ * MatTooltip renders its floating panel via CDK Overlay, appended outside
+ * this adapter's own component tree (see tooltip.component.ts's class doc
+ * comment for the full "why"), so these rules can't live in a normal
+ * component `styleUrl` — they have to be a real global stylesheet a
+ * consuming app imports once (see SETUP.md).
+ *
+ * Every selector is scoped under `.rec-tooltip` (the class `<rec-tooltip>`
+ * always applies via `matTooltipClass`) and gated behind
+ * `[data-recursica-theme]` (docs/STYLING_SYSTEM.md §4's specificity
+ * convention) so these rules never affect a plain, non-Recursica
+ * `matTooltip` elsewhere in the consuming app.
+ *
+ * `--mat-tooltip-*` are Material's own theming custom properties
+ * (confirmed in the compiled `TooltipComponent`'s `styles: [...]`,
+ * `@angular/material/fesm2022/tooltip2.mjs`); `min-width`/`max-width`/
+ * `min-height`/padding/border have no Material custom-property equivalent,
+ * so they're direct property overrides on `.mat-mdc-tooltip-surface`
+ * instead, same "fall back to a direct override only for whatever isn't
+ * exposed as a variable" rule button.component.css follows.
+ */
+
+[data-recursica-theme] .mat-mdc-tooltip.rec-tooltip {
+  --mat-tooltip-container-color: var(
+    --recursica_ui-kit_components_tooltip_properties_colors_background-color
+  );
+  --mat-tooltip-supporting-text-color: var(
+    --recursica_ui-kit_components_tooltip_properties_colors_text-color
+  );
+  --mat-tooltip-container-shape: var(
+    --recursica_ui-kit_components_tooltip_properties_border-radius
+  );
+  --mat-tooltip-supporting-text-font: var(
+    --recursica_ui-kit_components_tooltip_properties_text_font-family
+  );
+  --mat-tooltip-supporting-text-size: var(
+    --recursica_ui-kit_components_tooltip_properties_text_font-size
+  );
+  --mat-tooltip-supporting-text-weight: var(
+    --recursica_ui-kit_components_tooltip_properties_text_font-weight
+  );
+  --mat-tooltip-supporting-text-line-height: var(
+    --recursica_ui-kit_components_tooltip_properties_text_line-height
+  );
+  --mat-tooltip-supporting-text-tracking: var(
+    --recursica_ui-kit_components_tooltip_properties_text_letter-spacing
+  );
+}
+
+[data-recursica-theme] .mat-mdc-tooltip.rec-tooltip .mat-mdc-tooltip-surface {
+  padding: var(
+      --recursica_ui-kit_components_tooltip_properties_vertical-padding
+    )
+    var(--recursica_ui-kit_components_tooltip_properties_horizontal-padding);
+  min-width: var(--recursica_ui-kit_components_tooltip_properties_min-width);
+  max-width: var(--recursica_ui-kit_components_tooltip_properties_max-width);
+  min-height: var(--recursica_ui-kit_components_tooltip_properties_min-height);
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_tooltip_properties_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_tooltip_properties_colors_border-color
+  );
+  box-shadow: var(--recursica_ui-kit_components_tooltip_properties_elevation);
+  font-style: var(
+    --recursica_ui-kit_components_tooltip_properties_text_font-style
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tooltip_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tooltip_properties_text_text-transform
+  );
+}
+
+/*
+ * Beak: MatTooltip has no arrow of its own (confirmed against the compiled
+ * template — just the surface `<div>`, nothing else), so it's a rotated
+ * square `::after` on the outer `.mat-mdc-tooltip` div (which Material
+ * leaves free — it only uses `::before` there, for its own invisible
+ * hit-area extension) rather than on `.mat-mdc-tooltip-surface` itself
+ * (which has `overflow: hidden` in Material's own CSS and would clip
+ * anything positioned outside its bounds).
+ *
+ * Orientation comes from the CDK overlay panel's own position class
+ * (`.mat-mdc-tooltip-panel-{above,below,left,right}`, applied by Material
+ * to an ancestor of `.mat-mdc-tooltip` — confirmed the same way Material's
+ * own `::before` hit-area rule keys off it) — points toward whichever edge
+ * is closest to the trigger.
+ */
+[data-recursica-theme] .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  content: "";
+  position: absolute;
+  width: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071
+  );
+  height: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071
+  );
+  background-color: var(
+    --recursica_ui-kit_components_tooltip_properties_colors_background-color
+  );
+  transform: rotate(45deg);
+}
+
+[data-recursica-theme]
+  .mat-mdc-tooltip-panel-below
+  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  top: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+  left: 50%;
+  margin-left: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+}
+
+[data-recursica-theme]
+  .mat-mdc-tooltip-panel-above
+  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  bottom: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+  left: 50%;
+  margin-left: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+}
+
+[data-recursica-theme]
+  .mat-mdc-tooltip-panel-right
+  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  left: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+  top: 50%;
+  margin-top: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+}
+
+[data-recursica-theme]
+  .mat-mdc-tooltip-panel-left
+  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  right: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+  top: 50%;
+  margin-top: calc(
+    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
+  );
+}

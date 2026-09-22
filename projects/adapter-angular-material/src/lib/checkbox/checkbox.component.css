@@ -1,1 +1,314 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Checkbox.module.css` — primitive
+ * (single-checkbox) rules only. `CheckboxGroup`'s own `.groupRoot` rules
+ * live in `checkbox-group.component.css`.
+ *
+ * Structural rules (position/display/flex) are left ungated; every
+ * token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ *
+ * ## `.inner`/`.icon` positioning: no Mantine base to inherit (same gap category `Tabs` already documented)
+ *
+ * The genesis `Checkbox.module.css` itself never declares `position:
+ * relative`/`position: absolute` for `.inner`/`.icon` — reading Mantine's
+ * own compiled base stylesheet directly
+ * (`@mantine/core/styles/Checkbox.css`) shows those rules live in
+ * Mantine's own **base** CSS (`.m_26062bec { position: relative; ... }`,
+ * `.m_bf295423 { position: absolute; inset: 0; margin: auto; ... }`), which
+ * this hand-built component has no equivalent of and must declare itself —
+ * the same "no Mantine base to inherit" category `tabs/IMPLEMENTATION_NOTES.md`'s
+ * active-underline finding already documents, just for the checkmark
+ * overlay instead of a border.
+ */
+
+.root {
+  display: inline-block;
+}
+
+:host-context([data-recursica-theme]) .root {
+  max-width: var(
+    --recursica_ui-kit_components_checkbox-item_properties_max-width
+  );
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+:host-context([data-recursica-theme]) .body {
+  gap: var(--recursica_ui-kit_components_checkbox-item_properties_label-gap);
+}
+
+.body.readOnlyDisplay {
+  cursor: default;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .inner {
+  width: var(--recursica_ui-kit_components_checkbox_properties_size);
+  height: var(--recursica_ui-kit_components_checkbox_properties_size);
+}
+
+.input {
+  display: block;
+  cursor: pointer;
+  appearance: none;
+  box-sizing: border-box;
+  border-style: solid;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  transition: all 0.2s ease; /* HARDCODE: matches Checkbox.module.css's own documented hardcode; no transition token exists. */
+}
+
+:host-context([data-recursica-theme]) .input {
+  width: var(--recursica_ui-kit_components_checkbox_properties_size);
+  height: var(--recursica_ui-kit_components_checkbox_properties_size);
+  border-radius: var(
+    --recursica_ui-kit_components_checkbox_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_checkbox_properties_border-size
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .input:checked,
+:host-context([data-recursica-theme]) .input.inputChecked {
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input[data-indeterminate],
+:host-context([data-recursica-theme]) .input.inputIndeterminate {
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_properties_colors_border-color
+  );
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme])
+  .input:disabled:not(:checked):not([data-indeterminate]) {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input:checked:disabled {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input[data-indeterminate]:disabled {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+/*
+ * `.readOnlyDisplay`'s static box reuses the disabled-state color tokens —
+ * the honest approximation documented in checkbox.component.ts's class doc
+ * comment and IMPLEMENTATION_NOTES.md's "ReadOnlyField gap" section (no
+ * dedicated read-only color tokens exist in the schema either, same gap
+ * `Dropdown`'s own readOnly approximation already flagged).
+ */
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .input:not(.inputChecked):not(.inputIndeterminate) {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_unchecked_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .readOnlyDisplay .input.inputChecked {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .input.inputIndeterminate {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+.icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+:host-context([data-recursica-theme]) .icon {
+  width: var(--recursica_ui-kit_components_checkbox_properties_icon-size);
+  height: var(--recursica_ui-kit_components_checkbox_properties_icon-size);
+}
+
+/* No icon-color token exists for the unchecked state (no icon is visible then) — matches Checkbox.module.css's own note. */
+:host-context([data-recursica-theme]) .input:checked + .icon,
+:host-context([data-recursica-theme]) .input.inputChecked + .icon {
+  color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input[data-indeterminate] + .icon,
+:host-context([data-recursica-theme]) .input.inputIndeterminate + .icon {
+  color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input:checked:disabled + .icon,
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .input.inputChecked
+  + .icon {
+  color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_checked_variants_states_disabled_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .input[data-indeterminate]:disabled
+  + .icon,
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .input.inputIndeterminate
+  + .icon {
+  color: var(
+    --recursica_ui-kit_components_checkbox_variants_selection-states_indeterminate_variants_states_disabled_properties_colors_icon-color
+  );
+}
+
+.labelWrapper {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-width: 0; /* HARDCODE: forces text wrap boundary in flex child, matches Checkbox.module.css's own hardcode. */
+}
+
+.label {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.readOnlyDisplay .label {
+  cursor: default;
+}
+
+:host-context([data-recursica-theme]) .label {
+  color: var(
+    --recursica_ui-kit_components_checkbox-item_properties_colors_text-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_font-weight
+  );
+  line-height: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_line-height
+  );
+  font-style: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_font-style
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_letter-spacing
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]) .body:has(.input:disabled) .label,
+:host-context([data-recursica-theme]) .readOnlyDisplay .label {
+  opacity: var(
+    --recursica_ui-kit_components_checkbox-item_variants_states_disabled_properties_opacity
+  );
+  color: var(
+    --recursica_ui-kit_components_checkbox-item_properties_colors_disabled-text
+  );
+}

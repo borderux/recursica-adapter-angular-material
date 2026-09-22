@@ -1,1 +1,91 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Breadcrumb.module.css`, adapted for
+ * this component's own `<nav><ol><li>` structure (see
+ * `breadcrumb.component.ts`'s class doc comment for why) instead of a flat
+ * `<div>` of children — `.root`'s flex/gap/padding rules move to `.list`
+ * (the `<ol>`), since that's the element with actual list-item children now.
+ *
+ * `.link`/`.current` apply `recursica_ui-kit_components_link_*` tokens
+ * directly (no `rec-link` component exists yet to compose — see this
+ * component's own class doc comment).
+ */
+
+.root {
+  display: block;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .list {
+  padding: var(--recursica_ui-kit_components_breadcrumb_properties_padding);
+  gap: var(--recursica_ui-kit_components_breadcrumb_properties_item-gap);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+:host-context([data-recursica-theme]) .item {
+  gap: var(--recursica_ui-kit_components_breadcrumb_properties_item-gap);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link,
+.crumb,
+.current {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .link {
+  font-family: var(
+    --recursica_ui-kit_components_link_properties_text_font-family
+  );
+  font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
+  font-style: var(
+    --recursica_ui-kit_components_link_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_link_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_link_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_link_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_link_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_link_properties_text_text-transform
+  );
+  color: var(--recursica_ui-kit_components_link_properties_colors_text-color);
+}
+
+.link:visited {
+  color: var(
+    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color
+  );
+}
+
+/* Current-page item (last crumb) — real plain text by construction (see class doc comment), not a
+   defensive backstop against a stray Link the way the reference's identical rule is. Matches
+   Link's font (per product decision, same as the reference), not its color/decoration. */
+:host-context([data-recursica-theme]) .current {
+  font-family: var(
+    --recursica_ui-kit_components_link_properties_text_font-family
+  );
+  font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
+}

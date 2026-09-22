@@ -1,0 +1,11 @@
+/*
+ * `.root` is `display: inline-flex`, not `display: contents` — same
+ * live-verified reasoning `tooltip.component.css`'s equivalent rule
+ * documents (see hover-card-target.component.ts's own class doc comment):
+ * the CDK overlay origin needs a real, non-zero `getBoundingClientRect()`
+ * to anchor against.
+ */
+
+.root {
+  display: inline-flex;
+}

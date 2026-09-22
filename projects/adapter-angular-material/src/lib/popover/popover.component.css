@@ -1,1 +1,8 @@
-/* Styling not yet implemented. */
+/*
+ * Intentionally empty. `rec-popover`'s own template renders no visible box
+ * of its own (`<ng-content />` for `Target`/`Dropdown`, plus the
+ * `cdkConnectedOverlay` template) — every real visual rule for the
+ * dropdown panel lives in `popover-overlay.css`, the global stylesheet the
+ * portaled panel actually needs (see popover.component.ts's class doc
+ * comment for the reachability reasoning).
+ */

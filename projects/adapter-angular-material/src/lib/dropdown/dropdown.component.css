@@ -1,1 +1,325 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Dropdown.module.css` — trigger-only.
+ * This is normal `ViewEncapsulation.Emulated`-scoped component CSS,
+ * reachable because `.root`/`.input`/etc. are rendered directly inside
+ * `DropdownComponent`'s own template (confirmed live via Playwright DOM
+ * inspection — see `dropdown.component.ts`'s class doc comment).
+ *
+ * The options *panel* (`.dropdown`/`.option`/etc.) is a **separate**
+ * file, `dropdown-overlay.css` — a real global stylesheet, not scoped
+ * component CSS. That file's own header comment explains why: the panel
+ * renders through CDK Overlay and, contrary to this component's original
+ * assumption, does *not* carry `DropdownComponent`'s own scoping
+ * attribute, so normal scoped rules here could never have reached it.
+ *
+ * Structural rules (position/display/flex) are left ungated; every
+ * token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ */
+
+.root {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .root {
+  min-height: var(--recursica_ui-kit_components_dropdown_properties_min-height);
+
+  --input-left-section-size: calc(
+    var(--recursica_ui-kit_components_dropdown_properties_horizontal-padding) +
+      var(--recursica_ui-kit_components_dropdown_properties_icon-size) +
+      var(--recursica_ui-kit_components_dropdown_properties_icon-text-gap)
+  );
+  --input-right-section-size: calc(
+    var(--recursica_ui-kit_components_dropdown_properties_horizontal-padding) +
+      var(--recursica_ui-kit_components_dropdown_properties_icon-size) +
+      var(--recursica_ui-kit_components_dropdown_properties_icon-text-gap)
+  );
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.readOnlyDisplay {
+  cursor: default;
+}
+
+:host-context([data-recursica-theme]) .input {
+  min-height: var(--recursica_ui-kit_components_dropdown_properties_min-height);
+  padding-top: var(
+    --recursica_ui-kit_components_dropdown_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_dropdown_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_dropdown_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_dropdown_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_dropdown_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_dropdown_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_dropdown_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_dropdown_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_dropdown_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_dropdown_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_dropdown_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_text-color
+  );
+}
+
+.placeholder {
+  opacity: 0.5; /* HARDCODE: no dedicated placeholder-opacity token, same gap the genesis adapter's own Dropdown.module.css flags. */
+}
+
+.valueText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.root[data-with-left-section] .input {
+  padding-left: var(--input-left-section-size);
+}
+
+.root[data-with-right-section] .input {
+  padding-right: var(--input-right-section-size);
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/*
+ * The left section is absolutely positioned (not a normal flex sibling) so
+ * `.valueText` can stay a single, simply-centered flex child while
+ * `.root[data-with-left-section] .input`'s `padding-left` (below) reserves
+ * the room for it in the text flow — same technique Mantine's own `Input`
+ * uses (`--input-left-section-size` reserves padding+icon+gap as a single
+ * compound value for *that* purpose).
+ *
+ * Its own box, however, must be sized to *just* the icon (`icon-size`),
+ * not the compound padding+icon+gap value — using the compound value here
+ * too (an earlier bug, confirmed live via Playwright screenshot against
+ * `WithLeadingIcon`) rendered the icon far too large and flush against the
+ * left edge, because `height: 100%` on an absolutely-positioned element
+ * resolves against `.root` (the nearest positioned ancestor)'s full
+ * height, and its caller-supplied `<svg width="100%" height="100%">` (see
+ * below) filled that oversized box entirely.
+ */
+.section[data-position="left"] {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  justify-content: center;
+}
+
+.section[data-position="right"] {
+  gap: 4px;
+  margin-left: auto;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] {
+  left: var(
+    --recursica_ui-kit_components_dropdown_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+  height: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+}
+
+/*
+ * `.section svg` only ever matches the trailing chevron/clear-button icons
+ * — both are markup this component's own template writes directly. It
+ * does *not* match the leading icon (`leftSection`, a caller-supplied
+ * `TemplateRef` rendered via `*ngTemplateOutlet`): that `<svg>` belongs to
+ * the *caller's* view for `Emulated`-scoping purposes, not
+ * `DropdownComponent`'s, the exact same gap `Tabs.md`'s
+ * `leftSection`/`rightSection` finding already documents for `Tabs`'
+ * icons. Same fix: size the **wrapper** (`.section[data-position="left"]`,
+ * above) via scoped CSS, and have the caller's own SVG markup supply
+ * `width="100%" height="100%"` to fill it (see `dropdown.stories.ts`'s
+ * `pinIconTemplate`/`userIconTemplate`).
+ */
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+  height: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+  color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] svg {
+  color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_trailing-icon
+  );
+}
+
+.chevron {
+  display: flex;
+  transition: transform 150ms ease;
+}
+
+.chevron[data-open] {
+  transform: rotate(180deg);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+}
+
+:host-context([data-recursica-theme]) .clearButton {
+  width: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+  height: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+  color: var(
+    --recursica_ui-kit_components_dropdown_properties_colors_trailing-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .clearButton:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_error_properties_colors_trailing-icon
+  );
+}
+
+/* recursica-ignore: --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_border-size */
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_opacity
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_dropdown_variants_states_disabled_properties_colors_trailing-icon
+  );
+}

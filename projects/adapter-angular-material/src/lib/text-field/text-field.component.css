@@ -1,1 +1,287 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `TextField.module.css`. Normal
+ * `ViewEncapsulation.Emulated`-scoped component CSS — unlike `Dropdown`,
+ * there is no CDK-overlay-portaled content here at all (`matInput` is a
+ * bare directive on this component's own `<input>`, contributing no DOM/CSS
+ * of its own — see `text-field.component.ts`'s class doc comment), so
+ * everything below reaches its target via plain scoped selectors, no
+ * separate global stylesheet needed.
+ *
+ * Structural rules (position/display/flex) are left ungated; every
+ * token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ *
+ * Left/right icon sections use the same absolutely-positioned-box technique
+ * `dropdown.component.css` already fixed live (see its own IMPLEMENTATION_NOTES.md
+ * "Bug found and fixed" section): the section's own box is sized to exactly
+ * `icon-size` (not the padding+icon+gap compound value used for the input's
+ * own padding-reservation), vertically centered via `top: 50%; transform:
+ * translateY(-50%)`, applied to *both* sides here (the genesis reference's
+ * own Mantine `Input` layout doesn't need this because Mantine's internal
+ * section-sizing CSS variables handle it natively — this adapter has no
+ * equivalent, so it reuses the proven Dropdown fix for both sides instead
+ * of re-discovering the same bug independently).
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in TextField.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_text-field_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_text-field_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .root {
+  min-height: var(
+    --recursica_ui-kit_components_text-field_properties_min-height
+  );
+
+  --input-left-section-size: calc(
+    var(
+        --recursica_ui-kit_components_text-field_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_text-field_properties_icon-size) +
+      var(--recursica_ui-kit_components_text-field_properties_icon-text-gap)
+  );
+  --input-right-section-size: calc(
+    var(
+        --recursica_ui-kit_components_text-field_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_text-field_properties_icon-size) +
+      var(--recursica_ui-kit_components_text-field_properties_icon-text-gap)
+  );
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  background: none;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .input {
+  min-height: var(
+    --recursica_ui-kit_components_text-field_properties_min-height
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_text-field_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_text-field_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_text-field_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_text-field_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_text-field_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_text-field_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_text-field_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_text-field_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_text-field_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_text-field_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_text-field_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_text-field_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_text-field_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_text-field_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_text-field_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_text-field_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_text-field_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_text-field_properties_placeholder-opacity
+  );
+}
+
+.root[data-with-left-section] .input {
+  padding-left: var(--input-left-section-size);
+}
+
+.root[data-with-right-section] .input {
+  padding-right: var(--input-right-section-size);
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section[data-position="left"] {
+  left: 0;
+}
+
+.section[data-position="right"] {
+  right: 0;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] {
+  left: var(
+    --recursica_ui-kit_components_text-field_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_text-field_properties_icon-size);
+  height: var(--recursica_ui-kit_components_text-field_properties_icon-size);
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] {
+  right: var(
+    --recursica_ui-kit_components_text-field_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_text-field_properties_icon-size);
+  height: var(--recursica_ui-kit_components_text-field_properties_icon-size);
+}
+
+/*
+ * `.section svg` reaches leading/trailing icons the same way `dropdown.component.css`'s
+ * identical comment already documents for its own `leftSection` — these are
+ * caller-supplied `TemplateRef`s (`*ngTemplateOutlet`), so their `<svg>` belongs to the
+ * *caller's* view for `Emulated`-scoping purposes, not `TextFieldComponent`'s. The wrapper
+ * `.section` box is sized via scoped CSS (above); the caller's own SVG markup supplies
+ * `width="100%" height="100%"` to fill it (see `text-field.stories.ts`).
+ */
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: 100%;
+  height: 100%;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_properties_colors_trailing-icon
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_text-field_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_text-field_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_error_properties_colors_trailing-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_opacity
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_text-field_variants_states_disabled_properties_colors_trailing-icon
+  );
+}

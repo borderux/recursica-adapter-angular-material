@@ -1,0 +1,11 @@
+/*
+ * `:host` is `display: inline-flex`, not `display: contents` — same
+ * live-verified reasoning `hover-card-target.component.css`'s equivalent
+ * rule documents (see popover-target.component.ts's own class doc
+ * comment): the CDK overlay origin needs a real, non-zero
+ * `getBoundingClientRect()` to anchor against.
+ */
+
+:host {
+  display: inline-flex;
+}

@@ -38,7 +38,18 @@
               "projects/adapter-angular-material"
             ],
             "port": 6006,
-            "styles": ["recursica_variables_scoped.css"]
+            "styles": [
+              "recursica_variables_scoped.css",
+              "projects/adapter-angular-material/src/lib/tooltip/tooltip-overlay.css",
+              "projects/adapter-angular-material/src/lib/menu/menu-overlay.css",
+              "projects/adapter-angular-material/src/lib/dropdown/dropdown-overlay.css",
+              "projects/adapter-angular-material/src/lib/date-picker/date-picker-overlay.css",
+              "projects/adapter-angular-material/src/lib/auto-complete/auto-complete-overlay.css",
+              "projects/adapter-angular-material/src/lib/hover-card/hover-card-overlay.css",
+              "projects/adapter-angular-material/src/lib/modal/modal-overlay.css",
+              "projects/adapter-angular-material/src/lib/panel/panel-overlay.css",
+              "projects/adapter-angular-material/src/lib/popover/popover-overlay.css"
+            ]
           }
         },
         "build-storybook": {
@@ -54,7 +65,18 @@
               "projects/adapter-angular-material"
             ],
             "outputDir": "storybook-static",
-            "styles": ["recursica_variables_scoped.css"]
+            "styles": [
+              "recursica_variables_scoped.css",
+              "projects/adapter-angular-material/src/lib/tooltip/tooltip-overlay.css",
+              "projects/adapter-angular-material/src/lib/menu/menu-overlay.css",
+              "projects/adapter-angular-material/src/lib/dropdown/dropdown-overlay.css",
+              "projects/adapter-angular-material/src/lib/date-picker/date-picker-overlay.css",
+              "projects/adapter-angular-material/src/lib/auto-complete/auto-complete-overlay.css",
+              "projects/adapter-angular-material/src/lib/hover-card/hover-card-overlay.css",
+              "projects/adapter-angular-material/src/lib/modal/modal-overlay.css",
+              "projects/adapter-angular-material/src/lib/panel/panel-overlay.css",
+              "projects/adapter-angular-material/src/lib/popover/popover-overlay.css"
+            ]
           }
         }
       }

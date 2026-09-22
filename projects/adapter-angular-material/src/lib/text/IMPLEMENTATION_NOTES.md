@@ -1,29 +1,35 @@
-# Text — Implementation Notes (pre-implementation stub)
+# Text — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Genuinely does not exist — same finding as `Heading`
 
-## Integration report findings
+The stub's own `IMPLEMENTATION_NOTES.md` already confirmed `Category: DOES
+NOT EXIST` (Material's typography system is Sass mixins only, no
+importable component). Re-confirmed at build time. Renders a native `<p>`
+with a `recursica_brand_typography_{variant}` class — the same
+pre-existing global utility-class family `Heading` consumes (confirmed:
+`.recursica_brand_typography_body`/`body-small`/`caption`/`overline`/
+`subtitle`/`subtitle-small` all already exist in
+`recursica_variables_scoped.css`).
 
-- **Category**: DOES NOT EXIST
-- **Angular Material / CDK candidate**: _(none — Sass typography mixins only, not a component; see Q6)_
-- **Notes**: Material's typography system (`_typography.scss`'s `body-small`/`title-large`/etc. mixins) is 100% a build-time Sass authoring convenience for an app's own stylesheets, not a UI-kit component Recursica could wrap. There is no `<mat-text>` element, no `matText` directive, nothing importable at the TS/component level. `Text`/`Heading` need to be built as genuinely new Angular components from scratch, rendering a native element with Recursica's own `recursica_brand_typography_*` classes applied directly.
+## No polymorphism, no `weight` input from the stub's own guess
 
-## First-pass `@Input()` surface (this stub only — not audited)
+Same reasoning as `Avatar`/`Badge`/`Heading` for skipping
+`createPolymorphicComponent` — no other component in this adapter offers
+it. The stub's own first-pass guess included a `weight: string` input; the
+real reference has no such prop (confirmed by reading `Text.tsx`
+directly — weight is fully owned by the `variant`'s own typography class),
+so it isn't built here either.
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## Verification
 
-- `variant`: `string`
-- `weight`: `string`
+**Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and
+`eslint` all clean. Both golden-matching stories (Default,
+StaticVariations) confirmed registered and compiling with zero webpack
+errors in a live Storybook dev server (port 6007, isolated from the
+developer's own 6006 instance).
+
+**Not done, same flag as every component built this session**: no
+browser/Playwright tooling available, so the actual rendered typography
+was reasoned from the CSS, not visually verified.

@@ -1,1 +1,28 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the reference's own `Table.module.css`'s `.root` rule — the
+ * only piece that genuinely belongs on the `<table>` element itself (the
+ * rest of the reference's `.root <descendant>` rules are reproduced on
+ * each sub-component's own `:host`, see `table.component.ts`'s class doc
+ * comment for why).
+ */
+
+/* HARDCODED VALUES (matching the reference's own identical hardcodes):
+   - border-collapse: separate; border-spacing: 0; — required to support a custom
+     border-radius on the table element (the default `collapse` mode ignores it).
+   - overflow: hidden; — clips header/row backgrounds to the rounded table border. */
+
+.root {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .root {
+  border-radius: var(
+    --recursica_ui-kit_components_table_properties_border-radius
+  );
+  border: var(--recursica_ui-kit_components_table_properties_border-size) solid
+    var(--recursica_ui-kit_components_table_properties_colors_border-color);
+}

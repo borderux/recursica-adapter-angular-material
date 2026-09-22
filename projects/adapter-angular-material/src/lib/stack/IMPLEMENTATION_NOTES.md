@@ -1,29 +1,32 @@
-# Stack — Implementation Notes (pre-implementation stub)
+# Stack — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Genuinely does not exist — re-confirmed, not carried over
 
-## Integration report findings
+The stub's own `IMPLEMENTATION_NOTES.md` already confirmed `Category: DOES
+NOT EXIST` ("same conclusion as Flex"). Re-confirmed at build time.
 
-- **Category**: DOES NOT EXIST
-- **Angular Material / CDK candidate**: _(none; see Q5)_
-- **Notes**: Same conclusion as Flex (Q5) — build as a light wrapper around plain CSS flexbox (column direction), as a real Angular component.
+## Real default CSS reproduced
 
-## First-pass `@Input()` surface (this stub only — not audited)
+Confirmed directly in `@mantine/core`'s compiled `styles.css`:
+`align-items: stretch`, `justify-content: flex-start` — reproduced here as
+this component's own defaults (matching flexbox's own natural defaults for
+these two properties, unlike `Group`'s non-default `align-items: center`).
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## `RecursicaOverStyled` gate skipped, shared `resolveSpacing` utility
 
-- `gap`: `string`
-- `align`: `string`
+Same reasoning as `Flex`/`Group` — see `flex/IMPLEMENTATION_NOTES.md`, not
+repeated here.
+
+## Verification
+
+**Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and
+`eslint` all clean. All 3 golden-matching stories (Default,
+StaticGapSmall, StaticGapLarge) confirmed registered and compiling with
+zero webpack errors in a live Storybook dev server (port 6007, isolated
+from the developer's own 6006 instance).
+
+**Not done, same flag as every component built this session**: no
+browser/Playwright tooling available, so the actual rendered layout was
+reasoned from the code, not visually verified.

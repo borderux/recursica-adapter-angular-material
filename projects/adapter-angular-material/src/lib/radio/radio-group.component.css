@@ -1,0 +1,71 @@
+/*
+ * Ported from the genesis adapter's `Radio.module.css` — group rules only
+ * (`.groupRoot` and its `[data-layout]` variants). The primitive `Radio`
+ * rules live in `radio.component.css`.
+ *
+ * Unlike `Checkbox.module.css` (whose `.groupRoot` rules are duplicated
+ * across two separate blocks, reproduced faithfully in
+ * `checkbox-group.component.css` for that reason), `Radio.module.css`
+ * declares `.groupRoot` exactly once — reproduced here the same way, no
+ * cascade-ordering puzzle to solve.
+ *
+ * Structural rules (display/flex-direction/flex-wrap) are left ungated;
+ * every token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ */
+
+.root {
+  display: block;
+  width: 100%;
+}
+
+.groupRoot {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .groupRoot {
+  padding: var(
+    --recursica_ui-kit_components_radio-button-group_properties_padding
+  );
+  gap: var(
+    --recursica_ui-kit_components_radio-button-group_properties_item-gap
+  );
+}
+
+.groupRoot[data-layout="side-by-side"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
+  gap: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_side-by-side_properties_gutter
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  margin-top: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+}
+
+.groupRoot[data-layout="stacked"] {
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
+  margin-top: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_stacked_properties_label-field-gap
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_radio-button-group_variants_layouts_stacked_properties_top-bottom-margin
+  );
+}

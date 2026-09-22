@@ -1,0 +1,173 @@
+/*
+ * Unlike `menu.component.ts`'s own `<mat-menu>` wrapper (whose panel
+ * chrome is owned by Material and rendered outside any component's own
+ * view — needs `menu-overlay.css`), `<button mat-menu-item>` here **is**
+ * this component's own template output — Angular stamps its Emulated
+ * encapsulation attribute on it regardless of where content projection
+ * ultimately places it in the DOM (inside the CDK overlay panel), so
+ * normal scoped CSS reaches it exactly like `button.component.css` reaches
+ * its own `<button matButton>`. Ported from the genesis adapter's real
+ * `Menu.module.css` `.item`/`.itemLabel`/`.itemSection` rules.
+ */
+
+/*
+ * `[mat-menu-item]`'s own compiled base CSS (`ViewEncapsulation.None`,
+ * confirmed in `menu.mjs`) already resets `background`/`border`/`padding`/
+ * `cursor`/`display: flex`/etc. — nothing here needs to redo that reset,
+ * only add Recursica's own token-driven look on top.
+ */
+.root {
+  position: relative;
+}
+
+:host-context([data-recursica-theme]) .root {
+  padding: var(
+      --recursica_ui-kit_components_menu-item_properties_vertical-padding
+    )
+    var(--recursica_ui-kit_components_menu-item_properties_horizontal-padding);
+  border-radius: var(
+    --recursica_ui-kit_components_menu-item_properties_border-radius
+  );
+  margin-bottom: var(--recursica_ui-kit_components_menu_properties_item-gap);
+
+  font-family: var(
+    --recursica_ui-kit_components_menu-item_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_menu-item_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_menu-item_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_menu-item_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_menu-item_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_menu-item_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_menu-item_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_menu-item_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_text-color
+  );
+
+  &[data-selected] {
+    background-color: var(
+      --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_background-color
+    );
+    color: var(
+      --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_text-color
+    );
+  }
+
+  &:disabled:not([data-selected]) {
+    opacity: var(
+      --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+    );
+  }
+  &:disabled[data-selected] {
+    opacity: var(
+      --recursica_ui-kit_components_menu-item_variants_selection-states_selected_variants_states_disabled_properties_opacity
+    );
+  }
+}
+
+/*
+ * `MatMenuItem`'s own template projects this component's default content
+ * into its own non-flex `.mat-mdc-menu-item-text` wrapper — `.itemRow`
+ * supplies the flex row that wrapper doesn't provide. See
+ * menu-item.component.ts's class doc comment.
+ */
+.itemRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.itemLabel {
+  position: relative;
+  z-index: 1;
+  color: inherit;
+  flex: 1;
+  text-align: left;
+}
+
+.itemSection {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .itemSection[data-position="left"] {
+  width: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  height: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
+  );
+  margin-right: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-text-gap
+  );
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_leading-icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .itemSection[data-position="right"] {
+  width: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-trailing-size
+  );
+  height: var(
+    --recursica_ui-kit_components_menu-item_properties_icon-trailing-size
+  );
+  margin-left: var(--recursica_ui-kit_components_menu-item_properties_text-gap);
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_trailing-icon-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-selected]
+  .itemSection[data-position="left"] {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_leading-icon-color
+  );
+}
+:host-context([data-recursica-theme])
+  .root[data-selected]
+  .itemSection[data-position="right"] {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_trailing-icon-color
+  );
+}
+
+/* Hover overlay — same technique as Button/Accordion. */
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+:host-context([data-recursica-theme]) .root::after {
+  background-color: var(--recursica_brand_states_hover_color);
+}
+:host-context([data-recursica-theme]) .root:hover:not(:disabled)::after {
+  opacity: var(--recursica_brand_states_hover_opacity);
+}

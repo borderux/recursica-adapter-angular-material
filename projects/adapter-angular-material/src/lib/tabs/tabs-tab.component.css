@@ -1,0 +1,533 @@
+/*
+ * Ported from the source-of-truth `Tabs.module.css`'s `.tab` rules. Same
+ * `:host-context()`-crosses-the-component-boundary technique as
+ * `tabs-list.component.css` (see its header comment) — this file's own
+ * `.tab`/`.section` selectors are this component's own scope, gated by
+ * `:host-context([data-variant="..."])`/`:host-context([data-orientation="..."])`
+ * walking up to `<rec-tabs>`'s `.root`. `[data-active]`/`:disabled` are
+ * this component's *own* attributes (set directly on this `.tab` button in
+ * tabs-tab.component.ts), so those need no `:host-context()` — plain
+ * selectors reach them normally.
+ *
+ * Where the source-of-truth hoists shared sizing into `--tabs-*` custom
+ * properties once per `.root[data-variant]` and consumes them from a
+ * single unconditional `.tab` rule, this file does the same thing one
+ * level down — each variant block below sets those same `--tabs-*`
+ * properties directly on `.tab` itself (still gated by `:host-context()`),
+ * consumed by the one unconditional `.tab { ... }` rule beneath it.
+ */
+
+.tab {
+  box-sizing: border-box;
+  min-width: var(--tabs-min-width);
+  max-width: var(--tabs-max-width);
+  padding: var(--tabs-vertical-padding) var(--tabs-horizontal-padding);
+  gap: var(--tabs-element-gap);
+  display: flex;
+  align-items: center;
+  justify-content: var(--tabs-content-alignment);
+  cursor: pointer;
+  position: relative;
+  border-style: solid;
+  border-width: 0;
+  background: none;
+  font: inherit;
+  appearance: none;
+  text-align: start;
+}
+
+.tab:disabled {
+  opacity: var(--recursica_brand_states_disabled);
+  cursor: not-allowed;
+}
+
+/*
+ * Sized on `.section` itself, not a `.section svg`/`.section img` descendant
+ * selector — content projected via `*ngTemplateOutlet` from a caller-owned
+ * `TemplateRef` doesn't carry *this* component's own `_ngcontent-<hash>`
+ * attribute (confirmed live: the rendered `<svg>` carries no `_ngcontent-*`
+ * attribute at all), so an Emulated-scoped descendant selector reaching
+ * into it can never match. Same reasoning and same fix as `Button`'s own
+ * `icon` (`.iconWrapper > * { width: 100%; height: 100%; }` sizing the
+ * *wrapper*, with the caller's own SVG supplying `width="100%" height="100%"`
+ * — see `button.stories.ts`'s `searchIconTemplate` and its
+ * `IMPLEMENTATION_NOTES.md`'s `icon` section).
+ */
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--tabs-icon-size);
+  height: var(--tabs-icon-size);
+  color: var(--tab-icon-color, inherit);
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------
+   COMMON SIZING/GEOMETRY PER VARIANT
+--------------------------------- */
+
+:host-context([data-variant="default"]) .tab {
+  --tabs-element-gap: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_element-gap
+  );
+  --tabs-horizontal-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_horizontal-padding
+  );
+  --tabs-vertical-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_vertical-padding
+  );
+  --tabs-icon-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_icon-size
+  );
+  --tabs-min-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_min-width
+  );
+  --tabs-max-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_max-width
+  );
+  --tabs-active-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_border-size
+  );
+  --tabs-inactive-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
+  );
+  --tabs-border-radius: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_border-radius
+  );
+}
+:host-context([data-variant="default"][data-orientation="horizontal"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_orientation_horizontal_properties_tab-content-alignment
+  );
+}
+:host-context([data-variant="default"][data-orientation="vertical"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_orientation_vertical_properties_tab-content-alignment
+  );
+}
+
+:host-context([data-variant="outline"]) .tab {
+  --tabs-element-gap: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_element-gap
+  );
+  --tabs-horizontal-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_horizontal-padding
+  );
+  --tabs-vertical-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_vertical-padding
+  );
+  --tabs-icon-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_icon-size
+  );
+  --tabs-min-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_min-width
+  );
+  --tabs-max-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_max-width
+  );
+  --tabs-active-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_border-size
+  );
+  --tabs-inactive-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
+  );
+  --tabs-border-radius: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_border-radius
+  );
+}
+:host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_orientation_horizontal_properties_tab-content-alignment
+  );
+}
+:host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_orientation_vertical_properties_tab-content-alignment
+  );
+}
+
+:host-context([data-variant="pills"]) .tab {
+  --tabs-element-gap: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_element-gap
+  );
+  --tabs-horizontal-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_horizontal-padding
+  );
+  --tabs-vertical-padding: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_vertical-padding
+  );
+  --tabs-icon-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_icon-size
+  );
+  --tabs-min-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_min-width
+  );
+  --tabs-max-width: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_max-width
+  );
+  --tabs-active-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_border-size
+  );
+  --tabs-inactive-border-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_border-size
+  );
+  --tabs-border-radius: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_border-radius
+  );
+}
+:host-context([data-variant="pills"][data-orientation="horizontal"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_orientation_horizontal_properties_tab-content-alignment
+  );
+}
+:host-context([data-variant="pills"][data-orientation="vertical"]) .tab {
+  --tabs-content-alignment: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_orientation_vertical_properties_tab-content-alignment
+  );
+}
+
+/* ---------------------------------
+   BORDER RADIUS GEOMETRY
+--------------------------------- */
+
+:host-context([data-variant="pills"]) .tab {
+  border-radius: var(--tabs-border-radius);
+}
+
+:host-context([data-variant="default"][data-orientation="horizontal"]) .tab,
+:host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
+  border-radius: var(--tabs-border-radius) var(--tabs-border-radius) 0 0;
+}
+:host-context(
+    [data-variant="default"][data-orientation="horizontal"][data-inverted]
+  )
+  .tab,
+:host-context(
+    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
+  )
+  .tab {
+  border-radius: 0 0 var(--tabs-border-radius) var(--tabs-border-radius);
+}
+:host-context([data-variant="default"][data-orientation="vertical"]) .tab,
+:host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
+  border-radius: var(--tabs-border-radius) 0 0 var(--tabs-border-radius);
+}
+
+/* ---------------------------------
+   ACTIVE-STATE UNDERLINE (default & outline only — pills uses a full
+   border instead, set directly in the COLORS & TYPOGRAPHY section below).
+   The real source-of-truth relies on Mantine's own base (non-Recursica)
+   `Tabs.css` for this (`.tab` reserves `border-width: var(--tab-border-width)`
+   with a transparent color; `[data-active]` swaps it to
+   `var(--tabs-color)`) — this adapter has no such base, so the border
+   itself (not just its color, which the COLORS block below still supplies
+   per variant/state) is declared directly here. Every tab reserves the
+   same border size whether active or not (`border-color: transparent`
+   otherwise) so becoming active never shifts layout.
+--------------------------------- */
+:host-context([data-variant="default"][data-orientation="horizontal"]) .tab,
+:host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
+  border-bottom-style: solid;
+  border-bottom-width: var(--tabs-active-border-size);
+  border-bottom-color: transparent;
+}
+:host-context(
+    [data-variant="default"][data-orientation="horizontal"][data-inverted]
+  )
+  .tab,
+:host-context(
+    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
+  )
+  .tab {
+  border-bottom-style: none;
+  border-top-style: solid;
+  border-top-width: var(--tabs-active-border-size);
+  border-top-color: transparent;
+}
+:host-context([data-variant="default"][data-orientation="vertical"]) .tab,
+:host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
+  border-right-style: solid;
+  border-right-width: var(--tabs-active-border-size);
+  border-right-color: transparent;
+}
+
+/* ---------------------------------
+   COLORS & TYPOGRAPHY
+--------------------------------- */
+
+/* Default variant */
+:host-context([data-recursica-theme]):host-context([data-variant="default"])
+  .tab {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_text-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_icon-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_text-transform
+  );
+}
+:host-context([data-recursica-theme]):host-context([data-variant="default"])
+  .tab[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_colors_text-color
+  );
+  /* Fills in the border reserved (transparent) by the ACTIVE-STATE
+     UNDERLINE geometry block above — only whichever side has non-zero
+     width per that block's orientation/inverted rules is ever visible. */
+  border-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_colors_border-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_colors_icon-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_text_text-transform
+  );
+}
+
+/* Outline variant */
+:host-context([data-recursica-theme]):host-context([data-variant="outline"])
+  .tab {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_text-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_icon-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_text-transform
+  );
+}
+:host-context([data-recursica-theme]):host-context([data-variant="outline"])
+  .tab[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_colors_text-color
+  );
+  /* See the Default variant's identical comment above the same property. */
+  border-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_colors_border-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_colors_icon-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_text_text-transform
+  );
+}
+
+/* Pills variant */
+:host-context([data-recursica-theme]):host-context([data-variant="pills"])
+  .tab {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_colors_text-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_colors_icon-color
+  );
+  border-width: var(--tabs-inactive-border-size);
+  border-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_colors_border-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_text-transform
+  );
+}
+:host-context([data-recursica-theme]):host-context([data-variant="pills"])
+  .tab[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_colors_text-color
+  );
+  --tab-icon-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_colors_icon-color
+  );
+  border-width: var(--tabs-active-border-size);
+  border-color: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_colors_border-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_text_text-transform
+  );
+}
+
+/* ---------------------------------
+   HOVER
+   Pseudo-element overlay so hovering doesn't fade the text/icon — same
+   generic brand state tokens/technique as button.component.css's `::after`.
+--------------------------------- */
+.tab:not([data-active]):not(:disabled)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+:host-context([data-recursica-theme]) .tab:not([data-active]):hover::before {
+  background-color: var(--recursica_brand_states_hover_color);
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+/* Focus ring, same convention as button.component.css. */
+.tab:focus-visible {
+  outline: none;
+}
+:host-context([data-recursica-theme]) .tab:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}

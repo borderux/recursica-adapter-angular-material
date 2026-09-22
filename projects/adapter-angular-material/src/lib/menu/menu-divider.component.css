@@ -1,0 +1,12 @@
+.root {
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .root {
+  height: var(--recursica_ui-kit_components_menu_properties_divider-height);
+  background-color: var(
+    --recursica_ui-kit_components_menu_properties_colors_divider-color
+  );
+  opacity: var(--recursica_ui-kit_components_menu_properties_divider-opacity);
+  margin: 8px 0;
+}

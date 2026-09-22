@@ -1,1 +1,10 @@
-/* Styling not yet implemented. */
+/*
+ * Intentionally empty: this component's entire template is `<mat-menu>`,
+ * which Material itself renders `display: none` on host (it has no visible
+ * DOM of its own — its actual panel content is projected into the CDK
+ * Overlay only once a trigger opens it). There's nothing here for
+ * `ViewEncapsulation.Emulated`-scoped CSS to target.
+ *
+ * Real token/panel styling lives in `menu-overlay.css` (a global package
+ * asset) — see menu.component.ts's class doc comment for why.
+ */

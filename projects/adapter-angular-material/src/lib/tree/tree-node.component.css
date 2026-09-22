@@ -1,0 +1,220 @@
+/*
+ * Ported from the reference's own `Tree.module.css`. Note: the row's box
+ * model (padding/border/font/color/background) lives entirely on
+ * `.label`, not `.row` — the highlighted "chip" (hover/selected/focus)
+ * covers only the label, never the expand button, matching the
+ * reference's own identical structure and its own doc comment.
+ */
+
+/*
+ * `:host`, not a plain `.node` class selector — under `ViewEncapsulation.Emulated`, a
+ * component's own stylesheet can only reach its *host* element via `:host`/`:host()`/
+ * `:host-context()`; a plain class selector compiles with the component's own
+ * `_ngcontent-*` content attribute appended, which the host element itself never carries
+ * (it carries `_nghost-*` instead) — even though `host: { class: 'node' }` in
+ * `tree-node.component.ts` does put a literal `node` class on it. Same live-caught category
+ * of finding `table-td.component.css`'s own `:host(:not(:first-child))` rule already
+ * establishes elsewhere in this adapter (there, for `td[recTable Td]`... `rec-table-td`'s own
+ * host; here, for this component's own host).
+ */
+:host {
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+:host(:focus-visible) {
+  outline: none;
+}
+
+/* `> .row` (child combinator), not a plain descendant selector: a node's own `.row` is
+   always a direct child of its own host, while every descendant node's `.row` (inside the
+   nested `.subtree`) is not — without the `>`, focusing a parent node would draw the ring on
+   every expanded descendant's label too. Same reasoning the reference's own identical rule
+   documents. */
+:host-context([data-recursica-theme]):host(:focus-visible) > .row .label {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+.row {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+:host-context([data-recursica-theme]) .row {
+  /* Per-level indent — the reference computes this via Mantine's own internal
+     --label-offset/--level-offset resolver (see tree.component.ts's own class doc comment
+     for why this adapter has no equivalent); --tree-level is set directly per node
+     (tree-node.component.ts's own [style.--tree-level] binding) and multiplied by the real
+     indent token here instead. */
+  margin-left: calc(
+    var(--tree-level, 0) *
+      var(--recursica_ui-kit_components_tree_properties_indent)
+  );
+  gap: var(--recursica_ui-kit_components_tree_properties_button-node-gap);
+}
+
+.subtree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .subtree {
+  gap: var(--recursica_ui-kit_components_tree_properties_item-gap);
+}
+
+/* The expand button is always rendered (even for leaf nodes) so every row reserves identical
+   layout space — hidden via visibility (not display) on leaf rows so the label stays aligned
+   across the whole tree, matching the reference's own identical technique. */
+.expandButton {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+.row:not([data-has-children]) .expandButton {
+  visibility: hidden;
+}
+
+.expandGlyph {
+  color: inherit;
+  width: 1em;
+  height: 1em;
+}
+.row[data-has-children] .expandGlyph {
+  transition: transform 150ms ease;
+}
+.row[data-expanded] .expandGlyph {
+  transform: rotate(90deg);
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  /* Sized to its own content, not stretched to fill the row's remaining width — the
+     hover/selected/focus "chip" covers just the label, not the full row width. */
+  flex: 0 1 auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-style: solid;
+}
+
+:host-context([data-recursica-theme]) .label {
+  padding: var(--recursica_ui-kit_components_tree_properties_vertical-padding)
+    var(--recursica_ui-kit_components_tree_properties_horizontal-padding);
+  border-width: var(--recursica_ui-kit_components_tree_properties_border-size);
+  border-radius: var(
+    --recursica_ui-kit_components_tree_properties_border-radius
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_text-transform
+  );
+
+  color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_text-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_border-color
+  );
+}
+
+/* Hover overlay via ::after — same technique as Menu/Accordion/Button elsewhere in this
+   adapter. Tree has no component-specific hover tokens of its own, matching the reference's
+   own identical choice to reuse the generic brand hover tokens. */
+.label::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+:host-context([data-recursica-theme]) .label::after {
+  background-color: var(--recursica_brand_states_hover_color);
+}
+.row:hover .label::after {
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+:host-context([data-recursica-theme]) .label[data-selected] {
+  font-family: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_text-transform
+  );
+
+  color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_text-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_border-color
+  );
+}

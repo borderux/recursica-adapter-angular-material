@@ -1,30 +1,56 @@
-# Menu — Implementation Notes (pre-implementation stub)
+# Menu — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: real implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+Wraps `MatMenu`/`MatMenuTrigger`/`MatMenuItem` — a mature, CDK-Overlay-backed
+compound API, but shaped differently from the genesis adapter's Mantine dot
+notation. `rec-menu` covers both Mantine's `<Menu>` root and `<Menu.Dropdown>`
+(one `<mat-menu>` wraps both roles); `rec-menu-item`/`rec-menu-divider`/
+`rec-menu-label` mirror `Menu.Item`/`Menu.Divider`/`Menu.Label`.
 
-## Integration report findings
+## No `<rec-menu-target>`
 
-- **Category**: EASY
-- **Angular Material / CDK candidate**: `MatMenu`/`MatMenuTrigger`/`MatMenuItem` (`menu.d.ts`)
-- **Notes**: Direct, mature match: trigger directive + panel template + items, built on CDK Overlay.
+Mantine's `Menu.Target` exists to `cloneElement()` a ref/click-handler onto
+the trigger. Angular doesn't need this — `[recMenuTriggerFor]`
+(`menu-trigger-for.directive.ts`) attaches directly to the real trigger
+element via Angular's `hostDirectives` (composing Material's own real
+`MatMenuTrigger`, not reimplementing its open/close/positioning/keyboard
+logic). This directive only exists so callers pass this adapter's own
+`MenuComponent`, never a raw `MatMenu`.
 
-## First-pass `@Input()` surface (this stub only — not audited)
+## Styling: split between component-scoped CSS and a global stylesheet
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+`MatMenuItem`'s `<button mat-menu-item>` **is** `MenuItemComponent`'s own
+template output — Angular stamps its Emulated encapsulation attribute on it
+regardless of where content projection ultimately renders it, so
+`menu-item.component.css`'s normal scoped rules reach it exactly like
+`button.component.css` reaches its own `<button matButton>`.
 
-- `xPosition`: `'before' | 'after'`
-- `yPosition`: `'above' | 'below'`
-- `disabled`: `boolean`
+`MatMenu`'s panel container (`.mat-mdc-menu-panel`/`.mat-mdc-menu-content`)
+is different: it's Material's own internal component, rendered via CDK
+Overlay outside any of this adapter's own views (same situation as
+`Tooltip` — see its `IMPLEMENTATION_NOTES.md`). Its styling ships in
+`menu-overlay.css`, a global package asset scoped under `.rec-menu`
+(`MatMenu`'s own `panelClass` input, aliased to `class`) and gated behind
+`[data-recursica-theme]`.
+
+## `overStyled`: `overClass` only — no `overStyle`
+
+Same reasoning as `Tooltip`: the panel is created/destroyed by CDK on every
+open/close, no safe stable `ElementRef` to hand inline styles to.
+
+## Not yet implemented: `Menu.Sub` (nested submenus)
+
+The genesis adapter's `Menu.Sub`/`Menu.Sub.Target`/`Menu.Sub.Item`/
+`Menu.Sub.Dropdown` have no equivalent here yet. `MatMenuItem` has native
+submenu-trigger support (`_triggersSubmenu`) and nesting a second
+`<rec-menu>` likely composes via the same `[recMenuTriggerFor]` directive
+applied to a `rec-menu-item`, but this hasn't been built or verified —
+real follow-up work, not silently dropped.
+
+## `leftSection`/`rightSection`
+
+`TemplateRef`s, not projected-content slots — same translation as
+`Button`'s `icon`. `MatMenuItem`'s own template has only a single icon
+slot (no leading/trailing split the way Recursica's tokens expect), so
+`MenuItemComponent` renders its own wrapper spans instead of relying on it.

@@ -1,1 +1,30 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the reference's own `Tree.module.css`'s `.root` rule. Hand-
+ * built — no Material component wrapped (see `tree.component.ts`'s class
+ * doc comment), so tokens are consumed directly.
+ */
+
+.root {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .root {
+  max-width: var(--recursica_ui-kit_components_tree_properties_max-width);
+  gap: var(--recursica_ui-kit_components_tree_properties_item-gap);
+}
+
+/* Whole-tree `disabled` (no per-node concept, matching the reference's own identical
+   choice) — pointer-events blocks mouse interaction tree-wide; keyboard is separately
+   guarded in TreeNodeComponent's own onKeydown/onRowClick/onToggleClick (checking
+   context.disabled via TreeComponent's own toggleExpanded()/select() early returns). */
+.root[data-disabled] {
+  pointer-events: none;
+}
+:host-context([data-recursica-theme]) .root[data-disabled] {
+  opacity: var(--recursica_brand_states_disabled);
+}

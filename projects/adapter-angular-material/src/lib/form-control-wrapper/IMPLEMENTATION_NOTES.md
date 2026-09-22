@@ -1,31 +1,46 @@
-# FormControlWrapper — Implementation Notes (pre-implementation stub)
+# FormControlWrapper — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: real implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+Composes `Label` + `FormControlLayout` + `AssistiveElement`, matching the
+genesis adapter's real `FormControlWrapper.tsx`. Also declares the shared
+`--form-field-*` CSS custom-property bridge from `FormControlWrapper.module.css`
+so future real field components (`TextField`, `Checkbox`, etc.) can consume
+it directly.
 
-## Integration report findings
+## The id/ARIA-wiring mechanism is fundamentally different from React
 
-- **Category**: REQUIRES WORK
-- **Angular Material / CDK candidate**: _(none — build new, per Q8)_
-- **Notes**: Required per Q8, for two independent reasons: (1) side-by-side label layout is architecturally unavailable from `MatFormField` at all — it would need to be faked by placing the label outside `<mat-form-field>`, losing its automatic `<label for>`/`aria-describedby` wiring; a `FormControlWrapper` that owns layout and manually wires that association itself is the only way to get a consistent side-by-side option across every control type. (2) `MatFormField` only covers text-like controls — `MatCheckbox`/`MatRadioButton`/`MatSlideToggle` are never `MatFormFieldControl`s, so even a purely-stacked adapter still needs a hand-built label+description+error layout for choice controls.
+The React reference uses `React.cloneElement()` to inject `id`/
+`aria-labelledby`/`aria-describedby`/`aria-errormessage` onto whatever
+single child is passed in. Angular has no equivalent — a parent cannot
+mutate attributes onto opaque `<ng-content>`-projected content.
 
-## First-pass `@Input()` surface (this stub only — not audited)
+Replacement: `RECURSICA_FORM_CONTROL` (`utils/recursica-form-control.ts`),
+modeled on `MatFormField`'s own real `ContentChild(MatFormFieldControl)`
+mechanism (confirmed via its real declaration) but deliberately lighter —
+just `id` + `setDescribedByIds()`, not the full interface Material built for
+`<mat-form-field>`'s own visual chrome. `FormControlWrapper` queries for a
+projected control providing this token via `@ContentChild` and calls
+`setDescribedByIds()` on it directly.
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+**Real, documented difference from React**: the control's `id` is the
+control's own concern (mirroring `MatFormFieldControl.id`/`MatInput`'s own
+`_uniqueId` fallback) — `FormControlWrapper` reads it, it doesn't generate
+and inject one the way `useId()` does in React. A control that doesn't
+implement `RECURSICA_FORM_CONTROL` renders without the `for`/
+`aria-describedby` connection — a real Angular constraint every future
+form-shaped component (`Checkbox`, `Radio`, `Switch`, `TextField`,
+`TextArea`, `Dropdown`, `AutoComplete`, `NumberInput`, `DatePicker`,
+`TimePicker`) needs to implement this contract to get.
 
-- `label`: `string`
-- `description`: `string`
-- `error`: `string`
-- `required`: `boolean`
+Verified live in Storybook against a demo directive (`DemoFormControlDirective`
+in `form-control-wrapper.stories.ts` — a stand-in for a real future field
+component, since none exist yet) that provides itself under
+`RECURSICA_FORM_CONTROL` and applies whatever `aria-describedby` ids get
+computed onto a plain `<input>`.
+
+`label`/`assistiveText`/`description`/`helperText`/`error` accept
+`string | TemplateRef<unknown>` — a plain string for the common case, a
+`TemplateRef` for rich content (richer ergonomics than forcing every text
+prop through `TemplateRef` the way `Button`'s `icon`/`Label`'s
+`labelActionArea` do, since those genuinely can't be plain strings).

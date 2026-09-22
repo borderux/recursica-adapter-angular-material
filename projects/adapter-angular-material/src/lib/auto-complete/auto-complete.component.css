@@ -1,1 +1,265 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `AutoComplete.module.css` input/section
+ * rules — the suggestions-panel rules from that same file live in
+ * `auto-complete-overlay.css` instead (global, unscoped — see that file's
+ * own header comment and `auto-complete-control.component.ts`'s class doc
+ * comment for why the CDK-overlay-portaled panel can't be reached here).
+ *
+ * Structural rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ * Left/right icon sections use the same absolutely-positioned-box technique
+ * `text-field.component.css`/`dropdown.component.css` already proved live —
+ * this component has both, matching `TextField`, not just the one
+ * `Dropdown` has.
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in AutoComplete.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_autocomplete_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .root {
+  height: var(--recursica_ui-kit_components_autocomplete_properties_height);
+
+  --input-left-section-size: calc(
+    var(
+        --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_autocomplete_properties_icon-size) +
+      var(--recursica_ui-kit_components_autocomplete_properties_icon-text-gap)
+  );
+  --input-right-section-size: calc(
+    var(
+        --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_autocomplete_properties_icon-size) +
+      var(--recursica_ui-kit_components_autocomplete_properties_icon-text-gap)
+  );
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  background: none;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .input {
+  height: var(--recursica_ui-kit_components_autocomplete_properties_height);
+  padding-top: var(
+    --recursica_ui-kit_components_autocomplete_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_autocomplete_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_autocomplete_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_autocomplete_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_autocomplete_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_autocomplete_properties_placeholder-opacity
+  );
+}
+
+.root[data-with-left-section] .input {
+  padding-left: var(--input-left-section-size);
+}
+
+.root[data-with-right-section] .input {
+  padding-right: var(--input-right-section-size);
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section[data-position="left"] {
+  left: 0;
+}
+
+.section[data-position="right"] {
+  right: 0;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] {
+  left: var(
+    --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_autocomplete_properties_icon-size);
+  height: var(--recursica_ui-kit_components_autocomplete_properties_icon-size);
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] {
+  right: var(
+    --recursica_ui-kit_components_autocomplete_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_autocomplete_properties_icon-size);
+  height: var(--recursica_ui-kit_components_autocomplete_properties_icon-size);
+}
+
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: 100%;
+  height: 100%;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_properties_colors_trailing-icon
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_error_properties_colors_trailing-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_opacity
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="right"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_autocomplete_variants_states_disabled_properties_colors_trailing-icon
+  );
+}

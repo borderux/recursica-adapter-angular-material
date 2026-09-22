@@ -1,0 +1,25 @@
+/*
+ * Ported from the genesis adapter's `Modal.module.css`'s `.footer` rule.
+ * Real, normal `Emulated`-scoped component CSS — see
+ * `modal-footer.component.ts`'s class doc comment for why this component
+ * doesn't need the global overlay-CSS treatment `ModalComponent`'s own
+ * chrome does.
+ */
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+:host-context([data-recursica-theme]) .footer {
+  padding: var(
+      --recursica_ui-kit_components_modal_properties_header-footer-vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding
+    );
+  background-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_footer-background-color
+  );
+  gap: var(--recursica_ui-kit_components_modal_properties_button-gap);
+}

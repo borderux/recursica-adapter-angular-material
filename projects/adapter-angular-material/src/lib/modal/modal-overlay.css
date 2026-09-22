@@ -1,0 +1,277 @@
+/*
+ * Recursica Modal — global overlay styling.
+ *
+ * `MatDialog.open(templateRef, config)` instantiates `rec-modal`'s content
+ * through `@angular/cdk/dialog`'s own portal mechanism — the same class of
+ * reachability problem `dropdown.component.ts`'s own "a global stylesheet
+ * is needed after all" section documents for `CdkConnectedOverlay`. Every
+ * selector here is scoped under `.rec-modal-panel-content` (applied
+ * directly in `modal.component.ts`'s template) and gated behind
+ * `[data-recursica-theme]` — `data-recursica-theme` is set on
+ * `document.documentElement` (confirmed in `theme-provider.component.ts`),
+ * a true document-wide ancestor, so `:host-context()`-equivalent gating
+ * still applies correctly even though this stylesheet is plain global CSS,
+ * not `:host-context()` itself.
+ *
+ * `.rec-modal-panel` (the `panelClass` passed to `MatDialogConfig`) targets
+ * the dialog's own outer CDK pane — used only to neutralize Material's own
+ * default panel sizing so this adapter's own `.rec-modal-panel-content`
+ * box (real width/height/scroll bounds) is what actually constrains the
+ * dialog, not Material's.
+ */
+
+/* Material's own theme constrains the outer pane to a fixed 560px/280px max/min-width by default
+   (`--mat-dialog-container-max-width`/`-min-width`, confirmed in the compiled
+   `.cdk-overlay-pane.mat-mdc-dialog-panel` rule) — reset both so this adapter's own
+   `.rec-modal-panel-content` min/max-width tokens are the real constraint instead. */
+.rec-modal-panel {
+  --mat-dialog-container-max-width: none;
+  --mat-dialog-container-min-width: 0;
+}
+
+[data-recursica-theme] .rec-modal-panel .mat-mdc-dialog-surface {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+[data-recursica-theme] .rec-modal-panel-content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  min-width: var(--recursica_ui-kit_components_modal_properties_min-width);
+  max-width: var(--recursica_ui-kit_components_modal_properties_max-width);
+  min-height: var(--recursica_ui-kit_components_modal_properties_min-height);
+  max-height: min(
+    var(--recursica_ui-kit_components_modal_properties_max-height),
+    calc(100vh - 4rem)
+  );
+
+  border-style: solid;
+  border-width: var(--recursica_ui-kit_components_modal_properties_border-size);
+  border-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_border-color
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_modal_properties_border-radius
+  );
+  background-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_content-background-color
+  );
+  box-shadow: var(--recursica_ui-kit_components_modal_properties_elevation);
+}
+
+[data-recursica-theme] .rec-modal-panel-content[data-full-screen] {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+
+[data-recursica-theme] .rec-modal-panel-content .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  padding: var(
+      --recursica_ui-kit_components_modal_properties_header-footer-vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding
+    );
+  background-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_header-background-color
+  );
+}
+
+[data-recursica-theme] .rec-modal-panel-content .title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+
+  color: var(--recursica_ui-kit_components_modal_properties_colors_title);
+  font-family: var(
+    --recursica_ui-kit_components_modal_properties_header-style_fontFamily
+  );
+  font-size: var(
+    --recursica_ui-kit_components_modal_properties_header-style_fontSize
+  );
+  font-style: var(
+    --recursica_ui-kit_components_modal_properties_header-style_fontStyle
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_modal_properties_header-style_fontWeight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_modal_properties_header-style_letterSpacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_modal_properties_header-style_lineHeight
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_modal_properties_header-style_textCase
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_modal_properties_header-style_textDecoration
+  );
+}
+
+[data-recursica-theme] .rec-modal-panel-content .bodyWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: hidden;
+  min-height: 0;
+}
+
+[data-recursica-theme] .rec-modal-panel-content .scrollArea {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+  border-top: var(
+      --recursica_ui-kit_components_modal_properties_scroll-divider-size
+    )
+    solid transparent;
+  border-bottom: var(
+      --recursica_ui-kit_components_modal_properties_scroll-divider-size
+    )
+    solid transparent;
+
+  padding: var(
+      --recursica_ui-kit_components_modal_properties_content-vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_modal_properties_content-horizontal-padding
+    );
+  color: var(--recursica_ui-kit_components_modal_properties_colors_content);
+  font-family: var(
+    --recursica_ui-kit_components_modal_properties_content-style_fontFamily
+  );
+  font-size: var(
+    --recursica_ui-kit_components_modal_properties_content-style_fontSize
+  );
+  font-style: var(
+    --recursica_ui-kit_components_modal_properties_content-style_fontStyle
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_modal_properties_content-style_fontWeight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_modal_properties_content-style_letterSpacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_modal_properties_content-style_lineHeight
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_modal_properties_content-style_textCase
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_modal_properties_content-style_textDecoration
+  );
+}
+
+[data-recursica-theme] .rec-modal-panel-content .scrollArea[data-scrolled-top] {
+  border-top-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_scroll-divider
+  );
+}
+
+[data-recursica-theme]
+  .rec-modal-panel-content
+  .scrollArea[data-scrolled-bottom] {
+  border-bottom-color: var(
+    --recursica_ui-kit_components_modal_properties_colors_scroll-divider
+  );
+}
+
+/* Close button — matches Button's text-variant, icon-only, small-size visual treatment
+   (same tokens Button.module.css itself uses), so it looks like a real Recursica Button
+   rather than bespoke chrome. */
+[data-recursica-theme] .rec-modal-panel-content .close {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  height: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
+  );
+  min-width: var(
+    --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_min-width
+  );
+  padding: 0
+    var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_horizontal-padding
+    );
+  border-radius: var(
+    --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_border-radius
+  );
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color
+  );
+}
+
+[data-recursica-theme] .rec-modal-panel-content .close svg {
+  width: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
+  );
+  height: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
+  );
+  position: relative;
+  z-index: 1;
+}
+
+[data-recursica-theme] .rec-modal-panel-content .close::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  opacity: 0;
+  background-color: var(--recursica_brand_states_hover_color);
+}
+
+[data-recursica-theme]
+  .rec-modal-panel-content
+  .close:hover:not(:disabled)::after {
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+[data-recursica-theme] .rec-modal-panel-content .close:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}

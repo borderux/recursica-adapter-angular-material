@@ -1,1 +1,228 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `DatePicker.module.css` input/section
+ * rules — the calendar popup rules from that same file live in
+ * `date-picker-overlay.css` instead (global, unscoped — see that file's own
+ * header comment and `date-picker-control.component.ts`'s class doc comment
+ * for why `MatDatepickerContent`'s `ViewEncapsulation.None` DOM can't be
+ * reached by this scoped stylesheet).
+ *
+ * Structural rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ * `.section` left-icon layout reuses the same absolutely-positioned-box
+ * technique `text-field.component.css`/`number-input.component.css` already
+ * proved live. No right section — the reference's own `DatePicker.tsx` has
+ * no `rightSection` prop.
+ *
+ * **Not needed here, unlike the reference**: Mantine's own
+ * `DatePickerInput` renders its value as a `<button>`'s block text content,
+ * which wraps by default — the reference's own CSS needed an explicit
+ * `white-space: nowrap` fix for it. This component's value lives in a real
+ * `<input>` (via `matInput`/`MatDatepickerInput`, both bare directives on
+ * this component's own element — see the control component's class doc
+ * comment), which never wraps to begin with, so that whole bug class
+ * doesn't apply.
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in DatePicker.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_date-picker_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+}
+
+:host-context([data-recursica-theme]) .root {
+  width: var(--recursica_ui-kit_components_date-picker_properties_width);
+  min-height: var(
+    --recursica_ui-kit_components_date-picker_properties_min-height
+  );
+
+  --input-left-section-size: calc(
+    var(
+        --recursica_ui-kit_components_date-picker_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_date-picker_properties_icon-size) +
+      var(--recursica_ui-kit_components_date-picker_properties_icon-text-gap)
+  );
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  background: none;
+  cursor: pointer;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .input {
+  min-height: var(
+    --recursica_ui-kit_components_date-picker_properties_min-height
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_date-picker_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_date-picker_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_date-picker_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_date-picker_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_date-picker_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_date-picker_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_date-picker_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_date-picker_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_date-picker_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_date-picker_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_date-picker_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_date-picker_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_date-picker_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_date-picker_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_date-picker_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_date-picker_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_date-picker_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_date-picker_properties_placeholder-opacity
+  );
+}
+
+.root[data-with-left-section] .input {
+  padding-left: var(--input-left-section-size);
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+:host-context([data-recursica-theme]) .section {
+  left: var(
+    --recursica_ui-kit_components_date-picker_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_date-picker_properties_icon-size);
+  height: var(--recursica_ui-kit_components_date-picker_properties_icon-size);
+}
+
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: 100%;
+  height: 100%;
+  color: var(
+    --recursica_ui-kit_components_date-picker_properties_colors_leading-icon
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .section svg {
+  color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_opacity
+  );
+  cursor: not-allowed;
+}
+
+.root[data-disabled] {
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .section svg {
+  color: var(
+    --recursica_ui-kit_components_date-picker_variants_states_disabled_properties_colors_leading-icon
+  );
+}

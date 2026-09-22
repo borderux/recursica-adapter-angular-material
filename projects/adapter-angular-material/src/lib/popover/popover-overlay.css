@@ -1,0 +1,132 @@
+/*
+ * Recursica Popover — global overlay styling.
+ *
+ * Near-verbatim copy of `hover-card-overlay.css`, scoped under
+ * `.rec-popover-panel` instead of `.rec-hover-card-panel` — confirmed
+ * directly against `recursica_variables_scoped.css` that Popover and
+ * HoverCard share the exact same token namespace
+ * (`recursica_ui-kit_components_hover-card-popover_properties_*`), the
+ * same way the reference's own `Popover.module.css`/`HoverCard.module.css`
+ * both read from `--recursica_ui-kit_components_hover-card-popover_properties_*`
+ * directly (confirmed by reading both files). See
+ * `hover-card.component.ts`'s/`dropdown.component.ts`'s class doc comments
+ * for the underlying CDK-portal reachability finding every selector here
+ * being scoped under `.rec-popover-panel` and gated behind
+ * `[data-recursica-theme]` repeats.
+ *
+ * EXEMPTIONS: same as `hover-card-overlay.css` — border-style: solid
+ * (Mantine's own Paper primitive doesn't set it natively either,
+ * confirmed identically for Popover in `Popover.module.css`'s own
+ * comment), and the beak is a real CSS border-triangle, not a sized
+ * element reading a `beak-size` token.
+ */
+
+[data-recursica-theme] .rec-popover-panel {
+  position: relative;
+  box-sizing: border-box;
+  border-style: solid;
+  background-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_background-color
+  );
+  border-width: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_border-size
+  );
+  border-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_border-radius
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_elevation
+  );
+  min-width: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_min-width
+  );
+  max-width: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_max-width
+  );
+  padding: var(
+      --recursica_ui-kit_components_hover-card-popover_properties_vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_hover-card-popover_properties_horizontal-padding
+    );
+  font-family: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_content-text_text-transform
+  );
+  color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_content
+  );
+}
+
+/* Beak/arrow — a real CSS border-triangle, centered on the panel's edge that faces the target
+   (data-position is the base side only: top/bottom/left/right, -start/-end alignment variants
+   all use the same centered beak — same documented scope cut as HoverCard's own). */
+[data-recursica-theme] .rec-popover-panel .arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+}
+
+[data-recursica-theme] .rec-popover-panel[data-position="top"] .arrow {
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+  border-bottom-width: 0;
+}
+
+[data-recursica-theme] .rec-popover-panel[data-position="bottom"] .arrow {
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+  border-top-width: 0;
+}
+
+[data-recursica-theme] .rec-popover-panel[data-position="left"] .arrow {
+  right: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+  border-right-width: 0;
+}
+
+[data-recursica-theme] .rec-popover-panel[data-position="right"] .arrow {
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(
+    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
+  );
+  border-left-width: 0;
+}

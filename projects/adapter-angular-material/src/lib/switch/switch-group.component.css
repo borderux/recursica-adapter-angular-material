@@ -1,0 +1,66 @@
+/*
+ * Ported from the genesis adapter's `Switch.module.css` — group rules only
+ * (`.groupRoot` and its `[data-layout]` variants, under its "GROUP STYLES"
+ * comment block). The primitive `Switch` rules live in `switch.component.css`.
+ *
+ * Unlike `Checkbox.module.css` (whose `.groupRoot` rules are duplicated
+ * across two separate blocks — see `checkbox-group.component.css`'s own
+ * header comment), `Switch.module.css` declares `.groupRoot` exactly once,
+ * the same as `Radio.module.css` — reproduced here the same way, no
+ * cascade-ordering puzzle to solve.
+ *
+ * Structural rules (display/flex-direction/align-items) are left ungated;
+ * every token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ */
+
+.root {
+  display: block;
+  width: 100%;
+}
+
+.groupRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+:host-context([data-recursica-theme]) .groupRoot {
+  padding: var(--recursica_ui-kit_components_switch-group_properties_padding);
+  gap: var(--recursica_ui-kit_components_switch-group_properties_item-gap);
+}
+
+.groupRoot[data-layout="side-by-side"] {
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
+  gap: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_side-by-side_properties_gutter
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  margin-top: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+}
+
+.groupRoot[data-layout="stacked"] {
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
+  margin-top: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_stacked_properties_label-field-gap
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_switch-group_variants_layouts_stacked_properties_top-bottom-margin
+  );
+}

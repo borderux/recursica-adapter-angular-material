@@ -1,0 +1,36 @@
+:host-context([data-recursica-theme]) .root {
+  padding: var(
+      --recursica_ui-kit_components_menu-item_properties_vertical-padding
+    )
+    var(--recursica_ui-kit_components_menu-item_properties_horizontal-padding);
+
+  font-family: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_menu-item_properties_supporting-text_text-transform
+  );
+
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_supporting-text-color
+  );
+  opacity: 0.7;
+}

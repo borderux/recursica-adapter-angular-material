@@ -1,1 +1,69 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's own real `ReadOnlyField.module.css`.
+ *
+ * Selectors are unprefixed (`.textField`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ *
+ * NOT ported: the reference's `.layoutOverride` block, which re-maps a
+ * `--form-control-margin-bottom` CSS custom property to a
+ * `read-only-field`-specific layout token
+ * (`..._variants_layouts_{stacked,side-by-side}_properties_top-bottom-margin`)
+ * so `FormControlWrapper`'s own vertical rhythm can be overridden per
+ * consumer. This adapter's own `FormControlLayoutComponent`
+ * (`form-control-layout/form-control-layout.component.css`) does not
+ * consume a `--form-control-margin-bottom` custom property at all — its
+ * `.root` margin-bottom is a hardcoded
+ * `var(--recursica_ui-kit_globals_form_properties_vertical-item-gap)` rule.
+ * Confirmed in `recursica_variables_scoped.css` that both of
+ * `read-only-field`'s own `stacked`/`side-by-side` `top-bottom-margin`
+ * tokens already alias to that exact same global token
+ * (`--recursica_ui-kit_components_read-only-field_variants_layouts_{stacked,side-by-side}_properties_top-bottom-margin: var(--recursica_ui-kit_globals_form_properties_vertical-item-gap)`)
+ * — so porting the override bridge here would have zero visible effect
+ * against this adapter's current `FormControlLayoutComponent`. Not modified
+ * here regardless (out of scope for this component; belongs to whichever
+ * future task revisits `FormControlLayoutComponent` itself), and documented
+ * as a deliberate no-op rather than a silent omission.
+ */
+
+.textField {
+  margin: 0; /* HARDCODE (ported): resets native <p> margin; FormControlWrapper controls vertical rhythm. */
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+  padding: 0; /* HARDCODE (ported): read-only fields have no padding token defined. */
+}
+
+:host-context([data-recursica-theme]) .textField {
+  font-family: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_line-height
+  );
+  font-style: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_font-style
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_read-only-field_properties_text_text-transform
+  );
+  color: var(
+    --recursica_ui-kit_components_read-only-field_properties_colors_text-color
+  );
+  min-height: var(
+    --recursica_ui-kit_components_read-only-field_properties_min-height
+  );
+}

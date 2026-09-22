@@ -3,5 +3,22 @@
   "dest": "../../dist",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    {
+      "glob": "tooltip-overlay.css",
+      "input": "src/lib/tooltip",
+      "output": "/"
+    },
+    {
+      "glob": "menu-overlay.css",
+      "input": "src/lib/menu",
+      "output": "/"
+    },
+    {
+      "glob": "dropdown-overlay.css",
+      "input": "src/lib/dropdown",
+      "output": "/"
+    }
+  ]
 }

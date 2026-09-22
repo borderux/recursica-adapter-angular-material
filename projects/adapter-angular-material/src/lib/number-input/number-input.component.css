@@ -1,1 +1,333 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `NumberInput.module.css`, adapted the
+ * same way `text-field.component.css` adapts `TextField.module.css` — no
+ * `mergeClassNames`/Mantine `classNames` prop indirection needed here since
+ * this is a hand-built `<input>`, not a wrapped Mantine primitive.
+ *
+ * Structural rules ungated; every token-driven declaration gated behind
+ * `:host-context([data-recursica-theme])`, per docs/STYLING_SYSTEM.md §4.
+ * `.section` left/right icon layout reuses the same absolutely-positioned-box
+ * technique `text-field.component.css`/`dropdown.component.css` already
+ * proved live.
+ */
+
+/* EXEMPTIONS:
+   - border-size is constant across disabled/error states — only border-color changes; the
+     disabled/error border-size tokens are never applied by design, matching the genesis
+     reference's own identical exemption in NumberInput.module.css. */
+/* recursica-ignore: --recursica_ui-kit_components_number-input_variants_states_disabled_properties_border-size */
+/* recursica-ignore: --recursica_ui-kit_components_number-input_variants_states_error_properties_border-size */
+
+.root {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+:host-context([data-recursica-theme]) .root {
+  min-height: var(
+    --recursica_ui-kit_components_number-input_properties_min-height
+  );
+
+  --input-left-section-size: calc(
+    var(
+        --recursica_ui-kit_components_number-input_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_number-input_properties_icon-size) +
+      var(--recursica_ui-kit_components_number-input_properties_icon-text-gap)
+  );
+  --input-right-section-size: calc(
+    var(
+        --recursica_ui-kit_components_number-input_properties_horizontal-padding
+      ) +
+      var(--recursica_ui-kit_components_number-input_properties_icon-size) +
+      var(--recursica_ui-kit_components_number-input_properties_icon-text-gap)
+  );
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  font: inherit;
+  outline: none;
+  border-style: solid;
+  background: none;
+
+  /* Hide the native browser spin-button UI — replaced by `.controls` below. */
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .input {
+  min-height: var(
+    --recursica_ui-kit_components_number-input_properties_min-height
+  );
+  padding-top: var(
+    --recursica_ui-kit_components_number-input_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_number-input_properties_vertical-padding
+  );
+  padding-left: var(
+    --recursica_ui-kit_components_number-input_properties_horizontal-padding
+  );
+  padding-right: var(
+    --recursica_ui-kit_components_number-input_properties_horizontal-padding
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_number-input_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_number-input_properties_border-size
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_number-input_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_number-input_properties_text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_number-input_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_number-input_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_number-input_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_number-input_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_number-input_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_number-input_properties_text_text-transform
+  );
+
+  background-color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme]) .input::placeholder {
+  opacity: var(
+    --recursica_ui-kit_components_number-input_properties_placeholder-opacity
+  );
+}
+
+.root[data-with-left-section] .input {
+  padding-left: var(--input-left-section-size);
+}
+
+.root[data-with-right-section] .input {
+  padding-right: var(--input-right-section-size);
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section[data-position="left"] {
+  left: 0;
+}
+
+.section[data-position="right"] {
+  right: 0;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] {
+  left: var(
+    --recursica_ui-kit_components_number-input_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_number-input_properties_icon-size);
+  height: var(--recursica_ui-kit_components_number-input_properties_icon-size);
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] {
+  right: var(
+    --recursica_ui-kit_components_number-input_properties_horizontal-padding
+  );
+  width: var(--recursica_ui-kit_components_number-input_properties_icon-size);
+  height: var(--recursica_ui-kit_components_number-input_properties_icon-size);
+}
+
+/* Same "caller-supplied TemplateRef's <svg> belongs to the caller's view for
+   Emulated-scoping purposes" reasoning as text-field.component.css's identical comment. */
+.section svg {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .section svg {
+  width: 100%;
+  height: 100%;
+}
+
+:host-context([data-recursica-theme]) .section[data-position="left"] svg {
+  color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] svg {
+  color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_trailing-icon
+  );
+}
+
+/* -------------------------------------
+   CONTROLS (increment/decrement)
+-------------------------------------- */
+
+.controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .controls {
+  padding-right: var(
+    --recursica_ui-kit_components_number-input_properties_horizontal-padding
+  );
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.control {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.control:disabled {
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme]) .control {
+  width: var(--recursica_ui-kit_components_number-input_properties_icon-size);
+  color: var(
+    --recursica_ui-kit_components_number-input_properties_colors_trailing-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .control svg {
+  width: calc(
+    var(--recursica_ui-kit_components_number-input_properties_icon-size) * 0.75
+  );
+  height: calc(
+    var(--recursica_ui-kit_components_number-input_properties_icon-size) * 0.75
+  );
+}
+
+/* -------------------------------------
+   FOCUS / ERROR / DISABLED STATE
+-------------------------------------- */
+
+:host-context([data-recursica-theme]) .input:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-error] .input {
+  border-color: var(
+    --recursica_ui-kit_components_number-input_variants_states_error_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_number-input_variants_states_error_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_error_properties_colors_text-color
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_error_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-error]
+  .section[data-position="right"]
+  svg,
+:host-context([data-recursica-theme]) .root[data-error] .control {
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_error_properties_colors_trailing-icon
+  );
+}
+
+:host-context([data-recursica-theme]) .root[data-disabled] .input {
+  border-color: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_colors_text-color
+  );
+  opacity: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_opacity
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="left"]
+  svg {
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_colors_leading-icon
+  );
+}
+
+:host-context([data-recursica-theme])
+  .root[data-disabled]
+  .section[data-position="right"]
+  svg,
+:host-context([data-recursica-theme]) .root[data-disabled] .control {
+  color: var(
+    --recursica_ui-kit_components_number-input_variants_states_disabled_properties_colors_trailing-icon
+  );
+}

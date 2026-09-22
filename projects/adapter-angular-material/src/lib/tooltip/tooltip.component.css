@@ -1,1 +1,21 @@
-/* Styling not yet implemented. */
+/*
+ * The real token/beak styling lives in `tooltip-overlay.css` (a global
+ * package asset), not here — see tooltip.component.ts's class doc comment
+ * for why: MatTooltip's floating panel renders via CDK Overlay, outside
+ * this component's own template, so Emulated-encapsulation-scoped CSS in
+ * this file can never reach it.
+ *
+ * `display: inline-flex`, not `display: contents`: `MatTooltip` positions
+ * its overlay off `elementRef.nativeElement.getBoundingClientRect()` of
+ * this wrapper — verified live (Playwright) that `display: contents`
+ * produces a zero-size rect pinned at `(0, 0)` (a `display: contents`
+ * element generates no box of its own at all, so it has nothing for
+ * `getBoundingClientRect()` to measure), which sent the tooltip to the
+ * top-left corner of the viewport instead of anchoring to the trigger.
+ * `inline-flex` shrink-wraps tightly to the projected content's own size
+ * (no visible extra box, no added spacing) while still generating a real,
+ * correctly-positioned box to anchor the overlay to.
+ */
+.root {
+  display: inline-flex;
+}

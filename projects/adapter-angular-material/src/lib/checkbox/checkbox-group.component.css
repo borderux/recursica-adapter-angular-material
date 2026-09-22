@@ -1,0 +1,89 @@
+/*
+ * Ported from the genesis adapter's `Checkbox.module.css` — group rules
+ * only (`.groupRoot` and its `[data-layout]` variants). The primitive
+ * `Checkbox` rules live in `checkbox.component.css`.
+ *
+ * The source-of-truth file declares `.groupRoot`/`.groupRoot[data-layout=...]`
+ * **twice** — a "GROUP STYLES" block near the top of the file and a
+ * "CheckboxGroup Layouts" block near the bottom, both matching the same
+ * elements. Reproduced here in the same order, on purpose, so ordinary CSS
+ * cascade (later declaration wins for equal specificity) resolves
+ * identically to the source file rather than guessing which one was
+ * "meant" to win.
+ *
+ * Structural rules (display/flex-direction/flex-wrap) are left ungated;
+ * every token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ */
+
+.root {
+  display: block;
+  width: 100%;
+}
+
+.groupRoot {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .groupRoot {
+  padding: var(--recursica_ui-kit_components_checkbox-group_properties_padding);
+  gap: var(--recursica_ui-kit_components_checkbox-group_properties_item-gap);
+}
+
+.groupRoot[data-layout="side-by-side"] {
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
+  padding-top: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  padding-bottom: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_vertical-padding
+  );
+  margin-top: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_top-bottom-margin
+  );
+}
+
+.groupRoot[data-layout="stacked"] {
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
+  margin-top: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_top-bottom-margin
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_top-bottom-margin
+  );
+}
+
+/* --- CheckboxGroup Layouts (second block, same selectors — see header comment) --- */
+
+.groupRoot[data-layout="stacked"] {
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
+  gap: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_label-field-gap
+  );
+}
+
+.groupRoot[data-layout="side-by-side"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+:host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
+  gap: var(
+    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_gutter
+  );
+}

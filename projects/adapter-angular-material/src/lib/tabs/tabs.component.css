@@ -1,1 +1,35 @@
-/* Styling not yet implemented. */
+/*
+ * Root layout only. `.list`/`.tab`/`.panel` live in sibling components
+ * (TabsListComponent/TabComponent/TabPanelComponent, each its own
+ * ViewEncapsulation.Emulated scope) — they reach these same `data-variant`/
+ * `data-orientation`/`data-inverted` attributes (set on this component's
+ * own `.root` below) via `:host-context([data-variant="..."])` etc. in
+ * their own CSS files, rather than the nested `.root[data-variant] .tab`
+ * selectors the source-of-truth `Tabs.module.css` uses — Angular's
+ * per-component style scoping (docs/STYLING_SYSTEM.md §3) can't select
+ * across a component boundary the way a single shared CSS Module file can.
+ * Same technique as `card.component.css`'s `--card-padding` custom
+ * property crossing into `CardHeader`/`CardFooter`, just via attribute
+ * selectors instead of a custom property, because these rules are
+ * conditional (`data-variant="pills"` vs `"default"`), not a single value.
+ */
+
+.root {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Vertical: list beside the panel, not above it. Mantine's own base
+   (non-Recursica) Tabs styling provides this structural layout for free;
+   this adapter has no such base to inherit, so it's declared directly. */
+.root[data-orientation="vertical"] {
+  width: auto;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+/* Inverted + vertical ("list on the right instead of left") is a real gap —
+   see IMPLEMENTATION_NOTES.md. Only horizontal inversion (list order swap,
+   handled in tabs-list.component.css) is implemented. */

@@ -1,0 +1,398 @@
+/*
+ * Ported from the reference's own `Timeline.module.css`. Unlike the
+ * reference (which syncs bullet/connector geometry via Mantine's own
+ * `--tl-bullet-size`/`--tl-line-width` custom properties, needed because
+ * Mantine's unstyled `Timeline` owns the connector), this component
+ * hand-builds the connector directly (`.item::before`) — see
+ * `timeline-item.component.ts`'s class doc comment for why no
+ * cross-component custom-property sync is needed here.
+ *
+ * `:host { display: contents }` — same reasoning as `StepComponent`'s own
+ * `stepper-step.component.css`: this component's own `.item` becomes a
+ * real flex-item sibling of `<rec-timeline>`'s `.root` column directly.
+ */
+
+:host {
+  display: contents;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .item {
+  margin-top: var(--recursica_ui-kit_components_timeline_properties_item-gap);
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+/* Connector line — a real border-left on a positioned pseudo-element behind the bullet,
+   bridging from this item's bullet down to the next item's bullet. Hidden on the last item
+   (no next item to connect to), matching the reference's own `.item:last-child::before` cutoff. */
+.item::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  border-left-style: solid;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.item[data-last]::before {
+  display: none;
+}
+
+:host-context([data-recursica-theme]) .item::before {
+  border-left-width: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_inactive_properties_connector-size
+  );
+  border-left-color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_inactive_properties_colors_connector-color
+  );
+}
+:host-context([data-recursica-theme]) .item[data-active]::before {
+  border-left-width: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_active_properties_connector-size
+  );
+  border-left-color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_active_properties_colors_connector-color
+  );
+}
+
+/* ==== BULLET ==== */
+
+.itemBullet {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  overflow: hidden;
+}
+
+.itemBullet > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* Default variant */
+:host-context([data-recursica-theme])
+  .item[data-variant="default"]
+  .itemBullet {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_border-size
+  );
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_variants_selection-states_inactive_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_variants_selection-states_inactive_properties_colors_border-color
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="default"][data-active]
+  .itemBullet {
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_variants_selection-states_active_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_variants_selection-states_active_properties_colors_border-color
+  );
+}
+
+/* Icon variant */
+:host-context([data-recursica-theme]) .item[data-variant="icon"] .itemBullet {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_bullet-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_bullet-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_border-size
+  );
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_inactive_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_inactive_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_inactive_properties_colors_icon-color
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="icon"]
+  .itemBullet
+  > * {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_icon-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_icon-size
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="icon"][data-active]
+  .itemBullet {
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_active_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_active_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon_variants_selection-states_active_properties_colors_icon-color
+  );
+}
+
+/* Icon-alternative variant */
+:host-context([data-recursica-theme])
+  .item[data-variant="icon-alternative"]
+  .itemBullet {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_bullet-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_bullet-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_border-size
+  );
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_inactive_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_inactive_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_inactive_properties_colors_icon-color
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="icon-alternative"]
+  .itemBullet
+  > * {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_icon-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_icon-size
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="icon-alternative"][data-active]
+  .itemBullet {
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_active_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_active_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_variants_selection-states_active_properties_colors_icon-color
+  );
+}
+
+/* Avatar variant — sized off the default bullet-size (not its own avatar-size token) to keep
+   the connector line aligned across variants, matching the reference's own identical exemption
+   (its own recursica-ignore comment for --...timeline-bullet_variants_types_avatar_properties_avatar-size). */
+:host-context([data-recursica-theme]) .item[data-variant="avatar"] .itemBullet {
+  width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size
+  );
+  height: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_properties_border-size
+  );
+  opacity: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_inactive_properties_avatar-opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_inactive_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_inactive_properties_colors_border-color
+  );
+}
+:host-context([data-recursica-theme])
+  .item[data-variant="avatar"][data-active]
+  .itemBullet {
+  opacity: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_active_properties_avatar-opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_active_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_avatar_variants_selection-states_active_properties_colors_border-color
+  );
+}
+
+/* ==== BODY ==== */
+
+.itemBody {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+:host-context([data-recursica-theme]) .itemBody {
+  padding-left: var(
+    --recursica_ui-kit_components_timeline_properties_bullet-content-gap
+  );
+}
+
+.itemTitle {
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .itemTitle {
+  font-family: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_timeline_properties_title-text_text-transform
+  );
+  margin-bottom: var(
+    --recursica_ui-kit_components_timeline_properties_title-description-gap
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_inactive_properties_colors_title-color
+  );
+}
+:host-context([data-recursica-theme]) .item[data-active] .itemTitle {
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_active_properties_colors_title-color
+  );
+}
+
+.itemContent {
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .itemContent {
+  gap: var(
+    --recursica_ui-kit_components_timeline_properties_description-timestamp-gap
+  );
+  max-width: var(
+    --recursica_ui-kit_components_timeline_properties_max-text-width
+  );
+}
+
+:host-context([data-recursica-theme]) .description {
+  font-family: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_timeline_properties_description-text_text-transform
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_inactive_properties_colors_description-color
+  );
+}
+:host-context([data-recursica-theme]) .item[data-active] .description {
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_active_properties_colors_description-color
+  );
+}
+
+:host-context([data-recursica-theme]) .timestamp {
+  font-family: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_font-size
+  );
+  font-style: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_timeline_properties_timestamp-text_text-transform
+  );
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_inactive_properties_colors_timestamp-color
+  );
+}
+:host-context([data-recursica-theme]) .item[data-active] .timestamp {
+  color: var(
+    --recursica_ui-kit_components_timeline_variants_selection-states_active_properties_colors_timestamp-color
+  );
+}

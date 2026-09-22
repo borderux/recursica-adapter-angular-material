@@ -1,1 +1,165 @@
-/* Styling not yet implemented. */
+/*
+ * Ported directly from the genesis adapter's own real
+ * Label.tsx/.module.css — same Recursica token names
+ * (`recursica_ui-kit_components_label_*`), same flex+`order`-based layout
+ * (see class doc comment for why there's no underlying Material component
+ * to translate from).
+ *
+ * Selectors are unprefixed (`.root`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ */
+
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .root {
+  color: var(--recursica_ui-kit_components_label_properties_colors_text-color);
+}
+
+.root[data-alignment="left"] {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.root[data-alignment="right"] {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.labelText {
+  order: 1;
+}
+
+:host-context([data-recursica-theme]) .labelText {
+  font-family: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_label_properties_label-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_label_properties_label-text_line-height
+  );
+  font-style: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-style
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_label_properties_label-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_label_properties_label-text_text-transform
+  );
+}
+
+.required {
+  order: 2;
+}
+
+:host-context([data-recursica-theme]) .required {
+  margin-left: var(
+    --recursica_ui-kit_components_label_properties_required-indicator-gap
+  );
+  color: var(
+    --recursica_ui-kit_components_label_properties_colors_asterisk-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_label_properties_label-text_font-size
+  );
+  line-height: var(
+    --recursica_ui-kit_components_label_properties_label-text_line-height
+  );
+}
+
+.optionalText {
+  order: 5;
+  flex-basis: 100%;
+  margin-left: 0;
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .optionalText {
+  margin-top: var(
+    --recursica_ui-kit_components_label_properties_label-optional-text-gap
+  );
+  font-family: var(
+    --recursica_ui-kit_components_label_properties_optional-text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_label_properties_optional-text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_label_properties_optional-text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_label_properties_optional-text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_label_properties_optional-text_line-height
+  );
+  font-style: var(
+    --recursica_ui-kit_components_label_properties_optional-text_font-style
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_label_properties_optional-text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_label_properties_optional-text_text-transform
+  );
+  opacity: var(
+    --recursica_ui-kit_components_label_properties_optional-text-opacity
+  );
+}
+
+.actionAreaWrapper {
+  order: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .actionAreaWrapper {
+  margin-left: var(
+    --recursica_ui-kit_components_label_properties_edit-icon-gap
+  );
+}
+
+.editIconWrapper {
+  order: 4;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .editIconWrapper {
+  margin-left: var(
+    --recursica_ui-kit_components_label_properties_edit-icon-gap
+  );
+}
+
+:host-context([data-recursica-theme])
+  .editIconWrapper[data-replaces-asterisk="true"] {
+  color: var(
+    --recursica_ui-kit_components_label_properties_colors_asterisk-color
+  );
+}

@@ -1,30 +1,44 @@
-# Flex — Implementation Notes (pre-implementation stub)
+# Flex — Implementation Notes
 
-**Status**: stub (`docs/CREATING_AN_ADAPTER.md` step 9). No real behavior
-is implemented — this component renders the shared
-`<rec-in-development-stub>` placeholder and declares only a first-pass
-`@Input()` surface.
+**Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
-**Seeded from**: `docs/ADAPTER_INTEGRATION_REPORT.md` §9's
-component-by-component mapping table (and, for components with no row of
-their own there, its "Additional notable findings" section / the relevant
-numbered Q&A). **This is a pre-implementation survey, not a substitute for
-step 10's own prop audit against `@angular/material`'s real `.d.ts` at
-implementation time** — re-verify every claim below before building.
+## Genuinely does not exist — re-confirmed, not carried over
 
-## Integration report findings
+The stub's own `IMPLEMENTATION_NOTES.md` already confirmed `Category: DOES
+NOT EXIST` (`@angular/cdk/layout` only offers `BreakpointObserver`/
+`MediaMatcher`, no markup/CSS). Re-confirmed at build time.
 
-- **Category**: DOES NOT EXIST
-- **Angular Material / CDK candidate**: _(none; see Q5)_
-- **Notes**: Confirmed absent from both `@angular/material` and `@angular/cdk` (Q5) — no export anywhere resembling a generic flex/grid layout wrapper. `@angular/cdk/layout` only offers `BreakpointObserver`/`MediaMatcher` (responsive breakpoint detection, no markup/CSS). `Flex`/`Stack`/`Group`/`Grid` all need to be built as light wrappers around plain CSS flexbox/grid, as real Angular components (nothing to wrap).
+## No design-system CSS at all — a pure passthrough
 
-## First-pass `@Input()` surface (this stub only — not audited)
+The reference's own `Flex.module.css` is empty ("Mantine handles flex,
+gap, align, justify. No intrinsic design-system styles required for pure
+layout wrappers.") — `Flex.tsx` applies every prop as literal inline CSS
+via Mantine's `Flex`, with no default beyond `direction: row`. This
+component reproduces that directly via host style bindings, no inner
+wrapper `<div>` — the host element itself is the flex container.
 
-A minimal, best-effort guess at the Recursica-facing inputs this component
-will likely need, based on the report findings above. Not exhaustive, not
-verified against the real Material `.d.ts` — step 10's own audit
-(`docs/CREATING_AN_ADAPTER.md` step 10 item 1) supersedes this list.
+## `RecursicaOverStyled` gate skipped
 
-- `gap`: `string`
-- `direction`: `string`
-- `wrap`: `boolean`
+Confirmed by reading `Flex.tsx`'s own doc comment: layout primitives don't
+use the `overStyled` escape hatch. This component has no wrapped element to
+protect either way — a caller's own `class`/`[style]` on `<rec-flex>`
+already reaches the host directly via ordinary Angular host binding.
+
+## `gap`/`rowGap`/`columnGap`: shared `resolveSpacing` utility
+
+`utils/recursica-spacing.ts` is a direct port of the reference's own
+`SPACING_MAP`/`mapLayoutProps` (`filterStylingProps.ts`) — shared by
+`Flex`/`Group`/`Stack`/`Grid`, all of which need the identical
+"`rec-*` token or raw CSS value" resolution.
+
+## Verification
+
+**Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and
+`eslint` all clean. All 3 golden-matching stories (Default,
+StaticGapSmallColumn, StaticGapLargeRow) confirmed registered and
+compiling with zero webpack errors in a live Storybook dev server (port
+6007, isolated from the developer's own 6006 instance).
+
+**Not done, same flag as every component built this session**: no
+browser/Playwright tooling available, so the actual rendered flex layout
+was reasoned from the code, not visually verified.

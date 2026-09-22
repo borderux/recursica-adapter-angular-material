@@ -90,9 +90,18 @@ html[data-recursica-theme="dark"] {
 @import "@angular/cdk/a11y-prebuilt.css";
 
 @import "./path/to/recursica_variables_scoped.css"; // Recursica theme variables
+@import "@recursica/adapter-angular-material/tooltip-overlay.css";
+@import "@recursica/adapter-angular-material/menu-overlay.css";
+@import "@recursica/adapter-angular-material/dropdown-overlay.css";
+@import "@recursica/adapter-angular-material/date-picker-overlay.css";
+@import "@recursica/adapter-angular-material/auto-complete-overlay.css";
+@import "@recursica/adapter-angular-material/hover-card-overlay.css";
+@import "@recursica/adapter-angular-material/modal-overlay.css";
+@import "@recursica/adapter-angular-material/panel-overlay.css";
+@import "@recursica/adapter-angular-material/popover-overlay.css";
 ```
 
-This adapter's own component CSS is not a separate stylesheet to import — Angular's build pipeline compiles each component's `styleUrl` inline as part of that component's own module, scoped via `ViewEncapsulation.Emulated` (see `docs/STYLING_SYSTEM.md` §3). There's no `@recursica/adapter-angular-material/style.css`-equivalent import step the way the React adapters need.
+Most of this adapter's own component CSS is not a separate stylesheet to import — Angular's build pipeline compiles each component's `styleUrl` inline as part of that component's own module, scoped via `ViewEncapsulation.Emulated` (see `docs/STYLING_SYSTEM.md` §3). `Tooltip`/`Menu`/`Dropdown`/`DatePicker`/`AutoComplete`/`HoverCard`/`Modal`/`Panel`/`Popover` are the exceptions so far: each renders its interactive panel through CDK Overlay (or, for `DatePicker`, Angular Material's own `ViewEncapsulation.None` calendar), outside this adapter's own scoped-CSS reach, so their real token styling ships as genuine global stylesheets instead (see each one's own class doc comment).
 
 ---
 
@@ -163,7 +172,7 @@ export default {
 
 It is highly recommended (but optional) to install `eslint-plugin-recursica`, which flags use of the `overStyled` escape-hatch prop so it stays easy to audit.
 
-> **Note**: this adapter has not yet implemented an `overStyled` mechanism of its own (see [OVERSTYLING.md](OVERSTYLING.md) and [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6) — installing this plugin today has nothing to flag in this adapter's own components. Documented here for parity with the other adapters' setup instructions, and so it's already wired up once the mechanism exists.
+See [OVERSTYLING.md](OVERSTYLING.md) and [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6 for this adapter's own `overStyled`/`overClass`/`overStyle` mechanism.
 
 Install the plugin as a dev dependency:
 

@@ -1,0 +1,49 @@
+.root {
+  box-sizing: border-box;
+  border-bottom-style: solid;
+}
+
+:host-context([data-recursica-theme]) .root {
+  /* Bleeds to the card's edges — see card.component.ts's `--card-padding` doc comment. */
+  margin: calc(var(--card-padding, 0px) * -1)
+    calc(var(--card-padding, 0px) * -1) 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+
+  background-color: var(
+    --recursica_ui-kit_components_card_properties_colors_header-background-color
+  );
+  padding: var(--recursica_ui-kit_components_card_properties_header-padding);
+  color: var(--recursica_ui-kit_components_card_properties_colors_title);
+  border-bottom-width: var(
+    --recursica_ui-kit_components_card_properties_divider-size
+  );
+  border-bottom-color: var(
+    --recursica_ui-kit_components_card_properties_colors_divider-color
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_card_properties_header-style_fontFamily
+  );
+  font-size: var(
+    --recursica_ui-kit_components_card_properties_header-style_fontSize
+  );
+  font-style: var(
+    --recursica_ui-kit_components_card_properties_header-style_fontStyle
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_card_properties_header-style_fontWeight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_card_properties_header-style_letterSpacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_card_properties_header-style_lineHeight
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_card_properties_header-style_textCase
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_card_properties_header-style_textDecoration
+  );
+}

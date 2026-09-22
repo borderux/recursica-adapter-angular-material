@@ -1,1 +1,269 @@
-/* Styling not yet implemented. */
+/*
+ * Ported from the genesis adapter's `Radio.module.css` — primitive
+ * (single-radio) rules only. `RadioGroup`'s own `.groupRoot` rules live in
+ * `radio-group.component.css`.
+ *
+ * Structural rules (position/display/flex) are left ungated; every
+ * token-driven declaration is gated behind
+ * `:host-context([data-recursica-theme])`, per `docs/STYLING_SYSTEM.md` §4.
+ *
+ * ## `.inner`'s `margin-top` centering trick, ported faithfully
+ *
+ * `Radio.module.css`'s `.inner` sets its own `font-size` to the label's text
+ * token so an `em`-based line-height token evaluates to the right pixel
+ * value, then offsets `margin-top` by `(line-height - circle-size) / 2` to
+ * vertically center the circle against the label's first line — reproduced
+ * verbatim rather than re-derived, since the em-based line-height token
+ * can't be multiplied by font-size in plain CSS (per the source file's own
+ * comment).
+ */
+
+.root {
+  display: inline-block;
+}
+
+:host-context([data-recursica-theme]) .root {
+  max-width: var(
+    --recursica_ui-kit_components_radio-button-item_properties_max-width
+  );
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+:host-context([data-recursica-theme]) .body {
+  gap: var(
+    --recursica_ui-kit_components_radio-button-item_properties_label-gap
+  );
+}
+
+.body.readOnlyDisplay {
+  cursor: default;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .inner {
+  width: var(--recursica_ui-kit_components_radio-button_properties_size);
+  height: var(--recursica_ui-kit_components_radio-button_properties_size);
+  font-size: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_font-size
+  );
+  margin-top: calc(
+    (
+        var(
+            --recursica_ui-kit_components_radio-button-item_properties_text_line-height
+          ) -
+          var(--recursica_ui-kit_components_radio-button_properties_size)
+      ) /
+      2
+  );
+}
+
+.radio {
+  display: block;
+  cursor: pointer;
+  appearance: none;
+  box-sizing: border-box;
+  border-style: solid;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  transition: all 0.2s ease; /* HARDCODE: matches Radio.module.css's own documented hardcode; no transition token exists. */
+}
+
+:host-context([data-recursica-theme]) .radio {
+  width: var(--recursica_ui-kit_components_radio-button_properties_size);
+  height: var(--recursica_ui-kit_components_radio-button_properties_size);
+  border-radius: var(
+    --recursica_ui-kit_components_radio-button_properties_border-radius
+  );
+  border-width: var(
+    --recursica_ui-kit_components_radio-button_properties_border-size
+  );
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .radio:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+:host-context([data-recursica-theme]) .radio:checked,
+:host-context([data-recursica-theme]) .radio.radioChecked {
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_properties_colors_border-color
+  );
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+}
+
+:host-context([data-recursica-theme]) .radio:disabled:not(:checked) {
+  opacity: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .radio:checked:disabled {
+  opacity: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+/*
+ * `.readOnlyDisplay`'s static circle reuses the disabled-state color
+ * tokens — the honest approximation documented in radio.component.ts's
+ * class doc comment and IMPLEMENTATION_NOTES.md's "ReadOnlyField gap"
+ * section (no dedicated read-only color tokens exist in the schema either,
+ * same gap `Checkbox`'s own readOnly approximation already flagged).
+ */
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .radio:not(.radioChecked) {
+  opacity: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+:host-context([data-recursica-theme]) .readOnlyDisplay .radio.radioChecked {
+  opacity: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_opacity
+  );
+  background-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_border-color
+  );
+}
+
+.icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+:host-context([data-recursica-theme]) .icon {
+  width: var(--recursica_ui-kit_components_radio-button_properties_icon-size);
+  height: var(--recursica_ui-kit_components_radio-button_properties_icon-size);
+}
+
+/* No icon-color token exists for the unselected state (no icon is visible then) — matches Radio.module.css's own note. */
+:host-context([data-recursica-theme]) .radio:checked + .icon,
+:host-context([data-recursica-theme]) .radio.radioChecked + .icon {
+  color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .radio:checked:disabled + .icon,
+:host-context([data-recursica-theme])
+  .readOnlyDisplay
+  .radio.radioChecked
+  + .icon {
+  color: var(
+    --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_icon-color
+  );
+}
+
+.labelWrapper {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-width: 0; /* HARDCODE: forces text wrap boundary in flex child, matches Radio.module.css's own hardcode. */
+}
+
+.label {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.readOnlyDisplay .label {
+  cursor: default;
+}
+
+:host-context([data-recursica-theme]) .label {
+  color: var(
+    --recursica_ui-kit_components_radio-button-item_properties_colors_text-color
+  );
+  font-family: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_font-weight
+  );
+  line-height: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_line-height
+  );
+  font-style: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_font-style
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_letter-spacing
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_radio-button-item_properties_text_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]) .body:has(.radio:disabled) .label,
+:host-context([data-recursica-theme]) .readOnlyDisplay .label {
+  opacity: var(
+    --recursica_ui-kit_components_radio-button-item_variants_states_disabled_properties_opacity
+  );
+  color: var(
+    --recursica_ui-kit_components_radio-button-item_properties_colors_disabled-text
+  );
+}

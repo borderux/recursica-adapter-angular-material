@@ -1,1 +1,126 @@
-/* Styling not yet implemented. */
+/*
+ * Real CSS Grid implementation — see `grid.component.ts`'s own class doc
+ * comment for why this doesn't port Mantine's flexbox-plus-negative-margin
+ * `Grid` internals (there's no Mantine stylesheet here to fight
+ * specificity against, so the simpler native approach is used instead).
+ *
+ * Breakpoints (`36em`/`48em`/`62em`/`75em`/`88em` for xs/sm/md/lg/xl) are
+ * Mantine's own hardcoded defaults (confirmed in `@mantine/core`'s
+ * compiled `styles.css`) — reused for the same reason `Container`'s size
+ * scale reuses them: no Recursica breakpoint token exists to reference
+ * instead.
+ */
+
+.inner {
+  display: grid;
+  align-items: stretch;
+}
+
+/*
+ * Column span/offset resolution — mobile-first cascade. Each breakpoint's
+ * `@media` block only overrides the CSS custom property that breakpoint
+ * actually sets (`--col-span-xs` etc., set inline by GridColComponent's own
+ * host bindings — see grid-col.component.ts) and lets the `var(..., var(...))`
+ * fallback chain carry forward whatever the next-smaller breakpoint
+ * resolved to, matching Mantine's own "override upward, inherit downward"
+ * responsive prop behavior.
+ */
+rec-grid-col {
+  display: block;
+  grid-column: span var(--col-span-base, 1);
+  margin-inline-start: calc(
+    var(--col-offset-base, 0) * (100% / var(--rec-grid-columns, 6))
+  );
+}
+
+@media (min-width: 36em) {
+  rec-grid-col {
+    grid-column: span var(--col-span-xs, var(--col-span-base, 1));
+    margin-inline-start: calc(
+      var(--col-offset-xs, var(--col-offset-base, 0)) *
+        (100% / var(--rec-grid-columns, 6))
+    );
+  }
+
+  rec-grid-col[data-hidden-from="xs"] {
+    display: none;
+  }
+}
+
+@media (max-width: 35.99em) {
+  rec-grid-col[data-visible-from="xs"] {
+    display: none;
+  }
+}
+
+@media (min-width: 48em) {
+  rec-grid-col {
+    grid-column: span
+      var(--col-span-sm, var(--col-span-xs, var(--col-span-base, 1)));
+    margin-inline-start: calc(
+      var(--col-offset-sm, var(--col-offset-xs, var(--col-offset-base, 0))) *
+        (100% / var(--rec-grid-columns, 6))
+    );
+  }
+
+  rec-grid-col[data-hidden-from="sm"] {
+    display: none;
+  }
+}
+
+@media (max-width: 47.99em) {
+  rec-grid-col[data-visible-from="sm"] {
+    display: none;
+  }
+}
+
+@media (min-width: 62em) {
+  rec-grid-col {
+    grid-column: span
+      var(
+        --col-span-md,
+        var(--col-span-sm, var(--col-span-xs, var(--col-span-base, 1)))
+      );
+    margin-inline-start: calc(
+      var(
+          --col-offset-md,
+          var(--col-offset-sm, var(--col-offset-xs, var(--col-offset-base, 0)))
+        ) *
+        (100% / var(--rec-grid-columns, 6))
+    );
+  }
+
+  rec-grid-col[data-hidden-from="md"] {
+    display: none;
+  }
+}
+
+@media (max-width: 61.99em) {
+  rec-grid-col[data-visible-from="md"] {
+    display: none;
+  }
+}
+
+@media (min-width: 75em) {
+  rec-grid-col[data-hidden-from="lg"] {
+    display: none;
+  }
+}
+
+@media (max-width: 74.99em) {
+  rec-grid-col[data-visible-from="lg"] {
+    display: none;
+  }
+}
+
+@media (min-width: 88em) {
+  rec-grid-col[data-hidden-from="xl"] {
+    display: none;
+  }
+}
+
+@media (max-width: 87.99em) {
+  rec-grid-col[data-visible-from="xl"] {
+    display: none;
+  }
+}
