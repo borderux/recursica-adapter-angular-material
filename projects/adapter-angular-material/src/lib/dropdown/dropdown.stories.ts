@@ -90,7 +90,7 @@ export const Clearable: Story = {
     props: args,
     template: `
       <div style="width: 320px;">
-        <rec-form-control-wrapper label="Clearable Options">
+        <rec-form-control-wrapper label="Clearable Options" assistiveText="Select your country of origin.">
           <rec-dropdown
             [data]="${COUNTRIES_NG_LIST}"
             value="Canada"
@@ -118,7 +118,7 @@ export const WithLeadingIcon: Story = {
     template: `
       ${pinIconTemplate}
       <div style="width: 320px;">
-        <rec-form-control-wrapper label="Destination">
+        <rec-form-control-wrapper label="Destination" assistiveText="Select your country of origin.">
           <rec-dropdown
             [data]="${COUNTRIES_NG_LIST}"
             [placeholder]="placeholder"
@@ -153,7 +153,7 @@ export const WithRichOptions: Story = {
       <div style="width: 320px;">
         <rec-form-control-wrapper
           label="Assignee"
-          assistiveText="Each option can show a leading icon and supporting text."
+          assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
         >
           <rec-dropdown [data]="${richOptionsData}" placeholder="Pick a team member"></rec-dropdown>
         </rec-form-control-wrapper>
@@ -250,7 +250,7 @@ export const StaticError: Story = {
     props: args,
     template: `
       <div style="width: 320px;">
-        <rec-form-control-wrapper label="Destination" error="You must choose a valid destination.">
+        <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin." error="You must choose a valid destination.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Invalid Island" [error]="true"></rec-dropdown>
         </rec-form-control-wrapper>
       </div>
@@ -263,7 +263,7 @@ export const StaticDisabled: Story = {
     props: args,
     template: `
       <div style="width: 320px;">
-        <rec-form-control-wrapper label="Country Selection">
+        <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="United States" [disabled]="true"></rec-dropdown>
         </rec-form-control-wrapper>
       </div>
@@ -276,7 +276,7 @@ export const StaticReadOnly: Story = {
     props: args,
     template: `
       <div style="width: 320px;">
-        <rec-form-control-wrapper label="Read Only View">
+        <rec-form-control-wrapper label="Read Only View" assistiveText="Select your country of origin.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Canada" [readOnly]="true"></rec-dropdown>
         </rec-form-control-wrapper>
       </div>

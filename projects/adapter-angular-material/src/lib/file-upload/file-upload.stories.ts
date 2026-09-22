@@ -169,7 +169,12 @@ export const ReadOnly: Story = {
   render: () => ({
     template: `
       <div style="width: 400px;">
-        <rec-file-upload label="Upload Files" [readOnly]="true" [files]="files"></rec-file-upload>
+        <rec-file-upload
+          label="Upload Files"
+          assistiveText="Submitted files cannot be changed"
+          [readOnly]="true"
+          [files]="files"
+        ></rec-file-upload>
       </div>
     `,
     props: {
@@ -187,8 +192,8 @@ export const AcceptRestriction: Story = {
       <div style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
-          assistiveText="Only .pdf files are accepted"
-          accept=".pdf"
+          assistiveText="Only .pdf and .png files are accepted"
+          accept=".pdf,.png"
           [files]="files"
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"

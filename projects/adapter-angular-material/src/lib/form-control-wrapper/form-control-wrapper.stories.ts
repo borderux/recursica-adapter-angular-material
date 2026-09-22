@@ -120,11 +120,15 @@ export const WithHelperText: Story = {
   }),
 };
 
-/** `error` takes priority over `assistiveText` — matching the React reference. */
-export const WithError: Story = {
+/**
+ * `error` takes priority over `assistiveText` — matching the React
+ * reference (`VisualErrorState` there).
+ */
+export const VisualErrorState: Story = {
   args: {
+    label: "Encryption Protocol",
     assistiveText: "We'll never share your email.",
-    error: "Please enter a valid email address.",
+    error: "Strict validation limits reached. Handshake rejected securely.",
   },
   render: (args) => ({
     props: args,
@@ -139,6 +143,107 @@ export const WithError: Story = {
 export const Required: Story = {
   args: { required: true },
   render: (args) => ({ props: args, template }),
+};
+
+/**
+ * The 4 stories below (`Default`/`RequiredArchitecture`/
+ * `WithoutAssistiveIcons`/`NativeChildrenDirectly`) exist purely to give
+ * this file 1:1 name/config parity with the React reference's own
+ * `FormControlWrapper.stories.tsx`, per `docs/CREATING_AN_ADAPTER.md` step
+ * 10 — each combines 2-3 concerns the way Mantine's originals do, on top
+ * of (not replacing) the atomic `Stacked`/`SideBySide`/`WithHelperText`/
+ * `Required`/`VisualErrorState` stories above, which stay as the
+ * single-concern coverage.
+ */
+
+/** Mirrors the React reference's `Default` story exactly. */
+export const Default: Story = {
+  args: {
+    label: "Account Username",
+    formLayout: "stacked",
+    assistiveText: "Validation occurs immediately natively.",
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-form-control-wrapper [formLayout]="formLayout" [label]="label" [assistiveText]="assistiveText">
+        <input recDemoFormControl type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+      </rec-form-control-wrapper>
+    `,
+  }),
+};
+
+/** Mirrors the React reference's `RequiredArchitecture` story exactly. */
+export const RequiredArchitecture: Story = {
+  args: {
+    label: "Root Password",
+    formLayout: "side-by-side",
+    required: true,
+    assistiveText: "Bypass string structure required to initiate protocol.",
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-form-control-wrapper [formLayout]="formLayout" [label]="label" [required]="required" [assistiveText]="assistiveText">
+        <input recDemoFormControl type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+      </rec-form-control-wrapper>
+    `,
+  }),
+};
+
+/** Mirrors the React reference's `WithoutAssistiveIcons` story exactly. */
+export const WithoutAssistiveIcons: Story = {
+  args: {
+    label: "Server Domain",
+    assistiveText:
+      "A standard text boundary without default native icon parameters bounding.",
+    assistiveWithIcon: false,
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-form-control-wrapper [formLayout]="formLayout" [label]="label" [assistiveText]="assistiveText" [assistiveWithIcon]="assistiveWithIcon">
+        <input recDemoFormControl type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+      </rec-form-control-wrapper>
+    `,
+  }),
+};
+
+/**
+ * Mirrors the React reference's `NativeChildrenDirectly` story, which wraps
+ * a raw, un-styled `<input type="checkbox">` (no `TextField` mapping) to
+ * prove native-child compatibility. Every story in this file already wraps
+ * a bare native `<input>` — there's no `TextField`-equivalent component
+ * here yet to bypass the way the React version bypasses its `TextField`
+ * map — so this reuses the same `recDemoFormControl` directive already
+ * established throughout this file for the id/`aria-describedby` wiring
+ * demo, applied to a checkbox instead of a text input to match the React
+ * story's exact "Raw HTML Checkbox" content.
+ */
+export const NativeChildrenDirectly: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Bypassing any wrapped-input mapping to show exactly how native `<input>` hooks execute inside the raw wrapper.",
+      },
+    },
+  },
+  args: {
+    label: "Raw HTML Checkbox",
+    formLayout: "side-by-side",
+    assistiveText: "This wraps a raw HTML input tag mapping correctly.",
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <rec-form-control-wrapper [formLayout]="formLayout" [label]="label" [assistiveText]="assistiveText">
+          <input recDemoFormControl type="checkbox" style="margin: 0; width: 16px; height: 16px;" />
+        </rec-form-control-wrapper>
+      </div>
+    `,
+  }),
 };
 
 /**

@@ -26,29 +26,45 @@ export default meta;
 
 type Story = StoryObj<FormControlLayoutComponent>;
 
-const template = `
-  <ng-template #left><rec-label>Email address</rec-label></ng-template>
+const withLabelTemplate = `
+  <ng-template #left><rec-label [labelSize]="labelSize">A fairly long label to show the stacked-layout width cap in action</rec-label></ng-template>
   <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize" [leftSection]="left">
     <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
   </rec-form-control-layout>
 `;
 
-export const Stacked: Story = {
-  render: (args) => ({ props: args, template }),
+/**
+ * A real Label (not a placeholder) in a stacked layout, at `labelSize="default"`. Mirrors
+ * the genesis adapter's own `StackedLayoutWithLabelDefault` story.
+ */
+export const StackedLayoutWithLabelDefault: Story = {
+  render: (args) => ({ props: args, template: withLabelTemplate }),
 };
 
-export const SideBySide: Story = {
+/** Same as above, at `labelSize="small"` — mirrors `StackedLayoutWithLabelSmall`. */
+export const StackedLayoutWithLabelSmall: Story = {
+  args: { labelSize: "small" },
+  render: (args) => ({ props: args, template: withLabelTemplate }),
+};
+
+/**
+ * Demonstrates the side-by-side layout without a left section — mirrors
+ * `SideBySideLayout`.
+ */
+export const SideBySideLayout: Story = {
   args: { formLayout: "side-by-side" },
-  render: (args) => ({ props: args, template }),
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize">
+        <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+      </rec-form-control-layout>
+    `,
+  }),
 };
 
-export const SideBySideSmall: Story = {
-  args: { formLayout: "side-by-side", labelSize: "small" },
-  render: (args) => ({ props: args, template }),
-};
-
-/** No `leftSection` — useful for aligning a standalone control (e.g. a `Switch`/`Checkbox`) to match other fields' spacing. */
-export const NoLabel: Story = {
+/** No `leftSection` — useful for aligning a standalone control (e.g. a `Switch`/`Checkbox`) to match other fields' spacing. Mirrors `StackedLayout`. */
+export const StackedLayout: Story = {
   render: (args) => ({
     props: args,
     template: `

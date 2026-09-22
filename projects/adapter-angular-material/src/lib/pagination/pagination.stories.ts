@@ -8,7 +8,7 @@ import { PaginationComponent } from "./pagination.component";
  * `Pagination.Root`/`.Items`/etc. composition isn't built here).
  */
 const meta: Meta<PaginationComponent> = {
-  title: "Components/Pagination",
+  title: "UI-Kit/Pagination",
   component: PaginationComponent,
   args: {
     total: 10,

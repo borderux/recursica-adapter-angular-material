@@ -25,7 +25,7 @@ const meta: Meta<TooltipComponent> = {
     overClass: { control: "text" },
   },
   args: {
-    label: "Helpful information",
+    label: "This is a helpful tooltip",
     position: "top",
     disabled: false,
     withBeak: true,
@@ -68,8 +68,25 @@ export const Right: Story = {
 };
 
 export const WithoutBeak: Story = {
-  args: { withBeak: false },
-  render: (args) => ({ props: args, template }),
+  args: {
+    label: "Tooltip without a beak indicator",
+    withBeak: false,
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: 64px; display: flex; justify-content: center;">
+        <rec-tooltip
+          [label]="label"
+          [position]="position"
+          [disabled]="disabled"
+          [withBeak]="withBeak"
+        >
+          <rec-button variant="outline">Without Beak</rec-button>
+        </rec-tooltip>
+      </div>
+    `,
+  }),
 };
 
 export const Disabled: Story = {

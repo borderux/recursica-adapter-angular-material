@@ -6,6 +6,8 @@ import { CardFooterComponent } from "./card-footer.component";
 import { CardContentComponent } from "./card-content.component";
 import { CardSectionComponent } from "./card-section.component";
 import { ButtonComponent } from "../button/button.component";
+import { LayerComponent } from "../layer/layer.component";
+import { TextComponent } from "../text/text.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -23,6 +25,8 @@ const meta: Meta<CardComponent> = {
         CardContentComponent,
         CardSectionComponent,
         ButtonComponent,
+        LayerComponent,
+        TextComponent,
       ],
     }),
   ],
@@ -36,29 +40,37 @@ export const Default: Story = {
     template: `
       <div style="max-width: 400px;">
         <rec-card>
+          <rec-card-header>Customer Activity Report</rec-card-header>
           <rec-card-content>
-            A minimal card with just content, no header or footer.
+            Card inner section content body. Notice how this acts as padded
+            content natively based on the overarching properties.
+            Recursica's vertical gutter governs vertical spacing between
+            siblings in the flex container.
+            <br /><br />
+            Another section showing the vertical gutter spacing.
           </rec-card-content>
+          <rec-card-footer style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span>Generated today</span>
+            <rec-button variant="solid">View Details</rec-button>
+          </rec-card-footer>
         </rec-card>
       </div>
     `,
   }),
 };
 
-export const WithHeaderAndFooter: Story = {
+export const HeaderlessAndFooterless: Story = {
   render: () => ({
     template: `
       <div style="max-width: 400px;">
         <rec-card>
-          <rec-card-header>Card title</rec-card-header>
           <rec-card-content>
-            This card has a header and footer, both bleeding edge-to-edge
-            to the card's own border.
+            <strong>Notice</strong>
+            This is a completely generic card payload dropping the Header
+            and Footer specific elements, simply acting as a padded
+            elevation boundary box directly mirroring native composability!
+            <rec-button variant="solid">Acknowledge</rec-button>
           </rec-card-content>
-          <rec-card-footer>
-            <rec-button variant="text" size="small">Cancel</rec-button>
-            <rec-button variant="solid" size="small">Confirm</rec-button>
-          </rec-card-footer>
         </rec-card>
       </div>
     `,
@@ -78,6 +90,33 @@ export const WithSection: Story = {
             An edge-to-edge image section above the card's own padded content.
           </rec-card-content>
         </rec-card>
+      </div>
+    `,
+  }),
+};
+
+/** Mirrors the reference's own `LayerDemonstration` — two cards side by side at layer 1/layer 2. */
+export const LayerDemonstration: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; gap: 32px; background-color: #e9ecef; padding: 32px;">
+        <rec-layer [layer]="1">
+          <rec-card>
+            <rec-card-header>Layer 1 Wrapper</rec-card-header>
+            <rec-card-content>
+              <rec-text>Content inside layer 1 card.</rec-text>
+            </rec-card-content>
+          </rec-card>
+        </rec-layer>
+
+        <rec-layer [layer]="2">
+          <rec-card>
+            <rec-card-header>Layer 2 Wrapper</rec-card-header>
+            <rec-card-content>
+              <rec-text>Content inside layer 2 card exposing a higher elevation drop shadow inherently cascaded.</rec-text>
+            </rec-card-content>
+          </rec-card>
+        </rec-layer>
       </div>
     `,
   }),

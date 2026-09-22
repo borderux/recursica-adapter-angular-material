@@ -23,36 +23,36 @@ export default meta;
 
 type Story = StoryObj<AssistiveElementComponent>;
 
-export const Help: Story = {
+export const DefaultHelp: Story = {
   render: (args) => ({
     props: args,
     template: `
       <rec-assistive-element [assistiveVariant]="assistiveVariant" [assistiveWithIcon]="assistiveWithIcon">
-        This is helper text explaining the field above.
+        This is a standard assistive layout explaining specific configurations.
       </rec-assistive-element>
     `,
   }),
 };
 
-export const Error: Story = {
+export const ErrorState: Story = {
   args: { assistiveVariant: "error" },
   render: (args) => ({
     props: args,
     template: `
       <rec-assistive-element [assistiveVariant]="assistiveVariant" [assistiveWithIcon]="assistiveWithIcon">
-        This field is required.
+        Invalid property. You must satisfy the constraints outlined above.
       </rec-assistive-element>
     `,
   }),
 };
 
-export const WithoutIcon: Story = {
+export const NoIconHelp: Story = {
   args: { assistiveWithIcon: false },
   render: (args) => ({
     props: args,
     template: `
       <rec-assistive-element [assistiveVariant]="assistiveVariant" [assistiveWithIcon]="assistiveWithIcon">
-        This is helper text explaining the field above.
+        Fallback textual representation without visual injection targets.
       </rec-assistive-element>
     `,
   }),

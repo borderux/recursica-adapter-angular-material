@@ -44,13 +44,17 @@ export const Default: Story = {
     props: args,
     template: `
       <div style="padding: 64px;">
-        <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
+        <rec-button variant="solid" [recMenuTriggerFor]="menu">Toggle Menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
-          <rec-menu-item>Profile</rec-menu-item>
+          <rec-menu-label>Application</rec-menu-label>
           <rec-menu-item>Settings</rec-menu-item>
+          <rec-menu-item>Messages</rec-menu-item>
+          <rec-menu-item>Gallery</rec-menu-item>
+          <rec-menu-item>Search</rec-menu-item>
           <rec-menu-divider />
-          <rec-menu-item disabled>Disabled action</rec-menu-item>
-          <rec-menu-item>Log out</rec-menu-item>
+          <rec-menu-label>Danger zone</rec-menu-label>
+          <rec-menu-item>Transfer my data</rec-menu-item>
+          <rec-menu-item>Delete my account</rec-menu-item>
         </rec-menu>
       </div>
     `,
@@ -68,6 +72,28 @@ export const WithLabelAndSelection: Story = {
           <rec-menu-item [selected]="true">Name</rec-menu-item>
           <rec-menu-item>Date modified</rec-menu-item>
           <rec-menu-item>Size</rec-menu-item>
+        </rec-menu>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * Mirrors the reference's own `WithDisabledItems` — `rec-menu-item` already
+ * supports `disabled` (confirmed in `menu-item.component.ts`), so this only
+ * needed a new story, not a component change.
+ */
+export const WithDisabledItems: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="padding: 64px;">
+        <rec-button variant="solid" [recMenuTriggerFor]="menu">Menu with Disabled</rec-button>
+        <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
+          <rec-menu-item>Settings</rec-menu-item>
+          <rec-menu-item [disabled]="true">Search (disabled)</rec-menu-item>
+          <rec-menu-item>Messages</rec-menu-item>
+          <rec-menu-item [disabled]="true">Delete (disabled)</rec-menu-item>
         </rec-menu>
       </div>
     `,

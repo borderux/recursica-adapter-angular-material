@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { ButtonComponent } from "./button.component";
+import { LayerComponent } from "../layer/layer.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -15,7 +16,7 @@ import { ButtonComponent } from "./button.component";
 const meta: Meta<ButtonComponent> = {
   title: "UI-Kit/Button",
   component: ButtonComponent,
-  decorators: [moduleMetadata({ imports: [ButtonComponent] })],
+  decorators: [moduleMetadata({ imports: [ButtonComponent, LayerComponent] })],
   argTypes: {
     variant: { control: "radio", options: ["solid", "outline", "text"] },
     size: { control: "radio", options: ["default", "small"] },
@@ -97,9 +98,42 @@ export const AllVariants: Story = {
   }),
 };
 
-export const Disabled: Story = {
+export const DisabledSolid: Story = {
   args: { disabled: true },
-  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
+  render: (args) => ({ props: args, template: withLabel("Disabled Solid") }),
+};
+
+/** Mirrors the reference's own `LayerOneSolid` — a solid button on an elevated (layer 1) surface. */
+export const LayerOneSolid: Story = {
+  args: { variant: "solid", size: "default" },
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-layer [layer]="1" style="padding: 24px; display: block;">
+        ${withLabel("Layer 1 Solid")}
+      </rec-layer>
+    `,
+  }),
+};
+
+/**
+ * Mirrors the reference's own `TruncatedLabel` — a long label inside a
+ * width-constrained container, demonstrating the component's own existing
+ * `.labelText` ellipsis/`max-width` CSS (already built, not added for this
+ * story — see `button.component.css`).
+ */
+export const TruncatedLabel: Story = {
+  args: { variant: "solid", size: "default" },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div style="max-width: 250px;">
+        ${withLabel(
+          "This is an exceptionally long button label designed to demonstrate how the component handles text overflow by applying an ellipsis rather than breaking the layout or wrapping to multiple lines.",
+        )}
+      </div>
+    `,
+  }),
 };
 
 /**

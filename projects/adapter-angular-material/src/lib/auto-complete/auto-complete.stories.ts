@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { AutoCompleteComponent } from "./auto-complete.component";
@@ -12,16 +13,26 @@ import { AutoCompleteComponent } from "./auto-complete.component";
  *
  * The reference's `RichOptionRowPreview`/`RichOptionRowPreviewWrapped`
  * stories render option rows directly (bypassing the real portal) purely
- * for style-review stability — not mirrored here; `WithRichOptions`/
- * `WithRichOptionsWrapped` below exercise the same rich-option rendering
- * through the real component instead.
+ * for style-review stability. `WithRichOptions`/`WithRichOptionsWrapped`
+ * above exercise the same rich-option rendering through the real component
+ * instead; `RichOptionRowPreview`/`RichOptionRowPreviewWrapped` below are
+ * mirrored too, the same way `dropdown.stories.ts`'s own pair are —
+ * `rec-auto-complete-control` has no `debugForceOpen` escape hatch the way
+ * `rec-dropdown` does (see `dropdown.component.ts`), so these render the
+ * exact option-row markup/CSS classes `auto-complete-control.component.ts`'s
+ * own template uses (`.rec-autocomplete-panel`/`.option`/`.optionContent`/
+ * `.optionIcon`/`.optionText`/`.optionTextWrap`/`.optionLabel`/
+ * `.optionSupportingText`, styled globally by `auto-complete-overlay.css`)
+ * directly, rather than inventing a new rendering mechanism — the same
+ * "outside the real portal, real classes" approach the reference's own
+ * `renderRichOption` preview stories use.
  */
 const meta: Meta<AutoCompleteComponent> = {
   title: "UI-Kit/AutoComplete",
   component: AutoCompleteComponent,
   decorators: [
     moduleMetadata({
-      imports: [AutoCompleteComponent],
+      imports: [AutoCompleteComponent, NgTemplateOutlet],
     }),
   ],
   argTypes: {
@@ -173,7 +184,7 @@ export const WithRichOptions: Story = {
           label="Assignee"
           placeholder="Search team members..."
           [data]="${richOptionsData}"
-          assistiveText="Each option can show a leading icon and supporting text."
+          assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
         ></rec-auto-complete>
       </div>
     `,
@@ -199,6 +210,74 @@ export const WithRichOptionsWrapped: Story = {
         ></rec-auto-complete>
       </div>
     `,
+  }),
+};
+
+const previewRowsData = `[
+  { value: 'icon-and-supporting', label: 'Jane Doe', leadingIcon: userIcon, supportingText: 'jane.doe@example.com' },
+  { value: 'no-icon', label: 'Alex Smith', supportingText: 'No leadingIcon — label/supportingText shift left, no reserved icon space' },
+  { value: 'no-supporting-text', label: 'Taylor Rivera', leadingIcon: userIcon },
+  { value: 'plain', label: 'Plain option — no leadingIcon, no supportingText' },
+  { value: 'long-text', label: 'A very long option label that, with wrapItemText, wraps onto a second line instead of overflowing the fixed-width dropdown — otherwise it truncates with an ellipsis', leadingIcon: userIcon, supportingText: 'A similarly long supporting text string, to confirm the same wrap-or-truncate behavior applies to it too' }
+]`;
+
+/**
+ * Renders the option row content directly — outside the real CDK overlay —
+ * inside a `.rec-autocomplete-panel`-classed container sized to
+ * `AutoComplete`'s own stacked-layout max-width token, using the exact same
+ * `.option`/`.optionContent`/`.optionIcon`/`.optionText`/`.optionLabel`/
+ * `.optionSupportingText` markup `auto-complete-control.component.ts`'s own
+ * template uses (styled globally by `auto-complete-overlay.css`, wired into
+ * Storybook's `styles` array in `angular.json`). Spacing between rows,
+ * icon/supportingText presence-or-absence alignment, and long-text
+ * wrapping/truncation are all much easier to inspect this way than by
+ * opening the real (CDK-overlay-portal-rendered) panel — mirrors the
+ * reference's own `RichOptionRowPreview`/`RichOptionRowPreviewWrapped`
+ * rationale exactly (see `renderRichOption`/`MANTINE_ADAPTER_RICH_OPTION_DATA.md`).
+ */
+function optionRowPreviewTemplate(wrapItemText: boolean): string {
+  return `
+    ${userIconTemplate}
+    <div
+      class="dropdown rec-autocomplete-panel"
+      role="listbox"
+      style="width: var(--recursica_ui-kit_components_autocomplete_variants_layouts_stacked_properties_max-width);"
+    >
+      @for (opt of ${previewRowsData}; track opt.value) {
+        <div class="option" role="option" tabindex="-1">
+          <span class="optionContent">
+            @if (opt.leadingIcon) {
+              <span class="optionIcon">
+                <ng-container [ngTemplateOutlet]="opt.leadingIcon" />
+              </span>
+            }
+            <span class="optionText" [class.optionTextWrap]="${wrapItemText}">
+              <span class="optionLabel">{{ opt.label }}</span>
+              @if (opt.supportingText) {
+                <span class="optionSupportingText">{{ opt.supportingText }}</span>
+              }
+            </span>
+          </span>
+        </div>
+      }
+    </div>
+  `;
+}
+
+// Default: `wrapItemText` is false — label/supportingText truncate to a
+// single line with an ellipsis instead of wrapping.
+export const RichOptionRowPreview: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: optionRowPreviewTemplate(false),
+  }),
+};
+
+// `wrapItemText: true` — label/supportingText wrap onto additional lines instead of truncating.
+export const RichOptionRowPreviewWrapped: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: optionRowPreviewTemplate(true),
   }),
 };
 

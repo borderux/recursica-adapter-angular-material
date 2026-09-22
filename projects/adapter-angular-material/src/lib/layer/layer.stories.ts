@@ -7,12 +7,29 @@ import { LayerComponent } from "./layer.component";
  * stub, so the title uses the `"UI-Kit/<Name>"` convention (no 🚧 prefix,
  * no `_InDevelopmentStub`).
  *
- * Each story wraps its `<rec-layer>` in a plain `<div data-recursica-theme="light">`
- * so `recursica_variables_scoped.css`'s theme+layer cascade
- * (`[data-recursica-theme="light"] [data-recursica-layer="N"]`) resolves
- * real, non-transparent colors — see that file's own header comment. The
- * token CSS itself is loaded globally for all stories via
- * `.storybook/preview.ts`.
+ * Mirrors the reference's own `Layer.stories.tsx` — found in the shared
+ * `@recursica/storybook-template` package (`templates/../stories/components/Layer.stories.tsx`
+ * as installed), not in `recursica-adapter-mantine-v8`'s own `src/components/Layer/`
+ * folder (which holds only `USAGE.md`) — easy to miss on a per-adapter-repo
+ * search alone. Real story set: `Default`, `NestedLayers`, `ContentsOnly`.
+ *
+ * `Default` relies on the global `layer`/`withLayer` Storybook args +
+ * decorator (`.storybook/preview.ts`/`storybook-layer-wrapper.component.ts`
+ * — ported directly from the reference's own identical mechanism), which
+ * wraps *every* story in this Storybook in an outer `rec-layer` by default
+ * — no per-story manual wrap needed here, matching the reference's own
+ * plain, unwrapped `Default` JSX exactly.
+ *
+ * No per-story `data-recursica-theme="light"` wrapper `<div>` either (an
+ * earlier draft of this file had one on every story) — `rec-theme-provider`
+ * (wired globally via `StorybookThemeSyncComponent`, `.storybook/preview.ts`)
+ * already sets the real `data-recursica-theme` attribute on
+ * `document.documentElement` for every story, following Storybook's own
+ * light/dark toolbar toggle. A hardcoded per-story `light` div would have
+ * silently defeated that toggle for this component specifically (a
+ * descendant `[data-recursica-theme="light"]` div out-scopes the real
+ * `dark` value on `<html>` for CSS selectors that key off it) — removed
+ * as part of this fix, not left in place.
  */
 const meta: Meta<LayerComponent> = {
   title: "UI-Kit/Layer",
@@ -23,42 +40,28 @@ export default meta;
 
 type Story = StoryObj<LayerComponent>;
 
-export const Layer0: Story = {
+export const Default: Story = {
   render: () => ({
     template: `
-      <div data-recursica-theme="light">
-        <rec-layer [layer]="0">Layer 0 — base page surface</rec-layer>
+      <div style="padding: 24px;">
+        This content sits directly on the layer applied by the story's outer Layer wrapper — use the withLayer/layer Story Controls to preview layers 0-3.
       </div>
     `,
   }),
 };
 
-export const Layer1: Story = {
+export const NestedLayers: Story = {
   render: () => ({
     template: `
-      <div data-recursica-theme="light">
-        <rec-layer [layer]="1">Layer 1 — raised surface</rec-layer>
-      </div>
-    `,
-  }),
-};
-
-export const Layer2: Story = {
-  render: () => ({
-    template: `
-      <div data-recursica-theme="light">
-        <rec-layer [layer]="2">Layer 2 — further raised surface</rec-layer>
-      </div>
-    `,
-  }),
-};
-
-export const Layer3: Story = {
-  render: () => ({
-    template: `
-      <div data-recursica-theme="light">
-        <rec-layer [layer]="3">Layer 3 — topmost surface</rec-layer>
-      </div>
+      <rec-layer [layer]="1" style="padding: 24px; display: block;">
+        Layer 1
+        <rec-layer [layer]="2" style="padding: 24px; margin-top: 16px; display: block;">
+          Layer 2
+          <rec-layer [layer]="3" style="padding: 24px; margin-top: 16px; display: block;">
+            Layer 3
+          </rec-layer>
+        </rec-layer>
+      </rec-layer>
     `,
   }),
 };
@@ -72,11 +75,11 @@ export const Layer3: Story = {
 export const ContentsOnly: Story = {
   render: () => ({
     template: `
-      <div data-recursica-theme="light">
-        <rec-layer [layer]="1" [contentsOnly]="true">
-          contentsOnly — no box, no data-recursica-layer attribute
-        </rec-layer>
-      </div>
+      <rec-layer [layer]="1" [contentsOnly]="true">
+        <div style="border: 1px dashed currentColor; padding: 24px;">
+          This box comes from a plain child div, not Layer itself — with contentsOnly, Layer renders no box of its own and applies no layer styling.
+        </div>
+      </rec-layer>
     `,
   }),
 };
