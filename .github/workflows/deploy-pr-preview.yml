@@ -1,0 +1,123 @@
+# PR preview deployment — same pattern as recursica-sandbox's own
+# deploy-pr-preview.yml (rossjrw/pr-preview-action publishing under a
+# pr-preview/ subdirectory of the gh-pages branch, alongside the main
+# Storybook deploy from deploy-storybook.yml). Posts/updates a "Storybook
+# preview" section in the PR description with the live preview link, and
+# tears the preview down automatically when the PR closes. Ported from
+# @recursica/adapter-mantine-v8's own deploy-pr-preview.yml.
+#
+# Opt-in via PR title: the whole job only runs when the PR title contains the
+# word "preview" (case-insensitive) — most PRs don't need one, so this avoids
+# spending CI minutes (checkout, npm ci, build) and posting a preview link on
+# every single PR. Gated at the job level via `if:`, not a first step's
+# output, so a non-matching title skips checkout/setup-node/etc. entirely
+# instead of running them and then no-opping later steps. `contains()` is
+# GitHub's own expression function and is already case-insensitive for
+# strings, so no separate shell step is needed to lowercase/compare it.
+#
+# The "closed" event is the one exception: the job always runs regardless of
+# the current title, so a preview that was already built still gets torn down
+# even if the title was edited afterward to no longer contain "preview"
+# (pr-preview-action's own cleanup is a no-op if no preview was ever deployed
+# for that PR, so this is safe either way).
+
+name: Deploy PR Preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    branches: [main]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+
+# Allow concurrent deployments for different PRs
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  deploy-preview:
+    # Don't run on changeset-release branches — same guard as pull-request.yml.
+    # Otherwise: run on close unconditionally (to tear down), or only when the
+    # PR title opts in with "preview". Everything below only executes when
+    # this evaluates true, so a non-matching title skips the entire job.
+    if: >-
+      ${{ !startsWith(github.head_ref, 'changeset-release') &&
+      (github.event.action == 'closed' || contains(github.event.pull_request.title, 'preview')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add pending message to PR description
+        if: github.event.action != 'closed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) return;
+            const existingBody = context.payload.pull_request.body || '';
+            const pendingSection = `## Storybook preview\n\n> [!WARNING]\n> ⏳ **Please wait for 1 minute while our system automatically build a Storybook preview`;
+            const newBody = existingBody.includes('## Storybook preview')
+              ? existingBody.replace(/## Storybook preview[\s\S]*?(?=\n\n##|$)/, pendingSection)
+              : existingBody + '\n\n' + pendingSection;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              body: newBody
+            });
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      - name: Build Storybook
+        if: github.event.action != 'closed'
+        run: npm run build-storybook
+
+      - name: Deploy preview
+        # No `if` needed — the job-level gate already ensures this only runs
+        # on close (tear down) or a title-matched build (deploy).
+        id: preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./storybook-static
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+      - name: Sleep for 30 seconds to allow CDN propagation
+        if: steps.preview.outputs.deployment-action == 'deploy'
+        run: sleep 30
+
+      - name: Update PR description with Storybook preview URL
+        if: steps.preview.outputs.deployment-action == 'deploy'
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview-url }}
+        with:
+          script: |
+            const previewUrl = process.env.PREVIEW_URL;
+            const prNumber = context.payload.pull_request.number;
+            const existingBody = context.payload.pull_request.body || '';
+            const previewSection = `\n\n## Storybook preview\n\n[View Storybook preview](${previewUrl})\n`;
+            const newBody = existingBody.includes('## Storybook preview')
+              ? existingBody.replace(/## Storybook preview[\s\S]*?(?=\n\n##|$)/, `## Storybook preview\n\n[View Storybook preview](${previewUrl})\n`)
+              : existingBody + previewSection;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              body: newBody
+            });

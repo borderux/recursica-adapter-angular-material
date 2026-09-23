@@ -1,0 +1,50 @@
+# Deploys this package's Storybook to GitHub Pages on every push to main.
+#
+# Unlike recursica-sandbox (which deploys a full app plus a nested /storybook
+# subpath), this repo is a single library package with no separate app to
+# build — Storybook itself is the whole site, published straight to the
+# gh-pages branch root. Same deploy mechanism as recursica-sandbox's own
+# deploy-main.yml (JamesIves/github-pages-deploy-action pushing to gh-pages),
+# just without the app-build step it doesn't need here. Ported from
+# @recursica/adapter-mantine-v8's own deploy-storybook.yml.
+
+name: Deploy Storybook to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: "./storybook-static"
+          branch: gh-pages
+          clean: false
+          force: false
