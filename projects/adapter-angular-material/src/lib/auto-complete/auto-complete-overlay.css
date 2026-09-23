@@ -22,7 +22,22 @@
  * `Dropdown`'s own option rows.
  */
 
+/*
+ * `width: 100%` — required because `AutoCompleteControlComponent` already
+ * binds `[cdkConnectedOverlayWidth]="overlayWidth"` (the trigger's own
+ * `offsetWidth`, captured on open) onto CDK's `.cdk-overlay-pane` wrapper —
+ * confirmed live that binding *does* correctly set `.cdk-overlay-pane`'s
+ * inline `width`. But `.cdk-overlay-pane` is itself `display: flex` (CDK's
+ * own default, row-direction), and without `width: 100%` here this panel —
+ * a flex *item* along that row's main axis — sized to its own content
+ * (`flex-grow: 0` default) instead of stretching to fill the pane, so a
+ * short-labeled option list (e.g. "Alpha"/"Beta"/...) rendered a panel far
+ * narrower than the trigger, confirmed live via Playwright (pane measured
+ * 320px, this panel measured ~82px) — not a missing panel-width *binding*
+ * (already wired), a missing *fill* rule on the bound width's target.
+ */
 [data-recursica-theme] .rec-autocomplete-panel {
+  width: 100%;
   overflow: auto;
   max-height: 320px;
   box-sizing: border-box;
@@ -36,6 +51,16 @@
   border-radius: var(
     --recursica_ui-kit_components_autocomplete_properties_border-radius
   );
+  /*
+   * Matches the genesis reference's own `AutoComplete.module.css` `.dropdown`
+   * rule exactly (same token) — confirmed by reading that file directly.
+   * Same token/pattern `menu-overlay.css`'s own `.rec-menu` panel already
+   * uses in this adapter; `Dropdown`'s own panel does *not* get this (its
+   * own `Dropdown.module.css` has no `box-shadow` on `.dropdown` at all —
+   * confirmed by reading that file too, so `dropdown-overlay.css` is
+   * correctly left without one).
+   */
+  box-shadow: var(--recursica_ui-kit_components_menu_properties_elevation);
   padding-top: var(
     --recursica_ui-kit_components_autocomplete_properties_vertical-padding
   );

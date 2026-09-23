@@ -29,6 +29,37 @@
   min-width: 0; /* HARDCODE: resets Material's own hardcoded 64px .mdc-button min-width baseline so this component's own min-width tokens (below) are the real constraint. No "undo the browser/Material default" token exists. */
 }
 
+/* HARDCODE: matButton's compiled template wraps our projected content
+ * (`.iconWrapper` + `.labelText`) in its own internal `<span
+ * class="mdc-button__label">` — that span, not `.root` itself, is the
+ * actual immediate parent of the icon/label pair. Material's own CSS
+ * leaves that span `display: block`, so without this override the icon
+ * and label stack as ordinary block boxes (icon on one line, label
+ * wrapping to the next) instead of sitting side-by-side — `.root`'s own
+ * `display: inline-flex`/`align-items`/`gap` (below) only ever governed
+ * the layout of `.mdc-button__label` as a single flex item among
+ * matButton's other internal spans (ripple/focus-indicator/touch-target),
+ * never the layout *inside* it. No token exists for "undo Material's
+ * internal label-wrapper block default" — this is a structural fix, not
+ * a themed value.
+ *
+ * `::ng-deep` (real, verified necessity, same precedent as
+ * `loader.component.css`'s `.root[data-animate="false"] ::ng-deep *`):
+ * `.mdc-button__label` is rendered by `matButton`'s own internal template,
+ * so it never carries this component's `_ngcontent-<hash>` attribute —
+ * a plain scoped descendant selector (`.root .mdc-button__label`) silently
+ * never matches it (verified: computed styles were unchanged with the
+ * non-`::ng-deep` version of this rule). `::ng-deep` drops the attribute
+ * requirement for everything after it while `.root` itself still requires
+ * it, so this still only ever takes effect on a real instance of this
+ * component. */
+.root ::ng-deep .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
 :host-context([data-recursica-theme]) .root {
   font-family: var(
     --recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-family
@@ -54,6 +85,15 @@
   gap: var(
     --recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap
   );
+
+  /* `::ng-deep` needed here too — see the `.root ::ng-deep .mdc-button__label`
+   * rule's doc comment above for why a plain nested (non-`::ng-deep`)
+   * selector silently never matches Material's internally-rendered span. */
+  ::ng-deep .mdc-button__label {
+    gap: var(
+      --recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap
+    );
+  }
 }
 
 .labelText {
@@ -186,6 +226,23 @@
     min-width: var(
       --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_default_properties_min-width
     );
+    /* Icon-only must use its own (narrower) horizontal-padding token, not the
+       label/icon-label sizes' — otherwise it inherits the wider generic
+       `[data-size="default"]` baseline padding above, making content-width
+       exceed min-width and rendering an oval instead of the true circle
+       min-width is meant to force (min-width + this padding + the icon
+       token size are calibrated together — see Mantine reference's
+       identical `padding: 0 var(...icon-only...horizontal-padding)` in
+       Button.module.css). */
+    --mat-button-filled-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_default_properties_horizontal-padding
+    );
+    --mat-button-outlined-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_default_properties_horizontal-padding
+    );
+    --mat-button-text-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_default_properties_horizontal-padding
+    );
     .labelText {
       display: none;
     }
@@ -242,6 +299,14 @@
   gap: var(
     --recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap
   );
+
+  /* `::ng-deep` needed here too — see the `.root ::ng-deep .mdc-button__label`
+   * rule's doc comment near the top of this file. */
+  ::ng-deep .mdc-button__label {
+    gap: var(
+      --recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap
+    );
+  }
 
   .labelText {
     max-width: var(
@@ -308,6 +373,16 @@
     );
     min-width: var(
       --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_min-width
+    );
+    /* See identical comment in the [data-size="default"] icon-only block above. */
+    --mat-button-filled-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_horizontal-padding
+    );
+    --mat-button-outlined-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_horizontal-padding
+    );
+    --mat-button-text-horizontal-padding: var(
+      --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_horizontal-padding
     );
     .labelText {
       display: none;

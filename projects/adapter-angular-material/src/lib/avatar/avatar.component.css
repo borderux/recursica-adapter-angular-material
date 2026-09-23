@@ -196,6 +196,13 @@
   justify-content: center;
 }
 
+/* See avatar.component.ts's class doc comment: toggled instead of
+   structurally added/removed so a real projected text child is never
+   discarded by the default-icon-fallback detection. */
+.textWrapper.hidden {
+  display: none;
+}
+
 /* 1. IMAGE */
 :host-context([data-recursica-theme]) .root[data-style="image"] {
   border-radius: var(

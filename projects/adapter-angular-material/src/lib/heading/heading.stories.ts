@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { HeadingComponent } from "./heading.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -12,7 +13,7 @@ const meta: Meta<HeadingComponent> = {
   component: HeadingComponent,
   decorators: [
     moduleMetadata({
-      imports: [HeadingComponent],
+      imports: [HeadingComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -32,14 +33,14 @@ export const Default: Story = {
 export const StaticVariations: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-heading [order]="1">H1 Heading</rec-heading>
         <rec-heading [order]="2">H2 Heading</rec-heading>
         <rec-heading [order]="3">H3 Heading</rec-heading>
         <rec-heading [order]="4">H4 Heading</rec-heading>
         <rec-heading [order]="5">H5 Heading</rec-heading>
         <rec-heading [order]="6">H6 Heading</rec-heading>
-      </div>
+      </rec-stack>
     `,
   }),
 };

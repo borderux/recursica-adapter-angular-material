@@ -121,29 +121,3 @@ export const WithLeadingIconSelected: Story = {
     `,
   }),
 };
-
-// Verification-only stories (not part of the golden regression set) — a
-// real, fully-wired uncontrolled toggle and a removable chip that actually
-// disappears, so real end-to-end behavior (not just static rendering) can
-// be exercised with a real Playwright click. See IMPLEMENTATION_NOTES.md's
-// Verification section.
-
-export const InteractiveToggle: Story = {
-  render: () => ({
-    template: `<rec-chip [defaultChecked]="false" (checkedChange)="checked = $event">{{ checked ? 'Selected' : 'Click to select' }}</rec-chip>`,
-    props: { checked: false },
-  }),
-};
-
-export const InteractiveRemovable: Story = {
-  render: () => ({
-    template: `
-      @if (visible) {
-        <rec-chip [checked]="false" (remove)="visible = false">Click x to remove</rec-chip>
-      } @else {
-        <span data-testid="removed">Chip removed</span>
-      }
-    `,
-    props: { visible: true },
-  }),
-};

@@ -51,6 +51,20 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  /*
+   * `border-box` — required so `min-height` (below, under
+   * `[data-form-layout="stacked"]`/`[data-form-layout="side-by-side"]`)
+   * measures the *total* box (content+padding), not content alone. The
+   * genesis reference gets this for free from Mantine's own global
+   * `:where(*, *::before, *::after) { box-sizing: border-box; }` reset
+   * (`@mantine/core/styles.css`) — this adapter has no equivalent global
+   * reset, so without this the label-to-control gap in stacked layout
+   * rendered ~8px too large (min-height's 20px content floor stacking on
+   * top of padding-bottom's 8px, instead of the 8px living *inside* the
+   * 20px), confirmed live via Playwright screenshot vs
+   * `ui-kit-autocomplete--default`'s golden.
+   */
+  box-sizing: border-box;
 }
 
 .rightSection {

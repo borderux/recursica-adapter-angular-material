@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { SwitchComponent } from "./switch.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -16,7 +17,7 @@ const meta: Meta<SwitchComponent> = {
   component: SwitchComponent,
   decorators: [
     moduleMetadata({
-      imports: [SwitchComponent],
+      imports: [SwitchComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -54,12 +55,12 @@ export const SideBySideLayout: Story = {
 export const StaticVariations: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-switch label="Default Unchecked State" (checkedChange)="$event"></rec-switch>
         <rec-switch label="Checked State" [defaultChecked]="true" (checkedChange)="$event"></rec-switch>
         <rec-switch label="Disabled Unchecked" [disabled]="true"></rec-switch>
         <rec-switch label="Disabled Checked" [defaultChecked]="true" [disabled]="true"></rec-switch>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -67,9 +68,9 @@ export const StaticVariations: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-switch label="Standard Switch" [defaultChecked]="true" [readOnly]="true"></rec-switch>
-      </div>
+      </rec-stack>
     `,
   }),
 };

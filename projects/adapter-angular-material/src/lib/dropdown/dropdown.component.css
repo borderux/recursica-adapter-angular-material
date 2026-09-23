@@ -23,7 +23,29 @@
   width: 100%;
 }
 
+/*
+ * `max-width`/`min-width` — this component has no `formLayout` input at all
+ * (see this file's class doc comment's "`RECURSICA_FORM_CONTROL`: composed
+ * like a real field, not internally" section: the caller composes
+ * `<rec-form-control-wrapper><rec-dropdown>` itself, and today every real
+ * usage — `dropdown.stories.ts`'s own stories included — only ever renders
+ * it in a stacked layout), so this wires directly to the `stacked` variant
+ * tokens rather than adding layout-switching machinery no consumer needs
+ * yet. Without this, `.root`'s `width: 100%` (above) just fills whatever
+ * ad-hoc width its container happens to offer with no upper bound at all —
+ * confirmed live via Playwright that the trigger rendered exactly as wide
+ * as its story's own `<rec-stack>` wrapper, with no cap, and correspondingly
+ * narrower than the genesis reference's own `Dropdown.module.css` (its
+ * `.layoutOverride` class wires the equivalent `--dropdown-control-max-width`
+ * hook straight to this same `stacked`-variant token).
+ */
 :host-context([data-recursica-theme]) .root {
+  max-width: var(
+    --recursica_ui-kit_components_dropdown_variants_layouts_stacked_properties_max-width
+  );
+  min-width: var(
+    --recursica_ui-kit_components_dropdown_variants_layouts_stacked_properties_min-width
+  );
   min-height: var(--recursica_ui-kit_components_dropdown_properties_min-height);
 
   --input-left-section-size: calc(
@@ -168,9 +190,30 @@
   justify-content: center;
 }
 
+/*
+ * Absolutely positioned too (see `.section[data-position="left"]`'s own
+ * comment above for the general technique) — **not** its original plain
+ * in-flow `margin-left: auto` flex-child approach. That approach anchored
+ * the chevron against `.input`'s own *content-box* edge, which
+ * `.root[data-with-right-section] .input`'s `padding-right` (below) sets to
+ * the *compound* `--input-right-section-size` (horizontal-padding +
+ * icon-size + icon-text-gap) — correct for reserving room for `.valueText`
+ * to end clear of the icon, but ~`icon-text-gap` (8px) too far when reused
+ * to place the icon *itself*, which only needs `horizontal-padding`'s worth
+ * of inset from the real right edge. Confirmed live via Playwright: the
+ * chevron rendered visibly indented past the trigger's own border, not
+ * flush with it like the genesis reference's own `Dropdown.module.css`
+ * (`.section[data-position="right"] { padding-right: horizontal-padding }`,
+ * flush against Mantine core's own absolutely-positioned `Input.Section`).
+ * No fixed `width` here (unlike the left section) — this box holds 1–2
+ * icons (chevron, optionally preceded by the clear button) and needs to
+ * size to that content, not a single fixed `icon-size`.
+ */
 .section[data-position="right"] {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   gap: 4px;
-  margin-left: auto;
 }
 
 :host-context([data-recursica-theme]) .section[data-position="left"] {
@@ -179,6 +222,12 @@
   );
   width: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
   height: var(--recursica_ui-kit_components_dropdown_properties_icon-size);
+}
+
+:host-context([data-recursica-theme]) .section[data-position="right"] {
+  right: var(
+    --recursica_ui-kit_components_dropdown_properties_horizontal-padding
+  );
 }
 
 /*

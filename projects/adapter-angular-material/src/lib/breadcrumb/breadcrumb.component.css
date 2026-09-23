@@ -40,6 +40,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /*
+   * Matches Mantine's own compiled Breadcrumbs separator CSS
+   * (`line-height: 1` alongside the same flex/align-items/justify-content
+   * trio). Without it the separator's line box uses the inherited default
+   * line-height, which — combined with the glyph's own font
+   * ascent/descent metrics — visually centers the glyph below the
+   * flex row's true center relative to sibling link/text, ending up too
+   * low.
+   */
+  line-height: 1;
+}
+
+:host-context([data-recursica-theme]) .separator {
+  /*
+   * Mantine's own `body`/`:host` reset (`@mantine/core/styles.css`) sets a
+   * global `font-family` that happens to already match the
+   * `recursica_..._link_..._font-family` token, so its separator — which
+   * sets no font of its own, same as this one before this rule — inherits
+   * that matching font "for free". This adapter has no equivalent global
+   * body font reset, so without setting it explicitly here the separator
+   * falls back to the browser's default font, whose ascent/descent metrics
+   * differ from the token font enough to visibly throw off the `→` glyph's
+   * vertical centering against the sibling link text even with
+   * `line-height: 1` above. Match the link's font directly instead of
+   * depending on an inherited default.
+   */
+  font-family: var(
+    --recursica_ui-kit_components_link_properties_text_font-family
+  );
+  font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
 }
 
 .link,

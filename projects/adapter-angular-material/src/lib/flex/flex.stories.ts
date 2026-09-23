@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { FlexComponent } from "./flex.component";
 import { ButtonComponent } from "../button/button.component";
+import { TextComponent } from "../text/text.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +14,7 @@ const meta: Meta<FlexComponent> = {
   component: FlexComponent,
   decorators: [
     moduleMetadata({
-      imports: [FlexComponent, ButtonComponent],
+      imports: [FlexComponent, ButtonComponent, TextComponent],
     }),
   ],
   argTypes: {
@@ -34,7 +35,7 @@ export const Default: Story = {
       <rec-flex>
         <rec-button variant="solid">Block A</rec-button>
         <rec-button variant="outline">Block B</rec-button>
-        <span>Text inside Flex</span>
+        <rec-text>Text inside Flex</rec-text>
       </rec-flex>
     `,
   }),

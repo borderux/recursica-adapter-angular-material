@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { SwitchGroupComponent } from "./switch-group.component";
 import { SwitchComponent } from "./switch.component";
+import { StackComponent } from "../stack/stack.component";
+import { TextComponent } from "../text/text.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -14,7 +16,12 @@ const meta: Meta<SwitchGroupComponent> = {
   component: SwitchGroupComponent,
   decorators: [
     moduleMetadata({
-      imports: [SwitchGroupComponent, SwitchComponent],
+      imports: [
+        SwitchGroupComponent,
+        SwitchComponent,
+        StackComponent,
+        TextComponent,
+      ],
     }),
   ],
   argTypes: {
@@ -130,14 +137,14 @@ export const ReadOnly: Story = {
 export const InteractiveMultiSelect: Story = {
   render: () => ({
     template: `
-      <div>
+      <rec-stack>
         <rec-switch-group formLayout="stacked" label="Pick any" [value]="value" (valueChange)="value = $event">
           <rec-switch value="a" label="Option A"></rec-switch>
           <rec-switch value="b" label="Option B"></rec-switch>
           <rec-switch value="c" label="Option C"></rec-switch>
         </rec-switch-group>
-        <p data-testid="selected-value">{{ value.join(',') }}</p>
-      </div>
+        <rec-text data-testid="selected-value">{{ value.join(',') }}</rec-text>
+      </rec-stack>
     `,
     props: { value: [] as string[] },
   }),

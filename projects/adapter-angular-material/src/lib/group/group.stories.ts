@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { GroupComponent } from "./group.component";
 import { ButtonComponent } from "../button/button.component";
+import { TextComponent } from "../text/text.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +14,7 @@ const meta: Meta<GroupComponent> = {
   component: GroupComponent,
   decorators: [
     moduleMetadata({
-      imports: [GroupComponent, ButtonComponent],
+      imports: [GroupComponent, ButtonComponent, TextComponent],
     }),
   ],
 };
@@ -27,7 +28,7 @@ export const Default: Story = {
       <rec-group>
         <rec-button variant="solid">Primary</rec-button>
         <rec-button variant="outline">Secondary</rec-button>
-        <span>Text element within Group</span>
+        <rec-text>Text element within Group</rec-text>
       </rec-group>
     `,
   }),

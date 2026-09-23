@@ -20,7 +20,23 @@
  * non-Recursica CDK overlay panel elsewhere in the consuming app.
  */
 
+/*
+ * `width: 100%` — required because `DropdownComponent` already binds
+ * `[cdkConnectedOverlayWidth]="overlayWidth"` (the trigger button's own
+ * `offsetWidth`, captured in `open()`) onto CDK's `.cdk-overlay-pane`
+ * wrapper — confirmed live that binding *does* correctly set
+ * `.cdk-overlay-pane`'s inline `width`. But `.cdk-overlay-pane` is itself
+ * `display: flex` (CDK's own default, row-direction), and without
+ * `width: 100%` here this panel — a flex *item* along that row's main axis
+ * — sized to its own content (`flex-grow: 0` default) instead of
+ * stretching to fill the pane, so a short-labeled option list rendered a
+ * panel far narrower than the trigger (same live-verified finding as
+ * `auto-complete-overlay.css`'s own `.rec-autocomplete-panel`) — not a
+ * missing panel-width *binding* (already wired), a missing *fill* rule on
+ * the bound width's target.
+ */
 [data-recursica-theme] .rec-dropdown-panel {
+  width: 100%;
   overflow: auto;
   max-height: 320px;
   box-sizing: border-box;

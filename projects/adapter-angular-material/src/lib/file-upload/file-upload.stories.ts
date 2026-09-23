@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { FileUploadComponent } from "./file-upload.component";
 import type { RecursicaFileUploadItem } from "../file-input/file-input-item";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -20,7 +21,7 @@ const meta: Meta<FileUploadComponent> = {
   component: FileUploadComponent,
   decorators: [
     moduleMetadata({
-      imports: [FileUploadComponent],
+      imports: [FileUploadComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -37,7 +38,7 @@ type Story = StoryObj<FileUploadComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           assistiveText="Max file size 5MB"
@@ -45,7 +46,7 @@ export const Default: Story = {
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: { files: [] as RecursicaFileUploadItem[] },
   }),
@@ -54,7 +55,7 @@ export const Default: Story = {
 export const WithFiles: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           assistiveText="Max file size 5MB"
@@ -62,7 +63,7 @@ export const WithFiles: Story = {
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: {
       files: [
@@ -77,14 +78,14 @@ export const WithFiles: Story = {
 export const EmptyState: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           [files]="files"
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: { files: [] as RecursicaFileUploadItem[] },
   }),
@@ -93,9 +94,9 @@ export const EmptyState: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload label="Upload Files" [disabled]="true" [files]="files"></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: {
       files: [{ file: mockFile("document.pdf") }] as RecursicaFileUploadItem[],
@@ -106,9 +107,9 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload label="Upload Files" error="File upload failed. Please try again."></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -125,7 +126,7 @@ export const CustomIcon: Story = {
   render: () => ({
     template: `
       ${starIconTemplate}
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           [icon]="starIcon"
@@ -133,7 +134,7 @@ export const CustomIcon: Story = {
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: { files: [] as RecursicaFileUploadItem[] },
   }),
@@ -142,14 +143,14 @@ export const CustomIcon: Story = {
 export const LongFilenames: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           [files]="files"
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: {
       files: [
@@ -168,14 +169,14 @@ export const LongFilenames: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           assistiveText="Submitted files cannot be changed"
           [readOnly]="true"
           [files]="files"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: {
       files: [
@@ -189,7 +190,7 @@ export const ReadOnly: Story = {
 export const AcceptRestriction: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           assistiveText="Only .pdf and .png files are accepted"
@@ -198,7 +199,7 @@ export const AcceptRestriction: Story = {
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: { files: [] as RecursicaFileUploadItem[] },
   }),
@@ -207,7 +208,7 @@ export const AcceptRestriction: Story = {
 export const MaxFilesRestriction: Story = {
   render: () => ({
     template: `
-      <div style="width: 400px;">
+      <rec-stack style="width: 400px;">
         <rec-file-upload
           label="Upload Files"
           assistiveText="Up to 2 files allowed"
@@ -216,7 +217,7 @@ export const MaxFilesRestriction: Story = {
           (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
           (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
         ></rec-file-upload>
-      </div>
+      </rec-stack>
     `,
     props: {
       files: [

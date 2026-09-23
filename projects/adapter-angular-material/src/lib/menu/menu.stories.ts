@@ -6,6 +6,7 @@ import { MenuDividerComponent } from "./menu-divider.component";
 import { MenuLabelComponent } from "./menu-label.component";
 import { MenuTriggerForDirective } from "./menu-trigger-for.directive";
 import { ButtonComponent } from "../button/button.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -23,6 +24,7 @@ const meta: Meta<MenuComponent> = {
         MenuLabelComponent,
         MenuTriggerForDirective,
         ButtonComponent,
+        StackComponent,
       ],
     }),
   ],
@@ -43,7 +45,7 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px;">
+      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Toggle Menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-label>Application</rec-menu-label>
@@ -56,7 +58,7 @@ export const Default: Story = {
           <rec-menu-item>Transfer my data</rec-menu-item>
           <rec-menu-item>Delete my account</rec-menu-item>
         </rec-menu>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -65,7 +67,7 @@ export const WithLabelAndSelection: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px;">
+      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-label>Sort by</rec-menu-label>
@@ -73,7 +75,7 @@ export const WithLabelAndSelection: Story = {
           <rec-menu-item>Date modified</rec-menu-item>
           <rec-menu-item>Size</rec-menu-item>
         </rec-menu>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -87,7 +89,7 @@ export const WithDisabledItems: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px;">
+      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Menu with Disabled</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-item>Settings</rec-menu-item>
@@ -95,7 +97,7 @@ export const WithDisabledItems: Story = {
           <rec-menu-item>Messages</rec-menu-item>
           <rec-menu-item [disabled]="true">Delete (disabled)</rec-menu-item>
         </rec-menu>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -114,13 +116,13 @@ export const WithIcons: Story = {
     props: args,
     template: `
       ${searchIconTemplate}
-      <div style="padding: 64px;">
+      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-item [leftSection]="searchIcon">Search</rec-menu-item>
           <rec-menu-item [leftSection]="searchIcon">Find replace</rec-menu-item>
         </rec-menu>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -163,13 +165,13 @@ export const OverStyledEscapeHatch: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px;">
+      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
         <rec-menu #menu [overStyled]="overStyled" [overClass]="overClass">
           <rec-menu-item>Profile</rec-menu-item>
           <rec-menu-item>Settings</rec-menu-item>
         </rec-menu>
-      </div>
+      </rec-stack>
     `,
   }),
 };

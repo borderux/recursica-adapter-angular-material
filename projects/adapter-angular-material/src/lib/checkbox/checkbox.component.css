@@ -23,6 +23,14 @@
 
 .root {
   display: inline-block;
+  /* Without this, the default `vertical-align: baseline` reserves descender
+     space below `.root` inside the block-level `rec-checkbox` host (no
+     Mantine base to inherit here — its own root is a plain block-level
+     `<div>`, never an inline-block needing baseline alignment), inflating
+     each item's rendered height and, transitively, the visual gap between
+     stacked `CheckboxGroup` items beyond the `item-gap`/`label-field-gap`
+     token's actual value. */
+  vertical-align: top;
 }
 
 :host-context([data-recursica-theme]) .root {
@@ -57,6 +65,20 @@
 :host-context([data-recursica-theme]) .inner {
   width: var(--recursica_ui-kit_components_checkbox_properties_size);
   height: var(--recursica_ui-kit_components_checkbox_properties_size);
+  /* Apply font-size to this element so that an 'em' based line-height token evaluates to the correct exact pixel value. */
+  font-size: var(
+    --recursica_ui-kit_components_checkbox-item_properties_text_font-size
+  );
+  /* Mathematically syncs the physical input checkbox bounding block visually with the center of the text's first line — ported from Checkbox.module.css's `.inner`, matching Mantine's own default `align-items: center` look (see checkbox.component.ts's class doc comment). */
+  margin-top: calc(
+    (
+        var(
+            --recursica_ui-kit_components_checkbox-item_properties_text_line-height
+          ) -
+          var(--recursica_ui-kit_components_checkbox_properties_size)
+      ) /
+      2
+  );
 }
 
 .input {

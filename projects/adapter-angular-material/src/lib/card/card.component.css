@@ -40,6 +40,17 @@
   border-radius: var(
     --recursica_ui-kit_components_card_properties_borders_border-radius
   );
+  /*
+   * Mantine's own compiled Card.css (Paper's base styles) sets
+   * `overflow: hidden` alongside `border-radius` on its root so
+   * Header/Content/Footer sections are clipped to the rounded corners
+   * instead of bleeding past them with square edges. Ported here for the
+   * same reason — this component builds Header/Footer as plain `<div>`s
+   * with their own square background/padding (see card.component.ts's
+   * class doc comment), so without this the rounded corners are hidden
+   * behind those sections' square backgrounds.
+   */
+  overflow: hidden;
   border-style: solid;
   border-width: var(
     --recursica_ui-kit_components_card_properties_borders_border-size

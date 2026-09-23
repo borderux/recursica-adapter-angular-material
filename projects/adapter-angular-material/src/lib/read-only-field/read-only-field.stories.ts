@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { ReadOnlyFieldComponent } from "./read-only-field.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -11,7 +12,9 @@ import { ReadOnlyFieldComponent } from "./read-only-field.component";
 const meta: Meta<ReadOnlyFieldComponent> = {
   title: "UI-Kit/ReadOnlyField",
   component: ReadOnlyFieldComponent,
-  decorators: [moduleMetadata({ imports: [ReadOnlyFieldComponent] })],
+  decorators: [
+    moduleMetadata({ imports: [ReadOnlyFieldComponent, StackComponent] }),
+  ],
   argTypes: {
     type: {
       control: "select",
@@ -162,7 +165,7 @@ export const WithEditIcon: Story = {
 export const DataTypes: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-read-only-field label="Text Mapping" type="text" value="Standard string output"></rec-read-only-field>
         <rec-read-only-field label="Number Mapping" type="number" [value]="1234567.89"></rec-read-only-field>
         <rec-read-only-field label="Date Mapping" type="date" value="4/28/2026"></rec-read-only-field>
@@ -170,7 +173,7 @@ export const DataTypes: Story = {
         <rec-read-only-field label="Boolean Mapping (False)" type="boolean" [value]="false"></rec-read-only-field>
         <rec-read-only-field label="Switch Mapping (True -> On)" type="switch" [value]="true"></rec-read-only-field>
         <rec-read-only-field label="Switch Mapping (False -> Off)" type="switch" [value]="false"></rec-read-only-field>
-      </div>
+      </rec-stack>
     `,
   }),
 };

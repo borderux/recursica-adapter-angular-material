@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { TooltipComponent } from "./tooltip.component";
 import { ButtonComponent } from "../button/button.component";
+import { GroupComponent } from "../group/group.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -15,7 +16,9 @@ const meta: Meta<TooltipComponent> = {
   title: "UI-Kit/Tooltip",
   component: TooltipComponent,
   decorators: [
-    moduleMetadata({ imports: [TooltipComponent, ButtonComponent] }),
+    moduleMetadata({
+      imports: [TooltipComponent, ButtonComponent, GroupComponent],
+    }),
   ],
   argTypes: {
     position: { control: "radio", options: ["top", "bottom", "left", "right"] },
@@ -36,7 +39,7 @@ export default meta;
 type Story = StoryObj<TooltipComponent>;
 
 const template = `
-  <div style="padding: 64px; display: flex; justify-content: center;">
+  <rec-group justify="center" wrap="nowrap" style="padding: 64px;">
     <rec-tooltip
       [label]="label"
       [position]="position"
@@ -45,7 +48,7 @@ const template = `
     >
       <rec-button variant="solid">Hover me</rec-button>
     </rec-tooltip>
-  </div>
+  </rec-group>
 `;
 
 export const Default: Story = {
@@ -75,7 +78,7 @@ export const WithoutBeak: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px; display: flex; justify-content: center;">
+      <rec-group justify="center" wrap="nowrap" style="padding: 64px;">
         <rec-tooltip
           [label]="label"
           [position]="position"
@@ -84,7 +87,7 @@ export const WithoutBeak: Story = {
         >
           <rec-button variant="outline">Without Beak</rec-button>
         </rec-tooltip>
-      </div>
+      </rec-group>
     `,
   }),
 };
@@ -134,7 +137,7 @@ export const OverStyledEscapeHatch: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 64px; display: flex; justify-content: center;">
+      <rec-group justify="center" wrap="nowrap" style="padding: 64px;">
         <rec-tooltip
           [label]="label"
           [overStyled]="overStyled"
@@ -142,7 +145,7 @@ export const OverStyledEscapeHatch: Story = {
         >
           <rec-button variant="solid">Hover me</rec-button>
         </rec-tooltip>
-      </div>
+      </rec-group>
     `,
   }),
 };

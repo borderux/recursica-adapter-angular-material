@@ -57,35 +57,3 @@ export const NoIconHelp: Story = {
     `,
   }),
 };
-
-/**
- * `overStyled` escape hatch: `overClass`/`overStyle` are only forwarded
- * onto this component's own root `<div>` when `overStyled` is `true` — see
- * `docs/STYLING_SYSTEM.md` §6.
- *
- * Uses `background-color`/`padding`, not `color`: the root's own inline
- * `color` would be inherited by `.textWrapper`, but `.textWrapper` has its
- * own directly-matching color rule — a directly-matching rule on a
- * descendant always wins over an inherited value from an ancestor,
- * regardless of the ancestor's specificity, so a `color` override here
- * would silently appear to do nothing. `background-color` has no such
- * competing rule and is unmistakable.
- */
-export const OverStyledEscapeHatch: Story = {
-  args: {
-    overStyled: true,
-    overStyle: {
-      "background-color": "#2962ff",
-      padding: "8px",
-      "border-radius": "4px",
-    },
-  },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-assistive-element [overStyled]="overStyled" [overStyle]="overStyle">
-        Over-styled assistive text.
-      </rec-assistive-element>
-    `,
-  }),
-};

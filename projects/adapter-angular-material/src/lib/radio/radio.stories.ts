@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { RadioComponent } from "./radio.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +14,7 @@ const meta: Meta<RadioComponent> = {
   component: RadioComponent,
   decorators: [
     moduleMetadata({
-      imports: [RadioComponent],
+      imports: [RadioComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -69,9 +70,9 @@ export const DisabledChecked: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-radio label="Account Type" [defaultChecked]="true" [readOnly]="true"></rec-radio>
-      </div>
+      </rec-stack>
     `,
   }),
 };

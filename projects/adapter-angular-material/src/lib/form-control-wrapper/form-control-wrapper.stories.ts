@@ -9,6 +9,7 @@ import {
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { FormControlWrapperComponent } from "./form-control-wrapper.component";
+import { GroupComponent } from "../group/group.component";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -71,7 +72,11 @@ const meta: Meta<FormControlWrapperComponent> = {
   component: FormControlWrapperComponent,
   decorators: [
     moduleMetadata({
-      imports: [FormControlWrapperComponent, DemoFormControlDirective],
+      imports: [
+        FormControlWrapperComponent,
+        DemoFormControlDirective,
+        GroupComponent,
+      ],
     }),
   ],
   argTypes: {
@@ -237,11 +242,11 @@ export const NativeChildrenDirectly: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="display: flex; gap: 10px; align-items: center;">
+      <rec-group gap="10px" wrap="nowrap">
         <rec-form-control-wrapper [formLayout]="formLayout" [label]="label" [assistiveText]="assistiveText">
           <input recDemoFormControl type="checkbox" style="margin: 0; width: 16px; height: 16px;" />
         </rec-form-control-wrapper>
-      </div>
+      </rec-group>
     `,
   }),
 };

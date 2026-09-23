@@ -2,8 +2,12 @@ import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
   Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewEncapsulation,
+  isDevMode,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import {
@@ -144,7 +148,7 @@ const APPEARANCE_MAP: Record<
     </button>
   `,
 })
-export class ButtonComponent implements RecursicaOverStyled {
+export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
   @Input() variant: RecursicaButtonVariant = "solid";
   @Input() size: RecursicaButtonSize = "default";
 
@@ -171,6 +175,26 @@ export class ButtonComponent implements RecursicaOverStyled {
   @Input() disabled = false;
   @Input() disableRipple?: boolean;
   @Input() disabledInteractive?: boolean;
+
+  /**
+   * **Required whenever `iconOnly` is `true`.** An icon-only button has no
+   * visible label text, so without an accessible name a screen reader
+   * announces nothing meaningful (matches the React reference's identical
+   * `USAGE.md` "Icon-only buttons: accessibility" requirement). This is
+   * enforced the same way the React reference enforces it — Mantine's
+   * `ButtonProps` is a *runtime* type (no TypeScript conditional-prop-type
+   * trick there either), so the reference's `Button.tsx` checks at runtime
+   * and logs a `console.warn` in development when `icon`/no visible
+   * children/no `aria-label` all hold. This component does the Angular
+   * equivalent: `ngOnInit`/`ngOnChanges` (this adapter's established
+   * lifecycle pattern for an input-driven check that must run both on
+   * first render and reactively — see `docs/COMPONENT_DEV_GUIDE.md`'s
+   * "Lifecycle pattern" bullet and `ThemeProviderComponent`'s identical
+   * precedent) call `checkIconOnlyAccessibility()`, which `console.warn`s
+   * (gated on `isDevMode()`, this framework's equivalent of the React
+   * reference's `process.env.NODE_ENV !== "production"` gate) when
+   * `iconOnly` is `true` and this is falsy.
+   */
   @Input() ariaLabel?: string;
 
   @Input() overStyled = false;
@@ -206,5 +230,44 @@ export class ButtonComponent implements RecursicaOverStyled {
     style: Record<string, string> | null;
   } {
     return resolveOverStyle(this);
+  }
+
+  /**
+   * `ngOnInit` (not just `ngOnChanges`) runs this on first render. Angular
+   * only calls `ngOnChanges` for an `@Input()` that is actually *bound* in
+   * the caller's template — a `<rec-button>` with `[iconOnly]="true"` bound
+   * but no `[ariaLabel]` binding at all still needs this check to run, so
+   * `ngOnChanges` alone would miss it. See `ariaLabel`'s own doc comment
+   * and `ThemeProviderComponent`'s identical precedent
+   * (`docs/COMPONENT_DEV_GUIDE.md`'s "Lifecycle pattern" bullet).
+   */
+  ngOnInit(): void {
+    this.checkIconOnlyAccessibility();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const iconOnlyChanged =
+      changes["iconOnly"] && !changes["iconOnly"].firstChange;
+    const ariaLabelChanged =
+      changes["ariaLabel"] && !changes["ariaLabel"].firstChange;
+    if (iconOnlyChanged || ariaLabelChanged) {
+      this.checkIconOnlyAccessibility();
+    }
+  }
+
+  /**
+   * Runtime enforcement of `ariaLabel`'s "required whenever `iconOnly` is
+   * `true`" contract — see `ariaLabel`'s own doc comment for why this is a
+   * `console.warn`, not a compile-time check. Gated on `isDevMode()` so it
+   * never runs (or costs anything) in a production build, mirroring the
+   * React reference's `process.env.NODE_ENV !== "production"` gate.
+   */
+  private checkIconOnlyAccessibility(): void {
+    if (isDevMode() && this.iconOnly && !this.ariaLabel) {
+      console.warn(
+        "[Recursica Button] Icon-only buttons must provide an accessible name. " +
+          'Pass ariaLabel (e.g. ariaLabel="Submit").',
+      );
+    }
   }
 }

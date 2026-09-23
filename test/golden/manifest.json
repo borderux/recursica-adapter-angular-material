@@ -8,14 +8,20 @@
   "components-pagination--with-text-labels": {
     "createdAt": "2026-09-22T20:36:55.448Z"
   },
+  "ui-kit-assistiveelement--default-help": {
+    "createdAt": "2026-09-22T22:19:30.689Z"
+  },
   "ui-kit-assistiveelement--error": {
     "createdAt": "2026-09-22T20:36:57.544Z"
+  },
+  "ui-kit-assistiveelement--error-state": {
+    "createdAt": "2026-09-23T16:39:28.211Z"
   },
   "ui-kit-assistiveelement--help": {
     "createdAt": "2026-09-22T20:36:59.713Z"
   },
-  "ui-kit-assistiveelement--over-styled-escape-hatch": {
-    "createdAt": "2026-09-22T20:37:01.692Z"
+  "ui-kit-assistiveelement--no-icon-help": {
+    "createdAt": "2026-09-23T16:39:30.000Z"
   },
   "ui-kit-assistiveelement--without-icon": {
     "createdAt": "2026-09-22T20:37:03.540Z"
@@ -34,6 +40,12 @@
   },
   "ui-kit-autocomplete--forms-side-by-side": {
     "createdAt": "2026-09-22T20:37:15.347Z"
+  },
+  "ui-kit-autocomplete--rich-option-row-preview": {
+    "createdAt": "2026-09-23T16:39:46.328Z"
+  },
+  "ui-kit-autocomplete--rich-option-row-preview-wrapped": {
+    "createdAt": "2026-09-23T16:39:48.652Z"
   },
   "ui-kit-autocomplete--static-read-only": {
     "createdAt": "2026-09-22T20:37:18.025Z"
@@ -86,9 +98,6 @@
   "ui-kit-breadcrumb--default": {
     "createdAt": "2026-09-22T20:37:57.952Z"
   },
-  "ui-kit-button--all-variants": {
-    "createdAt": "2026-09-22T20:38:00.179Z"
-  },
   "ui-kit-button--default": {
     "createdAt": "2026-09-22T20:38:02.273Z"
   },
@@ -101,17 +110,8 @@
   "ui-kit-button--loading": {
     "createdAt": "2026-09-22T20:38:09.448Z"
   },
-  "ui-kit-button--loading-outline": {
-    "createdAt": "2026-09-22T20:38:12.250Z"
-  },
-  "ui-kit-button--loading-without-recursica-loader": {
-    "createdAt": "2026-09-22T20:38:14.351Z"
-  },
   "ui-kit-button--outline-small": {
     "createdAt": "2026-09-22T20:38:16.261Z"
-  },
-  "ui-kit-button--over-styled-escape-hatch": {
-    "createdAt": "2026-09-22T20:38:18.410Z"
   },
   "ui-kit-button--solid-default": {
     "createdAt": "2026-09-22T20:38:20.314Z"
@@ -128,14 +128,8 @@
   "ui-kit-card--with-header-and-footer": {
     "createdAt": "2026-09-22T20:38:29.982Z"
   },
-  "ui-kit-card--with-section": {
-    "createdAt": "2026-09-22T20:38:32.857Z"
-  },
   "ui-kit-checkbox--default": {
     "createdAt": "2026-09-22T20:38:34.783Z"
-  },
-  "ui-kit-checkbox--interactive-toggle": {
-    "createdAt": "2026-09-22T20:38:36.947Z"
   },
   "ui-kit-checkbox--long-label-wrap": {
     "createdAt": "2026-09-22T20:38:38.882Z"
@@ -151,9 +145,6 @@
   },
   "ui-kit-checkboxgroup--default": {
     "createdAt": "2026-09-22T20:38:48.778Z"
-  },
-  "ui-kit-checkboxgroup--interactive-multi-select": {
-    "createdAt": "2026-09-22T20:38:50.975Z"
   },
   "ui-kit-checkboxgroup--read-only": {
     "createdAt": "2026-09-22T20:38:52.926Z"
@@ -172,12 +163,6 @@
   },
   "ui-kit-chip--error-state": {
     "createdAt": "2026-09-22T20:39:06.510Z"
-  },
-  "ui-kit-chip--interactive-removable": {
-    "createdAt": "2026-09-22T20:39:08.773Z"
-  },
-  "ui-kit-chip--interactive-toggle": {
-    "createdAt": "2026-09-22T20:39:10.768Z"
   },
   "ui-kit-chip--removable": {
     "createdAt": "2026-09-22T20:39:12.877Z"

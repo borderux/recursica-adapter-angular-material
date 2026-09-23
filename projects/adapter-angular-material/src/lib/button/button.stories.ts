@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { ButtonComponent } from "./button.component";
 import { LayerComponent } from "../layer/layer.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -16,7 +17,11 @@ import { LayerComponent } from "../layer/layer.component";
 const meta: Meta<ButtonComponent> = {
   title: "UI-Kit/Button",
   component: ButtonComponent,
-  decorators: [moduleMetadata({ imports: [ButtonComponent, LayerComponent] })],
+  decorators: [
+    moduleMetadata({
+      imports: [ButtonComponent, LayerComponent, StackComponent],
+    }),
+  ],
   argTypes: {
     variant: { control: "radio", options: ["solid", "outline", "text"] },
     size: { control: "radio", options: ["default", "small"] },
@@ -85,19 +90,6 @@ export const OutlineSmall: Story = {
   render: (args) => ({ props: args, template: withLabel("Outline Small") }),
 };
 
-/** All three variants side by side, for a direct visual comparison. */
-export const AllVariants: Story = {
-  render: () => ({
-    template: `
-      <div style="display: flex; gap: 16px; align-items: center;">
-        <rec-button variant="solid">Solid</rec-button>
-        <rec-button variant="outline">Outline</rec-button>
-        <rec-button variant="text">Text</rec-button>
-      </div>
-    `,
-  }),
-};
-
 export const DisabledSolid: Story = {
   args: { disabled: true },
   render: (args) => ({ props: args, template: withLabel("Disabled Solid") }),
@@ -127,11 +119,11 @@ export const TruncatedLabel: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="max-width: 250px;">
+      <rec-stack style="max-width: 250px;">
         ${withLabel(
           "This is an exceptionally long button label designed to demonstrate how the component handles text overflow by applying an ellipsis rather than breaking the layout or wrapping to multiple lines.",
         )}
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -144,21 +136,6 @@ export const TruncatedLabel: Story = {
  */
 export const Loading: Story = {
   args: { loading: true },
-  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
-};
-
-export const LoadingOutline: Story = {
-  args: { loading: true, variant: "outline" },
-  render: (args) => ({ props: args, template: withLabel("Explore Button") }),
-};
-
-/**
- * `useRecursicaLoader: false` — Material has nothing built-in to fall back
- * to (unlike Mantine), so this renders no visual loading indicator at all;
- * the button is still disabled while `loading`.
- */
-export const LoadingWithoutRecursicaLoader: Story = {
-  args: { loading: true, useRecursicaLoader: false },
   render: (args) => ({ props: args, template: withLabel("Explore Button") }),
 };
 
@@ -191,38 +168,6 @@ export const IconOnly: Story = {
     template: `
       ${searchIconTemplate}
       <rec-button [icon]="searchIcon" [iconOnly]="true" ariaLabel="Search"></rec-button>
-    `,
-  }),
-};
-
-/**
- * `overStyled` escape hatch: `overClass`/`overStyle` are only
- * forwarded onto the wrapped `<button matButton>` when `overStyled` is
- * `true`. This story sets a real inline style via `overStyle` to prove
- * it actually reaches the wrapped element — see `docs/STYLING_SYSTEM.md` §6.
- *
- * Uses an unmistakable color (not a border) deliberately: the `solid`
- * variant's own `border-color` token resolves to transparent by design (a
- * filled button's shape comes from its background, not a visible border),
- * so a border-only override here would apply correctly but render
- * invisibly — true but not a convincing demo. `background-color` is always
- * visible regardless of variant/token values.
- */
-export const OverStyledEscapeHatch: Story = {
-  args: {
-    overStyled: true,
-    overStyle: { "background-color": "magenta", "border-color": "cyan" },
-  },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-button
-        [variant]="variant"
-        [overStyled]="overStyled"
-        [overStyle]="overStyle"
-      >
-        Over-styled
-      </rec-button>
     `,
   }),
 };

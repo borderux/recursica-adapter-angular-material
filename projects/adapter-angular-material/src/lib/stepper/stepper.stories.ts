@@ -3,6 +3,8 @@ import { moduleMetadata } from "@storybook/angular";
 import { StepperComponent } from "./stepper.component";
 import { StepComponent } from "./stepper-step.component";
 import { StepperCompletedComponent } from "./stepper-completed.component";
+import { StackComponent } from "../stack/stack.component";
+import { GroupComponent } from "../group/group.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -31,7 +33,13 @@ const meta: Meta<StepperComponent> = {
   component: StepperComponent,
   decorators: [
     moduleMetadata({
-      imports: [StepperComponent, StepComponent, StepperCompletedComponent],
+      imports: [
+        StepperComponent,
+        StepComponent,
+        StepperCompletedComponent,
+        StackComponent,
+        GroupComponent,
+      ],
     }),
   ],
   argTypes: {
@@ -55,7 +63,7 @@ const buttonStyleDisabled =
   "border: 1px solid #c9c9c9; color: #c9c9c9; background: none; border-radius: 999px; padding: 8px 20px; cursor: not-allowed;";
 
 const template = `
-  <div style="width: 600px; display: flex; flex-direction: column;">
+  <rec-stack gap="0" style="width: 600px;">
     <rec-stepper [active]="active" [size]="size" [orientation]="orientation" (stepClick)="active = $event">
       <rec-stepper-step
         label="First step"
@@ -69,7 +77,7 @@ const template = `
       <rec-stepper-completed>Completed, click back button to get to previous step</rec-stepper-completed>
     </rec-stepper>
 
-    <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+    <rec-group justify="center" wrap="nowrap" gap="8px" style="margin-top: 24px;">
       <button
         [attr.style]="active === 0 ? disabledStyle : enabledStyle"
         [disabled]="active === 0"
@@ -80,12 +88,12 @@ const template = `
         [disabled]="active === 3"
         (click)="active = active < 3 ? active + 1 : active"
       >Next step</button>
-    </div>
-  </div>
+    </rec-group>
+  </rec-stack>
 `;
 
 const stressTestTemplate = `
-  <div style="width: 600px; display: flex; flex-direction: column;">
+  <rec-stack gap="0" style="width: 600px;">
     <rec-stepper [active]="active" [size]="size" [orientation]="orientation" (stepClick)="active = $event">
       <rec-stepper-step
         label="This is an extremely long step title designed to test how the layout handles multiline text wrapping and constraints"
@@ -99,7 +107,7 @@ const stressTestTemplate = `
       <rec-stepper-completed>Completed, click back button to get to previous step</rec-stepper-completed>
     </rec-stepper>
 
-    <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+    <rec-group justify="center" wrap="nowrap" gap="8px" style="margin-top: 24px;">
       <button
         [attr.style]="active === 0 ? disabledStyle : enabledStyle"
         [disabled]="active === 0"
@@ -110,8 +118,8 @@ const stressTestTemplate = `
         [disabled]="active === 3"
         (click)="active = active < 3 ? active + 1 : active"
       >Next step</button>
-    </div>
-  </div>
+    </rec-group>
+  </rec-stack>
 `;
 
 export const Default: Story = {
@@ -186,13 +194,13 @@ export const LayoutStressTest: Story = {
 export const OverStyledEscapeHatch: Story = {
   render: () => ({
     template: `
-      <div style="width: 600px;">
+      <rec-stack style="width: 600px;">
         <rec-stepper [active]="1" [overStyled]="true" [overStyle]="{ 'background-color': '#fff3f5' }">
           <rec-stepper-step label="One" />
           <rec-stepper-step label="Two" />
           <rec-stepper-step label="Three" />
         </rec-stepper>
-      </div>
+      </rec-stack>
     `,
   }),
 };

@@ -107,23 +107,3 @@ export const ReadOnly: Story = {
     props: { value: ["disabledNode"] as string[] },
   }),
 };
-
-// Verification-only story (not part of the golden regression set) — a real,
-// fully-wired multi-checkbox group so the array `value` updating across
-// clicks on multiple checkboxes can be exercised with real Playwright
-// interaction. See IMPLEMENTATION_NOTES.md's Verification section.
-export const InteractiveMultiSelect: Story = {
-  render: () => ({
-    template: `
-      <div>
-        <rec-checkbox-group formLayout="stacked" label="Pick any" [value]="value" (valueChange)="value = $event">
-          <rec-checkbox value="a" label="Option A"></rec-checkbox>
-          <rec-checkbox value="b" label="Option B"></rec-checkbox>
-          <rec-checkbox value="c" label="Option C"></rec-checkbox>
-        </rec-checkbox-group>
-        <p data-testid="selected-value">{{ value.join(',') }}</p>
-      </div>
-    `,
-    props: { value: [] as string[] },
-  }),
-};

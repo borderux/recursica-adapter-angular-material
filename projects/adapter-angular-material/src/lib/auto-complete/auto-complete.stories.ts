@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from "@angular/common";
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { AutoCompleteComponent } from "./auto-complete.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -32,7 +33,7 @@ const meta: Meta<AutoCompleteComponent> = {
   component: AutoCompleteComponent,
   decorators: [
     moduleMetadata({
-      imports: [AutoCompleteComponent, NgTemplateOutlet],
+      imports: [AutoCompleteComponent, NgTemplateOutlet, StackComponent],
     }),
   ],
   argTypes: {
@@ -71,14 +72,14 @@ const COUNTRY_DATA = [
 export const Default: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Country Selection"
           placeholder="Start typing..."
           assistiveText="Search from a predefined list of countries."
           [data]="data"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: COUNTRY_DATA },
   }),
@@ -87,7 +88,7 @@ export const Default: Story = {
 export const FormsSideBySide: Story = {
   render: () => ({
     template: `
-      <div style="width: 480px;">
+      <rec-stack style="width: 480px;">
         <rec-auto-complete
           formLayout="side-by-side"
           label="Primary Region"
@@ -95,7 +96,7 @@ export const FormsSideBySide: Story = {
           assistiveText="Select the primary region for the deployment. This violently long string tests native textual wrapping safely mapping alongside inputs."
           [data]="data"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: {
       data: ["US-East", "US-West", "EU-Central", "AP-South", "SA-East"],
@@ -116,14 +117,14 @@ export const WithLeadingIcon: Story = {
   render: () => ({
     template: `
       ${searchIconTemplate}
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Search Projects"
           placeholder="Project name..."
           [data]="data"
           [leftSection]="searchIcon"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: ["Alpha", "Beta", "Gamma", "Delta", "Epsilon"] },
   }),
@@ -141,14 +142,14 @@ export const WithTrailingIcon: Story = {
   render: () => ({
     template: `
       ${checkIconTemplate}
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Validation URL"
           placeholder="https://recursica.dev"
           [data]="data"
           [rightSection]="checkIcon"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: {
       data: [
@@ -179,14 +180,14 @@ export const WithRichOptions: Story = {
   render: () => ({
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Assignee"
           placeholder="Search team members..."
           [data]="${richOptionsData}"
           assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -200,7 +201,7 @@ export const WithRichOptionsWrapped: Story = {
   render: () => ({
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Assignee"
           placeholder="Search team members..."
@@ -208,7 +209,7 @@ export const WithRichOptionsWrapped: Story = {
           [wrapItemText]="true"
           assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -284,14 +285,14 @@ export const RichOptionRowPreviewWrapped: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Disabled Deployment Node"
           placeholder="Disabled primitive map..."
           [data]="data"
           [disabled]="true"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: ["Node 1", "Node 2", "Node 3"] },
   }),
@@ -300,7 +301,7 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Cluster Failure"
           placeholder="Failing component instance..."
@@ -309,7 +310,7 @@ export const ErrorState: Story = {
           error="Critical runtime node disconnect detected traversing DOM architecture."
           [required]="true"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: ["Cluster A", "Cluster B", "Cluster C"] },
   }),
@@ -318,7 +319,7 @@ export const ErrorState: Story = {
 export const StaticReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Static ReadOnly Review"
           placeholder="Ignored..."
@@ -326,7 +327,7 @@ export const StaticReadOnly: Story = {
           [value]="'Explicitly Uneditable Bound Output'"
           [readOnly]="true"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: ["Option 1", "Option 2"] },
   }),
@@ -335,7 +336,7 @@ export const StaticReadOnly: Story = {
 export const EditableReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
+      <rec-stack style="width: 320px;">
         <rec-auto-complete
           label="Editable ReadOnly Review"
           placeholder="Ignored until active..."
@@ -344,7 +345,7 @@ export const EditableReadOnly: Story = {
           [readOnly]="true"
           [labelWithEditIcon]="true"
         ></rec-auto-complete>
-      </div>
+      </rec-stack>
     `,
     props: { data: ["Option 1", "Option 2"] },
   }),

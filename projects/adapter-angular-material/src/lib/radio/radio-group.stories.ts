@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { RadioGroupComponent } from "./radio-group.component";
 import { RadioComponent } from "./radio.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -14,7 +15,7 @@ const meta: Meta<RadioGroupComponent> = {
   component: RadioGroupComponent,
   decorators: [
     moduleMetadata({
-      imports: [RadioGroupComponent, RadioComponent],
+      imports: [RadioGroupComponent, RadioComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -103,14 +104,14 @@ export const ReadOnly: Story = {
 export const InteractiveExclusiveSelect: Story = {
   render: () => ({
     template: `
-      <div>
+      <rec-stack>
         <rec-radio-group formLayout="stacked" label="Pick one" [value]="value" (valueChange)="value = $event">
           <rec-radio value="a" label="Option A"></rec-radio>
           <rec-radio value="b" label="Option B"></rec-radio>
           <rec-radio value="c" label="Option C"></rec-radio>
         </rec-radio-group>
         <p data-testid="selected-value">{{ value }}</p>
-      </div>
+      </rec-stack>
     `,
     props: { value: "" as string },
   }),
@@ -122,13 +123,13 @@ export const InteractiveExclusiveSelect: Story = {
 export const InteractiveDisabledMember: Story = {
   render: () => ({
     template: `
-      <div>
+      <rec-stack>
         <rec-radio-group formLayout="stacked" label="Pick an available option" [value]="value" (valueChange)="value = $event">
           <rec-radio value="a" label="Option A"></rec-radio>
           <rec-radio value="b" label="Option B (disabled)" [disabled]="true"></rec-radio>
         </rec-radio-group>
         <p data-testid="selected-value">{{ value }}</p>
-      </div>
+      </rec-stack>
     `,
     props: { value: "a" as string },
   }),

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { CheckboxComponent } from "./checkbox.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +14,7 @@ const meta: Meta<CheckboxComponent> = {
   component: CheckboxComponent,
   decorators: [
     moduleMetadata({
-      imports: [CheckboxComponent],
+      imports: [CheckboxComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -57,13 +58,13 @@ export const LongLabelWrap: Story = {
 export const StaticVariations: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-checkbox label="Default Unchecked State" (checkedChange)="$event"></rec-checkbox>
         <rec-checkbox label="Acknowledge Configuration" [defaultChecked]="true" (checkedChange)="$event"></rec-checkbox>
         <rec-checkbox label="Indeterminate Master" [indeterminate]="true" (checkedChange)="$event"></rec-checkbox>
         <rec-checkbox label="Disabled Variant" [disabled]="true"></rec-checkbox>
         <rec-checkbox label="Disabled Checked Variant" [checked]="true" [disabled]="true"></rec-checkbox>
-      </div>
+      </rec-stack>
     `,
   }),
 };
@@ -71,20 +72,9 @@ export const StaticVariations: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px;">
+      <rec-stack gap="24px">
         <rec-checkbox label="Accept Terms &amp; Conditions" [defaultChecked]="true" [readOnly]="true"></rec-checkbox>
-      </div>
+      </rec-stack>
     `,
-  }),
-};
-
-// Verification-only story (not part of the golden regression set) — a real,
-// fully-wired uncontrolled toggle so real click/keyboard behavior can be
-// exercised with a real Playwright interaction. See IMPLEMENTATION_NOTES.md's
-// Verification section.
-export const InteractiveToggle: Story = {
-  render: () => ({
-    template: `<rec-checkbox [label]="checked ? 'Checked' : 'Click or press Space to check'" [defaultChecked]="false" (checkedChange)="checked = $event"></rec-checkbox>`,
-    props: { checked: false },
   }),
 };

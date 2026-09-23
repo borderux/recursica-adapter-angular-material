@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { StackComponent } from "./stack.component";
 import { ButtonComponent } from "../button/button.component";
+import { TextComponent } from "../text/text.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +14,7 @@ const meta: Meta<StackComponent> = {
   component: StackComponent,
   decorators: [
     moduleMetadata({
-      imports: [StackComponent, ButtonComponent],
+      imports: [StackComponent, ButtonComponent, TextComponent],
     }),
   ],
 };
@@ -27,7 +28,7 @@ export const Default: Story = {
       <rec-stack>
         <rec-button variant="solid">Primary Block</rec-button>
         <rec-button variant="outline">Secondary Block</rec-button>
-        <span>Text element within Stack</span>
+        <rec-text>Text element within Stack</rec-text>
       </rec-stack>
     `,
   }),

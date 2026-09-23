@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/borderux/recursica-adapter-angular-material.git"
   },
-  "version": "0.0.0",
+  "version": "0.1.0",
   "publishConfig": {
     "access": "public"
   },
@@ -80,7 +80,7 @@
     "@compodoc/compodoc": "^2.0.0",
     "@eslint/js": "^9.25.0",
     "@playwright/test": "^1.63.0",
-    "@recursica/adapter-tester": "^5.1.4",
+    "@recursica/adapter-tester": "^5.2.0",
     "@storybook/addon-docs": "9.1.20",
     "@storybook/addon-onboarding": "9.1.20",
     "@storybook/angular": "9.1.20",

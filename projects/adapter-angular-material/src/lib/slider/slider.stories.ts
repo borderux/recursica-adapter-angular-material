@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { SliderComponent } from "./slider.component";
+import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -17,7 +18,7 @@ const meta: Meta<SliderComponent> = {
   component: SliderComponent,
   decorators: [
     moduleMetadata({
-      imports: [SliderComponent],
+      imports: [SliderComponent, StackComponent],
     }),
   ],
   argTypes: {
@@ -195,7 +196,7 @@ export const RangeModeWithIconsAndInputs: Story = {
 export const FormLayouts: Story = {
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 2.5rem; max-width: 600px;">
+      <rec-stack gap="2.5rem" style="max-width: 600px;">
         <rec-slider
           label="Stacked Layout"
           assistiveText="This is the standard top-to-bottom stacked form layout."
@@ -208,7 +209,7 @@ export const FormLayouts: Story = {
           [defaultValue]="60"
           formLayout="side-by-side"
         ></rec-slider>
-      </div>
+      </rec-stack>
     `,
   }),
 };

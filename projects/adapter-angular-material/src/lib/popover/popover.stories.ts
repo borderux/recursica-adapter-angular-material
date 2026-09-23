@@ -5,6 +5,7 @@ import { PopoverTargetComponent } from "./popover-target.component";
 import { PopoverDropdownComponent } from "./popover-dropdown.component";
 import { ButtonComponent } from "../button/button.component";
 import { TextComponent } from "../text/text.component";
+import { GroupComponent } from "../group/group.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -26,6 +27,7 @@ const meta: Meta<PopoverComponent> = {
         PopoverDropdownComponent,
         ButtonComponent,
         TextComponent,
+        GroupComponent,
       ],
     }),
   ],
@@ -74,7 +76,7 @@ export const Default: Story = {
 export const SolidDefault: Story = {
   render: () => ({
     template: `
-      <div style="padding: 100px; display: flex; justify-content: center;">
+      <rec-group justify="center" wrap="nowrap" style="padding: 100px;">
         <rec-popover position="top" [withBeak]="true" [width]="200" [defaultOpened]="true">
           <rec-popover-target>
             <rec-button variant="solid">Toggle Popover</rec-button>
@@ -83,7 +85,7 @@ export const SolidDefault: Story = {
             <rec-text>This is a static representation of an opened popover with a beak.</rec-text>
           </rec-popover-dropdown>
         </rec-popover>
-      </div>
+      </rec-group>
     `,
   }),
 };
@@ -91,7 +93,7 @@ export const SolidDefault: Story = {
 export const WithoutBeak: Story = {
   render: () => ({
     template: `
-      <div style="padding: 100px; display: flex; justify-content: center;">
+      <rec-group justify="center" wrap="nowrap" style="padding: 100px;">
         <rec-popover position="bottom" [withBeak]="false" [width]="200" [defaultOpened]="true">
           <rec-popover-target>
             <rec-button variant="outline">Bottom Popover</rec-button>
@@ -100,7 +102,7 @@ export const WithoutBeak: Story = {
             <rec-text>This popover is positioned at the bottom and has no beak.</rec-text>
           </rec-popover-dropdown>
         </rec-popover>
-      </div>
+      </rec-group>
     `,
   }),
 };
