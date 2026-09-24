@@ -26,11 +26,25 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/fesm2022/recursica-adapter-angular-material.mjs"
     },
+    "./*.css": {
+      "style": "./dist/*.css",
+      "default": "./dist/*.css"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "docs/PHILOSOPHY.md"
+    "docs/PHILOSOPHY.md",
+    "CHANGELOG.md",
+    "llms.txt",
+    "USAGE.md",
+    "ARCHITECTURE.md",
+    "SETUP.md",
+    "OVERSTYLING.md",
+    "recursica_variables_scoped.css",
+    "recursica_brand.json",
+    "recursica_tokens.json",
+    "recursica_ui-kit.json"
   ],
   "engines": {
     "node": ">=20"
@@ -38,7 +52,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "npm run storybook",
-    "build": "ng build adapter-angular-material",
+    "build": "node scripts/sync-lib-version.mjs && ng build adapter-angular-material",
     "lint": "eslint .",
     "check-types": "tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json",
     "format": "prettier --write \"**/*.{js,ts,json,md,css,scss,html}\"",

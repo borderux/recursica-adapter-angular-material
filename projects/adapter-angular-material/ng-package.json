@@ -19,6 +19,36 @@
       "glob": "dropdown-overlay.css",
       "input": "src/lib/dropdown",
       "output": "/"
+    },
+    {
+      "glob": "date-picker-overlay.css",
+      "input": "src/lib/date-picker",
+      "output": "/"
+    },
+    {
+      "glob": "auto-complete-overlay.css",
+      "input": "src/lib/auto-complete",
+      "output": "/"
+    },
+    {
+      "glob": "hover-card-overlay.css",
+      "input": "src/lib/hover-card",
+      "output": "/"
+    },
+    {
+      "glob": "modal-overlay.css",
+      "input": "src/lib/modal",
+      "output": "/"
+    },
+    {
+      "glob": "panel-overlay.css",
+      "input": "src/lib/panel",
+      "output": "/"
+    },
+    {
+      "glob": "popover-overlay.css",
+      "input": "src/lib/popover",
+      "output": "/"
     }
   ]
 }
