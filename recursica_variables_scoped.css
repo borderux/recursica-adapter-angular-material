@@ -2,7 +2,7 @@
  * Recursica CSS Variables - Scoped
  * Transform version: 1.3.3
  * Source JSON version: 0.28.2
- * Generated: Wed, 23 Sep 2026 16:11:12 GMT
+ * Generated: Thu, 24 Sep 2026 20:43:37 GMT
  *
  * --- How to integrate this file ---
  *
@@ -137,6 +137,11 @@
   --recursica_brand_layout-grids_default_columns: 6;
   --recursica_brand_layout-grids_default_margin: var(--recursica_tokens_sizes_3x);
   --recursica_brand_layout-grids_default_row-gutter: var(--recursica_tokens_sizes_3x);
+  --recursica_brand_layout-grids_junk_column-gutter: var(--recursica_tokens_sizes_2x);
+  --recursica_brand_layout-grids_junk_columns: 3;
+  --recursica_brand_layout-grids_junk_margin: var(--recursica_tokens_sizes_3x);
+  --recursica_brand_layout-grids_junk_max-width: 480;
+  --recursica_brand_layout-grids_junk_row-gutter: var(--recursica_tokens_sizes_3x);
   --recursica_brand_modes_dark_elevations_elevation-0: var(--recursica_brand_modes_dark_elevations_elevation-0_x) var(--recursica_brand_modes_dark_elevations_elevation-0_y) var(--recursica_brand_modes_dark_elevations_elevation-0_blur) var(--recursica_brand_modes_dark_elevations_elevation-0_spread) var(--recursica_brand_modes_dark_elevations_elevation-0_color);
   --recursica_brand_modes_dark_elevations_elevation-0_blur: 0px;
   --recursica_brand_modes_dark_elevations_elevation-0_color: var(--recursica_brand_modes_dark_palettes_neutral_500_color_tone);
@@ -6172,3 +6177,10 @@
   text-transform: var(--recursica_brand_typography_overline_textCase);
 }
 
+
+/* Breakpoint: junk */
+@media (max-width: 480px) {
+  :root {
+    --recursica_brand_typography_h1_fontSize: var(--recursica_tokens_font_sizes_2xl);
+  }
+}

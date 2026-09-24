@@ -8,12 +8,17 @@ import {
   ViewEncapsulation,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import type {
   RecursicaFormControlLabelSize,
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import { TimePickerControlComponent } from "./time-picker-control.component";
 
 let nextId = 0;
@@ -55,6 +60,7 @@ function formatReadOnlyTime(value: string | undefined): string | undefined {
   selector: "rec-time-picker",
   imports: [WithReadOnlyWrapperComponent, TimePickerControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [recursicaValueAccessorProvider(TimePickerComponent)],
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -91,11 +97,12 @@ function formatReadOnlyTime(value: string | undefined): string | undefined {
         [withSeconds]="withSeconds"
         [leftSection]="leftSection"
         (valueChange)="onValueChange($event)"
+        (blurred)="onBlur()"
       />
     </ng-template>
   `,
 })
-export class TimePickerComponent implements OnInit {
+export class TimePickerComponent implements ControlValueAccessor, OnInit {
   @Input() value?: string;
   @Input() defaultValue?: string;
   @Output() valueChange = new EventEmitter<string | undefined>();
@@ -143,6 +150,8 @@ export class TimePickerComponent implements OnInit {
    */
   private readonly _uncontrolledValue = signal<string | undefined>(undefined);
 
+  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);
   }
@@ -160,5 +169,26 @@ export class TimePickerComponent implements OnInit {
       this._uncontrolledValue.set(next);
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+  }
+
+  onBlur(): void {
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

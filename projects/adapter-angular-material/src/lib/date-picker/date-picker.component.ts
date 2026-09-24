@@ -8,12 +8,17 @@ import {
   ViewEncapsulation,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import type {
   RecursicaFormControlLabelSize,
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import { DatePickerControlComponent } from "./date-picker-control.component";
 
 let nextId = 0;
@@ -49,6 +54,7 @@ const READ_ONLY_FORMAT: Intl.DateTimeFormatOptions = {
   selector: "rec-date-picker",
   imports: [WithReadOnlyWrapperComponent, DatePickerControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [recursicaValueAccessorProvider(DatePickerComponent)],
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -92,7 +98,7 @@ const READ_ONLY_FORMAT: Intl.DateTimeFormatOptions = {
     </ng-template>
   `,
 })
-export class DatePickerComponent implements OnInit {
+export class DatePickerComponent implements ControlValueAccessor, OnInit {
   @Input() value?: Date | null;
   @Input() defaultValue?: Date | null;
   @Output() valueChange = new EventEmitter<Date | null>();
@@ -147,6 +153,8 @@ export class DatePickerComponent implements OnInit {
     undefined,
   );
 
+  private readonly cva = new RecursicaValueAccessor<Date | null | undefined>();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? null);
   }
@@ -168,5 +176,23 @@ export class DatePickerComponent implements OnInit {
       this._uncontrolledValue.set(next);
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: Date | null | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: Date | null | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

@@ -170,6 +170,7 @@ let nextId = 0;
 export class NumberInputControlComponent implements RecursicaFormControl {
   @Input() value?: number;
   @Output() valueChange = new EventEmitter<number | undefined>();
+  @Output() blurred = new EventEmitter<void>();
 
   @Input() placeholder?: string;
   @Input() name?: string;
@@ -215,6 +216,7 @@ export class NumberInputControlComponent implements RecursicaFormControl {
   }
 
   onBlur(event: Event): void {
+    this.blurred.emit();
     const el = event.target as HTMLInputElement;
     if (el.value === "") {
       return;

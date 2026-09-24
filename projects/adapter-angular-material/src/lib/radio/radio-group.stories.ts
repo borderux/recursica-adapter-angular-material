@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { RadioGroupComponent } from "./radio-group.component";
 import { RadioComponent } from "./radio.component";
 import { StackComponent } from "../stack/stack.component";
@@ -132,5 +133,25 @@ export const InteractiveDisabledMember: Story = {
       </rec-stack>
     `,
     props: { value: "a" as string },
+  }),
+};
+
+/**
+ * `ControlValueAccessor` regression coverage (`docs/COMPONENT_DEV_GUIDE.md`'s
+ * "Forms integration" section) — `[formControl]` bound directly onto
+ * `<rec-radio-group>`, not just `[value]`/`(valueChange)`.
+ */
+export const ReactiveForms: Story = {
+  decorators: [moduleMetadata({ imports: [ReactiveFormsModule] })],
+  render: () => ({
+    props: { ctrl: new FormControl("b") },
+    template: `
+      <rec-stack>
+        <rec-radio-group formLayout="stacked" label="Reactive Forms RadioGroup" [formControl]="ctrl">
+          <rec-radio value="a" label="Option A"></rec-radio>
+          <rec-radio value="b" label="Option B"></rec-radio>
+        </rec-radio-group>
+      </rec-stack>
+    `,
   }),
 };

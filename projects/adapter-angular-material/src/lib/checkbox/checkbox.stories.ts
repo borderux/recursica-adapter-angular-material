@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { CheckboxComponent } from "./checkbox.component";
 import { StackComponent } from "../stack/stack.component";
 
@@ -75,6 +76,21 @@ export const ReadOnly: Story = {
       <rec-stack gap="24px">
         <rec-checkbox label="Accept Terms &amp; Conditions" [defaultChecked]="true" [readOnly]="true"></rec-checkbox>
       </rec-stack>
+    `,
+  }),
+};
+
+/**
+ * `ControlValueAccessor` regression coverage (`docs/COMPONENT_DEV_GUIDE.md`'s
+ * "Forms integration" section) — `[formControl]` bound directly onto
+ * `<rec-checkbox>`, not just `[checked]`/`(checkedChange)`.
+ */
+export const ReactiveForms: Story = {
+  decorators: [moduleMetadata({ imports: [ReactiveFormsModule] })],
+  render: () => ({
+    props: { ctrl: new FormControl(true) },
+    template: `
+      <rec-checkbox [formControl]="ctrl" label="Reactive Forms Checkbox"></rec-checkbox>
     `,
   }),
 };

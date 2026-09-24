@@ -207,6 +207,7 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
   @Input() data: RecursicaDropdownData = [];
   @Input() value?: string;
   @Output() valueChange = new EventEmitter<string | undefined>();
+  @Output() blurred = new EventEmitter<void>();
 
   @Input() placeholder?: string;
   @Input() name?: string;
@@ -301,6 +302,7 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
   close(): void {
     this.isOpen = false;
     this.highlightedIndex = -1;
+    this.blurred.emit();
   }
 
   onInput(event: Event): void {

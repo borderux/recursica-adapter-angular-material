@@ -13,6 +13,7 @@ import {
   forwardRef,
 } from "@angular/core";
 import { ConnectedPosition, OverlayModule } from "@angular/cdk/overlay";
+import { ControlValueAccessor } from "@angular/forms";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -21,6 +22,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import {
   RecursicaDropdownData,
   RecursicaDropdownOption,
@@ -180,6 +185,7 @@ let nextId = 0;
       provide: RECURSICA_FORM_CONTROL,
       useExisting: forwardRef(() => DropdownComponent),
     },
+    recursicaValueAccessorProvider(DropdownComponent),
   ],
   template: `
     <div
@@ -356,7 +362,12 @@ let nextId = 0;
   `,
 })
 export class DropdownComponent
-  implements RecursicaFormControl, RecursicaOverStyled, AfterViewInit, OnDestroy
+  implements
+    RecursicaFormControl,
+    RecursicaOverStyled,
+    ControlValueAccessor,
+    AfterViewInit,
+    OnDestroy
 {
   @Input() data: RecursicaDropdownData = [];
   @Input() value: string | null = null;
@@ -409,6 +420,8 @@ export class DropdownComponent
   private readonly baseId = `rec-dropdown-${nextId++}`;
   @Input() id = this.baseId;
   readonly panelId = `${this.baseId}-panel`;
+
+  private readonly cva = new RecursicaValueAccessor<string | null>();
 
   private describedByIds: string[] = [];
 
@@ -494,6 +507,23 @@ export class DropdownComponent
     this.isOpen = false;
     this.highlightedIndex = -1;
     this.closed.emit();
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string | null): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | null) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   clear(event: Event): void {
@@ -501,6 +531,7 @@ export class DropdownComponent
     if (this.disabled) return;
     this.value = null;
     this.valueChange.emit(null);
+    this.cva.notifyChange(null);
   }
 
   /**
@@ -528,6 +559,7 @@ export class DropdownComponent
     if (opt.disabled) return;
     this.value = opt.value;
     this.valueChange.emit(opt.value);
+    this.cva.notifyChange(opt.value);
     this.close();
     this.triggerRef?.nativeElement.focus();
   }

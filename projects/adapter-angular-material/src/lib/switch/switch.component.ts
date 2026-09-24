@@ -10,6 +10,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import {
   FormControlLayoutComponent,
   RecursicaFormControlLabelSize,
@@ -19,6 +20,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import { SWITCH_GROUP_CONTEXT } from "./switch-group-context";
 
 let nextId = 0;
@@ -156,6 +161,7 @@ let nextId = 0;
   imports: [NgTemplateOutlet, FormControlLayoutComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./switch.component.css",
+  providers: [recursicaValueAccessorProvider(SwitchComponent)],
   template: `
     @if (formLayout) {
       <rec-form-control-layout
@@ -273,7 +279,9 @@ let nextId = 0;
     </ng-template>
   `,
 })
-export class SwitchComponent implements RecursicaOverStyled, OnInit {
+export class SwitchComponent
+  implements RecursicaOverStyled, ControlValueAccessor, OnInit
+{
   @Input() label?: string | TemplateRef<unknown>;
 
   /** Controlled `checked`. Leave unbound for uncontrolled (see class doc comment). Ignored when this switch is a value-bound member of a `<rec-switch-group>`. */
@@ -321,6 +329,8 @@ export class SwitchComponent implements RecursicaOverStyled, OnInit {
   private readonly _uncontrolledChecked = signal(false);
 
   private readonly groupCtx = inject(SWITCH_GROUP_CONTEXT, { optional: true });
+
+  private readonly cva = new RecursicaValueAccessor<boolean>();
 
   /**
    * Seeds the uncontrolled-`checked` signal from `defaultChecked` here, not
@@ -387,5 +397,23 @@ export class SwitchComponent implements RecursicaOverStyled, OnInit {
       this._uncontrolledChecked.set(nextChecked);
     }
     this.checkedChange.emit(nextChecked);
+    this.cva.notifyChange(nextChecked);
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: boolean): void {
+    this.checked = value;
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

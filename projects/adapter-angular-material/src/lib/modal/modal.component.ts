@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -53,6 +54,16 @@ let nextId = 0;
  * `[opened]="false"` *and* the user closing it themselves (close button,
  * backdrop, `Escape`) — the same "closed" signal regardless of cause,
  * matching the reference's own single `onClose` callback shape.
+ *
+ * `ngOnChanges` fires before the `@ViewChild("contentTpl")` query resolves
+ * (that only happens in `ngAfterViewInit`), so a caller mounting this with
+ * `[opened]="true"` already `true` at creation — the normal pattern for a
+ * modal that only exists while something is selected — used to call
+ * `dialog.open(this.contentTemplate, ...)` with `contentTemplate` still
+ * `undefined`, throwing inside `MatDialog.open()` itself. `viewInitialized`
+ * below guards `ngOnChanges` until the view (and therefore the query) is
+ * actually ready; `ngAfterViewInit` opens the dialog itself if `opened` was
+ * already `true` by then.
  *
  * ## Global overlay CSS — same reachability finding as `Dropdown`/`HoverCard`
  *
@@ -133,7 +144,7 @@ let nextId = 0;
     </ng-template>
   `,
 })
-export class ModalComponent implements OnChanges, OnDestroy {
+export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() opened = false;
   @Output() openedChange = new EventEmitter<boolean>();
   @Output() closed = new EventEmitter<void>();
@@ -150,15 +161,23 @@ export class ModalComponent implements OnChanges, OnDestroy {
   private readonly dialog = inject(MatDialog);
   private readonly id = `rec-modal-${nextId++}`;
   private dialogRef?: MatDialogRef<unknown>;
+  private viewInitialized = false;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes["opened"]) {
+    if (!changes["opened"] || !this.viewInitialized) {
       return;
     }
     if (this.opened) {
       this.openDialog();
     } else {
       this.dialogRef?.close();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    if (this.opened) {
+      this.openDialog();
     }
   }
 
