@@ -20,8 +20,6 @@ This library requires the following peer dependencies to be installed in your pr
 npm install @angular/cdk@^20.2.14 @angular/material@^20.2.14 @angular/core @angular/common @angular/forms @angular/platform-browser rxjs
 ```
 
-**Important**: this adapter has no `@recursica/adapter-common` dependency — that package is React-only (hard `react`/`react-dom` peers) and cannot be a dependency of an Angular library. See [`docs/ADAPTER_INTEGRATION_REPORT.md`](docs/ADAPTER_INTEGRATION_REPORT.md) Crosscutting Finding A for the full explanation and what was hand-ported instead.
-
 ## Philosophy
 
 Please read [PHILOSOPHY.md](./docs/PHILOSOPHY.md) to understand the core principles of the adapter.
@@ -41,7 +39,7 @@ This project is built using:
 - **Angular Material 20+ (`@angular/material`, `@angular/cdk`)**: base components/directives and Angular's own Sass-based theming system.
 - **Storybook (`@storybook/angular`)**: used for interactive component development and documentation. Note this is the Angular-CLI-builder-based framework, not the newer Vite-based `@storybook/angular-vite` — see [`docs/CREATING_AN_ADAPTER.md`](docs/CREATING_AN_ADAPTER.md)'s decisions log for why the latter doesn't work against this repo's pinned Angular 20.
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for more details, and [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) for how this adapter styles components on top of Angular Material (it does **not** use CSS Modules — Angular's build tooling has no equivalent — see that doc §3).
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for more details, and [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) for how this adapter styles components on top of Angular Material.
 
 ### Developing with Storybook locally
 
@@ -56,7 +54,7 @@ This spins up a local Storybook instance (`http://localhost:6006`) for component
 
 ## TypeScript Support
 
-All components include full TypeScript support with their `@Input()` surface documented in the component's own JSDoc (rendered into Storybook's Docs panel via Compodoc — see `docs/COMPONENT_STORYBOOK_GUIDE.md`).
+All components include full TypeScript support with their `@Input()` surface documented in the component's own JSDoc (rendered into Storybook's Docs panel via Compodoc — see [docs/COMPONENT_STORYBOOK_GUIDE.md](./docs/COMPONENT_STORYBOOK_GUIDE.md)
 
 ## License
 

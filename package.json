@@ -21,6 +21,17 @@
   "main": "./dist/fesm2022/recursica-adapter-angular-material.mjs",
   "module": "./dist/fesm2022/recursica-adapter-angular-material.mjs",
   "types": "./dist/index.d.ts",
+  "keywords": [
+    "angular",
+    "ui",
+    "ui-kit",
+    "components",
+    "typescript",
+    "material",
+    "recursica",
+    "design system",
+    "design systems"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
