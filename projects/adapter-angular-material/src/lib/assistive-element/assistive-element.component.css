@@ -93,32 +93,40 @@
   );
 }
 
-/* ==== VARIANTS ==== */
+/* ==== VARIANTS ====
+ * Descendant overrides are nested (native CSS nesting) inside each
+ * `.root[data-variant="x"]` block rather than written as flat top-level
+ * `.root[data-variant="x"] .descendant` selector strings — Angular's
+ * ViewEncapsulation.Emulated compiler silently fails to match that flat
+ * shape (compiles into the stylesheet but matches zero real elements; not
+ * a specificity loss, a non-match). Confirmed via live getComputedStyle()
+ * while building Toast — see docs/DEVELOPMENT_ISSUES.md. `button.component.css`
+ * already uses this nested form for its own per-variant `.iconWrapper`
+ * override; matched here instead of reinventing it.
+ */
 
-:host-context([data-recursica-theme]) .root[data-variant="help"] .textWrapper {
-  color: var(
-    --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_text-color
-  );
-}
-:host-context([data-recursica-theme])
-  .root[data-variant="help"]
-  .iconWrapper
-  svg {
-  color: var(
-    --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_icon-color
-  );
+:host-context([data-recursica-theme]) .root[data-variant="help"] {
+  .textWrapper {
+    color: var(
+      --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_text-color
+    );
+  }
+  .iconWrapper svg {
+    color: var(
+      --recursica_ui-kit_components_assistive-element_variants_types_help_properties_colors_icon-color
+    );
+  }
 }
 
-:host-context([data-recursica-theme]) .root[data-variant="error"] .textWrapper {
-  color: var(
-    --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_text-color
-  );
-}
-:host-context([data-recursica-theme])
-  .root[data-variant="error"]
-  .iconWrapper
-  svg {
-  color: var(
-    --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_icon-color
-  );
+:host-context([data-recursica-theme]) .root[data-variant="error"] {
+  .textWrapper {
+    color: var(
+      --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_text-color
+    );
+  }
+  .iconWrapper svg {
+    color: var(
+      --recursica_ui-kit_components_assistive-element_variants_types_error_properties_colors_icon-color
+    );
+  }
 }

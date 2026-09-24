@@ -1,0 +1,53 @@
+/*
+ * Ported from the source-of-truth `Accordion.module.css`'s `.item`/
+ * `.noDivider`. `[data-active]`/`[data-disabled]` are this component's own
+ * attributes (set directly on this `.item` div in
+ * accordion-item.component.ts from `ACCORDION_CONTEXT`/its own `disabled`
+ * input) — plain selectors reach them normally, no `:host-context()`
+ * needed. The disabled-dimming opacity below applies to `.item` itself,
+ * which visually dims every descendant DOM node (including the projected
+ * `<rec-accordion-control>`/`<rec-accordion-panel>` custom elements) via
+ * plain CSS box rendering, regardless of Emulated-encapsulation component
+ * boundaries — opacity isn't a selector-matching concern.
+ */
+
+.item {
+  box-sizing: border-box;
+  position: relative;
+}
+
+:host-context([data-recursica-theme]) .item {
+  margin: var(--recursica_ui-kit_components_accordion-item_properties_margin);
+  padding: var(--recursica_ui-kit_components_accordion-item_properties_padding);
+
+  border-style: solid;
+  border-color: var(
+    --recursica_ui-kit_components_accordion-item_properties_colors_border-color
+  );
+  border-width: var(
+    --recursica_ui-kit_components_accordion-item_properties_border-size
+  );
+  border-bottom-color: var(
+    --recursica_ui-kit_components_accordion_properties_colors_divider-color
+  );
+  border-bottom-width: var(
+    --recursica_ui-kit_components_accordion_properties_divider-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_accordion-item_properties_border-radius
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_accordion-item_properties_elevation
+  );
+
+  transition: opacity 0.2s ease;
+}
+
+.item.noDivider {
+  border-bottom: none !important;
+  border-bottom-width: 0 !important;
+}
+
+.item[data-disabled] {
+  opacity: var(--recursica_brand_states_disabled);
+}

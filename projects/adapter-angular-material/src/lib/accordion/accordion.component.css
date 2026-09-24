@@ -1,0 +1,40 @@
+/*
+ * Ported from the source-of-truth `Accordion.module.css`'s `.root`. Generic
+ * token names only (recursica_variables_scoped.css header comment §3) —
+ * this component never references `data-recursica-layer`/`-theme` itself;
+ * the ambient cascade resolves the right value from whichever `<rec-layer>`/
+ * theme-provider ancestor is in scope. Gated by
+ * `:host-context([data-recursica-theme])` per `docs/STYLING_SYSTEM.md` §4,
+ * same convention as `card.component.css`.
+ */
+
+.root {
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context([data-recursica-theme]) .root {
+  border-style: solid;
+  border-width: var(
+    --recursica_ui-kit_components_accordion_properties_border-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_accordion_properties_border-radius
+  );
+  border-color: var(
+    --recursica_ui-kit_components_accordion_properties_colors_border-color
+  );
+  background-color: var(
+    --recursica_ui-kit_components_accordion_properties_colors_background-color
+  );
+  box-shadow: var(--recursica_ui-kit_components_accordion_properties_elevation);
+
+  max-width: var(--recursica_ui-kit_components_accordion_properties_max-width);
+  min-width: var(--recursica_ui-kit_components_accordion_properties_min-width);
+  padding: var(--recursica_ui-kit_components_accordion_properties_padding);
+
+  /* Gap between items */
+  gap: var(--recursica_ui-kit_components_accordion_properties_item-gap);
+}

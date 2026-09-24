@@ -46,3 +46,9 @@ projects/adapter-angular-material/documentation.json
 .adapter-tester/
 playwright-report/
 test-results/
+
+# Ephemeral verification screenshots/scripts (e.g. ad-hoc Playwright checks
+# during development) — never meant to be committed. Nothing previously
+# excluded this, which is how a batch of them ended up committed in "First
+# rev of all components" and had to be cleaned up later.
+.scratch/

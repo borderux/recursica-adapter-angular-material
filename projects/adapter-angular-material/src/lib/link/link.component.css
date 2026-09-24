@@ -1,0 +1,142 @@
+/*
+ * Ported conceptually from the React source of truth's own
+ * `Link.module.css` (recursica-adapter-mantine-v8) — same
+ * `recursica_ui-kit_components_link_*` token names, cross-checked against
+ * this adapter's own `breadcrumb.component.css` (which already applies
+ * several of these exact same tokens to its own `.link`/`.current`
+ * elements, since no standalone `rec-link` existed yet at the time
+ * Breadcrumb was built — see that file's own header comment).
+ *
+ * Selectors are unprefixed (`.root`) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4's
+ * specificity convention.
+ *
+ * DIVERGENCE FROM THE REFERENCE: text-transform is included here (applied
+ * to `.root`), unlike `Link.module.css`, which explicitly `recursica-ignore`s
+ * it ("links naturally inherit casing directly from text children"). This
+ * adapter's own `Breadcrumb` component already applies
+ * `--recursica_ui-kit_components_link_properties_text_text-transform` to
+ * its `.link` elements (breadcrumb.component.css) — matching that existing,
+ * real precedent in this codebase rather than reinventing the mapping, per
+ * this component's own build brief. The token itself currently resolves to
+ * `--recursica_tokens_font_cases_original` (a no-op "keep as authored"
+ * value), so in practice this has no visible effect either way.
+ *
+ * `:visited` is kept to only the two color tokens (`colors_text-color`/
+ * `colors_icon-color`) — not a stylistic choice, the browser's privacy
+ * model only allows `color` (and a small fixed list of other properties,
+ * none relevant here) to be styled inside a `:visited` rule at all. See
+ * IMPLEMENTATION_NOTES.md.
+ */
+
+.root {
+  /* HARDCODE: base layout — inline by default, only switches to
+     inline-flex (below) when an icon is actually present. */
+  box-sizing: border-box;
+  display: inline;
+  cursor: pointer;
+
+  /* HARDCODE: reset native anchor color/underline so the tokens below are
+     the single source of truth. */
+  text-decoration: none;
+  color: inherit;
+}
+
+:host-context([data-recursica-theme]) .root {
+  font-family: var(
+    --recursica_ui-kit_components_link_properties_text_font-family
+  );
+  font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
+  font-style: var(
+    --recursica_ui-kit_components_link_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_link_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_link_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_link_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_link_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_link_properties_text_text-transform
+  );
+  color: var(--recursica_ui-kit_components_link_properties_colors_text-color);
+}
+
+/* Icon present: switch to a flex row with token-driven gap. Ports the
+   reference's own `[data-has-icon]` technique verbatim (see
+   link.component.ts's class doc comment). */
+.root[data-has-icon] {
+  display: inline-flex;
+  align-items: center;
+}
+
+:host-context([data-recursica-theme]) .root[data-has-icon] {
+  gap: var(--recursica_ui-kit_components_link_properties_icon-text-gap);
+}
+
+:host-context([data-recursica-theme]) .root:visited {
+  color: var(
+    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color
+  );
+}
+
+/* Hover: no per-component hover token exists — driven by the brand-level
+   decoration token (resolves to `underline`), same as the reference. */
+:host-context([data-recursica-theme]) .root:hover {
+  text-decoration: var(--recursica_brand_states_link_decoration);
+}
+
+/* Focus State: native outline replaced with the recursica focus ring —
+   same pattern as button.component.css's `.root:focus-visible`. */
+.root:focus-visible {
+  outline: none;
+}
+
+:host-context([data-recursica-theme]) .root:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+/* Icon support */
+.iconWrapper {
+  /* HARDCODE: maintain intrinsic icon bounds. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconWrapper > * {
+  width: 100%;
+  height: 100%;
+}
+
+:host-context([data-recursica-theme]) .iconWrapper {
+  width: var(--recursica_ui-kit_components_link_properties_icon-size);
+  height: var(--recursica_ui-kit_components_link_properties_icon-size);
+  color: var(--recursica_ui-kit_components_link_properties_colors_icon-color);
+}
+
+:host-context([data-recursica-theme]) .root:visited .iconWrapper {
+  color: var(
+    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_icon-color
+  );
+}
+
+/* Label text wrapper */
+.labelText {
+  /* HARDCODE: allows text truncation if bounded. */
+  min-width: 0;
+}

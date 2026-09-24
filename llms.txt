@@ -30,6 +30,7 @@ to each component's implementation folder (which does have an
 `IMPLEMENTATION_NOTES.md`) rather than a `USAGE.md` that doesn't exist yet;
 update these links to point at `USAGE.md` as each one is written.
 
+- ✅ [Accordion](projects/adapter-angular-material/src/lib/accordion) (includes `AccordionItem`/`AccordionControl`/`AccordionPanel`, no separate llms.txt row — see the component's own `IMPLEMENTATION_NOTES.md`)
 - ✅ [AssistiveElement](projects/adapter-angular-material/src/lib/assistive-element)
 - ✅ [AutoComplete](projects/adapter-angular-material/src/lib/auto-complete)
 - ✅ [Avatar](projects/adapter-angular-material/src/lib/avatar)
@@ -52,6 +53,7 @@ update these links to point at `USAGE.md` as each one is written.
 - ✅ [HoverCard](projects/adapter-angular-material/src/lib/hover-card)
 - ✅ [Label](projects/adapter-angular-material/src/lib/label)
 - ✅ [Layer](projects/adapter-angular-material/src/lib/layer)
+- ✅ [Link](projects/adapter-angular-material/src/lib/link)
 - ✅ [Loader](projects/adapter-angular-material/src/lib/loader)
 - ✅ [Menu](projects/adapter-angular-material/src/lib/menu)
 - ✅ [Modal](projects/adapter-angular-material/src/lib/modal)
@@ -74,6 +76,7 @@ update these links to point at `USAGE.md` as each one is written.
 - ✅ [TextField](projects/adapter-angular-material/src/lib/text-field)
 - ✅ [TimePicker](projects/adapter-angular-material/src/lib/time-picker)
 - ✅ [Timeline](projects/adapter-angular-material/src/lib/timeline)
+- ✅ [Toast](projects/adapter-angular-material/src/lib/toast)
 - ✅ [Tooltip](projects/adapter-angular-material/src/lib/tooltip)
 - ✅ [TransferList](projects/adapter-angular-material/src/lib/transfer-list)
 - ✅ [Tree](projects/adapter-angular-material/src/lib/tree)

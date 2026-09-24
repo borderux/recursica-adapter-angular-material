@@ -1,0 +1,285 @@
+/*
+ * Ported from the genesis adapter's own real `Toast.module.css`, mapped onto
+ * a from-scratch `<div>` tree (see toast.component.ts's class doc comment —
+ * there is no Material component to wrap). Same Recursica token names
+ * (`recursica_ui-kit_components_toast_*`) — see IMPLEMENTATION_NOTES.md for
+ * the full prop → token mapping table this file implements.
+ *
+ * Selectors are unprefixed (`.root` etc.) — ViewEncapsulation.Emulated
+ * (docs/STYLING_SYSTEM.md §3) scopes them per build automatically. Every
+ * token-driven rule is additionally prefixed with
+ * `:host-context([data-recursica-theme])` per docs/STYLING_SYSTEM.md §4.
+ *
+ * HARDCODED VALUES:
+ *   - border-style: solid. Same baseline as the reference's own
+ *     Toast.module.css, so the per-variant border-color tokens actually
+ *     render.
+ *   - .title's margin-bottom: 2px. The reference relies on Mantine's own
+ *     compiled `Notification.css` base class for this (`.m_3feedf16 {
+ *     margin-bottom: 2px }`, read directly from the real compiled source —
+ *     not overridden by the reference's CSS module, so it's the real
+ *     rendered value there too). No Recursica token governs title-to-
+ *     description spacing, so this is ported as a literal, not guessed.
+ *   - .closeButton's width/height: 16px. Mantine's own compiled
+ *     `Notification.mjs` hardcodes `iconSize: 16` on the `CloseButton` it
+ *     composes (read directly from the real source) — no Recursica token
+ *     governs the close button's size (only its icon *color*, via
+ *     `..._colors_button` below), so 16px is ported directly.
+ *   - .closeButton's focus-visible outline: generic `currentColor`, not a
+ *     brand-scoped token. No Recursica token exists for Toast's close
+ *     button focus state (only Button/Modal's own brand-scoped focus
+ *     tokens, which belong to those components, not Toast's own token set)
+ *     — a plain `currentColor` outline keeps this keyboard-accessible
+ *     without borrowing tokens that aren't actually Toast's.
+ *
+ * LAYOUT SIMPLIFICATION (documented, not an oversight):
+ *   Mantine's own compiled `Notification.css` spaces icon/body/closeButton
+ *   apart via per-element `margin-inline-end` (`--mantine-spacing-md`/`-xs`),
+ *   with the reference's CSS module additionally overriding the icon's own
+ *   margin to `0 !important` in favor of the root's own `gap` token. Since
+ *   this component has no underlying Mantine layout to inherit, all three
+ *   regions (icon/body/closeButton) are spaced with a single flexbox `gap`
+ *   on `.root`, driven by the same
+ *   `--recursica_ui-kit_components_toast_properties_spacing` token the
+ *   reference uses for its `gap` override — the equivalent end result via
+ *   one mechanism instead of two.
+ *
+ * EXEMPTIONS (ported verbatim from the reference's own reasoning):
+ *   elevation_layer-1/2/3 are ignored: a toast's elevation doesn't depend on
+ *   the layer it's summoned from — all four layer variants resolve to the
+ *   same brand elevation value, so layer-0 (already wired below) is the
+ *   correct, layer-agnostic choice for all of them.
+ */
+/* recursica-ignore: --recursica_ui-kit_components_toast_properties_elevation_layer-1 */
+/* recursica-ignore: --recursica_ui-kit_components_toast_properties_elevation_layer-2 */
+/* recursica-ignore: --recursica_ui-kit_components_toast_properties_elevation_layer-3 */
+
+.root {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+:host-context([data-recursica-theme]) .root {
+  border-style: solid;
+  border-radius: var(
+    --recursica_ui-kit_components_toast_properties_border-radius
+  );
+  border-width: var(--recursica_ui-kit_components_toast_properties_border-size);
+  border-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_border-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_toast_properties_elevation_layer-0
+  );
+  padding: var(--recursica_ui-kit_components_toast_properties_vertical-padding)
+    var(--recursica_ui-kit_components_toast_properties_horizontal-padding);
+  min-width: var(--recursica_ui-kit_components_toast_properties_min-width);
+  max-width: var(--recursica_ui-kit_components_toast_properties_max-width);
+  min-height: var(--recursica_ui-kit_components_toast_properties_min-height);
+  gap: var(--recursica_ui-kit_components_toast_properties_spacing);
+
+  background-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_background-color
+  );
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
+  );
+}
+
+/* ======================================
+   ICON
+   ====================================== */
+
+.iconWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .iconWrapper {
+  width: var(--recursica_ui-kit_components_toast_properties_icon);
+  height: var(--recursica_ui-kit_components_toast_properties_icon);
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
+  );
+}
+
+.iconWrapper > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* ======================================
+   BODY / TITLE / DESCRIPTION
+   ====================================== */
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0 0 2px 0;
+}
+
+.description {
+  margin: 0;
+}
+
+:host-context([data-recursica-theme]) .title,
+:host-context([data-recursica-theme]) .description {
+  font-family: var(
+    --recursica_ui-kit_components_toast_properties_text_font-family
+  );
+  font-size: var(--recursica_ui-kit_components_toast_properties_text_font-size);
+  font-style: var(
+    --recursica_ui-kit_components_toast_properties_text_font-style
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_toast_properties_text_font-weight
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_toast_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_toast_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_toast_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_toast_properties_text_text-transform
+  );
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
+  );
+}
+
+/* ======================================
+   CLOSE BUTTON
+   ====================================== */
+
+.closeButton {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+:host-context([data-recursica-theme]) .closeButton {
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_button
+  );
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ======================================
+   ERROR VARIANT
+   ====================================== */
+
+/*
+ * Nested (native CSS nesting, `&`-implied descendant rules), not flat
+ * hand-written multi-part selector strings — matching `Button`'s own
+ * established convention for variant-scoped descendant overrides (see
+ * `button.component.css`'s `.root[data-variant="solid"] { ... .iconWrapper
+ * { color: ... } }`). Verified empirically (real Storybook, real
+ * `getComputedStyle()`) that the flat-selector form (`:host-context(...)
+ * .root[data-variant="error"] .iconWrapper { ... }`, written as its own
+ * top-level rule) silently fails to match here — Angular's emulated
+ * ViewEncapsulation compiler expands that specific shape (a `:host-context`
+ * selector list, a middle compound carrying an attribute selector, *then* a
+ * further descendant compound) into a form with a stray extra
+ * `[_ngcontent-xxx]` ancestor requirement that no real element in this
+ * component's DOM satisfies, so the rule never matches at all (not a
+ * specificity/cascade loss — confirmed the selector's compiled `cssText` is
+ * present in the stylesheet but 0 elements match it). The *nested* form
+ * below compiles through a different code path and was confirmed to work
+ * (see IMPLEMENTATION_NOTES.md's verification section for the exact
+ * before/after `getComputedStyle()` results). Also confirmed this same
+ * quirk pre-exists in `AssistiveElement`'s already-shipped
+ * `.root[data-variant="error"] .iconWrapper svg` flat rule (out of scope to
+ * fix here — not this component's file — flagged in
+ * `docs/DEVELOPMENT_ISSUES.md`).
+ */
+:host-context([data-recursica-theme]) .root[data-variant="error"] {
+  background-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
+  );
+
+  & .iconWrapper {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
+    );
+  }
+
+  & .title,
+  & .description {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
+    );
+  }
+
+  & .closeButton {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_button
+    );
+  }
+}
+
+/* ======================================
+   SUCCESS VARIANT
+   ====================================== */
+
+:host-context([data-recursica-theme]) .root[data-variant="success"] {
+  background-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
+  );
+
+  & .iconWrapper {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
+    );
+  }
+
+  & .title,
+  & .description {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
+    );
+  }
+
+  & .closeButton {
+    color: var(
+      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_button
+    );
+  }
+}

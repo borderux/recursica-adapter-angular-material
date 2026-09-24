@@ -1,0 +1,227 @@
+/*
+ * Ported from the source-of-truth `Accordion.module.css`'s `.control`/
+ * `.label`/`.icon`/`.chevron`/`.iconLeftWrapper`. `[data-active]` /
+ * `:disabled` / `:hover` / `:focus-visible` are all this component's own
+ * attributes/pseudo-classes on its own `.control` `<button>` — reached with
+ * plain selectors, no `:host-context()` needed (this component computes its
+ * own open/disabled state directly from `ACCORDION_ITEM_CONTEXT` in
+ * TypeScript, rather than relying on a `.item[data-active] .control`
+ * cross-component descendant selector the way the single-file source-of-
+ * truth CSS Module does).
+ */
+
+.control {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-style: solid;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  appearance: none;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.15s ease;
+}
+
+:host-context([data-recursica-theme]) .control {
+  gap: var(--recursica_ui-kit_components_accordion-header_properties_icon-gap);
+
+  padding: var(
+      --recursica_ui-kit_components_accordion-header_properties_vertical-padding
+    )
+    var(
+      --recursica_ui-kit_components_accordion-header_properties_horizontal-padding
+    );
+
+  /* Closed (resting) appearance — swapped to the open appearance by
+     .control[data-active] below. */
+  background-color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_closed_properties_colors_background-color
+  );
+  border-width: var(
+    --recursica_ui-kit_components_accordion-header_properties_border-size
+  );
+  border-radius: var(
+    --recursica_ui-kit_components_accordion-header_properties_border-radius
+  );
+  border-color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_closed_properties_colors_border-color
+  );
+  box-shadow: var(
+    --recursica_ui-kit_components_accordion-header_properties_elevation
+  );
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_closed_properties_colors_text-color
+  );
+
+  font-family: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_font-family
+  );
+  font-size: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_font-size
+  );
+  font-weight: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_font-weight
+  );
+  font-style: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_font-style
+  );
+  letter-spacing: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_letter-spacing
+  );
+  line-height: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_line-height
+  );
+  text-decoration: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_text-decoration
+  );
+  text-transform: var(
+    --recursica_ui-kit_components_accordion-header_properties_text_text-transform
+  );
+}
+
+:host-context([data-recursica-theme]) .control[data-active] {
+  background-color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_open_properties_colors_background-color
+  );
+  border-color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_open_properties_colors_border-color
+  );
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_open_properties_colors_text-color
+  );
+}
+
+/* Generic hover overlay (brand-layer states, same convention project-wide —
+   see recursica_variables_scoped.css header's "Hover & Focus states"). */
+.control::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+:host-context([data-recursica-theme]) .control::after {
+  background-color: var(--recursica_brand_states_hover_color);
+}
+
+.control:hover:not(:disabled)::after {
+  opacity: var(--recursica_brand_states_hover_opacity);
+}
+
+.control:focus-visible {
+  outline: none;
+}
+
+:host-context([data-recursica-theme]) .control:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size)
+      var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur)
+      var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
+}
+
+.control:disabled {
+  cursor: not-allowed;
+}
+
+/* ==== LABEL ==== */
+.label {
+  flex: 1;
+  min-width: 0; /* HARDCODE: required for text-overflow ellipsis on a flex child */
+  text-align: left;
+  color: inherit;
+  /* HARDCODE: overflow: clip (not hidden) + a small bleed margin avoids clipping descenders
+     (e.g. "g") when text_line-height is tighter than the font's natural ascent+descent — same
+     project-wide fix as the source-of-truth's own `.label`, see that file's dated comment and
+     Chip/FileInput's IMPLEMENTATION_NOTES.md for the original discovery. */
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ==== CHEVRON ==== */
+.chevron {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  transition: transform 200ms ease;
+}
+
+:host-context([data-recursica-theme]) .chevron {
+  width: var(
+    --recursica_ui-kit_components_accordion-header_properties_icon-right-size
+  );
+  height: var(
+    --recursica_ui-kit_components_accordion-header_properties_icon-right-size
+  );
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_closed_properties_colors_icon-color
+  );
+}
+
+.control[data-active] .chevron {
+  transform: rotate(180deg);
+}
+
+:host-context([data-recursica-theme]) .control[data-active] .chevron {
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_open_properties_colors_icon-color
+  );
+}
+
+/* ==== LEFT ICON ==== */
+.iconLeftWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context([data-recursica-theme]) .iconLeftWrapper {
+  width: var(
+    --recursica_ui-kit_components_accordion-header_properties_icon-left-size
+  );
+  height: var(
+    --recursica_ui-kit_components_accordion-header_properties_icon-left-size
+  );
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_closed_properties_colors_icon-color
+  );
+}
+
+:host-context([data-recursica-theme]) .control[data-active] .iconLeftWrapper {
+  color: var(
+    --recursica_ui-kit_components_accordion-header_variants_appearance_open_properties_colors_icon-color
+  );
+}
+
+/*
+ * Sized on the wrapper itself, not a `.iconLeftWrapper svg`/`.chevron svg`
+ * descendant selector — content projected via `*ngTemplateOutlet` from a
+ * caller-owned `TemplateRef` doesn't carry this component's own
+ * `_ngcontent-<hash>` attribute (same reasoning as `Button`'s `icon` and
+ * `Tabs.Tab`'s `leftSection`/`rightSection` — see either's
+ * IMPLEMENTATION_NOTES.md). The default built-in chevron `<svg>` (rendered
+ * directly in this component's own template when no override is supplied)
+ * *does* carry this component's attribute, so `width="100%" height="100%"`
+ * set directly on that literal markup is enough for it; `> *` here only
+ * needs to cover caller-supplied overrides.
+ */
+.iconLeftWrapper > *,
+.chevron > * {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
