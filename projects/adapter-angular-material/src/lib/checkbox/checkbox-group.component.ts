@@ -9,6 +9,7 @@ import {
   forwardRef,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
 import {
   RecursicaFormControlLabelSize,
@@ -19,6 +20,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import {
   CHECKBOX_GROUP_CONTEXT,
   CheckboxGroupContext,
@@ -142,6 +147,7 @@ import {
       }),
       deps: [forwardRef(() => CheckboxGroupComponent)],
     },
+    recursicaValueAccessorProvider(CheckboxGroupComponent),
   ],
   template: `
     <rec-form-control-wrapper
@@ -173,7 +179,9 @@ import {
     </rec-form-control-wrapper>
   `,
 })
-export class CheckboxGroupComponent implements RecursicaOverStyled, OnInit {
+export class CheckboxGroupComponent
+  implements RecursicaOverStyled, ControlValueAccessor, OnInit
+{
   @Input() label?: string | TemplateRef<unknown>;
   @Input() description?: string | TemplateRef<unknown>;
   @Input() assistiveText?: string | TemplateRef<unknown>;
@@ -207,6 +215,8 @@ export class CheckboxGroupComponent implements RecursicaOverStyled, OnInit {
 
   private readonly _uncontrolledValue = signal<string[]>([]);
 
+  private readonly cva = new RecursicaValueAccessor<string[] | undefined>();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);
   }
@@ -236,5 +246,23 @@ export class CheckboxGroupComponent implements RecursicaOverStyled, OnInit {
       this._uncontrolledValue.set(next);
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string[] | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string[] | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

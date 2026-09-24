@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { TextFieldComponent } from "./text-field.component";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
 import { StackComponent } from "../stack/stack.component";
@@ -188,6 +189,26 @@ export const EditableReadOnly: Story = {
       <rec-stack style="width: 320px;">
         <rec-form-control-wrapper label="Editable ReadOnly Review" [labelWithEditIcon]="true">
           <rec-text-field placeholder="Ignored until active..." value="Waiting for Edit Execution" [readOnly]="true"></rec-text-field>
+        </rec-form-control-wrapper>
+      </rec-stack>
+    `,
+  }),
+};
+
+/**
+ * `ControlValueAccessor` regression coverage (`docs/COMPONENT_DEV_GUIDE.md`'s
+ * "Forms integration" section) — `[formControl]` bound directly onto
+ * `<rec-text-field>`, not just `[value]`/`(valueChange)`. `ctrl.setValue()`
+ * exercises `writeValue`; typing exercises `registerOnChange`'s callback.
+ */
+export const ReactiveForms: Story = {
+  decorators: [moduleMetadata({ imports: [ReactiveFormsModule] })],
+  render: () => ({
+    props: { ctrl: new FormControl("seeded via ctrl.setValue()") },
+    template: `
+      <rec-stack style="width: 320px;">
+        <rec-form-control-wrapper label="Reactive Forms TextField">
+          <rec-text-field [formControl]="ctrl"></rec-text-field>
         </rec-form-control-wrapper>
       </rec-stack>
     `,

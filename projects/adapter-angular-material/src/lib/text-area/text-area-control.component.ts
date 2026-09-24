@@ -83,6 +83,7 @@ let nextId = 0;
           [attr.aria-describedby]="describedByAttr"
           [value]="value ?? ''"
           (input)="onInput($event)"
+          (blur)="blurred.emit()"
         ></textarea>
       } @else {
         <textarea
@@ -96,6 +97,7 @@ let nextId = 0;
           [attr.aria-describedby]="describedByAttr"
           [value]="value ?? ''"
           (input)="onInput($event)"
+          (blur)="blurred.emit()"
         ></textarea>
       }
     </div>
@@ -104,6 +106,7 @@ let nextId = 0;
 export class TextAreaControlComponent implements RecursicaFormControl {
   @Input() value?: string;
   @Output() valueChange = new EventEmitter<string>();
+  @Output() blurred = new EventEmitter<void>();
 
   @Input() placeholder?: string;
   @Input() name?: string;

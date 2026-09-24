@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, Input, ViewEncapsulation } from "@angular/core";
 import {
   RecursicaOverStyled,
@@ -34,12 +35,26 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
  * (no `[tagName]`-style directive) — same category of constraint as
  * `Avatar`'s three mutually-exclusive display-mode branches. Six near-
  * identical `<h1>`–`<h6>` branches are the direct translation.
+ *
+ * ## One `<ng-content>`, six outlets — not six `<ng-content>`s
+ *
+ * This originally put a separate `<ng-content>` inside each `@switch`
+ * branch, which is exactly `docs/COMPONENT_DEV_GUIDE.md`'s documented
+ * content-projection gotcha: with more than one `<ng-content>` in a
+ * template, only the first-declared one ever receives projected content —
+ * every other branch renders empty, so five of the six orders silently
+ * dropped their children. Fixed the same way `Button`'s `icon` avoids the
+ * gotcha entirely: project into a single `<ng-template #content>` once,
+ * then `*ngTemplateOutlet` that same captured view from each branch — six
+ * outlets of one real `<ng-content>`, not six real ones.
  */
 @Component({
   selector: "rec-heading",
+  imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./heading.component.css",
   template: `
+    <ng-template #content><ng-content /></ng-template>
     @switch (order) {
       @case (1) {
         <h1
@@ -47,7 +62,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h1>
       }
       @case (2) {
@@ -56,7 +71,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h2>
       }
       @case (3) {
@@ -65,7 +80,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h3>
       }
       @case (4) {
@@ -74,7 +89,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h4>
       }
       @case (5) {
@@ -83,7 +98,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h5>
       }
       @default {
@@ -92,7 +107,7 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
         >
-          <ng-content />
+          <ng-container [ngTemplateOutlet]="content" />
         </h6>
       }
     }

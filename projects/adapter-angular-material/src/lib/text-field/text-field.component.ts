@@ -10,6 +10,7 @@ import {
   forwardRef,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
 import {
   RECURSICA_FORM_CONTROL,
@@ -19,6 +20,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 
 let nextId = 0;
 
@@ -59,10 +64,14 @@ let nextId = 0;
  *    degrades.
  * 3. **`NgControl`/`ReactiveFormsModule` are also optional** (`inject(NgControl,
  *    { optional: true, self: true })`) — `matInput` works standalone with
- *    plain property binding, no `[formControl]`/`ngModel` required, matching
- *    this component's own `value`/`(valueChange)` contract (the same
- *    "Recursica owns its own value model, doesn't need `ControlValueAccessor`"
- *    reasoning `Dropdown` already applied to skip `MatSelect`'s model).
+ *    plain property binding, no `[formControl]`/`ngModel` required. This
+ *    component now implements `ControlValueAccessor` itself (see
+ *    `docs/COMPONENT_DEV_GUIDE.md`'s "Forms integration" section — this
+ *    component's own template renders `matInput` on an `<input>` it owns,
+ *    which puts it in the same "wrapping component" category as every
+ *    self-implementing Material control, not `matInput`'s own bare-directive
+ *    category), so both `[formControl]` and plain `[value]`/`(valueChange)`
+ *    work.
  * 4. **Real, working behavior genuinely worth adopting**: `type` has a real
  *    setter that writes `element.type` directly and validates against
  *    `MAT_INPUT_INVALID_TYPES` (throws for `button`/`checkbox`/`radio`/etc.
@@ -128,6 +137,7 @@ let nextId = 0;
       provide: RECURSICA_FORM_CONTROL,
       useExisting: forwardRef(() => TextFieldComponent),
     },
+    recursicaValueAccessorProvider(TextFieldComponent),
   ],
   template: `
     <div
@@ -158,6 +168,7 @@ let nextId = 0;
         [attr.aria-describedby]="describedByAttr"
         [value]="currentValue"
         (input)="onInput($event)"
+        (blur)="onBlur()"
       />
       @if (rightSection) {
         <span class="section" data-position="right">
@@ -168,7 +179,11 @@ let nextId = 0;
   `,
 })
 export class TextFieldComponent
-  implements RecursicaFormControl, RecursicaOverStyled, OnInit
+  implements
+    RecursicaFormControl,
+    RecursicaOverStyled,
+    ControlValueAccessor,
+    OnInit
 {
   @Input() value?: string;
   @Input() defaultValue?: string;
@@ -222,6 +237,8 @@ export class TextFieldComponent
    */
   private readonly _uncontrolledValue = signal("");
 
+  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? "");
   }
@@ -251,5 +268,26 @@ export class TextFieldComponent
       this._uncontrolledValue.set(next);
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+  }
+
+  onBlur(): void {
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

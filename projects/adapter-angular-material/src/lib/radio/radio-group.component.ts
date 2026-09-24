@@ -9,6 +9,7 @@ import {
   forwardRef,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
 import {
   RecursicaFormControlLabelSize,
@@ -19,6 +20,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import { RADIO_GROUP_CONTEXT, RadioGroupContext } from "./radio-group-context";
 
 let nextGroupId = 0;
@@ -141,6 +146,7 @@ let nextGroupId = 0;
       }),
       deps: [forwardRef(() => RadioGroupComponent)],
     },
+    recursicaValueAccessorProvider(RadioGroupComponent),
   ],
   template: `
     <rec-form-control-wrapper
@@ -172,7 +178,9 @@ let nextGroupId = 0;
     </rec-form-control-wrapper>
   `,
 })
-export class RadioGroupComponent implements RecursicaOverStyled, OnInit {
+export class RadioGroupComponent
+  implements RecursicaOverStyled, ControlValueAccessor, OnInit
+{
   @Input() label?: string | TemplateRef<unknown>;
   @Input() description?: string | TemplateRef<unknown>;
   @Input() assistiveText?: string | TemplateRef<unknown>;
@@ -209,6 +217,8 @@ export class RadioGroupComponent implements RecursicaOverStyled, OnInit {
 
   private readonly _uncontrolledValue = signal<string | undefined>(undefined);
 
+  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+
   /**
    * Seeds the uncontrolled-`value` signal from `defaultValue` here, not in
    * a field initializer: Angular applies `@Input()`-bound values to the
@@ -243,5 +253,23 @@ export class RadioGroupComponent implements RecursicaOverStyled, OnInit {
       this._uncontrolledValue.set(itemValue);
     }
     this.valueChange.emit(itemValue);
+    this.cva.notifyChange(itemValue);
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

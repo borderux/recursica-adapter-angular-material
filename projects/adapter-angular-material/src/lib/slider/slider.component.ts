@@ -8,12 +8,17 @@ import {
   ViewEncapsulation,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import type {
   RecursicaFormControlLabelSize,
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import {
   RecursicaSliderMark,
   RecursicaSliderValue,
@@ -62,6 +67,7 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, SliderControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./slider.component.css",
+  providers: [recursicaValueAccessorProvider(SliderComponent)],
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -111,7 +117,7 @@ let nextId = 0;
     </ng-template>
   `,
 })
-export class SliderComponent implements OnInit {
+export class SliderComponent implements ControlValueAccessor, OnInit {
   @Input() value?: RecursicaSliderValue;
   @Input() defaultValue?: RecursicaSliderValue;
   @Output() valueChange = new EventEmitter<RecursicaSliderValue>();
@@ -168,6 +174,10 @@ export class SliderComponent implements OnInit {
     RecursicaSliderValue | undefined
   >(undefined);
 
+  private readonly cva = new RecursicaValueAccessor<
+    RecursicaSliderValue | undefined
+  >();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? this.min);
   }
@@ -187,5 +197,25 @@ export class SliderComponent implements OnInit {
       this._uncontrolledValue.set(next);
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: RecursicaSliderValue | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(
+    fn: (value: RecursicaSliderValue | undefined) => void,
+  ): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

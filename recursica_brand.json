@@ -2290,6 +2290,28 @@
           "$type": "number",
           "$value": "{tokens.sizes.3x}"
         }
+      },
+      "junk": {
+        "max-width": {
+          "$type": "number",
+          "$value": 480
+        },
+        "columns": {
+          "$type": "number",
+          "$value": 3
+        },
+        "row-gutter": {
+          "$type": "number",
+          "$value": "{tokens.sizes.3x}"
+        },
+        "column-gutter": {
+          "$type": "number",
+          "$value": "{tokens.sizes.2x}"
+        },
+        "margin": {
+          "$type": "number",
+          "$value": "{tokens.sizes.3x}"
+        }
       }
     },
     "dimensions": {
@@ -2599,11 +2621,23 @@
           }
         }
       }
+    },
+    "breakpoints": {
+      "junk": {
+        "typography": {
+          "h1": {
+            "fontSize": {
+              "$type": "dimension",
+              "$value": "{tokens.font.sizes.2xl}"
+            }
+          }
+        }
+      }
     }
   },
   "$extensions": {
     "recursica.metadata": {
-      "exportedAt": "2026-09-23T16:11:12.118Z",
+      "exportedAt": "2026-09-24T20:43:37.579Z",
       "version": "0.28.2"
     }
   }

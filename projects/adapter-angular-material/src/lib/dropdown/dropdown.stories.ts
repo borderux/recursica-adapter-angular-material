@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { DropdownComponent } from "./dropdown.component";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
 import { StackComponent } from "../stack/stack.component";
@@ -279,6 +280,25 @@ export const StaticReadOnly: Story = {
       <rec-stack style="width: 320px;">
         <rec-form-control-wrapper label="Read Only View" assistiveText="Select your country of origin.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Canada" [readOnly]="true"></rec-dropdown>
+        </rec-form-control-wrapper>
+      </rec-stack>
+    `,
+  }),
+};
+
+/**
+ * `ControlValueAccessor` regression coverage (`docs/COMPONENT_DEV_GUIDE.md`'s
+ * "Forms integration" section) — `[formControl]` bound directly onto
+ * `<rec-dropdown>`, not just `[value]`/`(valueChange)`.
+ */
+export const ReactiveForms: Story = {
+  decorators: [moduleMetadata({ imports: [ReactiveFormsModule] })],
+  render: () => ({
+    props: { ctrl: new FormControl("Canada") },
+    template: `
+      <rec-stack style="width: 320px;">
+        <rec-form-control-wrapper label="Reactive Forms Dropdown">
+          <rec-dropdown [data]="${COUNTRIES_NG_LIST}" [formControl]="ctrl"></rec-dropdown>
         </rec-form-control-wrapper>
       </rec-stack>
     `,

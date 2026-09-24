@@ -15,10 +15,15 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import {
   RecursicaSegmentedControlData,
   RecursicaSegmentedControlItem,
@@ -114,6 +119,7 @@ let nextId = 0;
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./segmented-control.component.css",
+  providers: [recursicaValueAccessorProvider(SegmentedControlComponent)],
   template: `
     <div
       #root
@@ -153,7 +159,13 @@ let nextId = 0;
   `,
 })
 export class SegmentedControlComponent
-  implements RecursicaOverStyled, OnInit, OnChanges, AfterViewInit, OnDestroy
+  implements
+    RecursicaOverStyled,
+    ControlValueAccessor,
+    OnInit,
+    OnChanges,
+    AfterViewInit,
+    OnDestroy
 {
   @Input() data: RecursicaSegmentedControlData = [];
   @Input() value?: string;
@@ -175,6 +187,8 @@ export class SegmentedControlComponent
   private readonly baseId = `rec-segmented-control-${nextId++}`;
   private _uncontrolledValue?: string;
   private resizeObserver?: ResizeObserver;
+
+  private readonly cva = new RecursicaValueAccessor<string | undefined>();
 
   get normalizedData(): RecursicaSegmentedControlItem[] {
     return this.data.map(normalizeSegmentedControlItem);
@@ -237,7 +251,25 @@ export class SegmentedControlComponent
       this._uncontrolledValue = item.value;
     }
     this.valueChange.emit(item.value);
+    this.cva.notifyChange(item.value);
+    this.cva.notifyTouched();
     queueMicrotask(() => this.updateIndicator());
+  }
+
+  writeValue(value: string | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   onKeydown(event: KeyboardEvent, index: number): void {

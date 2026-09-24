@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
   signal,
 } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
 import type {
   RecursicaFormControlLabelSize,
   RecursicaFormLayout,
@@ -15,6 +16,10 @@ import type {
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { RecursicaDropdownData } from "../dropdown/dropdown-option";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RecursicaValueAccessor,
+  recursicaValueAccessorProvider,
+} from "../utils/recursica-value-accessor";
 import { AutoCompleteControlComponent } from "./auto-complete-control.component";
 
 let nextId = 0;
@@ -34,6 +39,7 @@ let nextId = 0;
   selector: "rec-auto-complete",
   imports: [WithReadOnlyWrapperComponent, AutoCompleteControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [recursicaValueAccessorProvider(AutoCompleteComponent)],
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -75,11 +81,12 @@ let nextId = 0;
         [leftSection]="leftSection"
         [rightSection]="rightSection"
         (valueChange)="onValueChange($event)"
+        (blurred)="onBlur()"
       />
     </ng-template>
   `,
 })
-export class AutoCompleteComponent implements OnInit {
+export class AutoCompleteComponent implements ControlValueAccessor, OnInit {
   @Input() data: RecursicaDropdownData = [];
 
   @Input() value?: string;
@@ -131,6 +138,8 @@ export class AutoCompleteComponent implements OnInit {
    */
   private readonly _uncontrolledValue = signal("");
 
+  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? "");
   }
@@ -152,5 +161,26 @@ export class AutoCompleteComponent implements OnInit {
       this._uncontrolledValue.set(next ?? "");
     }
     this.valueChange.emit(next);
+    this.cva.notifyChange(next);
+  }
+
+  onBlur(): void {
+    this.cva.notifyTouched();
+  }
+
+  writeValue(value: string | undefined): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string | undefined) => void): void {
+    this.cva.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.cva.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

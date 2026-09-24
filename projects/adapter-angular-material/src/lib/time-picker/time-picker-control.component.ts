@@ -183,6 +183,7 @@ function clamp(value: number, min: number, max: number): number {
 export class TimePickerControlComponent implements RecursicaFormControl {
   @Input() value?: string;
   @Output() valueChange = new EventEmitter<string | undefined>();
+  @Output() blurred = new EventEmitter<void>();
 
   @Input() placeholder?: string;
   @Input() name?: string;
@@ -239,6 +240,7 @@ export class TimePickerControlComponent implements RecursicaFormControl {
   }
 
   onFieldBlur(event: Event): void {
+    this.blurred.emit();
     const raw = (event.target as HTMLInputElement).value;
     const digits = raw.replace(/\D/g, "");
     if (!digits) {
