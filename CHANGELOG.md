@@ -1,5 +1,11 @@
 # @recursica/adapter-angular-material
 
+## 0.3.1
+
+### Patch Changes
+
+- da27761: Fixed readme and package.json
+
 ## 0.3.0
 
 ### Minor Changes
