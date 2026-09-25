@@ -23,9 +23,7 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  max-width: var(
-    --recursica_ui-kit_components_radio-button-item_properties_max-width
-  );
+  max-width: var(--recursica_ui-kit_components_radio-button-item_properties_max-width);
 }
 
 .body {
@@ -35,9 +33,7 @@
 }
 
 :host-context([data-recursica-theme]) .body {
-  gap: var(
-    --recursica_ui-kit_components_radio-button-item_properties_label-gap
-  );
+  gap: var(--recursica_ui-kit_components_radio-button-item_properties_label-gap);
 }
 
 .body.readOnlyDisplay {
@@ -56,14 +52,10 @@
 :host-context([data-recursica-theme]) .inner {
   width: var(--recursica_ui-kit_components_radio-button_properties_size);
   height: var(--recursica_ui-kit_components_radio-button_properties_size);
-  font-size: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_font-size
-  );
+  font-size: var(--recursica_ui-kit_components_radio-button-item_properties_text_font-size);
   margin-top: calc(
     (
-        var(
-            --recursica_ui-kit_components_radio-button-item_properties_text_line-height
-          ) -
+        var(--recursica_ui-kit_components_radio-button-item_properties_text_line-height) -
           var(--recursica_ui-kit_components_radio-button_properties_size)
       ) /
       2
@@ -85,12 +77,8 @@
 :host-context([data-recursica-theme]) .radio {
   width: var(--recursica_ui-kit_components_radio-button_properties_size);
   height: var(--recursica_ui-kit_components_radio-button_properties_size);
-  border-radius: var(
-    --recursica_ui-kit_components_radio-button_properties_border-radius
-  );
-  border-width: var(
-    --recursica_ui-kit_components_radio-button_properties_border-size
-  );
+  border-radius: var(--recursica_ui-kit_components_radio-button_properties_border-radius);
+  border-width: var(--recursica_ui-kit_components_radio-button_properties_border-size);
   background-color: var(
     --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_properties_colors_background-color
   );
@@ -101,10 +89,8 @@
 
 :host-context([data-recursica-theme]) .radio:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -153,9 +139,7 @@
  * section (no dedicated read-only color tokens exist in the schema either,
  * same gap `Checkbox`'s own readOnly approximation already flagged).
  */
-:host-context([data-recursica-theme])
-  .readOnlyDisplay
-  .radio:not(.radioChecked) {
+:host-context([data-recursica-theme]) .readOnlyDisplay .radio:not(.radioChecked) {
   opacity: var(
     --recursica_ui-kit_components_radio-button_variants_selection-states_unselected_variants_states_disabled_properties_opacity
   );
@@ -200,10 +184,7 @@
 }
 
 :host-context([data-recursica-theme]) .radio:checked:disabled + .icon,
-:host-context([data-recursica-theme])
-  .readOnlyDisplay
-  .radio.radioChecked
-  + .icon {
+:host-context([data-recursica-theme]) .readOnlyDisplay .radio.radioChecked + .icon {
   color: var(
     --recursica_ui-kit_components_radio-button_variants_selection-states_selected_variants_states_disabled_properties_colors_icon-color
   );
@@ -229,41 +210,19 @@
 }
 
 :host-context([data-recursica-theme]) .label {
-  color: var(
-    --recursica_ui-kit_components_radio-button-item_properties_colors_text-color
-  );
-  font-family: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_font-size
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_font-weight
-  );
-  line-height: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_line-height
-  );
-  font-style: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_font-style
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_letter-spacing
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_radio-button-item_properties_text_text-transform
-  );
+  color: var(--recursica_ui-kit_components_radio-button-item_properties_colors_text-color);
+  font-family: var(--recursica_ui-kit_components_radio-button-item_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_radio-button-item_properties_text_font-size);
+  font-weight: var(--recursica_ui-kit_components_radio-button-item_properties_text_font-weight);
+  line-height: var(--recursica_ui-kit_components_radio-button-item_properties_text_line-height);
+  font-style: var(--recursica_ui-kit_components_radio-button-item_properties_text_font-style);
+  letter-spacing: var(--recursica_ui-kit_components_radio-button-item_properties_text_letter-spacing);
+  text-decoration: var(--recursica_ui-kit_components_radio-button-item_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_radio-button-item_properties_text_text-transform);
 }
 
 :host-context([data-recursica-theme]) .body:has(.radio:disabled) .label,
 :host-context([data-recursica-theme]) .readOnlyDisplay .label {
-  opacity: var(
-    --recursica_ui-kit_components_radio-button-item_variants_states_disabled_properties_opacity
-  );
-  color: var(
-    --recursica_ui-kit_components_radio-button-item_properties_colors_disabled-text
-  );
+  opacity: var(--recursica_ui-kit_components_radio-button-item_variants_states_disabled_properties_opacity);
+  color: var(--recursica_ui-kit_components_radio-button-item_properties_colors_disabled-text);
 }

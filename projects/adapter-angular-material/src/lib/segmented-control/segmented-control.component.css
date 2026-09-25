@@ -30,28 +30,14 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  background-color: var(
-    --recursica_ui-kit_components_segmented-control_properties_colors_background-color
-  );
+  background-color: var(--recursica_ui-kit_components_segmented-control_properties_colors_background-color);
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_segmented-control_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_segmented-control_properties_colors_border-color
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_segmented-control_properties_border-radius
-  );
-  padding: var(
-      --recursica_ui-kit_components_segmented-control_properties_padding-vertical
-    )
-    var(
-      --recursica_ui-kit_components_segmented-control_properties_padding-horizontal
-    );
-  box-shadow: var(
-    --recursica_ui-kit_components_segmented-control_properties_elevation
-  );
+  border-width: var(--recursica_ui-kit_components_segmented-control_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_segmented-control_properties_colors_border-color);
+  border-radius: var(--recursica_ui-kit_components_segmented-control_properties_border-radius);
+  padding: var(--recursica_ui-kit_components_segmented-control_properties_padding-vertical)
+    var(--recursica_ui-kit_components_segmented-control_properties_padding-horizontal);
+  box-shadow: var(--recursica_ui-kit_components_segmented-control_properties_elevation);
   gap: var(--recursica_ui-kit_components_segmented-control_properties_item-gap);
 }
 
@@ -68,10 +54,7 @@
     transform 200ms ease,
     width 200ms ease,
     height 200ms ease;
-  transform: translate(
-    var(--rec-segmented-control-indicator-x, 0),
-    var(--rec-segmented-control-indicator-y, 0)
-  );
+  transform: translate(var(--rec-segmented-control-indicator-x, 0), var(--rec-segmented-control-indicator-y, 0));
   width: var(--rec-segmented-control-indicator-width, 0);
   height: var(--rec-segmented-control-indicator-height, 0);
 }
@@ -130,25 +113,13 @@
   right: 20%;
   z-index: 1;
 }
-:host-context([data-recursica-theme])
-  .root[data-orientation="horizontal"]
-  .control:not(:first-child)::before {
-  width: var(
-    --recursica_ui-kit_components_segmented-control_properties_divider-size
-  );
-  background-color: var(
-    --recursica_ui-kit_components_segmented-control_properties_colors_divider-color
-  );
+:host-context([data-recursica-theme]) .root[data-orientation="horizontal"] .control:not(:first-child)::before {
+  width: var(--recursica_ui-kit_components_segmented-control_properties_divider-size);
+  background-color: var(--recursica_ui-kit_components_segmented-control_properties_colors_divider-color);
 }
-:host-context([data-recursica-theme])
-  .root[data-orientation="vertical"]
-  .control:not(:first-child)::before {
-  height: var(
-    --recursica_ui-kit_components_segmented-control_properties_divider-size
-  );
-  background-color: var(
-    --recursica_ui-kit_components_segmented-control_properties_colors_divider-color
-  );
+:host-context([data-recursica-theme]) .root[data-orientation="vertical"] .control:not(:first-child)::before {
+  height: var(--recursica_ui-kit_components_segmented-control_properties_divider-size);
+  background-color: var(--recursica_ui-kit_components_segmented-control_properties_colors_divider-color);
 }
 /* Hide the divider immediately adjacent to the active indicator on either side — matches
    the reference's own visual behavior where the sliding indicator visually absorbs the
@@ -165,10 +136,8 @@
 :host-context([data-recursica-theme]) .control:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -182,18 +151,10 @@
 }
 
 :host-context([data-recursica-theme]) .label {
-  padding-left: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_padding-horizontal
-  );
-  padding-right: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_padding-horizontal
-  );
-  height: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_height
-  );
-  gap: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_icon-text-gap
-  );
+  padding-left: var(--recursica_ui-kit_components_segmented-control-item_properties_item_padding-horizontal);
+  padding-right: var(--recursica_ui-kit_components_segmented-control-item_properties_item_padding-horizontal);
+  height: var(--recursica_ui-kit_components_segmented-control-item_properties_item_height);
+  gap: var(--recursica_ui-kit_components_segmented-control-item_properties_item_icon-text-gap);
 
   border-radius: var(
     --recursica_ui-kit_components_segmented-control-item_variants_selection-states_unselected_properties_border-radius
@@ -279,12 +240,8 @@
 }
 
 :host-context([data-recursica-theme]) .icon {
-  width: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_icon-size
-  );
-  height: var(
-    --recursica_ui-kit_components_segmented-control-item_properties_item_icon-size
-  );
+  width: var(--recursica_ui-kit_components_segmented-control-item_properties_item_icon-size);
+  height: var(--recursica_ui-kit_components_segmented-control-item_properties_item_icon-size);
 }
 
 .icon > * {

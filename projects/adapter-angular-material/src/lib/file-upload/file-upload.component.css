@@ -38,22 +38,12 @@
 }
 
 :host-context([data-recursica-theme]) .dropzone {
-  border-width: var(
-    --recursica_ui-kit_components_file-upload_properties_border-size
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_file-upload_properties_border-radius
-  );
-  border-color: var(
-    --recursica_ui-kit_components_file-upload_properties_colors_border-color
-  );
-  background-color: var(
-    --recursica_ui-kit_components_file-upload_properties_colors_background-color
-  );
+  border-width: var(--recursica_ui-kit_components_file-upload_properties_border-size);
+  border-radius: var(--recursica_ui-kit_components_file-upload_properties_border-radius);
+  border-color: var(--recursica_ui-kit_components_file-upload_properties_colors_border-color);
+  background-color: var(--recursica_ui-kit_components_file-upload_properties_colors_background-color);
   padding: var(--recursica_ui-kit_components_file-upload_properties_padding);
-  gap: var(
-    --recursica_ui-kit_components_file-upload_properties_vertical-element-gap
-  );
+  gap: var(--recursica_ui-kit_components_file-upload_properties_vertical-element-gap);
 }
 
 .dropzone > * {
@@ -91,9 +81,7 @@
 }
 
 :host-context([data-recursica-theme]) .uploadIcon {
-  color: var(
-    --recursica_ui-kit_components_file-upload_properties_colors_upload-icon
-  );
+  color: var(--recursica_ui-kit_components_file-upload_properties_colors_upload-icon);
 }
 
 .uploadIcon svg {
@@ -106,33 +94,15 @@
 }
 
 :host-context([data-recursica-theme]) .dropzoneText {
-  font-family: var(
-    --recursica_ui-kit_components_file-upload_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_file-upload_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_file-upload_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_file-upload_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_file-upload_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_file-upload_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_file-upload_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_file-upload_properties_text_text-transform
-  );
-  color: var(
-    --recursica_ui-kit_components_file-upload_properties_colors_text-color
-  );
+  font-family: var(--recursica_ui-kit_components_file-upload_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_file-upload_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_file-upload_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_file-upload_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_file-upload_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_file-upload_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_file-upload_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_file-upload_properties_text_text-transform);
+  color: var(--recursica_ui-kit_components_file-upload_properties_colors_text-color);
 }
 
 .fileList {
@@ -150,58 +120,38 @@
 -------------------------------------- */
 
 :host-context([data-recursica-theme]) .root[data-error="true"] .dropzone {
-  border-width: var(
-    --recursica_ui-kit_components_file-upload_variants_states_error_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_border-color
-  );
+  border-width: var(--recursica_ui-kit_components_file-upload_variants_states_error_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_border-color);
   background-color: var(
     --recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_background-color
   );
 }
 
 :host-context([data-recursica-theme]) .root[data-error="true"] .dropzoneText {
-  color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_text-color);
 }
 
 :host-context([data-recursica-theme]) .root[data-error="true"] .uploadIcon {
-  color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_upload-icon
-  );
+  color: var(--recursica_ui-kit_components_file-upload_variants_states_error_properties_colors_upload-icon);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled="true"] .dropzone {
-  border-width: var(
-    --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_border-color
-  );
+  border-width: var(--recursica_ui-kit_components_file-upload_variants_states_disabled_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_border-color);
   background-color: var(
     --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_background-color
   );
 }
 
-:host-context([data-recursica-theme])
-  .root[data-disabled="true"]
-  .dropzoneText {
-  color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_text-color
-  );
+:host-context([data-recursica-theme]) .root[data-disabled="true"] .dropzoneText {
+  color: var(--recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_text-color);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled="true"] .uploadIcon {
-  color: var(
-    --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_upload-icon
-  );
+  color: var(--recursica_ui-kit_components_file-upload_variants_states_disabled_properties_colors_upload-icon);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled="true"] {
-  opacity: var(
-    --recursica_ui-kit_components_file-upload_variants_states_disabled_properties_opacity
-  );
+  opacity: var(--recursica_ui-kit_components_file-upload_variants_states_disabled_properties_opacity);
   cursor: not-allowed;
 }

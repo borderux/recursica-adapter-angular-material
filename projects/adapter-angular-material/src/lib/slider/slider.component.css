@@ -17,12 +17,8 @@
 
 :host-context([data-recursica-theme]) .root {
   gap: var(--recursica_ui-kit_components_slider_properties_input-gap);
-  margin-top: var(
-    --recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin
-  );
-  margin-bottom: var(
-    --recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin
-  );
+  margin-top: var(--recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin);
+  margin-bottom: var(--recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin);
 }
 
 .root[data-disabled] {
@@ -43,9 +39,7 @@
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled] .icon {
-  color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_icon-color
-  );
+  color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_icon-color);
 }
 
 .icon > * {
@@ -69,18 +63,12 @@
 
 :host-context([data-recursica-theme]) .track {
   height: var(--recursica_ui-kit_components_slider_properties_track-height);
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_track-border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_track
-  );
+  border-radius: var(--recursica_ui-kit_components_slider_properties_track-border-radius);
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_track);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled] .track {
-  background-color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track
-  );
+  background-color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track);
 }
 
 .trackFill {
@@ -91,18 +79,12 @@
 }
 
 :host-context([data-recursica-theme]) .trackFill {
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_track-active
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_track-border-radius
-  );
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_track-active);
+  border-radius: var(--recursica_ui-kit_components_slider_properties_track-border-radius);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled] .trackFill {
-  background-color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track-active
-  );
+  background-color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_track-active);
 }
 
 /* Step indicators (marks) */
@@ -115,18 +97,10 @@
 }
 
 :host-context([data-recursica-theme]) .stepIndicator {
-  width: var(
-    --recursica_ui-kit_components_slider_properties_step-indicator-width
-  );
-  height: var(
-    --recursica_ui-kit_components_slider_properties_step-indicator-width
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_step-indicator-border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_step-indicator-color
-  );
+  width: var(--recursica_ui-kit_components_slider_properties_step-indicator-width);
+  height: var(--recursica_ui-kit_components_slider_properties_step-indicator-width);
+  border-radius: var(--recursica_ui-kit_components_slider_properties_step-indicator-border-radius);
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_step-indicator-color);
 }
 
 :host-context([data-recursica-theme]) .stepIndicator[data-active] {
@@ -140,9 +114,7 @@
     --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_step-indicator-color
   );
 }
-:host-context([data-recursica-theme])
-  .root[data-disabled]
-  .stepIndicator[data-active] {
+:host-context([data-recursica-theme]) .root[data-disabled] .stepIndicator[data-active] {
   background-color: var(
     --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_step-indicator-color-active
   );
@@ -194,51 +166,33 @@
 :host-context([data-recursica-theme]) .thumbInput::-webkit-slider-thumb {
   width: var(--recursica_ui-kit_components_slider_properties_thumb-size);
   height: var(--recursica_ui-kit_components_slider_properties_thumb-size);
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_thumb-border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_thumb
-  );
+  border-radius: var(--recursica_ui-kit_components_slider_properties_thumb-border-radius);
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_thumb);
   border-width: 0;
-  box-shadow: var(
-    --recursica_ui-kit_components_slider_properties_thumb-elevation
-  );
+  box-shadow: var(--recursica_ui-kit_components_slider_properties_thumb-elevation);
 }
 :host-context([data-recursica-theme]) .thumbInput::-moz-range-thumb {
   width: var(--recursica_ui-kit_components_slider_properties_thumb-size);
   height: var(--recursica_ui-kit_components_slider_properties_thumb-size);
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_thumb-border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_thumb
-  );
+  border-radius: var(--recursica_ui-kit_components_slider_properties_thumb-border-radius);
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_thumb);
   border-width: 0;
-  box-shadow: var(
-    --recursica_ui-kit_components_slider_properties_thumb-elevation
-  );
+  box-shadow: var(--recursica_ui-kit_components_slider_properties_thumb-elevation);
 }
 
 .thumbInput:focus-visible::-webkit-slider-thumb {
   outline: none;
 }
-:host-context([data-recursica-theme])
-  .thumbInput:focus-visible::-webkit-slider-thumb {
+:host-context([data-recursica-theme]) .thumbInput:focus-visible::-webkit-slider-thumb {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
-:host-context([data-recursica-theme])
-  .thumbInput:disabled::-webkit-slider-thumb,
+:host-context([data-recursica-theme]) .thumbInput:disabled::-webkit-slider-thumb,
 :host-context([data-recursica-theme]) .thumbInput:disabled::-moz-range-thumb {
-  background-color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_thumb
-  );
+  background-color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_thumb);
   cursor: not-allowed;
 }
 
@@ -256,33 +210,15 @@
 
 :host-context([data-recursica-theme]) .markLabels,
 :host-context([data-recursica-theme]) .minMaxLabels {
-  margin-top: var(
-    --recursica_ui-kit_components_slider_properties_step-indicator-width
-  );
-  font-family: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_slider_properties_min-max-label_text-transform
-  );
+  margin-top: var(--recursica_ui-kit_components_slider_properties_step-indicator-width);
+  font-family: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-family);
+  font-size: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-size);
+  font-style: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-style);
+  font-weight: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_slider_properties_min-max-label_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_slider_properties_min-max-label_line-height);
+  text-decoration: var(--recursica_ui-kit_components_slider_properties_min-max-label_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_slider_properties_min-max-label_text-transform);
 }
 
 .markLabel {
@@ -314,49 +250,23 @@
 :host-context([data-recursica-theme]) .numberInput {
   width: var(--recursica_ui-kit_components_slider_properties_input-width);
   height: var(--recursica_ui-kit_components_slider_properties_input-height);
-  padding: var(
-      --recursica_ui-kit_components_slider_properties_input-padding-vertical
-    )
+  padding: var(--recursica_ui-kit_components_slider_properties_input-padding-vertical)
     var(--recursica_ui-kit_components_slider_properties_input-padding-right)
     var(--recursica_ui-kit_components_slider_properties_input-padding-vertical)
     var(--recursica_ui-kit_components_slider_properties_input-padding-left);
-  border-width: var(
-    --recursica_ui-kit_components_slider_properties_input-border-size
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_slider_properties_input-border-radius
-  );
-  border-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_input-border-color
-  );
-  background-color: var(
-    --recursica_ui-kit_components_slider_properties_colors_input-background-color
-  );
+  border-width: var(--recursica_ui-kit_components_slider_properties_input-border-size);
+  border-radius: var(--recursica_ui-kit_components_slider_properties_input-border-radius);
+  border-color: var(--recursica_ui-kit_components_slider_properties_colors_input-border-color);
+  background-color: var(--recursica_ui-kit_components_slider_properties_colors_input-background-color);
   color: var(--recursica_ui-kit_components_slider_properties_colors_input-text);
-  font-family: var(
-    --recursica_ui-kit_components_slider_properties_input-text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_slider_properties_input-text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_slider_properties_input-text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_slider_properties_input-text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_slider_properties_input-text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_slider_properties_input-text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_slider_properties_input-text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_slider_properties_input-text_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_slider_properties_input-text_font-family);
+  font-size: var(--recursica_ui-kit_components_slider_properties_input-text_font-size);
+  font-style: var(--recursica_ui-kit_components_slider_properties_input-text_font-style);
+  font-weight: var(--recursica_ui-kit_components_slider_properties_input-text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_slider_properties_input-text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_slider_properties_input-text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_slider_properties_input-text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_slider_properties_input-text_text-transform);
 }
 
 .numberInput:focus-visible {
@@ -364,41 +274,27 @@
 }
 :host-context([data-recursica-theme]) .numberInput:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
 :host-context([data-recursica-theme]) .numberInput:disabled {
-  border-color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-border-color
-  );
+  border-color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-border-color);
   background-color: var(
     --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-background-color
   );
-  color: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-text
-  );
-  border-width: var(
-    --recursica_ui-kit_components_slider_variants_states_disabled_properties_input-border-size
-  );
+  color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_input-text);
+  border-width: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_input-border-size);
 }
 
 :host-context([data-recursica-theme]) .root[data-error] .numberInput {
-  border-color: var(
-    --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-border-color
-  );
+  border-color: var(--recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-border-color);
   background-color: var(
     --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-background-color
   );
-  color: var(
-    --recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-text
-  );
-  border-width: var(
-    --recursica_ui-kit_components_slider_variants_states_error_properties_input-border-size
-  );
+  color: var(--recursica_ui-kit_components_slider_variants_states_error_properties_colors_input-text);
+  border-width: var(--recursica_ui-kit_components_slider_variants_states_error_properties_input-border-size);
 }
 
 /* ==== READ-ONLY VALUE ==== */
@@ -408,28 +304,12 @@
 }
 
 :host-context([data-recursica-theme]) .readOnlyValue {
-  font-family: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_slider_properties_read-only-value_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-family);
+  font-size: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-size);
+  font-style: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-style);
+  font-weight: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_slider_properties_read-only-value_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_slider_properties_read-only-value_line-height);
+  text-decoration: var(--recursica_ui-kit_components_slider_properties_read-only-value_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_slider_properties_read-only-value_text-transform);
 }

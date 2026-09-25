@@ -33,18 +33,10 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  --switch-track-padding: var(
-    --recursica_ui-kit_components_switch_properties_track-inner-padding
-  );
-  --switch-thumb-width: var(
-    --recursica_ui-kit_components_switch_properties_thumb-width
-  );
-  --switch-thumb-height: var(
-    --recursica_ui-kit_components_switch_properties_thumb-height
-  );
-  --switch-track-width: var(
-    --recursica_ui-kit_components_switch_properties_track-width
-  );
+  --switch-track-padding: var(--recursica_ui-kit_components_switch_properties_track-inner-padding);
+  --switch-thumb-width: var(--recursica_ui-kit_components_switch_properties_thumb-width);
+  --switch-thumb-height: var(--recursica_ui-kit_components_switch_properties_thumb-height);
+  --switch-track-width: var(--recursica_ui-kit_components_switch_properties_track-width);
 }
 
 .root:has(input:disabled) {
@@ -91,15 +83,11 @@
 :host-context([data-recursica-theme]) .track {
   width: var(--switch-track-width);
   height: calc(var(--switch-thumb-height) + (var(--switch-track-padding) * 2));
-  border-radius: var(
-    --recursica_ui-kit_components_switch_properties_track-border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_switch_properties_track-border-radius);
   background-color: var(
     --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_track-color
   );
-  box-shadow: var(
-    --recursica_ui-kit_components_switch_properties_track-elevation
-  );
+  box-shadow: var(--recursica_ui-kit_components_switch_properties_track-elevation);
   padding: var(--switch-track-padding);
   border: none; /* HARDCODE: matches Switch.module.css's own documented hardcode — no border token for the track. */
 }
@@ -112,11 +100,9 @@
 }
 
 :host-context([data-recursica-theme]) .root input:focus-visible + .track {
-  outline: var(--recursica_brand_states_focus_border-size) solid
-    var(--recursica_brand_states_focus_color);
+  outline: var(--recursica_brand_states_focus_border-size) solid var(--recursica_brand_states_focus_color);
   outline-offset: var(--recursica_brand_states_focus_margin);
-  box-shadow: 0 0 var(--recursica_brand_states_focus_blur)
-    var(--recursica_brand_states_focus_color);
+  box-shadow: 0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_color);
 }
 
 /* Track/thumb dim per selection state when disabled — mirrors Switch.module.css's `:has()`-based rules. */
@@ -125,9 +111,7 @@
     --recursica_ui-kit_components_switch_variants_selection-states_selected_variants_states_disabled_properties_opacity
   );
 }
-:host-context([data-recursica-theme])
-  .root:has(input:disabled):not(:has(input:checked))
-  .track {
+:host-context([data-recursica-theme]) .root:has(input:disabled):not(:has(input:checked)) .track {
   opacity: var(
     --recursica_ui-kit_components_switch_variants_selection-states_unselected_variants_states_disabled_properties_opacity
   );
@@ -142,9 +126,7 @@
  * approximation already flagged). Class-driven (`.trackChecked`), not
  * `:checked`-driven, since the read-only branch renders no real `<input>`.
  */
-:host-context([data-recursica-theme])
-  .readOnlyDisplay
-  .track:not(.trackChecked) {
+:host-context([data-recursica-theme]) .readOnlyDisplay .track:not(.trackChecked) {
   opacity: var(
     --recursica_ui-kit_components_switch_variants_selection-states_unselected_variants_states_disabled_properties_opacity
   );
@@ -164,15 +146,11 @@
 :host-context([data-recursica-theme]) .thumb {
   width: var(--switch-thumb-width);
   height: var(--switch-thumb-height);
-  border-radius: var(
-    --recursica_ui-kit_components_switch_properties_thumb-border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_switch_properties_thumb-border-radius);
   background-color: var(
     --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_thumb-color
   );
-  box-shadow: var(
-    --recursica_ui-kit_components_switch_properties_thumb-elevation
-  );
+  box-shadow: var(--recursica_ui-kit_components_switch_properties_thumb-elevation);
   border: none; /* HARDCODE: matches Switch.module.css's own documented hardcode — no border token for the thumb. */
 }
 
@@ -218,16 +196,12 @@
 :host-context([data-recursica-theme]) .checkIcon {
   opacity: 0;
   transform: scale(0.5);
-  color: var(
-    --recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_icon-color
-  );
+  color: var(--recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_icon-color);
 }
 :host-context([data-recursica-theme]) .closeIcon {
   opacity: 1;
   transform: scale(1);
-  color: var(
-    --recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_icon-color
-  );
+  color: var(--recursica_ui-kit_components_switch_variants_selection-states_unselected_properties_colors_icon-color);
 }
 
 /*
@@ -241,22 +215,12 @@
  * unchecked-state declaration above). The working `.track`/`.thumb`
  * background-color rules above are single-line for the same reason.
  */
-:host-context([data-recursica-theme])
-  .root
-  input:checked
-  + .track
-  .thumb
-  .checkIcon,
+:host-context([data-recursica-theme]) .root input:checked + .track .thumb .checkIcon,
 :host-context([data-recursica-theme]) .thumb.thumbChecked .checkIcon {
   opacity: 1;
   transform: scale(1);
 }
-:host-context([data-recursica-theme])
-  .root
-  input:checked
-  + .track
-  .thumb
-  .closeIcon,
+:host-context([data-recursica-theme]) .root input:checked + .track .thumb .closeIcon,
 :host-context([data-recursica-theme]) .thumb.thumbChecked .closeIcon {
   opacity: 0;
   transform: scale(0.5);
@@ -268,16 +232,12 @@
 }
 
 :host-context([data-recursica-theme]) .labelWrapper {
-  max-width: var(
-    --recursica_ui-kit_components_switch-item_properties_label-max-width
-  );
+  max-width: var(--recursica_ui-kit_components_switch-item_properties_label-max-width);
 }
 
 :host-context([data-recursica-theme]) .root:has(input:disabled) .labelWrapper,
 :host-context([data-recursica-theme]) .readOnlyDisplay .labelWrapper {
-  opacity: var(
-    --recursica_ui-kit_components_switch-item_variants_states_disabled_properties_opacity
-  );
+  opacity: var(--recursica_ui-kit_components_switch-item_variants_states_disabled_properties_opacity);
 }
 
 .label {
@@ -291,39 +251,19 @@
 }
 
 :host-context([data-recursica-theme]) .label {
-  font-family: var(
-    --recursica_ui-kit_components_switch-item_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_switch-item_properties_text_font-size
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_switch-item_properties_text_font-weight
-  );
-  font-style: var(
-    --recursica_ui-kit_components_switch-item_properties_text_font-style
-  );
-  line-height: var(
-    --recursica_ui-kit_components_switch-item_properties_text_line-height
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_switch-item_properties_text_letter-spacing
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_switch-item_properties_text_text-transform
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_switch-item_properties_text_text-decoration
-  );
-  color: var(
-    --recursica_ui-kit_components_switch-item_properties_colors_text-color
-  );
+  font-family: var(--recursica_ui-kit_components_switch-item_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_switch-item_properties_text_font-size);
+  font-weight: var(--recursica_ui-kit_components_switch-item_properties_text_font-weight);
+  font-style: var(--recursica_ui-kit_components_switch-item_properties_text_font-style);
+  line-height: var(--recursica_ui-kit_components_switch-item_properties_text_line-height);
+  letter-spacing: var(--recursica_ui-kit_components_switch-item_properties_text_letter-spacing);
+  text-transform: var(--recursica_ui-kit_components_switch-item_properties_text_text-transform);
+  text-decoration: var(--recursica_ui-kit_components_switch-item_properties_text_text-decoration);
+  color: var(--recursica_ui-kit_components_switch-item_properties_colors_text-color);
   cursor: inherit;
 }
 
 :host-context([data-recursica-theme]) .root:has(input:disabled) .label,
 :host-context([data-recursica-theme]) .readOnlyDisplay .label {
-  color: var(
-    --recursica_ui-kit_components_switch-item_properties_colors_disabled-text
-  );
+  color: var(--recursica_ui-kit_components_switch-item_properties_colors_disabled-text);
 }
