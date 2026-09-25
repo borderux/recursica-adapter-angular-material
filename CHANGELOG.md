@@ -1,5 +1,11 @@
 # @recursica/adapter-angular-material
 
+## 0.5.1
+
+### Patch Changes
+
+- db95291: Versioned with Container and Table fixes
+
 ## 0.5.0
 
 ### Minor Changes
