@@ -43,7 +43,9 @@ import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
     >
-      <div class="content"><ng-content /></div>
+      <div class="content">
+        <div class="contentInner"><ng-content /></div>
+      </div>
     </div>
   `,
 })

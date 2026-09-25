@@ -20,6 +20,12 @@
   grid-template-rows: 1fr;
 }
 
+/* HARDCODE: `overflow: hidden` + `min-height: 0` here (the grid item measured by `.panel`'s
+   `grid-template-rows: 0fr`) make its *content-based* auto-minimum size 0, but its own padding
+   would still floor its border-box height — so padding lives one level down, on `.contentInner`,
+   a plain descendant that no longer factors into `.panel`'s track-sizing at all. Without this
+   split, the collapsed panel was still 32px tall (exactly the vertical padding) with content
+   peeking out underneath. */
 .content {
   box-sizing: border-box;
   min-height: 0;
@@ -27,65 +33,28 @@
 }
 
 :host-context([data-recursica-theme]) .panel {
-  margin: var(
-    --recursica_ui-kit_components_accordion-content_properties_margin
-  );
-  background-color: var(
-    --recursica_ui-kit_components_accordion-content_properties_colors_background-color
-  );
+  margin: var(--recursica_ui-kit_components_accordion-content_properties_margin);
+  background-color: var(--recursica_ui-kit_components_accordion-content_properties_colors_background-color);
   border-style: solid;
-  border-color: var(
-    --recursica_ui-kit_components_accordion-content_properties_colors_border-color
-  );
-  border-width: var(
-    --recursica_ui-kit_components_accordion-content_properties_border-size
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_accordion-content_properties_border-radius
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_accordion-content_properties_elevation
-  );
+  border-color: var(--recursica_ui-kit_components_accordion-content_properties_colors_border-color);
+  border-width: var(--recursica_ui-kit_components_accordion-content_properties_border-size);
+  border-radius: var(--recursica_ui-kit_components_accordion-content_properties_border-radius);
+  box-shadow: var(--recursica_ui-kit_components_accordion-content_properties_elevation);
 }
 
-:host-context([data-recursica-theme]) .content {
-  padding: 0
-    var(
-      --recursica_ui-kit_components_accordion-content_properties_horizontal-padding
-    )
-    var(
-      --recursica_ui-kit_components_accordion-content_properties_bottom-padding
-    );
-  padding-top: var(
-    --recursica_ui-kit_components_accordion-content_properties_top-padding
-  );
+:host-context([data-recursica-theme]) .contentInner {
+  padding: 0 var(--recursica_ui-kit_components_accordion-content_properties_horizontal-padding)
+    var(--recursica_ui-kit_components_accordion-content_properties_bottom-padding);
+  padding-top: var(--recursica_ui-kit_components_accordion-content_properties_top-padding);
 
-  color: var(
-    --recursica_ui-kit_components_accordion-content_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_accordion-content_properties_colors_text-color);
 
-  font-family: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_font-size
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_font-weight
-  );
-  font-style: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_font-style
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_accordion-content_properties_text_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_accordion-content_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_accordion-content_properties_text_font-size);
+  font-weight: var(--recursica_ui-kit_components_accordion-content_properties_text_font-weight);
+  font-style: var(--recursica_ui-kit_components_accordion-content_properties_text_font-style);
+  letter-spacing: var(--recursica_ui-kit_components_accordion-content_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_accordion-content_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_accordion-content_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_accordion-content_properties_text_text-transform);
 }

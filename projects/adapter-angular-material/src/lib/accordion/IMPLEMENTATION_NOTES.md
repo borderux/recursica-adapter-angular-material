@@ -240,6 +240,16 @@ order/accessibility tree instead. Requires `min-height: 0` on the inner
 grid track's automatic minimum sizing keeps contributing the content's
 intrinsic height even at `0fr`, and the collapse doesn't fully reach zero.
 
+**Follow-up (2026-09-25):** `min-height: 0` + `overflow: hidden` only zero
+out `.content`'s _content-based_ automatic minimum size — its own padding
+still floors its border-box height regardless (padding isn't suppressed by
+`overflow`), so a collapsed panel sat at a fixed ~32px with content visibly
+peeking out underneath (reported live via `adapter-tester`, confirmed by
+inspecting the compiled CSSOM's computed `grid-template-rows`). Fix: the
+token-driven padding/typography now live on a `.contentInner` div nested
+one level inside `.content`, so `.content` itself (the grid item `.panel`
+measures) carries no padding of its own and genuinely collapses to `0px`.
+
 ## `variant`: dropped
 
 The source-of-truth's `AccordionProps.variant` (`"default" | (string &
