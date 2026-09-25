@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { LayerComponent } from "./layer.component";
-import { StackComponent } from "../stack/stack.component";
 import { TextComponent } from "../text/text.component";
 
 /**
@@ -38,7 +37,7 @@ const meta: Meta<LayerComponent> = {
   component: LayerComponent,
   decorators: [
     moduleMetadata({
-      imports: [LayerComponent, StackComponent, TextComponent],
+      imports: [LayerComponent, TextComponent],
     }),
   ],
 };
@@ -49,9 +48,9 @@ type Story = StoryObj<LayerComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <rec-stack style="padding: 24px;">
+      <div style="padding: 24px;">
         <rec-text>This content sits directly on the layer applied by the story's outer Layer wrapper — use the withLayer/layer Story Controls to preview layers 0-3.</rec-text>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -82,9 +81,9 @@ export const ContentsOnly: Story = {
   render: () => ({
     template: `
       <rec-layer [layer]="1" [contentsOnly]="true">
-        <rec-stack style="border: 1px dashed currentColor; padding: 24px;">
+        <div style="border: 1px dashed currentColor; padding: 24px;">
           <rec-text>This box comes from a plain child Stack, not Layer itself — with contentsOnly, Layer renders no box of its own and applies no layer styling.</rec-text>
-        </rec-stack>
+        </div>
       </rec-layer>
     `,
   }),

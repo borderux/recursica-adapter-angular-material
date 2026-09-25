@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { TextAreaComponent } from "./text-area.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -18,7 +17,7 @@ const meta: Meta<TextAreaComponent> = {
   component: TextAreaComponent,
   decorators: [
     moduleMetadata({
-      imports: [TextAreaComponent, StackComponent],
+      imports: [TextAreaComponent],
     }),
   ],
   argTypes: {
@@ -45,13 +44,13 @@ type Story = StoryObj<TextAreaComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-text-area
           label="Description"
           assistiveText="Enter your full description here."
           placeholder="Type something long..."
         ></rec-text-area>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -59,7 +58,7 @@ export const Default: Story = {
 export const Autosize: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-text-area
           label="Auto-sizing TextArea"
           placeholder="Type multiple lines here. Watch it grow!"
@@ -67,7 +66,7 @@ export const Autosize: Story = {
           [minRows]="2"
           [maxRows]="6"
         ></rec-text-area>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -75,14 +74,14 @@ export const Autosize: Story = {
 export const StaticError: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-text-area
           label="Description"
           error="This field requires a detailed explanation."
           value="Some bad input."
           [required]="true"
         ></rec-text-area>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -90,13 +89,13 @@ export const StaticError: Story = {
 export const StaticDisabled: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-text-area
           label="Description"
           value="This content is locked."
           [disabled]="true"
         ></rec-text-area>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -112,13 +111,13 @@ export const StaticDisabled: Story = {
 export const StaticReadOnly: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-text-area
           label="Read Only View"
           value="This text is safely frozen in read-only form."
           [readOnly]="true"
         ></rec-text-area>
-      </rec-stack>
+      </div>
     `,
   }),
 };

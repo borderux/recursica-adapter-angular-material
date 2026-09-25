@@ -3,7 +3,6 @@ import { moduleMetadata } from "@storybook/angular";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { TextFieldComponent } from "./text-field.component";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -23,11 +22,7 @@ const meta: Meta<TextFieldComponent> = {
   component: TextFieldComponent,
   decorators: [
     moduleMetadata({
-      imports: [
-        TextFieldComponent,
-        FormControlWrapperComponent,
-        StackComponent,
-      ],
+      imports: [TextFieldComponent, FormControlWrapperComponent],
     }),
   ],
   argTypes: {
@@ -52,14 +47,14 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper
           label="Authentication Token"
           assistiveText="Tokens are stored identically locally and strictly ephemeral."
         >
           <rec-text-field [placeholder]="placeholder" [disabled]="disabled" [required]="required" [error]="error"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -68,7 +63,7 @@ export const FormsSideBySide: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 480px;">
+      <div style="width: 480px;">
         <rec-form-control-wrapper
           formLayout="side-by-side"
           label="Distributed Access Control"
@@ -76,7 +71,7 @@ export const FormsSideBySide: Story = {
         >
           <rec-text-field placeholder="admin@node.local"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -95,11 +90,11 @@ export const WithLeadingIcon: Story = {
     props: args,
     template: `
       ${searchIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Search Global Context">
           <rec-text-field placeholder="Search for repositories..." [leftSection]="searchIcon"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -117,11 +112,11 @@ export const WithTrailingIcon: Story = {
     props: args,
     template: `
       ${checkIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Validation URL">
           <rec-text-field placeholder="https://recursica.dev" [rightSection]="checkIcon"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -130,11 +125,11 @@ export const Disabled: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Disabled Deployment Node">
           <rec-text-field placeholder="Disabled primitive map..." [disabled]="true"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -143,11 +138,11 @@ export const ErrorState: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Cluster Failure" error="Critical runtime node disconnect detected traversing DOM architecture." [required]="true">
           <rec-text-field placeholder="Failing component instance..." value="Invalid Execution Plan" [error]="true" [required]="true"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -166,11 +161,11 @@ export const StaticReadOnly: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Static ReadOnly Review">
           <rec-text-field placeholder="Ignored..." value="Explicitly Uneditable Bound Output" [readOnly]="true"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -186,11 +181,11 @@ export const EditableReadOnly: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Editable ReadOnly Review" [labelWithEditIcon]="true">
           <rec-text-field placeholder="Ignored until active..." value="Waiting for Edit Execution" [readOnly]="true"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -206,11 +201,11 @@ export const ReactiveForms: Story = {
   render: () => ({
     props: { ctrl: new FormControl("seeded via ctrl.setValue()") },
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Reactive Forms TextField">
           <rec-text-field [formControl]="ctrl"></rec-text-field>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };

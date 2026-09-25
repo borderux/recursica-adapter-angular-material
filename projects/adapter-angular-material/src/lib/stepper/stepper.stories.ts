@@ -3,7 +3,6 @@ import { moduleMetadata } from "@storybook/angular";
 import { StepperComponent } from "./stepper.component";
 import { StepComponent } from "./stepper-step.component";
 import { StepperCompletedComponent } from "./stepper-completed.component";
-import { StackComponent } from "../stack/stack.component";
 import { GroupComponent } from "../group/group.component";
 
 /**
@@ -37,7 +36,6 @@ const meta: Meta<StepperComponent> = {
         StepperComponent,
         StepComponent,
         StepperCompletedComponent,
-        StackComponent,
         GroupComponent,
       ],
     }),
@@ -63,7 +61,7 @@ const buttonStyleDisabled =
   "border: 1px solid #c9c9c9; color: #c9c9c9; background: none; border-radius: 999px; padding: 8px 20px; cursor: not-allowed;";
 
 const template = `
-  <rec-stack gap="0" style="width: 600px;">
+  <div style="width: 600px;">
     <rec-stepper [active]="active" [size]="size" [orientation]="orientation" (stepClick)="active = $event">
       <rec-stepper-step
         label="First step"
@@ -89,11 +87,11 @@ const template = `
         (click)="active = active < 3 ? active + 1 : active"
       >Next step</button>
     </rec-group>
-  </rec-stack>
+  </div>
 `;
 
 const stressTestTemplate = `
-  <rec-stack gap="0" style="width: 600px;">
+  <div style="width: 600px;">
     <rec-stepper [active]="active" [size]="size" [orientation]="orientation" (stepClick)="active = $event">
       <rec-stepper-step
         label="This is an extremely long step title designed to test how the layout handles multiline text wrapping and constraints"
@@ -119,7 +117,7 @@ const stressTestTemplate = `
         (click)="active = active < 3 ? active + 1 : active"
       >Next step</button>
     </rec-group>
-  </rec-stack>
+  </div>
 `;
 
 export const Default: Story = {
@@ -194,13 +192,13 @@ export const LayoutStressTest: Story = {
 export const OverStyledEscapeHatch: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 600px;">
+      <div style="width: 600px;">
         <rec-stepper [active]="1" [overStyled]="true" [overStyle]="{ 'background-color': '#fff3f5' }">
           <rec-stepper-step label="One" />
           <rec-stepper-step label="Two" />
           <rec-stepper-step label="Three" />
         </rec-stepper>
-      </rec-stack>
+      </div>
     `,
   }),
 };

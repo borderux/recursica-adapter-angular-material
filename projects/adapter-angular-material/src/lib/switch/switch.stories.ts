@@ -67,11 +67,7 @@ export const StaticVariations: Story = {
 
 export const ReadOnly: Story = {
   render: () => ({
-    template: `
-      <rec-stack gap="24px">
-        <rec-switch label="Standard Switch" [defaultChecked]="true" [readOnly]="true"></rec-switch>
-      </rec-stack>
-    `,
+    template: `<rec-switch label="Standard Switch" [defaultChecked]="true" [readOnly]="true"></rec-switch>`,
   }),
 };
 

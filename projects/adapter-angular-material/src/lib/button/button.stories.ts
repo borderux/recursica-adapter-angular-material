@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { ButtonComponent } from "./button.component";
 import { LayerComponent } from "../layer/layer.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -19,7 +18,7 @@ const meta: Meta<ButtonComponent> = {
   component: ButtonComponent,
   decorators: [
     moduleMetadata({
-      imports: [ButtonComponent, LayerComponent, StackComponent],
+      imports: [ButtonComponent, LayerComponent],
     }),
   ],
   argTypes: {
@@ -119,11 +118,11 @@ export const TruncatedLabel: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="max-width: 250px;">
+      <div style="max-width: 250px;">
         ${withLabel(
           "This is an exceptionally long button label designed to demonstrate how the component handles text overflow by applying an ellipsis rather than breaking the layout or wrapping to multiple lines.",
         )}
-      </rec-stack>
+      </div>
     `,
   }),
 };

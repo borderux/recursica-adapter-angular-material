@@ -146,12 +146,10 @@ export const ReactiveForms: Story = {
   render: () => ({
     props: { ctrl: new FormControl("b") },
     template: `
-      <rec-stack>
-        <rec-radio-group formLayout="stacked" label="Reactive Forms RadioGroup" [formControl]="ctrl">
-          <rec-radio value="a" label="Option A"></rec-radio>
-          <rec-radio value="b" label="Option B"></rec-radio>
-        </rec-radio-group>
-      </rec-stack>
+      <rec-radio-group formLayout="stacked" label="Reactive Forms RadioGroup" [formControl]="ctrl">
+        <rec-radio value="a" label="Option A"></rec-radio>
+        <rec-radio value="b" label="Option B"></rec-radio>
+      </rec-radio-group>
     `,
   }),
 };

@@ -43,7 +43,7 @@ type Story = StoryObj<NumberInputComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-number-input
           label="Amount"
           placeholder="Enter an amount"
@@ -52,7 +52,7 @@ export const Default: Story = {
           [min]="0"
           [max]="100"
         ></rec-number-input>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -60,7 +60,7 @@ export const Default: Story = {
 export const SideBySideLayout: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 480px;">
+      <div style="width: 480px;">
         <rec-number-input
           formLayout="side-by-side"
           label="Amount"
@@ -70,7 +70,7 @@ export const SideBySideLayout: Story = {
           [min]="0"
           [max]="100"
         ></rec-number-input>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -99,9 +99,9 @@ export const WithLeftIcon: Story = {
   render: () => ({
     template: `
       ${dollarSectionTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-number-input label="Price" placeholder="0.00" [leftSection]="dollarSection"></rec-number-input>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -116,14 +116,14 @@ export const WithRightIcon: Story = {
   render: () => ({
     template: `
       ${percentSectionTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-number-input
           label="Percentage"
           placeholder="0"
           [rightSection]="percentSection"
           [hideControls]="true"
         ></rec-number-input>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -131,9 +131,9 @@ export const WithRightIcon: Story = {
 export const HiddenControls: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-number-input label="Zip Code" placeholder="Enter zip code" [hideControls]="true"></rec-number-input>
-      </rec-stack>
+      </div>
     `,
   }),
 };

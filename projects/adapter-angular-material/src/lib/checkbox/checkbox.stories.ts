@@ -73,9 +73,7 @@ export const StaticVariations: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <rec-stack gap="24px">
-        <rec-checkbox label="Accept Terms &amp; Conditions" [defaultChecked]="true" [readOnly]="true"></rec-checkbox>
-      </rec-stack>
+      <rec-checkbox label="Accept Terms &amp; Conditions" [defaultChecked]="true" [readOnly]="true"></rec-checkbox>
     `,
   }),
 };

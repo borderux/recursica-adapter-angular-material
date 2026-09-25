@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -82,6 +83,16 @@ let nextId = 0;
  * top-level `<Panel opened title placement>children<Panel.Footer>` shape —
  * the same reasoning `Modal`'s own granular sub-components were skipped
  * for.
+ *
+ * ## `viewInitialized` guard — same crash `Modal` had
+ *
+ * Every story here starts `opened: true`, same as `Modal`'s own stories —
+ * `ngOnChanges` fires before the `@ViewChild("contentTpl")` query resolves
+ * (only in `ngAfterViewInit`), so `openDialog()` used to call
+ * `dialog.open(this.contentTemplate, ...)` with `contentTemplate` still
+ * `undefined`, throwing inside `MatDialog.open()` itself. See
+ * `modal.component.ts`'s own class doc comment for the full explanation —
+ * this is the identical fix.
  */
 @Component({
   selector: "rec-panel",
@@ -133,7 +144,7 @@ let nextId = 0;
     </ng-template>
   `,
 })
-export class PanelComponent implements OnChanges, OnDestroy {
+export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() opened = false;
   @Output() openedChange = new EventEmitter<boolean>();
   @Output() closed = new EventEmitter<void>();
@@ -150,15 +161,23 @@ export class PanelComponent implements OnChanges, OnDestroy {
   private readonly dialog = inject(MatDialog);
   private readonly id = `rec-panel-${nextId++}`;
   private dialogRef?: MatDialogRef<unknown>;
+  private viewInitialized = false;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes["opened"]) {
+    if (!changes["opened"] || !this.viewInitialized) {
       return;
     }
     if (this.opened) {
       this.openDialog();
     } else {
       this.dialogRef?.close();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    if (this.opened) {
+      this.openDialog();
     }
   }
 

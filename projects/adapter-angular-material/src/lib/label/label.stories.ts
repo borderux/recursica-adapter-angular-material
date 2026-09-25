@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { LabelComponent } from "./label.component";
 import { ButtonComponent } from "../button/button.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -13,7 +12,7 @@ const meta: Meta<LabelComponent> = {
   component: LabelComponent,
   decorators: [
     moduleMetadata({
-      imports: [LabelComponent, ButtonComponent, StackComponent],
+      imports: [LabelComponent, ButtonComponent],
     }),
   ],
   argTypes: {
@@ -96,9 +95,9 @@ export const RightAligned: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 224px;">
+      <div style="width: 224px;">
         <rec-label [labelAlignment]="labelAlignment">Status</rec-label>
-      </rec-stack>
+      </div>
     `,
   }),
 };

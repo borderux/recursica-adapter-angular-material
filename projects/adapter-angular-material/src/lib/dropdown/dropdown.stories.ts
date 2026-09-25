@@ -3,7 +3,6 @@ import { moduleMetadata } from "@storybook/angular";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { DropdownComponent } from "./dropdown.component";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -20,7 +19,7 @@ const meta: Meta<DropdownComponent> = {
   component: DropdownComponent,
   decorators: [
     moduleMetadata({
-      imports: [DropdownComponent, FormControlWrapperComponent, StackComponent],
+      imports: [DropdownComponent, FormControlWrapperComponent],
     }),
   ],
   argTypes: {
@@ -72,7 +71,7 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
           <rec-dropdown
             [data]="${COUNTRIES_NG_LIST}"
@@ -82,7 +81,7 @@ export const Default: Story = {
             [error]="error"
           ></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -91,7 +90,7 @@ export const Clearable: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Clearable Options" assistiveText="Select your country of origin.">
           <rec-dropdown
             [data]="${COUNTRIES_NG_LIST}"
@@ -100,7 +99,7 @@ export const Clearable: Story = {
             [clearable]="true"
           ></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -119,7 +118,7 @@ export const WithLeadingIcon: Story = {
     props: args,
     template: `
       ${pinIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Destination" assistiveText="Select your country of origin.">
           <rec-dropdown
             [data]="${COUNTRIES_NG_LIST}"
@@ -127,7 +126,7 @@ export const WithLeadingIcon: Story = {
             [leftSection]="pinIcon"
           ></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -152,14 +151,14 @@ export const WithRichOptions: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper
           label="Assignee"
           assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
         >
           <rec-dropdown [data]="${richOptionsData}" placeholder="Pick a team member"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -174,7 +173,7 @@ export const WithRichOptionsWrapped: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper
           label="Assignee"
           assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
@@ -185,7 +184,7 @@ export const WithRichOptionsWrapped: Story = {
             [wrapItemText]="true"
           ></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -212,11 +211,11 @@ export const RichOptionRowPreview: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <rec-stack style="width: 320px; padding-bottom: 260px;">
+      <div style="width: 320px; padding-bottom: 260px;">
         <rec-form-control-wrapper label="Assignee">
           <rec-dropdown [data]="${previewRowsData}" placeholder="Pick a team member" [debugForceOpen]="true"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -228,7 +227,7 @@ export const RichOptionRowPreviewWrapped: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <rec-stack style="width: 320px; padding-bottom: 320px;">
+      <div style="width: 320px; padding-bottom: 320px;">
         <rec-form-control-wrapper label="Assignee">
           <rec-dropdown
             [data]="${previewRowsData}"
@@ -237,7 +236,7 @@ export const RichOptionRowPreviewWrapped: Story = {
             [debugForceOpen]="true"
           ></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -251,11 +250,11 @@ export const StaticError: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin." error="You must choose a valid destination.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Invalid Island" [error]="true"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -264,11 +263,11 @@ export const StaticDisabled: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="United States" [disabled]="true"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -277,11 +276,11 @@ export const StaticReadOnly: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Read Only View" assistiveText="Select your country of origin.">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Canada" [readOnly]="true"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -296,11 +295,11 @@ export const ReactiveForms: Story = {
   render: () => ({
     props: { ctrl: new FormControl("Canada") },
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-form-control-wrapper label="Reactive Forms Dropdown">
           <rec-dropdown [data]="${COUNTRIES_NG_LIST}" [formControl]="ctrl"></rec-dropdown>
         </rec-form-control-wrapper>
-      </rec-stack>
+      </div>
     `,
   }),
 };

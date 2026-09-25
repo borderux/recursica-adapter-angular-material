@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { DatePickerComponent } from "./date-picker.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -20,7 +19,7 @@ const meta: Meta<DatePickerComponent> = {
   component: DatePickerComponent,
   decorators: [
     moduleMetadata({
-      imports: [DatePickerComponent, StackComponent],
+      imports: [DatePickerComponent],
     }),
   ],
   argTypes: {
@@ -43,12 +42,12 @@ type Story = StoryObj<DatePickerComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker
           label="Project Deadline"
           assistiveText="Specify the absolute cutoff for code submission."
         ></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -56,13 +55,13 @@ export const Default: Story = {
 export const FormsSideBySide: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 480px;">
+      <div style="width: 480px;">
         <rec-date-picker
           formLayout="side-by-side"
           label="Incident Start Date"
           assistiveText="When did the incident originally occur?"
         ></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -82,9 +81,9 @@ export const WithLeadingIcon: Story = {
   render: () => ({
     template: `
       ${boxIconTemplate}
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker label="Launch Date" [leftSection]="boxIcon"></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -92,9 +91,9 @@ export const WithLeadingIcon: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker label="Disabled Date Range" [disabled]="true"></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -102,13 +101,13 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker
           label="Execution Date"
           error="The chosen date conflicts with an existing deployment freeze."
           [required]="true"
         ></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
   }),
 };
@@ -116,14 +115,14 @@ export const ErrorState: Story = {
 export const OpenedCalendar: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px; height: 420px;">
+      <div style="width: 320px; height: 420px;">
         <rec-date-picker
           label="Meeting Date"
           assistiveText="Calendar rendered open by default for styling review."
           [defaultValue]="meetingDate"
           [opened]="true"
         ></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
     props: {
       meetingDate: new Date(2026, 7, 26),
@@ -134,9 +133,9 @@ export const OpenedCalendar: Story = {
 export const StaticReadOnly: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker label="Static ReadOnly Review" [value]="reviewDate" [readOnly]="true"></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
     props: {
       reviewDate: new Date(2026, 4, 21),
@@ -147,14 +146,14 @@ export const StaticReadOnly: Story = {
 export const EditableReadOnly: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 320px;">
+      <div style="width: 320px;">
         <rec-date-picker
           label="Editable ReadOnly Review"
           [defaultValue]="reviewDate"
           [readOnly]="true"
           [labelWithEditIcon]="true"
         ></rec-date-picker>
-      </rec-stack>
+      </div>
     `,
     props: {
       reviewDate: new Date(2026, 5, 1),

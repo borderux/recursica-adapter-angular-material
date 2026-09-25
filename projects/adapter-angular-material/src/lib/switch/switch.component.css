@@ -156,7 +156,9 @@
 }
 
 .thumb {
-  transition: background-color 150ms ease;
+  transition:
+    background-color 150ms ease,
+    margin-inline-start 150ms ease;
 }
 
 :host-context([data-recursica-theme]) .thumb {
@@ -179,6 +181,14 @@
   background-color: var(
     --recursica_ui-kit_components_switch_variants_selection-states_selected_properties_colors_thumb-color
   );
+  /*
+   * HARDCODE: no track/thumb-width-derived "slide distance" token exists —
+   * `.track`'s `display: flex` lays the thumb out at the start by default,
+   * so pushing it to the end via `margin-inline-start: auto` (rather than a
+   * computed `translateX`) needs no token, just the track's own flex
+   * layout it already has.
+   */
+  margin-inline-start: auto;
 }
 
 .thumbIconWrapper {
@@ -220,7 +230,17 @@
   );
 }
 
-/* Checked state: check icon visible, close icon hidden. */
+/*
+ * Checked state: check icon visible, close icon hidden. Each selector
+ * below is deliberately kept on one line, not split across several —
+ * Angular's `ViewEncapsulation.Emulated` selector-scoping transform
+ * mis-scopes a selector chain split one-token-per-line (confirmed live:
+ * every token except the last ends up with no `[_ngcontent-*]` attribute
+ * of its own, instead emitting it as a separate, unscoped descendant
+ * step — silently breaking the rule's specificity against the base
+ * unchecked-state declaration above). The working `.track`/`.thumb`
+ * background-color rules above are single-line for the same reason.
+ */
 :host-context([data-recursica-theme])
   .root
   input:checked

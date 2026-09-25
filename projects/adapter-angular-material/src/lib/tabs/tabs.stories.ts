@@ -4,7 +4,6 @@ import { TabsComponent } from "./tabs.component";
 import { TabsListComponent } from "./tabs-list.component";
 import { TabComponent } from "./tabs-tab.component";
 import { TabPanelComponent } from "./tabs-panel.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -23,7 +22,6 @@ const meta: Meta<TabsComponent> = {
         TabsListComponent,
         TabComponent,
         TabPanelComponent,
-        StackComponent,
       ],
     }),
   ],
@@ -53,7 +51,7 @@ type Story = StoryObj<TabsComponent>;
  * rendered as an empty `<span>` until switched to this approach.
  */
 const template = `
-  <rec-stack style="width: 600px;">
+  <div style="width: 600px;">
     <rec-tabs [variant]="variant" [orientation]="orientation" [inverted]="inverted" defaultValue="gallery">
       <rec-tabs-list>
         <rec-tabs-tab value="gallery" [leftSection]="galleryTpl">Gallery</rec-tabs-tab>
@@ -75,7 +73,7 @@ const template = `
       <rec-tabs-panel value="messages">Messages tab content</rec-tabs-panel>
       <rec-tabs-panel value="settings">Settings tab content</rec-tabs-panel>
     </rec-tabs>
-  </rec-stack>
+  </div>
 `;
 
 export const Default: Story = {
@@ -146,7 +144,7 @@ export const Inverted: Story = {
 export const OverStyledEscapeHatch: Story = {
   render: () => ({
     template: `
-      <rec-stack style="width: 600px;">
+      <div style="width: 600px;">
         <rec-tabs defaultValue="one" [overStyled]="true" [overStyle]="{ 'border-bottom': '2px solid #2962ff' }">
           <rec-tabs-list>
             <rec-tabs-tab value="one">One</rec-tabs-tab>
@@ -155,7 +153,7 @@ export const OverStyledEscapeHatch: Story = {
           <rec-tabs-panel value="one">First panel.</rec-tabs-panel>
           <rec-tabs-panel value="two">Second panel.</rec-tabs-panel>
         </rec-tabs>
-      </rec-stack>
+      </div>
     `,
   }),
 };
