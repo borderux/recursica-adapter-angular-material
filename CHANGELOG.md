@@ -1,5 +1,11 @@
 # @recursica/adapter-angular-material
 
+## 0.4.1
+
+### Patch Changes
+
+- 61eb35f: Fixed accordion
+
 ## 0.4.0
 
 ### Minor Changes
