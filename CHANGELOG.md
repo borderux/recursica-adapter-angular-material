@@ -1,5 +1,11 @@
 # @recursica/adapter-angular-material
 
+## 0.5.0
+
+### Minor Changes
+
+- 679089a: Added Container and fixed tabs and stepper
+
 ## 0.4.1
 
 ### Patch Changes
