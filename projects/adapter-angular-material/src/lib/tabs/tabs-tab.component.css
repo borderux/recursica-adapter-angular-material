@@ -73,33 +73,23 @@
 --------------------------------- */
 
 :host-context([data-variant="default"]) .tab {
-  --tabs-element-gap: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_element-gap
-  );
+  --tabs-element-gap: var(--recursica_ui-kit_components_tabs-item_variants_styles_default_properties_element-gap);
   --tabs-horizontal-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_horizontal-padding
   );
   --tabs-vertical-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_vertical-padding
   );
-  --tabs-icon-size: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_icon-size
-  );
-  --tabs-min-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_min-width
-  );
-  --tabs-max-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_max-width
-  );
+  --tabs-icon-size: var(--recursica_ui-kit_components_tabs-item_variants_styles_default_properties_icon-size);
+  --tabs-min-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_default_properties_min-width);
+  --tabs-max-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_default_properties_max-width);
   --tabs-active-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_border-size
   );
   --tabs-inactive-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
   );
-  --tabs-border-radius: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_properties_border-radius
-  );
+  --tabs-border-radius: var(--recursica_ui-kit_components_tabs-item_variants_styles_default_properties_border-radius);
 }
 :host-context([data-variant="default"][data-orientation="horizontal"]) .tab {
   --tabs-content-alignment: var(
@@ -113,33 +103,23 @@
 }
 
 :host-context([data-variant="outline"]) .tab {
-  --tabs-element-gap: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_element-gap
-  );
+  --tabs-element-gap: var(--recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_element-gap);
   --tabs-horizontal-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_horizontal-padding
   );
   --tabs-vertical-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_vertical-padding
   );
-  --tabs-icon-size: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_icon-size
-  );
-  --tabs-min-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_min-width
-  );
-  --tabs-max-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_max-width
-  );
+  --tabs-icon-size: var(--recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_icon-size);
+  --tabs-min-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_min-width);
+  --tabs-max-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_max-width);
   --tabs-active-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_border-size
   );
   --tabs-inactive-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
   );
-  --tabs-border-radius: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_border-radius
-  );
+  --tabs-border-radius: var(--recursica_ui-kit_components_tabs-item_variants_styles_outline_properties_border-radius);
 }
 :host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
   --tabs-content-alignment: var(
@@ -153,33 +133,23 @@
 }
 
 :host-context([data-variant="pills"]) .tab {
-  --tabs-element-gap: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_element-gap
-  );
+  --tabs-element-gap: var(--recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_element-gap);
   --tabs-horizontal-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_horizontal-padding
   );
   --tabs-vertical-padding: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_vertical-padding
   );
-  --tabs-icon-size: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_icon-size
-  );
-  --tabs-min-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_min-width
-  );
-  --tabs-max-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_max-width
-  );
+  --tabs-icon-size: var(--recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_icon-size);
+  --tabs-min-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_min-width);
+  --tabs-max-width: var(--recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_max-width);
   --tabs-active-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_border-size
   );
   --tabs-inactive-border-size: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_border-size
   );
-  --tabs-border-radius: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_border-radius
-  );
+  --tabs-border-radius: var(--recursica_ui-kit_components_tabs-item_variants_styles_pills_properties_border-radius);
 }
 :host-context([data-variant="pills"][data-orientation="horizontal"]) .tab {
   --tabs-content-alignment: var(
@@ -204,14 +174,8 @@
 :host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
   border-radius: var(--tabs-border-radius) var(--tabs-border-radius) 0 0;
 }
-:host-context(
-    [data-variant="default"][data-orientation="horizontal"][data-inverted]
-  )
-  .tab,
-:host-context(
-    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
-  )
-  .tab {
+:host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .tab,
+:host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .tab {
   border-radius: 0 0 var(--tabs-border-radius) var(--tabs-border-radius);
 }
 :host-context([data-variant="default"][data-orientation="vertical"]) .tab,
@@ -237,14 +201,8 @@
   border-bottom-width: var(--tabs-active-border-size);
   border-bottom-color: transparent;
 }
-:host-context(
-    [data-variant="default"][data-orientation="horizontal"][data-inverted]
-  )
-  .tab,
-:host-context(
-    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
-  )
-  .tab {
+:host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .tab,
+:host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .tab {
   border-bottom-style: none;
   border-top-style: solid;
   border-top-width: var(--tabs-active-border-size);
@@ -262,8 +220,7 @@
 --------------------------------- */
 
 /* Default variant */
-:host-context([data-recursica-theme]):host-context([data-variant="default"])
-  .tab {
+:host-context([data-recursica-theme]):host-context([data-variant="default"]) .tab {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_background-color
   );
@@ -298,8 +255,7 @@
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_text_text-transform
   );
 }
-:host-context([data-recursica-theme]):host-context([data-variant="default"])
-  .tab[data-active] {
+:host-context([data-recursica-theme]):host-context([data-variant="default"]) .tab[data-active] {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_active_properties_colors_background-color
   );
@@ -342,8 +298,7 @@
 }
 
 /* Outline variant */
-:host-context([data-recursica-theme]):host-context([data-variant="outline"])
-  .tab {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"]) .tab {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_background-color
   );
@@ -378,8 +333,7 @@
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_text_text-transform
   );
 }
-:host-context([data-recursica-theme]):host-context([data-variant="outline"])
-  .tab[data-active] {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"]) .tab[data-active] {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_active_properties_colors_background-color
   );
@@ -420,8 +374,7 @@
 }
 
 /* Pills variant */
-:host-context([data-recursica-theme]):host-context([data-variant="pills"])
-  .tab {
+:host-context([data-recursica-theme]):host-context([data-variant="pills"]) .tab {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_colors_background-color
   );
@@ -460,8 +413,7 @@
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_inactive_properties_text_text-transform
   );
 }
-:host-context([data-recursica-theme]):host-context([data-variant="pills"])
-  .tab[data-active] {
+:host-context([data-recursica-theme]):host-context([data-variant="pills"]) .tab[data-active] {
   background-color: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_pills_variants_selection-states_active_properties_colors_background-color
   );
@@ -525,9 +477,7 @@
 }
 :host-context([data-recursica-theme]) .tab:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }

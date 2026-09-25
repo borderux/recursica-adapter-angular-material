@@ -59,6 +59,7 @@ export { StackComponent } from "./stack/stack.component";
 export { GroupComponent } from "./group/group.component";
 export { GridComponent } from "./grid/grid.component";
 export { GridColComponent } from "./grid/grid-col.component";
+export { ContainerComponent } from "./container/container.component";
 export { PopoverComponent } from "./popover/popover.component";
 export { PopoverTargetComponent } from "./popover/popover-target.component";
 export { PopoverDropdownComponent } from "./popover/popover-dropdown.component";

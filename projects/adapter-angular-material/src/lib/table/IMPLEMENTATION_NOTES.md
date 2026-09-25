@@ -98,6 +98,86 @@ coverage would be speculative scope, the same reasoning `Modal`'s/
 `HoverCard`'s own granular sub-components were skipped for elsewhere in
 this adapter.
 
+## Real bug found 2026-09-25: chained `:host-context()` silently drops the whole rule when the second argument is an element type
+
+Matt reported "row height is not correct at all" and "table looks different
+than mantine". Two distinct, compounding bugs, both found via live
+Playwright verification against a running Mantine reference on port 6011
+(not from reading source):
+
+1. **Wrong padding token.** `table-td.component.css`'s base `:host`
+   rule used `--recursica_ui-kit_components_table_properties_row-padding`/
+   `_padding` — both hardcoded to `--recursica_brand_dimensions_general_none`
+   (`0`) in `recursica_variables_scoped.css`. The reference's own
+   `Table.module.css` also has this exact zero-padding rule (§1, a shared
+   baseline for `th`+`td`), but then overrides it for body cells with a
+   _more specific_ `.root tbody td` rule (§4) using the real
+   `table-cell_properties_padding-vertical`/`-horizontal` tokens (mapped to
+   non-zero globals). This adapter's `table-th`/`table-tfoot` cell CSS
+   already used the correct final tokens directly; `table-td` (body cells)
+   never got the §4 override ported at all — cells silently sat at the §1
+   zero-padding baseline forever. Fixed by pointing the base rule at the
+   correct tokens directly (no cascade-override step needed here, since
+   each sub-component owns its own non-overlapping `:host`).
+
+2. **A structural Angular compiler bug, much bigger than the padding fix.**
+   Independently, the `SelectedAndDisabledRows` story's disabled row
+   (`rec-table-tr[disabled]`) rendered with zero visual difference —
+   `opacity: 1`, no dimming — despite `data-disabled="true"` being correctly
+   set on the DOM and the CSS rule looking correct in source. Root-caused by
+   grepping the actual **compiled** `<style>` tag content (not just
+   `document.styleSheets`, which silently omits rules the browser failed to
+   parse): any rule shaped `:host-context(A):host-context(B)` — two chained
+   `:host-context()` calls, not one compound selector — where `B` is (or
+   starts with) an element type selector (`rec-table-tr[data-disabled]`,
+   `rec-table-tfoot`) compiles to a **syntactically invalid** candidate
+   selector. Confirmed two different failure shapes depending on structure:
+
+   - Flat chain: concatenates the first context's attribute directly against
+     the second context's type name with no combinator —
+     `[data-recursica-theme]rec-table-tr[data-disabled]` (an attribute
+     selector immediately before a type selector, illegal — a type selector
+     must come first in a compound selector).
+   - Nested (`:host-context(A) { :host-context(B) {} }`): leaks Angular's own
+     internal `ShadowCss` sentinel string, `-shadowcsshost-no-combinator`,
+     directly into the compiled CSS.
+   - Two chained contexts both starting with element types (`rec-table-tfoot`
+     - `rec-table-tr[data-disabled]`): concatenates the two type names with
+       no separator — `rec-table-tfootrec-table-tr[data-disabled]` (two type
+       selectors can never share one compound selector).
+
+   Since these live inside a plain (non-forgiving) comma-separated selector
+   list, **one invalid candidate drops the entire rule** — not just the bad
+   variant. This affected 5 rules in this file alone (disabled — both body
+   and footer, the footer base/divider/currency rules) and was silently
+   eating the _entire_ `Table.Tfoot`-specific styling and both disabled-cell
+   states. It also affected two more files with the same chained-context
+   shape: `tabs-list.component.css` (4 rules, all `[data-inverted]`
+   variants — fixed via CSS nesting, since those chains are attribute-only
+   on both sides and nesting alone resolved them) and — separately —
+   confirmed present in principle wherever a similar shape exists project-wide
+   (grepped: only these 2 components use this pattern at all).
+
+   **Fix applied here**: dropped the redundant `:host-context([data-recursica-theme])`
+   prefix from every rule that also needs an element-typed ancestor context,
+   leaving a single un-chained `:host-context(element[...])` — the same
+   shape the file's own (already-working) striped/selected/hover rules use.
+   `--recursica_*` custom properties still resolve correctly via ordinary
+   CSS inheritance regardless of whether this specific selector re-asserts
+   the `[data-recursica-theme]` gate. **One case intentionally left broken**
+   (documented inline at the bottom of `table-td.component.css`): a footer
+   cell whose _row_ (not the cell itself) is disabled — chaining
+   `rec-table-tfoot` and `rec-table-tr[data-disabled]` together hits the
+   two-type-names-concatenated failure with no simple single-context
+   workaround. No story exercises this combination; falls back to the
+   plain body-cell disabled styling rather than nothing.
+
+   **How to apply elsewhere**: before writing `:host-context(A):host-context(B)`
+   in any component CSS in this adapter, check whether `B` is or starts with
+   an element type selector. If so, don't chain — verify live (grep the
+   compiled `<style>` tag text for the selector substring, not just
+   "looks right" in a screenshot) rather than trusting the source.
+
 ## Verification
 
 **Real signal, this session**: fresh `ng build`, `tsc --noEmit`, and

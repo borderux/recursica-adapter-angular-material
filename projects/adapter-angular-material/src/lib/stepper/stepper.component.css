@@ -33,12 +33,8 @@
    SIZES — mirrors the source-of-truth's `.large`/`.small` blocks.
 --------------------------------- */
 :host-context([data-recursica-theme]) .root[data-size="large"] {
-  --stepper-icon-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size
-  );
-  --stepper-indicator-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size
-  );
+  --stepper-icon-size: var(--recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size);
+  --stepper-indicator-size: var(--recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-size);
   --stepper-border-size: var(
     --recursica_ui-kit_components_stepper_variants_sizes_large_properties_indicator-border-size
   );
@@ -69,18 +65,12 @@
   --stepper-text-transform: var(
     --recursica_ui-kit_components_stepper_variants_sizes_large_properties_step-number-text_text-transform
   );
-  --stepper-svg-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_large_properties_completed-icon-size
-  );
+  --stepper-svg-size: var(--recursica_ui-kit_components_stepper_variants_sizes_large_properties_completed-icon-size);
 }
 
 :host-context([data-recursica-theme]) .root[data-size="small"] {
-  --stepper-icon-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size
-  );
-  --stepper-indicator-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size
-  );
+  --stepper-icon-size: var(--recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size);
+  --stepper-indicator-size: var(--recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-size);
   --stepper-border-size: var(
     --recursica_ui-kit_components_stepper_variants_sizes_small_properties_indicator-border-size
   );
@@ -111,9 +101,7 @@
   --stepper-text-transform: var(
     --recursica_ui-kit_components_stepper_variants_sizes_small_properties_step-number-text_text-transform
   );
-  --stepper-svg-size: var(
-    --recursica_ui-kit_components_stepper_variants_sizes_small_properties_completed-icon-size
-  );
+  --stepper-svg-size: var(--recursica_ui-kit_components_stepper_variants_sizes_small_properties_completed-icon-size);
 }
 
 /* ---------------------------------
@@ -137,9 +125,7 @@
   .steps {
     flex-direction: row;
     align-items: flex-start;
-    --stepper-step-gap: var(
-      --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_step-gap
-    );
+    --stepper-step-gap: var(--recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_step-gap);
     --stepper-max-text-width: var(
       --recursica_ui-kit_components_stepper_variants_orientation_horizontal_properties_max-text-width
     );
@@ -155,9 +141,7 @@
 :host-context([data-recursica-theme]) .root[data-orientation="vertical"] {
   .steps {
     flex-direction: column;
-    --stepper-step-gap: var(
-      --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_step-gap
-    );
+    --stepper-step-gap: var(--recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_step-gap);
     --stepper-max-text-width: var(
       --recursica_ui-kit_components_stepper_variants_orientation_vertical_properties_max-text-width
     );

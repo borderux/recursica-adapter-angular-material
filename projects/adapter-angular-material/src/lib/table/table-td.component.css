@@ -17,111 +17,63 @@
 }
 
 :host-context([data-recursica-theme]) :host {
-  padding: var(--recursica_ui-kit_components_table_properties_row-padding)
-    var(--recursica_ui-kit_components_table_properties_padding);
-  border-bottom: var(
-      --recursica_ui-kit_components_table_properties_row-divider-size
-    )
-    solid
+  padding: var(--recursica_ui-kit_components_table-cell_properties_padding-vertical)
+    var(--recursica_ui-kit_components_table-cell_properties_padding-horizontal);
+  border-bottom: var(--recursica_ui-kit_components_table_properties_row-divider-size) solid
     var(--recursica_ui-kit_components_table_properties_colors_row-divider-color);
 
-  background-color: var(
-    --recursica_ui-kit_components_table-cell_properties_colors_cell-color
-  );
-  color: var(
-    --recursica_ui-kit_components_table-cell_properties_colors_text-color
-  );
-  font-family: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_line-height
-  );
-  text-align: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_text-align
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_table-cell_properties_text-style_text-transform
-  );
+  background-color: var(--recursica_ui-kit_components_table-cell_properties_colors_cell-color);
+  color: var(--recursica_ui-kit_components_table-cell_properties_colors_text-color);
+  font-family: var(--recursica_ui-kit_components_table-cell_properties_text-style_font-family);
+  font-size: var(--recursica_ui-kit_components_table-cell_properties_text-style_font-size);
+  font-style: var(--recursica_ui-kit_components_table-cell_properties_text-style_font-style);
+  font-weight: var(--recursica_ui-kit_components_table-cell_properties_text-style_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_table-cell_properties_text-style_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_table-cell_properties_text-style_line-height);
+  text-align: var(--recursica_ui-kit_components_table-cell_properties_text-style_text-align);
+  text-decoration: var(--recursica_ui-kit_components_table-cell_properties_text-style_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_table-cell_properties_text-style_text-transform);
 }
 
 /* Reproduces the reference's own `.root th + th`/`.root td + td` adjacent-sibling divider —
    see table-th.component.css's identical rule for why `:not(:first-child)` on `:host()`
    is the right translation of a same-component adjacent-sibling selector. */
 :host-context([data-recursica-theme]) :host(:not(:first-child)) {
-  border-left: var(
-      --recursica_ui-kit_components_table_properties_column-divider-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_table_properties_colors_column-divider-color
-    );
+  border-left: var(--recursica_ui-kit_components_table_properties_column-divider-size) solid
+    var(--recursica_ui-kit_components_table_properties_colors_column-divider-color);
 }
 
 /* Currency formatted cell */
 :host-context([data-recursica-theme]) :host([data-currency="true"]) {
-  font-family: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_line-height
-  );
-  text-align: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_text-align
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_table-cell_properties_currency-style_font-family);
+  font-size: var(--recursica_ui-kit_components_table-cell_properties_currency-style_font-size);
+  font-style: var(--recursica_ui-kit_components_table-cell_properties_currency-style_font-style);
+  font-weight: var(--recursica_ui-kit_components_table-cell_properties_currency-style_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_table-cell_properties_currency-style_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_table-cell_properties_currency-style_line-height);
+  text-align: var(--recursica_ui-kit_components_table-cell_properties_currency-style_text-align);
+  text-decoration: var(--recursica_ui-kit_components_table-cell_properties_currency-style_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_table-cell_properties_currency-style_text-transform);
 }
 
-/* Disabled — either this cell's own [disabled], or the ancestor <tr>'s [data-disabled].
-   Two chained :host-context() calls (not one compound selector) — each is tested
-   independently against the ancestor chain, so this matches when both an ancestor with
-   [data-recursica-theme] AND an ancestor <tr> with [data-disabled] exist, regardless of
-   their relative position to each other. */
-:host-context([data-recursica-theme]) :host([data-disabled="true"]),
-:host-context([data-recursica-theme]):host-context(
-    rec-table-tr[data-disabled]
-  ) {
-  background-color: var(
-    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_cell-color
-  );
-  color: var(
-    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_text-color
-  );
-  opacity: var(
-    --recursica_ui-kit_components_table-cell_variants_states_disabled_properties_opacity
-  );
+/* Disabled — either this cell's own [disabled], or the ancestor <tr>'s [data-disabled]. No
+   `:host-context([data-recursica-theme])` gate here — confirmed live that Angular's
+   Emulated-encapsulation compiler cannot chain a second `:host-context()`/nest a `:host()` whose
+   argument is (or starts with) an element type selector (`rec-table-tr[data-disabled]`) onto a
+   `:host-context([data-recursica-theme])` prefix: both a flat `:host-context(A):host-context(B)`
+   chain and a nested `:host-context(A) { :host-context(B) {} }` block produced invalid output
+   (a `-shadowcsshost-no-combinator` internal placeholder leaking into the compiled CSS, or an
+   attribute selector directly adjacent to a type selector — either way the whole rule silently
+   dropped, confirmed by grepping the compiled `<style>` text). Same reason the sibling
+   striped/selected/hover rules below already omit the gate — matching that already-working
+   precedent rather than reintroducing the broken chain. `--recursica_*` custom properties still
+   resolve correctly via ordinary CSS inheritance from `[data-recursica-theme]` on `<html>`; the
+   gate is a belt-and-suspenders existence check, not load-bearing for inheritance. */
+:host([data-disabled="true"]),
+:host-context(rec-table-tr[data-disabled]) {
+  background-color: var(--recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_cell-color);
+  color: var(--recursica_ui-kit_components_table-cell_variants_states_disabled_properties_colors_text-color);
+  opacity: var(--recursica_ui-kit_components_table-cell_variants_states_disabled_properties_opacity);
 }
 
 /* Striped (even) rows — ancestor <tr> position, crossing TableTrComponent's own boundary. */
@@ -129,12 +81,7 @@
   background-color: color-mix(
     in srgb,
     var(--recursica_ui-kit_components_table_properties_colors_striped-color)
-      calc(
-        var(
-            --recursica_ui-kit_components_table_properties_opacities_striped-opacity
-          ) *
-          100%
-      ),
+      calc(var(--recursica_ui-kit_components_table_properties_opacities_striped-opacity) * 100%),
     transparent
   );
 }
@@ -144,12 +91,7 @@
   background-color: color-mix(
     in srgb,
     var(--recursica_ui-kit_components_table_properties_colors_selected-color)
-      calc(
-        var(
-            --recursica_ui-kit_components_table_properties_opacities_selected-opacity
-          ) *
-          100%
-      ),
+      calc(var(--recursica_ui-kit_components_table_properties_opacities_selected-opacity) * 100%),
     transparent
   );
 }
@@ -159,8 +101,7 @@
 :host-context(rec-table-tr:hover) {
   background-color: color-mix(
     in srgb,
-    var(--recursica_brand_states_hover_color)
-      calc(var(--recursica_brand_states_hover_opacity) * 100%),
+    var(--recursica_brand_states_hover_color) calc(var(--recursica_brand_states_hover_opacity) * 100%),
     transparent
   );
 }
@@ -172,119 +113,67 @@
    cells specifically, reproducing the reference's own `.root tfoot td` rule set.
    ========================================== */
 
-:host-context([data-recursica-theme]):host-context(rec-table-tfoot) {
-  background-color: var(
-    --recursica_ui-kit_components_table-footer_properties_colors_cell-color
-  );
-  color: var(
-    --recursica_ui-kit_components_table-footer_properties_colors_text-color
-  );
-  padding: var(
-      --recursica_ui-kit_components_table-footer_properties_padding-vertical
-    )
-    var(
-      --recursica_ui-kit_components_table-footer_properties_padding-horizontal
-    );
-  margin-top: var(
-    --recursica_ui-kit_components_table-footer_properties_vertical-margin
-  );
-  margin-bottom: var(
-    --recursica_ui-kit_components_table-footer_properties_vertical-margin
-  );
+/* No `[data-recursica-theme]` gate chained on — see the DISABLED rule above for why chaining a
+   second `:host-context()`/nesting a `:host()` whose argument starts with an element type
+   selector (`rec-table-tfoot`) onto that gate silently drops the whole rule. */
+:host-context(rec-table-tfoot) {
+  background-color: var(--recursica_ui-kit_components_table-footer_properties_colors_cell-color);
+  color: var(--recursica_ui-kit_components_table-footer_properties_colors_text-color);
+  padding: var(--recursica_ui-kit_components_table-footer_properties_padding-vertical)
+    var(--recursica_ui-kit_components_table-footer_properties_padding-horizontal);
+  margin-top: var(--recursica_ui-kit_components_table-footer_properties_vertical-margin);
+  margin-bottom: var(--recursica_ui-kit_components_table-footer_properties_vertical-margin);
   border-bottom: none;
-  border-top: var(
-      --recursica_ui-kit_components_table-footer_properties_horizontal-divider-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_table-footer_properties_colors_horizontal-divider-color
-    );
+  border-top: var(--recursica_ui-kit_components_table-footer_properties_horizontal-divider-size) solid
+    var(--recursica_ui-kit_components_table-footer_properties_colors_horizontal-divider-color);
 
-  font-family: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_table-footer_properties_text-style_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_table-footer_properties_text-style_font-family);
+  font-size: var(--recursica_ui-kit_components_table-footer_properties_text-style_font-size);
+  font-style: var(--recursica_ui-kit_components_table-footer_properties_text-style_font-style);
+  font-weight: var(--recursica_ui-kit_components_table-footer_properties_text-style_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_table-footer_properties_text-style_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_table-footer_properties_text-style_line-height);
+  text-decoration: var(--recursica_ui-kit_components_table-footer_properties_text-style_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_table-footer_properties_text-style_text-transform);
 }
 
-:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
-    :not(:first-child)
-  ) {
-  border-left: var(
-      --recursica_ui-kit_components_table-footer_properties_vertical-divider-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_table-footer_properties_colors_vertical-divider-color
-    );
+:host-context(rec-table-tfoot):host(:not(:first-child)) {
+  border-left: var(--recursica_ui-kit_components_table-footer_properties_vertical-divider-size) solid
+    var(--recursica_ui-kit_components_table-footer_properties_colors_vertical-divider-color);
 }
 
-:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
-    [data-currency="true"]
-  ) {
-  font-family: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_line-height
-  );
+:host-context(rec-table-tfoot):host([data-currency="true"]) {
+  font-family: var(--recursica_ui-kit_components_table-footer_properties_currency-style_font-family);
+  font-size: var(--recursica_ui-kit_components_table-footer_properties_currency-style_font-size);
+  font-style: var(--recursica_ui-kit_components_table-footer_properties_currency-style_font-style);
+  font-weight: var(--recursica_ui-kit_components_table-footer_properties_currency-style_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_table-footer_properties_currency-style_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_table-footer_properties_currency-style_line-height);
   /* No table-footer currency-style text-align token exists; reuse the table-cell one, matching
      the reference's own identical reuse (see Table.module.css's own comment for this rule). */
-  text-align: var(
-    --recursica_ui-kit_components_table-cell_properties_currency-style_text-align
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_table-footer_properties_currency-style_text-transform
-  );
+  text-align: var(--recursica_ui-kit_components_table-cell_properties_currency-style_text-align);
+  text-decoration: var(--recursica_ui-kit_components_table-footer_properties_currency-style_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_table-footer_properties_currency-style_text-transform);
 }
 
-:host-context([data-recursica-theme]):host-context(rec-table-tfoot):host(
-    [data-disabled="true"]
-  ),
-:host-context([data-recursica-theme]):host-context(
-    rec-table-tfoot
-  ):host-context(rec-table-tr[data-disabled]) {
+:host-context(rec-table-tfoot):host([data-disabled="true"]) {
   background-color: var(
     --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_colors_cell-color
   );
-  color: var(
-    --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_colors_text-color
-  );
-  opacity: var(
-    --recursica_ui-kit_components_table-footer_variants_states_disabled_properties_opacity
-  );
+  color: var(--recursica_ui-kit_components_table-footer_variants_states_disabled_properties_colors_text-color);
+  opacity: var(--recursica_ui-kit_components_table-footer_variants_states_disabled_properties_opacity);
 }
+
+/* KNOWN LIMITATION: a footer cell whose *row* (not the cell itself) is disabled — i.e.
+   `<rec-table-tr disabled>` inside `<rec-table-tfoot>` — cannot currently be styled with the
+   footer-specific disabled tokens. Chaining two `:host-context()` calls that both start with an
+   element type selector (`rec-table-tfoot` and `rec-table-tr[data-disabled]`) produces an
+   Angular-compiler-generated candidate that concatenates the two type names directly
+   (`rec-table-tfootrec-table-tr[data-disabled]`, invalid CSS — two type selectors can't share one
+   compound), which drops the whole rule. No current story exercises this combination (untested,
+   not reported); falls back to the plain body-cell disabled styling above (`:host-context(
+   rec-table-tr[data-disabled])`) instead of doing nothing, since that rule has no `rec-table-tfoot`
+   dependency and still matches. Revisit if a story ever needs this exact combination — likely needs
+   restructuring to avoid a two-element-type `:host-context()` chain entirely (e.g. a host-bound
+   `[attr.data-footer]` set directly by `TableTdComponent` from an injected tfoot context, rather
+   than an ancestor CSS lookup). */

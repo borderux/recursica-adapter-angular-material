@@ -37,10 +37,7 @@
    reserves space for in its own transparent, non-active border — see
    `tabs-tab.component.css`'s "ACTIVE-STATE UNDERLINE" section).
 --------------------------------- */
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="horizontal"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="default"][data-orientation="horizontal"]) .list {
   border-bottom-style: solid;
   border-bottom-width: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
@@ -49,23 +46,23 @@
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_border-color
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="horizontal"][data-inverted]
-  )
-  .list {
-  border-bottom-style: none;
-  border-top-style: solid;
-  border-top-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
-  );
-  border-top-color: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_border-color
-  );
+/* Nested (not a flat multi-line selector) — a chained `:host-context()` argument this long
+   silently fails to parse after Angular's selector-scoping rewrite when split across lines
+   (confirmed live: the whole rule vanishes from the compiled CSSOM, not just wraps awkwardly).
+   Nesting keeps every individual selector line short enough to survive on one line. */
+:host-context([data-recursica-theme]) {
+  :host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .list {
+    border-bottom-style: none;
+    border-top-style: solid;
+    border-top-width: var(
+      --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
+    );
+    border-top-color: var(
+      --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_colors_border-color
+    );
+  }
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="vertical"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="default"][data-orientation="vertical"]) .list {
   border-right-style: solid;
   border-right-width: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
@@ -75,10 +72,7 @@
   );
 }
 
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="horizontal"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"][data-orientation="horizontal"]) .list {
   border-bottom-style: solid;
   border-bottom-width: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
@@ -87,23 +81,20 @@
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_border-color
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
-  )
-  .list {
-  border-bottom-style: none;
-  border-top-style: solid;
-  border-top-width: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
-  );
-  border-top-color: var(
-    --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_border-color
-  );
+/* Nested — see the identical `default` variant rule above for why. */
+:host-context([data-recursica-theme]) {
+  :host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .list {
+    border-bottom-style: none;
+    border-top-style: solid;
+    border-top-width: var(
+      --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
+    );
+    border-top-color: var(
+      --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_colors_border-color
+    );
+  }
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="vertical"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"][data-orientation="vertical"]) .list {
   border-right-style: solid;
   border-right-width: var(
     --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
@@ -123,10 +114,7 @@
 }
 
 /* ---- Default variant ---- */
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="horizontal"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="default"][data-orientation="horizontal"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_default_variants_orientation_horizontal_properties_space-between-tabs
   );
@@ -135,19 +123,16 @@
     --recursica_ui-kit_components_tabs_variants_styles_default_variants_orientation_horizontal_properties_tabs-content-gap
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="horizontal"][data-inverted]
-  )
-  .list {
-  margin-bottom: 0;
-  margin-top: var(
-    --recursica_ui-kit_components_tabs_variants_styles_default_variants_orientation_horizontal_properties_tabs-content-gap
-  );
+/* Nested — see the divider rule above for why. */
+:host-context([data-recursica-theme]) {
+  :host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .list {
+    margin-bottom: 0;
+    margin-top: var(
+      --recursica_ui-kit_components_tabs_variants_styles_default_variants_orientation_horizontal_properties_tabs-content-gap
+    );
+  }
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="default"][data-orientation="vertical"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="default"][data-orientation="vertical"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_default_variants_orientation_vertical_properties_space-between-tabs
   );
@@ -157,10 +142,7 @@
 }
 
 /* ---- Outline variant ---- */
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="horizontal"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"][data-orientation="horizontal"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_outline_variants_orientation_horizontal_properties_space-between-tabs
   );
@@ -169,19 +151,16 @@
     --recursica_ui-kit_components_tabs_variants_styles_outline_variants_orientation_horizontal_properties_tabs-content-gap
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="horizontal"][data-inverted]
-  )
-  .list {
-  margin-bottom: 0;
-  margin-top: var(
-    --recursica_ui-kit_components_tabs_variants_styles_outline_variants_orientation_horizontal_properties_tabs-content-gap
-  );
+/* Nested — see the divider rule above for why. */
+:host-context([data-recursica-theme]) {
+  :host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .list {
+    margin-bottom: 0;
+    margin-top: var(
+      --recursica_ui-kit_components_tabs_variants_styles_outline_variants_orientation_horizontal_properties_tabs-content-gap
+    );
+  }
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="outline"][data-orientation="vertical"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="outline"][data-orientation="vertical"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_outline_variants_orientation_vertical_properties_space-between-tabs
   );
@@ -191,10 +170,7 @@
 }
 
 /* ---- Pills variant ---- */
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="pills"][data-orientation="horizontal"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="pills"][data-orientation="horizontal"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_pills_variants_orientation_horizontal_properties_space-between-tabs
   );
@@ -203,19 +179,14 @@
     --recursica_ui-kit_components_tabs_variants_styles_pills_variants_orientation_horizontal_properties_tabs-content-gap
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="pills"][data-orientation="horizontal"][data-inverted]
-  )
+:host-context([data-recursica-theme]):host-context([data-variant="pills"][data-orientation="horizontal"][data-inverted])
   .list {
   margin-bottom: 0;
   margin-top: var(
     --recursica_ui-kit_components_tabs_variants_styles_pills_variants_orientation_horizontal_properties_tabs-content-gap
   );
 }
-:host-context([data-recursica-theme]):host-context(
-    [data-variant="pills"][data-orientation="vertical"]
-  )
-  .list {
+:host-context([data-recursica-theme]):host-context([data-variant="pills"][data-orientation="vertical"]) .list {
   gap: var(
     --recursica_ui-kit_components_tabs_variants_styles_pills_variants_orientation_vertical_properties_space-between-tabs
   );
