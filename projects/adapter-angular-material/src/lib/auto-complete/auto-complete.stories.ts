@@ -112,14 +112,12 @@ export const WithLeadingIcon: Story = {
   render: () => ({
     template: `
       ${searchIconTemplate}
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Search Projects"
-          placeholder="Project name..."
-          [data]="data"
-          [leftSection]="searchIcon"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Search Projects"
+        placeholder="Project name..."
+        [data]="data"
+        [leftSection]="searchIcon"
+      ></rec-auto-complete>
     `,
     props: { data: ["Alpha", "Beta", "Gamma", "Delta", "Epsilon"] },
   }),
@@ -137,14 +135,12 @@ export const WithTrailingIcon: Story = {
   render: () => ({
     template: `
       ${checkIconTemplate}
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Validation URL"
-          placeholder="https://recursica.dev"
-          [data]="data"
-          [rightSection]="checkIcon"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Validation URL"
+        placeholder="https://recursica.dev"
+        [data]="data"
+        [rightSection]="checkIcon"
+      ></rec-auto-complete>
     `,
     props: {
       data: [
@@ -175,14 +171,12 @@ export const WithRichOptions: Story = {
   render: () => ({
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Assignee"
-          placeholder="Search team members..."
-          [data]="${richOptionsData}"
-          assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Assignee"
+        placeholder="Search team members..."
+        [data]="${richOptionsData}"
+        assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
+      ></rec-auto-complete>
     `,
   }),
 };
@@ -196,15 +190,13 @@ export const WithRichOptionsWrapped: Story = {
   render: () => ({
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Assignee"
-          placeholder="Search team members..."
-          [data]="${wrappedRichOptionsData}"
-          [wrapItemText]="true"
-          assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Assignee"
+        placeholder="Search team members..."
+        [data]="${wrappedRichOptionsData}"
+        [wrapItemText]="true"
+        assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
+      ></rec-auto-complete>
     `,
   }),
 };
@@ -280,14 +272,12 @@ export const RichOptionRowPreviewWrapped: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Disabled Deployment Node"
-          placeholder="Disabled primitive map..."
-          [data]="data"
-          [disabled]="true"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Disabled Deployment Node"
+        placeholder="Disabled primitive map..."
+        [data]="data"
+        [disabled]="true"
+      ></rec-auto-complete>
     `,
     props: { data: ["Node 1", "Node 2", "Node 3"] },
   }),
@@ -296,16 +286,14 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Cluster Failure"
-          placeholder="Failing component instance..."
-          [data]="data"
-          [defaultValue]="'Invalid Cluster'"
-          error="Critical runtime node disconnect detected traversing DOM architecture."
-          [required]="true"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Cluster Failure"
+        placeholder="Failing component instance..."
+        [data]="data"
+        [defaultValue]="'Invalid Cluster'"
+        error="Critical runtime node disconnect detected traversing DOM architecture."
+        [required]="true"
+      ></rec-auto-complete>
     `,
     props: { data: ["Cluster A", "Cluster B", "Cluster C"] },
   }),
@@ -314,15 +302,13 @@ export const ErrorState: Story = {
 export const StaticReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Static ReadOnly Review"
-          placeholder="Ignored..."
-          [data]="data"
-          [value]="'Explicitly Uneditable Bound Output'"
-          [readOnly]="true"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Static ReadOnly Review"
+        placeholder="Ignored..."
+        [data]="data"
+        [value]="'Explicitly Uneditable Bound Output'"
+        [readOnly]="true"
+      ></rec-auto-complete>
     `,
     props: { data: ["Option 1", "Option 2"] },
   }),
@@ -331,16 +317,14 @@ export const StaticReadOnly: Story = {
 export const EditableReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-auto-complete
-          label="Editable ReadOnly Review"
-          placeholder="Ignored until active..."
-          [data]="data"
-          [defaultValue]="'Waiting for Edit Execution'"
-          [readOnly]="true"
-          [labelWithEditIcon]="true"
-        ></rec-auto-complete>
-      </div>
+      <rec-auto-complete
+        label="Editable ReadOnly Review"
+        placeholder="Ignored until active..."
+        [data]="data"
+        [defaultValue]="'Waiting for Edit Execution'"
+        [readOnly]="true"
+        [labelWithEditIcon]="true"
+      ></rec-auto-complete>
     `,
     props: { data: ["Option 1", "Option 2"] },
   }),
