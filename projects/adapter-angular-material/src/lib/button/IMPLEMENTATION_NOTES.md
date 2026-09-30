@@ -126,6 +126,17 @@ Not part of `RecursicaButtonProps` (the React reference blocks Mantine's own
 `fullWidth` via `UNSUPPORTED_PROPS`). Same reasoning as `color` — never
 declared here.
 
+## `component`/polymorphism: not implemented (`PolymorphicAsLink` golden story excluded)
+
+The reference's `PolymorphicAsLink` story renders `Button` as a real `<a>`
+via Mantine's `createPolymorphicComponent` (`component="a"`). No component in
+this adapter supports polymorphic root-element swapping — same adapter-wide
+precedent `Avatar`/`Link`/`Text` already establish (see `link/IMPLEMENTATION_NOTES.md`'s
+identical note). This component's template root is a real `<button matButton>`
+(see class doc comment); making it conditionally render as `<a>` would need a
+structural rewrite, not a prop addition. Marked `exclude: true` in
+`adapter-tester.config.json` (2026-09-29) rather than built.
+
 ## `RecursicaOverStyled`
 
 `overStyled`/`overClass`/`overStyle` forward onto the wrapped

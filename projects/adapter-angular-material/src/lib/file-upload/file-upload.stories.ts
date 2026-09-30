@@ -15,6 +15,31 @@ function mockFile(name: string, size = 1024): File {
   return new File([new Uint8Array(size)], name);
 }
 
+/**
+ * Angular's template expression parser doesn't support arrow-function
+ * literals (`(file) => ({ file })`) inline in a binding — only property
+ * reads and method calls. These helpers live in real TypeScript, outside
+ * the template string, and are exposed to the template via `props` instead
+ * — same fix already applied in `file-input.stories.ts` (see that file's
+ * own doc comment); this file's own stories were written with the broken
+ * inline-arrow-function form despite the header comment above claiming to
+ * follow that convention, silently failing every story that used them
+ * (confirmed live: Angular JIT template compilation threw a `Parser Error`
+ * and the story never rendered at all, caught by `adapter-tester`'s
+ * `--divergence-only` run timing out on `page.waitForSelector` for
+ * `#storybook-root`, not by reading source).
+ */
+function toFileItems(files: File[]): RecursicaFileUploadItem[] {
+  return files.map((file) => ({ file }));
+}
+
+function removeFileItem(
+  items: RecursicaFileUploadItem[],
+  id: string,
+): RecursicaFileUploadItem[] {
+  return items.filter((item) => (item.id ?? item.file.name) !== id);
+}
+
 const meta: Meta<FileUploadComponent> = {
   title: "UI-Kit/FileUpload",
   component: FileUploadComponent,
@@ -42,12 +67,16 @@ export const Default: Story = {
           label="Upload Files"
           assistiveText="Max file size 5MB"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
-    props: { files: [] as RecursicaFileUploadItem[] },
+    props: {
+      files: [] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
+    },
   }),
 };
 
@@ -59,8 +88,8 @@ export const WithFiles: Story = {
           label="Upload Files"
           assistiveText="Max file size 5MB"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
@@ -70,6 +99,8 @@ export const WithFiles: Story = {
         { file: mockFile("image.png") },
         { file: mockFile("spreadsheet.xlsx") },
       ] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
     },
   }),
 };
@@ -81,12 +112,16 @@ export const EmptyState: Story = {
         <rec-file-upload
           label="Upload Files"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
-    props: { files: [] as RecursicaFileUploadItem[] },
+    props: {
+      files: [] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
+    },
   }),
 };
 
@@ -130,12 +165,16 @@ export const CustomIcon: Story = {
           label="Upload Files"
           [icon]="starIcon"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
-    props: { files: [] as RecursicaFileUploadItem[] },
+    props: {
+      files: [] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
+    },
   }),
 };
 
@@ -146,8 +185,8 @@ export const LongFilenames: Story = {
         <rec-file-upload
           label="Upload Files"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
@@ -161,6 +200,8 @@ export const LongFilenames: Story = {
         { file: mockFile("2026-08-team-offsite-photos-and-notes.zip") },
         { file: mockFile("resume.docx") },
       ] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
     },
   }),
 };
@@ -195,12 +236,16 @@ export const AcceptRestriction: Story = {
           assistiveText="Only .pdf and .png files are accepted"
           accept=".pdf,.png"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
-    props: { files: [] as RecursicaFileUploadItem[] },
+    props: {
+      files: [] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
+    },
   }),
 };
 
@@ -213,8 +258,8 @@ export const MaxFilesRestriction: Story = {
           assistiveText="Up to 2 files allowed"
           [maxFiles]="2"
           [files]="files"
-          (filesAdded)="files = files.concat($any($event).map((file) => ({ file })))"
-          (fileRemove)="files = files.filter((item) => (item.id ?? item.file.name) !== $event)"
+          (filesAdded)="files = files.concat(toFileItems($any($event)))"
+          (fileRemove)="files = removeFileItem(files, $event)"
         ></rec-file-upload>
       </div>
     `,
@@ -223,6 +268,8 @@ export const MaxFilesRestriction: Story = {
         { file: mockFile("document.pdf") },
         { file: mockFile("image.png") },
       ] as RecursicaFileUploadItem[],
+      toFileItems,
+      removeFileItem,
     },
   }),
 };

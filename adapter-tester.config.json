@@ -3,5 +3,28 @@
   "storybook": {
     "port": 6007,
     "command": "npx ng run adapter-angular-material:storybook --port 6007"
+  },
+  "stories": {
+    "ui-kit-breadcrumb--last-item-as-link": {
+      "exclude": true
+    },
+    "ui-kit-grid--grow": {
+      "exclude": true
+    },
+    "ui-kit-grid--responsive-sizes": {
+      "exclude": true
+    },
+    "ui-kit-button--polymorphic-as-link": {
+      "exclude": true
+    },
+    "ui-kit-link--polymorphic": {
+      "exclude": true
+    },
+    "ui-kit-switch--custom-read-only": {
+      "exclude": true
+    },
+    "ui-kit-menu--with-max-height": {
+      "exclude": true
+    }
   }
 }

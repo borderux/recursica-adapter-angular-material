@@ -11,6 +11,8 @@ export type RecursicaTextVariant =
   | "overline"
   | "subtitle"
   | "subtitle-small";
+export type RecursicaTextColor = "default" | "warning" | "alert" | "success";
+export type RecursicaTextEmphasis = "high" | "low";
 
 /**
  * Recursica `Text` — Angular Material adapter.
@@ -47,6 +49,8 @@ export type RecursicaTextVariant =
       class="root"
       [class]="resolvedTypographyClass"
       [style]="resolvedOverStyle.style"
+      [attr.data-color]="color"
+      [attr.data-emphasis]="emphasis"
     >
       <ng-content />
     </p>
@@ -54,6 +58,13 @@ export type RecursicaTextVariant =
 })
 export class TextComponent implements RecursicaOverStyled {
   @Input() variant: RecursicaTextVariant = "body";
+
+  /** Semantic text color, bound to the active layer's text-element tokens via `data-color` —
+   * same brand-layer mapping `heading.component.ts` uses. */
+  @Input() color: RecursicaTextColor = "default";
+
+  /** Emphasis level, bound to the theme's text-emphasis opacity tokens via `data-emphasis`. */
+  @Input() emphasis: RecursicaTextEmphasis = "high";
 
   @Input() overStyled = false;
   @Input() overClass?: string;

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/angular";
 import { moduleMetadata } from "@storybook/angular";
 import { FormControlLayoutComponent } from "./form-control-layout.component";
 import { LabelComponent } from "../label/label.component";
+import { SwitchComponent } from "../switch/switch.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -11,7 +12,9 @@ const meta: Meta<FormControlLayoutComponent> = {
   title: "UI-Kit/FormControlLayout",
   component: FormControlLayoutComponent,
   decorators: [
-    moduleMetadata({ imports: [FormControlLayoutComponent, LabelComponent] }),
+    moduleMetadata({
+      imports: [FormControlLayoutComponent, LabelComponent, SwitchComponent],
+    }),
   ],
   argTypes: {
     formLayout: { control: "radio", options: ["stacked", "side-by-side"] },
@@ -25,6 +28,30 @@ const meta: Meta<FormControlLayoutComponent> = {
 export default meta;
 
 type Story = StoryObj<FormControlLayoutComponent>;
+
+/**
+ * Mirrors the source-of-truth's own `Default` story: a standalone primitive
+ * (`Switch`, no label of its own) wrapped by a generic, non-`Label`
+ * `leftSection` — the raw dashed-border placeholder div is the reference's
+ * own literal story content (demonstrating that `leftSection` accepts any
+ * renderable node, not just `Label`), not layout chrome, so it's kept as a
+ * plain `<div>` rather than translated per the usual overstyling playbook.
+ */
+export const Default: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <ng-template #left>
+        <div style="padding: 8px; border: 1px dashed #ccc; background: #fafafa;">
+          Left Section Boundary
+        </div>
+      </ng-template>
+      <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize" [leftSection]="left">
+        <rec-switch label="Input area content"></rec-switch>
+      </rec-form-control-layout>
+    `,
+  }),
+};
 
 const withLabelTemplate = `
   <ng-template #left><rec-label [labelSize]="labelSize">A fairly long label to show the stacked-layout width cap in action</rec-label></ng-template>

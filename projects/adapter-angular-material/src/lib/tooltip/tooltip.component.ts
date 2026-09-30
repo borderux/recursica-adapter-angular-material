@@ -1,5 +1,17 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { MatTooltipModule, TooltipPosition } from "@angular/material/tooltip";
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import {
+  MatTooltip,
+  MatTooltipModule,
+  TooltipPosition,
+} from "@angular/material/tooltip";
 import { RecursicaOverStyled } from "../utils/recursica-over-styled";
 
 export type RecursicaTooltipPosition = "top" | "bottom" | "left" | "right";
@@ -93,6 +105,7 @@ const POSITION_MAP: Record<RecursicaTooltipPosition, TooltipPosition> = {
   styleUrl: "./tooltip.component.css",
   template: `
     <span
+      #tooltip="matTooltip"
       class="root"
       [matTooltip]="label"
       [matTooltipDisabled]="disabled"
@@ -105,7 +118,9 @@ const POSITION_MAP: Record<RecursicaTooltipPosition, TooltipPosition> = {
     </span>
   `,
 })
-export class TooltipComponent implements RecursicaOverStyled {
+export class TooltipComponent
+  implements RecursicaOverStyled, AfterViewInit, OnChanges
+{
   @Input() label = "";
   @Input() position: RecursicaTooltipPosition = "top";
   @Input() disabled = false;
@@ -115,8 +130,24 @@ export class TooltipComponent implements RecursicaOverStyled {
   /** Visual beak/arrow pointing at the trigger. Defaults to `true`, matching the mantine-adapter's own default. */
   @Input() withBeak = true;
 
+  /**
+   * Forces the tooltip open/closed, bypassing real hover/focus — matches the
+   * reference's own `opened` prop, used by its `LongContent` story to
+   * capture a static screenshot of wrapped tooltip text without simulating a
+   * real hover. `MatTooltip` has no equivalent declarative input, only
+   * imperative `show()`/`hide()` methods — called from `ngAfterViewInit`/
+   * `ngOnChanges`, guarded by a `viewInitialized` flag so a caller who sets
+   * `[opened]="true"` from the start doesn't call `show()` before the
+   * `@ViewChild` resolves (same ordering hazard `rec-modal` already hit —
+   * see that component's own fix).
+   */
+  @Input() opened?: boolean;
+
   @Input() overStyled = false;
   @Input() overClass?: string;
+
+  @ViewChild("tooltip") private readonly tooltip?: MatTooltip;
+  private viewInitialized = false;
 
   get materialPosition(): TooltipPosition {
     return POSITION_MAP[this.position];
@@ -128,5 +159,25 @@ export class TooltipComponent implements RecursicaOverStyled {
     if (this.withBeak) classes.push("rec-tooltip-beak");
     if (this.overStyled && this.overClass) classes.push(this.overClass);
     return classes.join(" ");
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    this.applyOpened();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["opened"]) {
+      this.applyOpened();
+    }
+  }
+
+  private applyOpened(): void {
+    if (!this.viewInitialized || this.opened === undefined) return;
+    if (this.opened) {
+      this.tooltip?.show(0);
+    } else {
+      this.tooltip?.hide(0);
+    }
   }
 }

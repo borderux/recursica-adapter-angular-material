@@ -1,6 +1,16 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  AfterContentInit,
+  Component,
+  ContentChildren,
+  Input,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation,
+  forwardRef,
+} from "@angular/core";
 import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { RecursicaOverStyled } from "../utils/recursica-over-styled";
+import { MenuItemComponent } from "./menu-item.component";
 
 export type RecursicaMenuPositionX = "before" | "after";
 export type RecursicaMenuPositionY = "above" | "below";
@@ -43,6 +53,23 @@ export type RecursicaMenuPositionY = "above" | "below";
  * rendered view). Real token styling ships in `menu-overlay.css`, gated
  * behind a `.rec-menu` class (via `MatMenu`'s own `panelClass`/`class`
  * input) and `[data-recursica-theme]`, exactly like `tooltip-overlay.css`.
+ *
+ * ## `@ContentChildren(MenuItemComponent)`: telling each item its own enclosing menu
+ *
+ * `rec-menu-item`'s `subMenu` input (see that component's own class doc
+ * comment) needs a *second* piece of information it has no way to obtain
+ * itself: the menu it's *inside*, not the one it opens — `MatMenuTrigger`'s
+ * `_parentMaterialMenu` is normally found via `inject(MAT_MENU_PANEL)`, but
+ * that injection never resolves for any of this adapter's projected menu
+ * content (see `menu-item.component.ts`'s own doc comment for why — a real
+ * CDK/Material architectural property, not something specific to
+ * `rec-menu-item`). Unlike that constructor-time DI, `@ContentChildren`
+ * resolves from the actual authored template structure (the same
+ * mechanism `MatMenu`'s own `_allItems`/`items` queries already rely on,
+ * confirmed working), so it correctly finds only this menu's own direct
+ * `<rec-menu-item>` children — not a nested submenu's items declared as a
+ * sibling `<rec-menu>` block — and can just hand each one a direct
+ * reference to `this`, no DI required.
  */
 @Component({
   selector: "rec-menu",
@@ -62,11 +89,14 @@ export type RecursicaMenuPositionY = "above" | "below";
     </mat-menu>
   `,
 })
-export class MenuComponent implements RecursicaOverStyled {
+export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
   @Input() xPosition: RecursicaMenuPositionX = "after";
   @Input() yPosition: RecursicaMenuPositionY = "below";
   @Input() overlapTrigger = false;
   @Input() hasBackdrop?: boolean;
+
+  @ContentChildren(forwardRef(() => MenuItemComponent))
+  private readonly items?: QueryList<MenuItemComponent>;
 
   /**
    * `overClass` only — no `overStyle`, same reasoning as `Tooltip`: the
@@ -90,5 +120,29 @@ export class MenuComponent implements RecursicaOverStyled {
     const classes = ["rec-menu"];
     if (this.overStyled && this.overClass) classes.push(this.overClass);
     return classes.join(" ");
+  }
+
+  /** Rebuilds `MatMenu._directDescendantItems` from this menu's own `<rec-menu-item>`s, in DOM order. */
+  syncItems(): void {
+    const direct = (
+      this.panel as unknown as {
+        _directDescendantItems: {
+          reset(v: unknown[]): void;
+          notifyOnChanges(): void;
+        };
+      }
+    )._directDescendantItems;
+    const items = (this.items?.toArray() ?? [])
+      .map((i) => i.matMenuItem)
+      .filter((i) => !!i);
+    direct.reset(items);
+    direct.notifyOnChanges();
+  }
+
+  ngAfterContentInit(): void {
+    this.items?.forEach((item) => item.setEnclosingMenu(this));
+    this.items?.changes.subscribe((list: QueryList<MenuItemComponent>) =>
+      list.forEach((item) => item.setEnclosingMenu(this)),
+    );
   }
 }

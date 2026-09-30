@@ -6,6 +6,8 @@ import {
 } from "../utils/recursica-over-styled";
 
 export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
+export type RecursicaHeadingColor = "default" | "warning" | "alert" | "success";
+export type RecursicaHeadingEmphasis = "high" | "low";
 
 /**
  * Recursica `Heading` — Angular Material adapter.
@@ -61,6 +63,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h1"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h1>
@@ -70,6 +74,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h2"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h2>
@@ -79,6 +85,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h3"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h3>
@@ -88,6 +96,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h4"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h4>
@@ -97,6 +107,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h5"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h5>
@@ -106,6 +118,8 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
           class="root recursica_brand_typography_h6"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h6>
@@ -115,6 +129,14 @@ export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
 })
 export class HeadingComponent implements RecursicaOverStyled {
   @Input() order: RecursicaHeadingOrder = 1;
+
+  /** Semantic text color, bound to the active layer's text-element tokens via `data-color` —
+   * ported from the reference's own identical `color`/`data-color` mapping (see
+   * `heading.component.css`'s brand-layer token rules, added alongside `emphasis`). */
+  @Input() color: RecursicaHeadingColor = "default";
+
+  /** Emphasis level, bound to the theme's text-emphasis opacity tokens via `data-emphasis`. */
+  @Input() emphasis: RecursicaHeadingEmphasis = "high";
 
   @Input() overStyled = false;
   @Input() overClass?: string;

@@ -102,6 +102,40 @@ export const WithDisabledItems: Story = {
   }),
 };
 
+/**
+ * Mirrors the reference's own `WithSubmenus` — `[subMenu]` on `rec-menu-item`
+ * wires `MatMenuTrigger` directly onto that item's own `<button
+ * mat-menu-item>`, so `MatMenuItem`'s native submenu detection (chevron,
+ * hover-open, keyboard nesting) activates with no extra state or directives —
+ * see `menu-item.component.ts`'s class doc comment for why this needed a
+ * `subMenu` input rather than reusing `[recMenuTriggerFor]`.
+ */
+export const WithSubmenus: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-stack style="padding: 64px;">
+        <rec-button variant="solid" [recMenuTriggerFor]="menu">Menu with Submenus</rec-button>
+        <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
+          <rec-menu-item>Dashboard</rec-menu-item>
+          <rec-menu-item [subMenu]="productsMenu">Products</rec-menu-item>
+          <rec-menu-item [subMenu]="ordersMenu">Orders</rec-menu-item>
+        </rec-menu>
+        <rec-menu #productsMenu>
+          <rec-menu-item>All products</rec-menu-item>
+          <rec-menu-item>Categories</rec-menu-item>
+          <rec-menu-item>Tags</rec-menu-item>
+        </rec-menu>
+        <rec-menu #ordersMenu>
+          <rec-menu-item>Open</rec-menu-item>
+          <rec-menu-item>Completed</rec-menu-item>
+          <rec-menu-item>Cancelled</rec-menu-item>
+        </rec-menu>
+      </rec-stack>
+    `,
+  }),
+};
+
 const searchIconTemplate = `
   <ng-template #searchIcon>
     <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

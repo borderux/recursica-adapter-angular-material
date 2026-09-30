@@ -44,3 +44,27 @@ export const StaticVariations: Story = {
     `,
   }),
 };
+
+export const Colors: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-heading [order]="2" color="default">Default heading</rec-heading>
+        <rec-heading [order]="2" color="warning">Warning heading</rec-heading>
+        <rec-heading [order]="2" color="alert">Alert heading</rec-heading>
+        <rec-heading [order]="2" color="success">Success heading</rec-heading>
+      </rec-stack>
+    `,
+  }),
+};
+
+export const Emphasis: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-heading [order]="2" emphasis="high">High emphasis heading</rec-heading>
+        <rec-heading [order]="2" emphasis="low">Low emphasis heading</rec-heading>
+      </rec-stack>
+    `,
+  }),
+};

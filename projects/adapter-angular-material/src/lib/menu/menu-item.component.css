@@ -116,6 +116,22 @@
   );
 }
 
+/* Submenu chevron — `MatMenuItem`'s own native `<svg class="mat-mdc-menu-submenu-icon">`,
+   rendered automatically once `subMenu` wires up a co-located `MatMenuTrigger` (see
+   menu-item.component.ts's class doc comment). Recolored to the same trailing-icon token
+   `.itemSection[data-position="right"]` uses, overriding Material's own `--mat-menu-item-icon-color`
+   default so the chevron matches Recursica's own icon coloring instead of Material's. */
+:host-context([data-recursica-theme]) .root .mat-mdc-menu-submenu-icon {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_trailing-icon-color
+  );
+}
+:host-context([data-recursica-theme]) .root[data-selected] .mat-mdc-menu-submenu-icon {
+  color: var(
+    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_trailing-icon-color
+  );
+}
+
 /* Hover overlay — same technique as Button/Accordion. */
 .root::after {
   content: "";

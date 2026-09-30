@@ -10,3 +10,29 @@
      genesis reference's own identical hardcode). */
   text-wrap: balance;
 }
+
+/* Semantic text color and emphasis — brand-layer tokens, not per-component UI-kit tokens (matches
+   the reference's own Text.module.css exactly — same rules as heading.component.css). */
+:host-context([data-recursica-theme]) .root[data-color="default"] {
+  color: var(--recursica_brand_layer_elements_text_color);
+}
+
+:host-context([data-recursica-theme]) .root[data-color="warning"] {
+  color: var(--recursica_brand_layer_elements_text_warning);
+}
+
+:host-context([data-recursica-theme]) .root[data-color="alert"] {
+  color: var(--recursica_brand_layer_elements_text_alert);
+}
+
+:host-context([data-recursica-theme]) .root[data-color="success"] {
+  color: var(--recursica_brand_layer_elements_text_success);
+}
+
+:host-context([data-recursica-theme]) .root[data-emphasis="high"] {
+  opacity: var(--recursica_brand_text-emphasis_high);
+}
+
+:host-context([data-recursica-theme]) .root[data-emphasis="low"] {
+  opacity: var(--recursica_brand_text-emphasis_low);
+}

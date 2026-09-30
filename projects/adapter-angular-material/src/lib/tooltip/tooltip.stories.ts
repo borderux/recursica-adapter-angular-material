@@ -129,6 +129,34 @@ if (
   document.head.appendChild(style);
 }
 
+/**
+ * Rendered open by default (`[opened]="true"`) so the wrapped-text layout is
+ * screenshot-testable without simulating a real hover — mirrors the
+ * reference's own `LongContent` story, which uses the same `opened` escape
+ * hatch for the same reason.
+ */
+export const LongContent: Story = {
+  args: {
+    label:
+      "This is a longer tooltip message that demonstrates how text wraps within the maximum width defined by the design system.",
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-group justify="center" wrap="nowrap" style="padding: 64px;">
+        <rec-tooltip
+          [label]="label"
+          [position]="position"
+          [withBeak]="withBeak"
+          [opened]="true"
+        >
+          <rec-button variant="solid">Long Content</rec-button>
+        </rec-tooltip>
+      </rec-group>
+    `,
+  }),
+};
+
 export const OverStyledEscapeHatch: Story = {
   args: {
     overStyled: true,

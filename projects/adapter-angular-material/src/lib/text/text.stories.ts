@@ -56,3 +56,27 @@ export const StaticVariations: Story = {
     `,
   }),
 };
+
+export const Colors: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-text color="default">Default (follows the layer's base text color)</rec-text>
+        <rec-text color="warning">Warning (cautionary, non-blocking messaging)</rec-text>
+        <rec-text color="alert">Alert (errors and destructive states)</rec-text>
+        <rec-text color="success">Success (confirmations and positive states)</rec-text>
+      </rec-stack>
+    `,
+  }),
+};
+
+export const Emphasis: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-text emphasis="high">High emphasis (solid — primary reading content)</rec-text>
+        <rec-text emphasis="low">Low emphasis (dimmed — secondary or supporting content)</rec-text>
+      </rec-stack>
+    `,
+  }),
+};

@@ -39,14 +39,46 @@ Overlay outside any of this adapter's own views (same situation as
 Same reasoning as `Tooltip`: the panel is created/destroyed by CDK on every
 open/close, no safe stable `ElementRef` to hand inline styles to.
 
-## Not yet implemented: `Menu.Sub` (nested submenus)
+## `Menu.Sub` (nested submenus) — built 2026-09-29, via `subMenu` on `rec-menu-item`
 
 The genesis adapter's `Menu.Sub`/`Menu.Sub.Target`/`Menu.Sub.Item`/
-`Menu.Sub.Dropdown` have no equivalent here yet. `MatMenuItem` has native
-submenu-trigger support (`_triggersSubmenu`) and nesting a second
-`<rec-menu>` likely composes via the same `[recMenuTriggerFor]` directive
-applied to a `rec-menu-item`, but this hasn't been built or verified —
-real follow-up work, not silently dropped.
+`Menu.Sub.Dropdown` have no direct equivalent — instead `rec-menu-item`
+takes a `subMenu` input pointing at another `<rec-menu>` (see
+`menu-item.component.ts`'s own class doc comment for the full story). Not
+the simple wiring first assumed: `[recMenuTriggerFor]` couldn't be reused
+(its `hostDirectives` composition puts `MatMenuTrigger` on the wrong DOM
+node — the outer `<rec-menu-item>`, not the inner `<button mat-menu-item>`
+`MatMenuItem` needs it co-located with), and worse, `MAT_MENU_PANEL`
+constructor-time DI — the mechanism Material's own submenu detection
+relies on — **never resolves for any content projected through this
+adapter's menu components at all**, confirmed by testing `inject(
+MAT_MENU_PANEL, {skipSelf:true})` at every boundary and finding it `null`
+everywhere (root cause: `<mat-menu>`'s panel content is a deferred
+`<ng-template>` CDK Overlay instantiates via a `TemplatePortal` rooted at
+the _trigger's_ `ViewContainerRef`, not `MatMenu`'s own tree — a real
+CDK/Material property, not an adapter bug). Fixed by directly setting the
+same fields Material's own code would have (`_parentMaterialMenu`,
+`_setTriggersSubmenu()`), sourcing the _enclosing_ menu via
+`@ContentChildren` on `MenuComponent` (works regardless of the DI issue,
+since content queries resolve from authored template structure, not
+injector hierarchy — the same mechanism `MatMenu`'s own `_allItems`/`items`
+queries already rely on).
+
+**Confirmed working**: chevron renders, clicking a submenu-trigger item
+opens the nested menu beside the parent (which stays open) — matches
+native behavior and is exactly what the reference's own `WithSubmenus`
+story (a static `opened`-forced render) needs.
+
+**Known gap, attempted but not resolved**: hover-to-open and keyboard
+`ArrowRight`/`Enter` submenu nesting don't work even after also fixing
+`_parentMaterialMenu` to reference the correct (enclosing, not sub-) menu
+and re-invoking `MatMenuTrigger`'s own `_handleHover()`. Deeper internal
+dependencies (`MatMenu._directDescendantItems`/`_hovered()`, the keyboard-
+routed synthetic-click path) weren't fully traced — not a regression
+(`Enter` on a submenu-trigger item closes the whole menu today, same as
+before this fix, when the item wasn't recognized as a submenu trigger at
+all). Real follow-up work if hover/keyboard parity matters, not silently
+dropped.
 
 ## `leftSection`/`rightSection`
 
