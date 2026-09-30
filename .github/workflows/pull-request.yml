@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Validate ADAPTER_STATUS.md
+        run: npm run validate-adapter-status
+
       - name: Build
         run: npm run build
 

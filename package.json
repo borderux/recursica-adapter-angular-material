@@ -65,6 +65,7 @@
     "dev": "npm run storybook",
     "build": "node scripts/sync-lib-version.mjs && ng build adapter-angular-material",
     "lint": "eslint .",
+    "validate-adapter-status": "node scripts/validate-adapter-status.mjs",
     "check-types": "tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json",
     "format": "prettier --write \"**/*.{js,ts,json,md,css,scss,html}\"",
     "prepare": "node .husky/install.mjs",
