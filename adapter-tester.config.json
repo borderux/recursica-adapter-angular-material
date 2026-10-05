@@ -8,12 +8,6 @@
     "ui-kit-breadcrumb--last-item-as-link": {
       "exclude": true
     },
-    "ui-kit-grid--grow": {
-      "exclude": true
-    },
-    "ui-kit-grid--responsive-sizes": {
-      "exclude": true
-    },
     "ui-kit-button--polymorphic-as-link": {
       "exclude": true
     },
@@ -24,6 +18,9 @@
       "exclude": true
     },
     "ui-kit-menu--with-max-height": {
+      "exclude": true
+    },
+    "ui-kit-menu--hover-trigger": {
       "exclude": true
     }
   }

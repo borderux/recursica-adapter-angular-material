@@ -1,0 +1,96 @@
+/* Responsive span/offset/visibility for `rec-layout-grid-col`. Breakpoint widths are Mantine's defaults (no Recursica breakpoint token exists). */
+
+/* Span is clamped to the current column count (span 6 fills the row at 3 columns). */
+:host {
+  display: block;
+  grid-column: span min(var(--col-span-base, 12), var(--recursica_brand_layout-grids_columns));
+  margin-inline-start: calc(var(--col-offset-base, 0) * (100% / var(--recursica_brand_layout-grids_columns)));
+}
+
+@media (min-width: 36em) {
+  :host {
+    grid-column: span min(var(--col-span-xs, var(--col-span-base, 12)), var(--recursica_brand_layout-grids_columns));
+    margin-inline-start: calc(
+      var(--col-offset-xs, var(--col-offset-base, 0)) * (100% / var(--recursica_brand_layout-grids_columns))
+    );
+  }
+
+  :host([data-hidden-from="xs"]) {
+    display: none;
+  }
+}
+
+@media (max-width: 35.99em) {
+  :host([data-visible-from="xs"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 48em) {
+  :host {
+    grid-column: span
+      min(var(--col-span-sm, var(--col-span-xs, var(--col-span-base, 12))), var(--recursica_brand_layout-grids_columns));
+    margin-inline-start: calc(
+      var(--col-offset-sm, var(--col-offset-xs, var(--col-offset-base, 0))) *
+        (100% / var(--recursica_brand_layout-grids_columns))
+    );
+  }
+
+  :host([data-hidden-from="sm"]) {
+    display: none;
+  }
+}
+
+@media (max-width: 47.99em) {
+  :host([data-visible-from="sm"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 62em) {
+  :host {
+    grid-column: span
+      min(
+        var(--col-span-md, var(--col-span-sm, var(--col-span-xs, var(--col-span-base, 12)))),
+        var(--recursica_brand_layout-grids_columns)
+      );
+    margin-inline-start: calc(
+      var(--col-offset-md, var(--col-offset-sm, var(--col-offset-xs, var(--col-offset-base, 0)))) *
+        (100% / var(--recursica_brand_layout-grids_columns))
+    );
+  }
+
+  :host([data-hidden-from="md"]) {
+    display: none;
+  }
+}
+
+@media (max-width: 61.99em) {
+  :host([data-visible-from="md"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 75em) {
+  :host([data-hidden-from="lg"]) {
+    display: none;
+  }
+}
+
+@media (max-width: 74.99em) {
+  :host([data-visible-from="lg"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 88em) {
+  :host([data-hidden-from="xl"]) {
+    display: none;
+  }
+}
+
+@media (max-width: 87.99em) {
+  :host([data-visible-from="xl"]) {
+    display: none;
+  }
+}

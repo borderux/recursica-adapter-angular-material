@@ -141,6 +141,20 @@ import { ThemeProviderComponent } from "@recursica/adapter-angular-material";
 export class AppComponent {}
 ```
 
+**Pass the Forge manifest.** Bind `[manifest]` to `recursica_manifest.json` (exported from Forge alongside the other `recursica_*` files). `Pagination` reads its button styles and sizes from it and throws if it is missing:
+
+```ts
+import manifest from "./recursica_manifest.json";
+// in your component class:
+readonly manifest = manifest;
+```
+
+```html
+<rec-theme-provider theme="light" [manifest]="manifest">...</rec-theme-provider>
+```
+
+`breakpointsFromRecManifest(manifest)` (exported from the package) returns a `{ name: "<start>px" }` object of the manifest's layout-grid breakpoints, for keeping your own responsive logic in step with the widths where Forge's layout-grid tokens switch.
+
 To switch themes at runtime, bind `[theme]` to a component property instead of a literal string. `rec-theme-provider` reactively re-applies `data-recursica-theme` whenever a _bound_ `theme` input changes — and per step 2 above, that single attribute write already drives Angular Material's own theme too. There is no separate provider to wrap this one in (contrast with Beam, which needs both `BeamThemeProvider` and `RecursicaThemeProvider`, or Mantine, which needs `MantineProvider` and `RecursicaThemeProvider`) — Angular Material has no runtime provider component to wrap at all.
 
 ---
@@ -170,20 +184,20 @@ export default {
 
 ## 7. Configure ESLint Plugin (Optional but Recommended)
 
-It is highly recommended (but optional) to install `eslint-plugin-recursica`, which flags use of the `overStyled` escape-hatch prop so it stays easy to audit.
+It is highly recommended (but optional) to install `@recursica/eslint-plugin`, which flags use of the `overStyled` escape-hatch prop so it stays easy to audit.
 
 See [OVERSTYLING.md](OVERSTYLING.md) and [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6 for this adapter's own `overStyled`/`overClass`/`overStyle` mechanism.
 
 Install the plugin as a dev dependency:
 
 ```bash
-npm install eslint-plugin-recursica --save-dev
+npm install @recursica/eslint-plugin --save-dev
 ```
 
 Then, add it to your `eslint.config.js`:
 
 ```javascript
-import recursica from "eslint-plugin-recursica";
+import recursica from "@recursica/eslint-plugin";
 
 export default [recursica.configs.recommended];
 ```

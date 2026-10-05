@@ -10,6 +10,10 @@ import {
   inject,
 } from "@angular/core";
 import { LayerComponent } from "../layer/layer.component";
+import {
+  RecursicaManifest,
+  RecursicaManifestService,
+} from "../utils/recursica-manifest";
 
 const THEME_ATTRIBUTE = "data-recursica-theme";
 
@@ -82,7 +86,14 @@ export class ThemeProviderComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() initLayer0 = true;
 
+  /**
+   * The Forge `recursica_manifest.json`. Required by components that read manifest data
+   * (currently `Pagination`, whose button variants come from it).
+   */
+  @Input() manifest?: RecursicaManifest;
+
   private readonly document = inject(DOCUMENT);
+  private readonly manifestService = inject(RecursicaManifestService);
 
   /**
    * `ngOnInit` (not just `ngOnChanges`) applies the theme on first render.
@@ -97,9 +108,13 @@ export class ThemeProviderComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnInit(): void {
     this.applyTheme();
+    this.manifestService.manifest.set(this.manifest);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes["manifest"] && !changes["manifest"].firstChange) {
+      this.manifestService.manifest.set(this.manifest);
+    }
     if (changes["theme"] && !changes["theme"].firstChange) {
       this.applyTheme();
     }

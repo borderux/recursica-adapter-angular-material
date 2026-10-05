@@ -1,13 +1,13 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
 
-export type RecursicaGridBreakpoint = "xs" | "sm" | "md" | "lg" | "xl";
-export type RecursicaGridResponsiveValue =
+export type RecursicaLayoutGridBreakpoint = "xs" | "sm" | "md" | "lg" | "xl";
+export type RecursicaLayoutGridResponsiveValue =
   | number
-  | Partial<Record<"base" | RecursicaGridBreakpoint, number>>;
+  | Partial<Record<"base" | RecursicaLayoutGridBreakpoint, number>>;
 
 function toResponsiveRecord(
-  value: RecursicaGridResponsiveValue | undefined,
-): Partial<Record<"base" | RecursicaGridBreakpoint, number>> {
+  value: RecursicaLayoutGridResponsiveValue | undefined,
+): Partial<Record<"base" | RecursicaLayoutGridBreakpoint, number>> {
   if (value === undefined) {
     return {};
   }
@@ -43,9 +43,9 @@ function toResponsiveRecord(
  * `[attr.data-visible-from]`, matched by the same `@media` blocks.
  */
 @Component({
-  selector: "rec-grid-col",
+  selector: "rec-layout-grid-col",
   encapsulation: ViewEncapsulation.Emulated,
-  styleUrl: "./grid.component.css",
+  styleUrl: "./layout-grid-col.component.css",
   host: {
     "[style.--col-span-base]": "spanRecord.base ?? null",
     "[style.--col-span-xs]": "spanRecord.xs ?? null",
@@ -65,19 +65,21 @@ function toResponsiveRecord(
   },
   template: `<ng-content />`,
 })
-export class GridColComponent {
-  @Input() span: RecursicaGridResponsiveValue = 1;
-  @Input() offset?: RecursicaGridResponsiveValue;
+export class LayoutGridColComponent {
+  @Input() span: RecursicaLayoutGridResponsiveValue = 12;
+  @Input() offset?: RecursicaLayoutGridResponsiveValue;
   @Input() order?: number;
-  @Input() visibleFrom?: RecursicaGridBreakpoint;
-  @Input() hiddenFrom?: RecursicaGridBreakpoint;
+  @Input() visibleFrom?: RecursicaLayoutGridBreakpoint;
+  @Input() hiddenFrom?: RecursicaLayoutGridBreakpoint;
 
-  get spanRecord(): Partial<Record<"base" | RecursicaGridBreakpoint, number>> {
+  get spanRecord(): Partial<
+    Record<"base" | RecursicaLayoutGridBreakpoint, number>
+  > {
     return toResponsiveRecord(this.span);
   }
 
   get offsetRecord(): Partial<
-    Record<"base" | RecursicaGridBreakpoint, number>
+    Record<"base" | RecursicaLayoutGridBreakpoint, number>
   > {
     return toResponsiveRecord(this.offset);
   }

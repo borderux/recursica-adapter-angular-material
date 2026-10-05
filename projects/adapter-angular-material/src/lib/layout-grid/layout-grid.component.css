@@ -1,0 +1,25 @@
+/* HARDCODED VALUES:
+ * Only the breakpoint widths below (Mantine's defaults, reused as in `Container`) — no Recursica
+ * breakpoint token exists.
+ *
+ * Brand-layer exemptions: layout-grid tokens have no ui-kit layer in Forge's model (a grid is a
+ * page-layout primitive, not a component), so LayoutGrid reads the responsive
+ * brand_layout-grids_* aliases directly.
+ *   recursica-allow-brand: --recursica_brand_layout-grids_column-gutter
+ *   recursica-allow-brand: --recursica_brand_layout-grids_row-gutter
+ *   recursica-allow-brand: --recursica_brand_layout-grids_columns
+ *   recursica-allow-brand: --recursica_brand_layout-grids_margin
+ */
+
+:host {
+  display: block;
+  margin: var(--recursica_brand_layout-grids_margin);
+}
+
+.inner {
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: repeat(var(--recursica_brand_layout-grids_columns), minmax(0, 1fr));
+  column-gap: var(--recursica_brand_layout-grids_column-gutter);
+  row-gap: var(--recursica_brand_layout-grids_row-gutter);
+}

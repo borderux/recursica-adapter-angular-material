@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import {
@@ -13,10 +14,21 @@ import {
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
 import {
+  ButtonComponent,
+  RecursicaButtonSize,
+  RecursicaButtonVariant,
+} from "../button/button.component";
+import { RecursicaManifestService } from "../utils/recursica-manifest";
+import {
   PAGINATION_DOTS,
   RecursicaPaginationRangeItem,
   computePaginationRange,
 } from "./pagination-range";
+
+interface PaginationRole {
+  variant: RecursicaButtonVariant;
+  size: RecursicaButtonSize;
+}
 
 export type RecursicaPaginationIconType = "next" | "prev" | "first" | "last";
 
@@ -26,13 +38,6 @@ const ICON_PATHS: Record<RecursicaPaginationIconType, string> = {
   first:
     "M6.85355 3.85355C7.04882 3.65829 7.04882 3.34171 6.85355 3.14645C6.65829 2.95118 6.34171 2.95118 6.14645 3.14645L2.14645 7.14645C1.95118 7.34171 1.95118 7.65829 2.14645 7.85355L6.14645 11.8536C6.34171 12.0488 6.65829 12.0488 6.85355 11.8536C7.04882 11.6583 7.04882 11.3417 6.85355 11.1464L3.20711 7.5L6.85355 3.85355ZM12.8536 3.85355C13.0488 3.65829 13.0488 3.34171 12.8536 3.14645C12.6583 2.95118 12.3417 2.95118 12.1464 3.14645L8.14645 7.14645C7.95118 7.34171 7.95118 7.65829 8.14645 7.85355L12.1464 11.8536C12.3417 12.0488 12.6583 12.0488 12.8536 11.8536C13.0488 11.6583 13.0488 11.3417 12.8536 11.1464L9.20711 7.5L12.8536 3.85355Z",
   last: "M2.14645 11.1464C1.95118 11.3417 1.95118 11.6583 2.14645 11.8536C2.34171 12.0488 2.65829 12.0488 2.85355 11.8536L6.85355 7.85355C7.04882 7.65829 7.04882 7.34171 6.85355 7.14645L2.85355 3.14645C2.65829 2.95118 2.34171 2.95118 2.14645 3.14645C1.95118 3.34171 1.95118 3.65829 2.14645 3.85355L5.79289 7.5L2.14645 11.1464ZM8.14645 11.1464C7.95118 11.3417 7.95118 11.6583 8.14645 11.8536C8.34171 12.0488 8.65829 12.0488 8.85355 11.8536L12.8536 7.85355C13.0488 7.65829 13.0488 7.34171 12.8536 7.14645L8.85355 3.14645C8.65829 2.95118 8.34171 2.95118 8.14645 3.14645C7.95118 3.34171 7.95118 3.65829 8.14645 3.85355L11.7929 7.5L8.14645 11.1464Z",
-};
-
-const LABELS: Record<RecursicaPaginationIconType, string> = {
-  next: "Next",
-  prev: "Prev",
-  first: "First",
-  last: "Last",
 };
 
 /**
@@ -69,7 +74,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
   selector: "rec-pagination",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./pagination.component.css",
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, ButtonComponent],
   template: `
     <div
       class="root"
@@ -77,106 +82,118 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
       [style]="resolvedOverStyle.style"
     >
       @if (withEdges) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
+        <rec-button
+          [variant]="navRole.variant"
+          [size]="navRole.size"
+          [icon]="firstIcon"
+          [iconOnly]="!withLabels"
+          [ariaLabel]="'First page'"
           [disabled]="disabled || currentValue <= 1"
-          [attr.aria-label]="'First page'"
           (click)="setPage(1)"
+          >{{ withLabels ? "First" : "" }}</rec-button
         >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'first' }"
-          />
-        </button>
       }
       @if (withControls) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
+        <rec-button
+          [variant]="navRole.variant"
+          [size]="navRole.size"
+          [icon]="prevIcon"
+          [iconOnly]="!withLabels"
+          [ariaLabel]="'Previous page'"
           [disabled]="disabled || currentValue <= 1"
-          [attr.aria-label]="'Previous page'"
           (click)="setPage(currentValue - 1)"
+          >{{ withLabels ? "Prev" : "" }}</rec-button
         >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'prev' }"
-          />
-        </button>
       }
 
       @for (item of rangeItems; track $index) {
         @if (item === dots) {
-          <span class="dots" aria-hidden="true">&hellip;</span>
+          <span
+            class="dots"
+            [attr.data-size]="inactiveRole.size"
+            aria-hidden="true"
+            >&hellip;</span
+          >
         } @else {
-          <button
-            type="button"
-            class="control"
-            [attr.data-active]="item === currentValue ? '' : null"
+          <rec-button
+            [variant]="
+              item === currentValue ? activeRole.variant : inactiveRole.variant
+            "
+            [size]="item === currentValue ? activeRole.size : inactiveRole.size"
             [attr.aria-current]="item === currentValue ? 'page' : null"
-            [attr.aria-label]="'Page ' + item"
+            [ariaLabel]="'Page ' + item"
             [disabled]="disabled"
             (click)="setPage(item)"
+            >{{ item }}</rec-button
           >
-            {{ item }}
-          </button>
         }
       }
 
       @if (withControls) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue >= total"
-          [attr.aria-label]="'Next page'"
-          (click)="setPage(currentValue + 1)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'next' }"
+        @if (withLabels) {
+          <rec-button
+            [variant]="navRole.variant"
+            [size]="navRole.size"
+            [ariaLabel]="'Next page'"
+            [disabled]="disabled || currentValue >= total"
+            (click)="setPage(currentValue + 1)"
+            >Next<span class="rightIcon" [attr.data-size]="navRole.size"
+              ><ng-container [ngTemplateOutlet]="nextIcon" /></span
+          ></rec-button>
+        } @else {
+          <rec-button
+            [variant]="navRole.variant"
+            [size]="navRole.size"
+            [icon]="nextIcon"
+            [iconOnly]="true"
+            [ariaLabel]="'Next page'"
+            [disabled]="disabled || currentValue >= total"
+            (click)="setPage(currentValue + 1)"
           />
-        </button>
+        }
       }
       @if (withEdges) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue >= total"
-          [attr.aria-label]="'Last page'"
-          (click)="setPage(total)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'last' }"
+        @if (withLabels) {
+          <rec-button
+            [variant]="navRole.variant"
+            [size]="navRole.size"
+            [ariaLabel]="'Last page'"
+            [disabled]="disabled || currentValue >= total"
+            (click)="setPage(total)"
+            >Last<span class="rightIcon" [attr.data-size]="navRole.size"
+              ><ng-container [ngTemplateOutlet]="lastIcon" /></span
+          ></rec-button>
+        } @else {
+          <rec-button
+            [variant]="navRole.variant"
+            [size]="navRole.size"
+            [icon]="lastIcon"
+            [iconOnly]="true"
+            [ariaLabel]="'Last page'"
+            [disabled]="disabled || currentValue >= total"
+            (click)="setPage(total)"
           />
-        </button>
+        }
       }
     </div>
 
-    <ng-template #iconTpl let-type>
-      @if (withLabels && (type === "next" || type === "last")) {
-        <span class="iconWithLabel">
-          <span>{{ iconLabel(type) }}</span>
-          <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-            <path [attr.d]="iconPath(type)" fill="currentColor" />
-          </svg>
-        </span>
-      } @else if (withLabels) {
-        <span class="iconWithLabel">
-          <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-            <path [attr.d]="iconPath(type)" fill="currentColor" />
-          </svg>
-          <span>{{ iconLabel(type) }}</span>
-        </span>
-      } @else {
-        <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-          <path [attr.d]="iconPath(type)" fill="currentColor" />
-        </svg>
-      }
+    <ng-template #firstIcon
+      ><ng-container
+        *ngTemplateOutlet="svgTpl; context: { $implicit: 'first' }"
+    /></ng-template>
+    <ng-template #prevIcon
+      ><ng-container *ngTemplateOutlet="svgTpl; context: { $implicit: 'prev' }"
+    /></ng-template>
+    <ng-template #nextIcon
+      ><ng-container *ngTemplateOutlet="svgTpl; context: { $implicit: 'next' }"
+    /></ng-template>
+    <ng-template #lastIcon
+      ><ng-container *ngTemplateOutlet="svgTpl; context: { $implicit: 'last' }"
+    /></ng-template>
+    <ng-template #svgTpl let-type>
+      <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
+        <path [attr.d]="iconPath(type)" fill="currentColor" />
+      </svg>
     </ng-template>
   `,
 })
@@ -199,10 +216,54 @@ export class PaginationComponent implements RecursicaOverStyled, OnInit {
 
   readonly dots = PAGINATION_DOTS;
 
+  private readonly manifestService = inject(RecursicaManifestService);
+
   private readonly _uncontrolledValue = signal(1);
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);
+  }
+
+  /** Button style/size the manifest selects for a Pagination role; throws if absent. */
+  private role(name: string): PaginationRole {
+    const manifest = this.manifestService.require("Pagination");
+    const selected = (
+      manifest["ui-kit"]?.components?.["pagination"] as
+        | {
+            properties?: Record<
+              string,
+              {
+                $extensions?: {
+                  "recursica.component"?: {
+                    "selected-variants"?: Record<string, unknown>;
+                  };
+                };
+              }
+            >;
+          }
+        | undefined
+    )?.properties?.[name]?.$extensions?.["recursica.component"]?.[
+      "selected-variants"
+    ];
+    if (!selected?.["style"] || !selected["size"]) {
+      throw new Error(
+        `Pagination: manifest has no ui-kit.components.pagination.properties.${name} selected-variants`,
+      );
+    }
+    return {
+      variant: selected["style"] as PaginationRole["variant"],
+      size: selected["size"] as PaginationRole["size"],
+    };
+  }
+
+  get activeRole(): PaginationRole {
+    return this.role("active-pages");
+  }
+  get inactiveRole(): PaginationRole {
+    return this.role("inactive-pages");
+  }
+  get navRole(): PaginationRole {
+    return this.role("navigation-controls");
   }
 
   get currentValue(): number {
@@ -227,10 +288,6 @@ export class PaginationComponent implements RecursicaOverStyled, OnInit {
 
   iconPath(type: string): string {
     return ICON_PATHS[type as RecursicaPaginationIconType];
-  }
-
-  iconLabel(type: string): string {
-    return LABELS[type as RecursicaPaginationIconType];
   }
 
   setPage(page: number): void {

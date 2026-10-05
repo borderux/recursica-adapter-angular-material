@@ -91,3 +91,15 @@ browser/Playwright tooling available, so actual click-through paging,
 ellipsis-range recalculation on click, and disabled-state boundary
 behavior were reasoned from the ported algorithm and code, not
 click-verified.
+
+## Manifest-driven Recursica Buttons (2026-10-05, ports mantine-v8 1.3.0)
+
+Page and navigation controls are now `rec-button`s, not hand-styled `<button>`s. Their style and size
+come from the Forge manifest's `ui-kit.components.pagination.properties.{active-pages,
+inactive-pages,navigation-controls}` `selected-variants` (stock export: active solid/small, inactive
+outline/small, navigation text/small). `rec-theme-provider`'s `[manifest]` input feeds
+`RecursicaManifestService`; `PaginationComponent` throws if it is unset or a role has no
+`selected-variants`. Icon-only nav buttons use `rec-button`'s `icon` + `iconOnly`; with `withLabels`,
+First/Prev put the icon left (`icon`), and Next/Last put it in a trailing `.rightIcon` span inside the
+label (the Angular Button has no `rightSection`). `pagination.component.css` now only lays out the row
+and styles the dots and `.rightIcon`.

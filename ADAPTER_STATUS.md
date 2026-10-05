@@ -78,48 +78,48 @@ components are listed under §2, with the reason in their own `IMPLEMENTATION_NO
 
 <!-- recursica:table id="hand-built" -->
 
-| Recursica component | Why                                                                                                       |
-| ------------------- | --------------------------------------------------------------------------------------------------------- |
-| Accordion           | `MatExpansionPanel` / `MatAccordion` investigated and rejected — see `accordion/IMPLEMENTATION_NOTES.md`. |
-| AssistiveElement    | No standalone helper/error text row in Material; only a part of `MatFormField`.                           |
-| AutoComplete        | `MatAutocomplete` rejected (overlay/styling constraints) — built on CDK Overlay.                          |
-| Avatar              | Nothing equivalent (`MatListItemAvatar` is list-scoped).                                                  |
-| Badge               | `MatBadge` is an overlay directive with a different shape; hand-built.                                    |
-| Breadcrumb          | Does not exist in Material/CDK.                                                                           |
-| Checkbox            | `MatCheckbox` investigated and rejected — see `checkbox/IMPLEMENTATION_NOTES.md`.                         |
-| Chip                | `MatChip` rejected — see `chip/IMPLEMENTATION_NOTES.md`.                                                  |
-| Container           | No max-width centering primitive in Material.                                                             |
-| Dropdown            | `MatSelect` rejected — see `dropdown/IMPLEMENTATION_NOTES.md`; built on CDK Overlay.                      |
-| FileInput           | Does not exist in Material/CDK; built on a native hidden file input.                                      |
-| FileUpload          | Does not exist in Material/CDK; reuses FileInput's item model.                                            |
-| Flex                | Material has no flex primitive (CDK layout is media-query only).                                          |
-| FormControlLayout   | Recursica-specific label/field/assistive composition; no Material concept.                                |
-| FormControlWrapper  | Composes Label + FormControlLayout + AssistiveElement instead of `MatFormField`.                          |
-| Grid                | `MatGridList` is a false friend (different model); hand-built.                                            |
-| Group               | No Material equivalent.                                                                                   |
-| Heading             | Material typography is Sass-only; no heading component.                                                   |
-| HoverCard           | `MatTooltip` only takes a string; built on CDK Overlay.                                                   |
-| Label               | `MatLabel` only works inside `MatFormField`.                                                              |
-| Layer               | Recursica-specific token-scoping primitive.                                                               |
-| Link                | No Material link component or styler.                                                                     |
-| Pagination          | `MatPaginator` rejected — see `pagination/IMPLEMENTATION_NOTES.md`.                                       |
-| Popover             | No packaged Material candidate; built on CDK Overlay.                                                     |
-| Radio               | `MatRadioButton` rejected — see `radio/IMPLEMENTATION_NOTES.md`.                                          |
-| ReadOnlyField       | No Material read-only rendering primitive.                                                                |
-| SegmentedControl    | `MatButtonToggleGroup` rejected — see `segmented-control/IMPLEMENTATION_NOTES.md`.                        |
-| Slider              | `MatSlider` rejected — see `slider/IMPLEMENTATION_NOTES.md`.                                              |
-| Stack               | No Material equivalent.                                                                                   |
-| Stepper             | `MatStepper` rejected — see `stepper/IMPLEMENTATION_NOTES.md`.                                            |
-| Switch              | `MatSlideToggle` rejected — see `switch/IMPLEMENTATION_NOTES.md`.                                         |
-| Table               | `MatTable` rejected (wrong shape) — see `table/IMPLEMENTATION_NOTES.md`.                                  |
-| Tabs                | `MatTabGroup` rejected — see `tabs/IMPLEMENTATION_NOTES.md`.                                              |
-| Text                | No Material text component.                                                                               |
-| ThemeProvider       | Recursica-specific; sets `data-recursica-theme`.                                                          |
-| TimePicker          | `MatTimepicker` rejected on design fit — see `time-picker/IMPLEMENTATION_NOTES.md`.                       |
-| Timeline            | Does not exist in Material/CDK.                                                                           |
-| Toast               | `MatSnackBar` audited, not wrapped; built from scratch.                                                   |
-| TransferList        | Composed from this adapter's own components.                                                              |
-| Tree                | `MatTree` / CDK tree rejected — see `tree/IMPLEMENTATION_NOTES.md`.                                       |
+| Recursica component | Why                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Accordion           | `MatExpansionPanel` / `MatAccordion` investigated and rejected — see `accordion/IMPLEMENTATION_NOTES.md`.  |
+| AssistiveElement    | No standalone helper/error text row in Material; only a part of `MatFormField`.                            |
+| AutoComplete        | `MatAutocomplete` rejected (overlay/styling constraints) — built on CDK Overlay.                           |
+| Avatar              | Nothing equivalent (`MatListItemAvatar` is list-scoped).                                                   |
+| Badge               | `MatBadge` is an overlay directive with a different shape; hand-built.                                     |
+| Breadcrumb          | Does not exist in Material/CDK.                                                                            |
+| Checkbox            | `MatCheckbox` investigated and rejected — see `checkbox/IMPLEMENTATION_NOTES.md`.                          |
+| Chip                | `MatChip` rejected — see `chip/IMPLEMENTATION_NOTES.md`.                                                   |
+| Container           | No max-width centering primitive in Material.                                                              |
+| Dropdown            | `MatSelect` rejected — see `dropdown/IMPLEMENTATION_NOTES.md`; built on CDK Overlay.                       |
+| FileInput           | Does not exist in Material/CDK; built on a native hidden file input.                                       |
+| FileUpload          | Does not exist in Material/CDK; reuses FileInput's item model.                                             |
+| Flex                | Material has no flex primitive (CDK layout is media-query only).                                           |
+| FormControlLayout   | Recursica-specific label/field/assistive composition; no Material concept.                                 |
+| FormControlWrapper  | Composes Label + FormControlLayout + AssistiveElement instead of `MatFormField`.                           |
+| LayoutGrid          | `MatGridList` is a false friend (different model); hand-built on CSS Grid from Forge's layout-grid tokens. |
+| Group               | No Material equivalent.                                                                                    |
+| Heading             | Material typography is Sass-only; no heading component.                                                    |
+| HoverCard           | `MatTooltip` only takes a string; built on CDK Overlay.                                                    |
+| Label               | `MatLabel` only works inside `MatFormField`.                                                               |
+| Layer               | Recursica-specific token-scoping primitive.                                                                |
+| Link                | No Material link component or styler.                                                                      |
+| Pagination          | `MatPaginator` rejected — see `pagination/IMPLEMENTATION_NOTES.md`.                                        |
+| Popover             | No packaged Material candidate; built on CDK Overlay.                                                      |
+| Radio               | `MatRadioButton` rejected — see `radio/IMPLEMENTATION_NOTES.md`.                                           |
+| ReadOnlyField       | No Material read-only rendering primitive.                                                                 |
+| SegmentedControl    | `MatButtonToggleGroup` rejected — see `segmented-control/IMPLEMENTATION_NOTES.md`.                         |
+| Slider              | `MatSlider` rejected — see `slider/IMPLEMENTATION_NOTES.md`.                                               |
+| Stack               | No Material equivalent.                                                                                    |
+| Stepper             | `MatStepper` rejected — see `stepper/IMPLEMENTATION_NOTES.md`.                                             |
+| Switch              | `MatSlideToggle` rejected — see `switch/IMPLEMENTATION_NOTES.md`.                                          |
+| Table               | `MatTable` rejected (wrong shape) — see `table/IMPLEMENTATION_NOTES.md`.                                   |
+| Tabs                | `MatTabGroup` rejected — see `tabs/IMPLEMENTATION_NOTES.md`.                                               |
+| Text                | No Material text component.                                                                                |
+| ThemeProvider       | Recursica-specific; sets `data-recursica-theme`.                                                           |
+| TimePicker          | `MatTimepicker` rejected on design fit — see `time-picker/IMPLEMENTATION_NOTES.md`.                        |
+| Timeline            | Does not exist in Material/CDK.                                                                            |
+| Toast               | `MatSnackBar` audited, not wrapped; built from scratch.                                                    |
+| TransferList        | Composed from this adapter's own components.                                                               |
+| Tree                | `MatTree` / CDK tree rejected — see `tree/IMPLEMENTATION_NOTES.md`.                                        |
 
 <!-- /recursica:table -->
 

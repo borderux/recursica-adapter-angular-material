@@ -7,7 +7,9 @@
 # @recursica/adapter-mantine-v8's own deploy-pr-preview.yml.
 #
 # Opt-in via PR title: the whole job only runs when the PR title contains the
-# word "preview" (case-insensitive) — most PRs don't need one, so this avoids
+# word "preview" or "Export Recursica Design Tokens" (the title of the PRs
+# Recursica Forge opens for token exports, which always get a preview)
+# (case-insensitive) — most PRs don't need one, so this avoids
 # spending CI minutes (checkout, npm ci, build) and posting a preview link on
 # every single PR. Gated at the job level via `if:`, not a first step's
 # output, so a non-matching title skips checkout/setup-node/etc. entirely
@@ -42,11 +44,11 @@ jobs:
   deploy-preview:
     # Don't run on changeset-release branches — same guard as pull-request.yml.
     # Otherwise: run on close unconditionally (to tear down), or only when the
-    # PR title opts in with "preview". Everything below only executes when
+    # PR title opts in with "preview" or is a token export. Everything below only executes when
     # this evaluates true, so a non-matching title skips the entire job.
     if: >-
       ${{ !startsWith(github.head_ref, 'changeset-release') &&
-      (github.event.action == 'closed' || contains(github.event.pull_request.title, 'preview')) }}
+      (github.event.action == 'closed' || contains(github.event.pull_request.title, 'preview') || contains(github.event.pull_request.title, 'Export Recursica Design Tokens')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Add pending message to PR description
