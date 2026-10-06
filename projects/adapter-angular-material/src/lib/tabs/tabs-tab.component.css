@@ -214,6 +214,24 @@
   border-top-width: var(--tabs-active-border-size);
   border-top-color: transparent;
 }
+/* Inverted: pull the tab up over the list's top divider so the active indicator sits on the
+   divider line rather than just below it. */
+:host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .tab {
+  margin-top: calc(
+    -1 *
+      var(
+        --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
+      )
+  );
+}
+:host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .tab {
+  margin-top: calc(
+    -1 *
+      var(
+        --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
+      )
+  );
+}
 :host-context([data-variant="default"][data-orientation="vertical"]) .tab,
 :host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
   border-right-style: solid;

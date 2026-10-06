@@ -41,6 +41,18 @@
   gap: var(--recursica_ui-kit_components_segmented-control_properties_item-gap);
 }
 
+/* Vertical: cap the container radius so it stays concentric with the pill items (matches the
+   Mantine adapter). */
+:host-context([data-recursica-theme]) .root[data-orientation="vertical"] {
+  border-radius: min(
+    var(--recursica_ui-kit_components_segmented-control_properties_border-radius),
+    calc(
+      var(--recursica_ui-kit_components_segmented-control-item_properties_item_height) / 2 +
+        var(--recursica_ui-kit_components_segmented-control_properties_padding-vertical)
+    )
+  );
+}
+
 /* Indicator — the moving selected block. Positioned via CSS custom properties written
    imperatively by SegmentedControlComponent's own updateIndicator() (see the component's
    class doc comment) rather than an Angular style binding. */

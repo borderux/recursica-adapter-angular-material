@@ -43,42 +43,6 @@ export const Default: Story = {
   }),
 };
 
-export const Success: Story = {
-  args: { variant: "success", title: "Changes Saved" },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        Your changes have been saved successfully.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const ErrorState: Story = {
-  args: { variant: "error", title: "Action Required" },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        You must complete your profile setup before accessing this feature.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const WithoutCloseButton: Story = {
-  args: { withCloseButton: false },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        This notification has no dismiss affordance.
-      </rec-toast>
-    `,
-  }),
-};
-
 /**
  * `icon`: a `TemplateRef` rendered via `*ngTemplateOutlet` — same slot
  * convention as `Button`/`Chip`/`Link`'s own `icon` inputs. Same
@@ -97,18 +61,6 @@ export const WithIcon: Story = {
       ${warningIconTemplate}
       <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton" [icon]="warningIcon">
         You must complete your profile setup before accessing this feature.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const NoTitle: Story = {
-  args: { title: undefined },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [withCloseButton]="withCloseButton">
-        A message with no title, just a description.
       </rec-toast>
     `,
   }),

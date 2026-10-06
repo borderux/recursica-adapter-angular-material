@@ -39,6 +39,10 @@
   min-width: var(--recursica_ui-kit_components_tooltip_properties_min-width);
   max-width: var(--recursica_ui-kit_components_tooltip_properties_max-width);
   min-height: var(--recursica_ui-kit_components_tooltip_properties_min-height);
+  /* Vertically centre the text within min-height (Mantine does the same). */
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
   border-style: solid;
   border-width: var(--recursica_ui-kit_components_tooltip_properties_border-size);
   border-color: var(--recursica_ui-kit_components_tooltip_properties_colors_border-color);

@@ -23,12 +23,8 @@
 }
 
 :host-context([data-recursica-theme]) .root[data-form-layout="stacked"] {
-  margin-top: var(
-    --recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin
-  );
-  margin-bottom: var(
-    --recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin
-  );
+  margin-top: var(--recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin);
+  margin-bottom: var(--recursica_ui-kit_components_transfer-list_variants_layouts_stacked_properties_top-bottom-margin);
 }
 :host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] {
   margin-top: var(
@@ -60,25 +56,13 @@
 :host-context([data-recursica-theme]) .pane {
   width: var(--recursica_ui-kit_components_transfer-list_properties_width);
   height: var(--recursica_ui-kit_components_transfer-list_properties_height);
-  padding: var(
-      --recursica_ui-kit_components_transfer-list_properties_vertical-padding
-    )
-    var(
-      --recursica_ui-kit_components_transfer-list_properties_horizontal-padding
-    );
-  border-width: var(
-    --recursica_ui-kit_components_transfer-list_properties_border-size
-  );
+  padding: var(--recursica_ui-kit_components_transfer-list_properties_vertical-padding)
+    var(--recursica_ui-kit_components_transfer-list_properties_horizontal-padding);
+  border-width: var(--recursica_ui-kit_components_transfer-list_properties_border-size);
   border-style: solid;
-  border-radius: var(
-    --recursica_ui-kit_components_transfer-list_properties_border-radius
-  );
-  border-color: var(
-    --recursica_ui-kit_components_transfer-list_properties_colors_border-color
-  );
-  background-color: var(
-    --recursica_ui-kit_components_transfer-list_properties_colors_background-color
-  );
+  border-radius: var(--recursica_ui-kit_components_transfer-list_properties_border-radius);
+  border-color: var(--recursica_ui-kit_components_transfer-list_properties_colors_border-color);
+  background-color: var(--recursica_ui-kit_components_transfer-list_properties_colors_background-color);
 }
 
 .paneHeader {
@@ -88,42 +72,20 @@
 }
 
 :host-context([data-recursica-theme]) .paneHeader {
-  margin-bottom: var(
-    --recursica_ui-kit_components_transfer-list_properties_title-filter-gap
-  );
-  font-family: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_fontFamily
-  );
-  font-size: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_fontSize
-  );
-  font-style: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_fontStyle
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_fontWeight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_letterSpacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_lineHeight
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_textDecoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_transfer-list_properties_header-style_textCase
-  );
-  color: var(
-    --recursica_ui-kit_components_transfer-list_properties_colors_header-color
-  );
+  margin-bottom: var(--recursica_ui-kit_components_transfer-list_properties_title-filter-gap);
+  font-family: var(--recursica_ui-kit_components_transfer-list_properties_header-style_fontFamily);
+  font-size: var(--recursica_ui-kit_components_transfer-list_properties_header-style_fontSize);
+  font-style: var(--recursica_ui-kit_components_transfer-list_properties_header-style_fontStyle);
+  font-weight: var(--recursica_ui-kit_components_transfer-list_properties_header-style_fontWeight);
+  letter-spacing: var(--recursica_ui-kit_components_transfer-list_properties_header-style_letterSpacing);
+  line-height: var(--recursica_ui-kit_components_transfer-list_properties_header-style_lineHeight);
+  text-decoration: var(--recursica_ui-kit_components_transfer-list_properties_header-style_textDecoration);
+  text-transform: var(--recursica_ui-kit_components_transfer-list_properties_header-style_textCase);
+  color: var(--recursica_ui-kit_components_transfer-list_properties_colors_header-color);
 }
 
 :host-context([data-recursica-theme]) .paneSearch {
-  margin-bottom: var(
-    --recursica_ui-kit_components_transfer-list_properties_filter-items-gap
-  );
+  margin-bottom: var(--recursica_ui-kit_components_transfer-list_properties_filter-items-gap);
 }
 
 .paneList {
@@ -136,15 +98,6 @@
      only defines gaps at the header/search/pane level, matching the reference's own
      identical hardcode (see its own comment for this exact rule). */
   gap: 2px;
-}
-
-.groupBlock {
-  display: flex;
-  flex-direction: column;
-}
-
-.groupLabel {
-  font-weight: 600;
 }
 
 .emptyState {
@@ -196,17 +149,13 @@
 -------------------------------------- */
 
 :host-context([data-recursica-theme]) .root[data-error] .pane {
-  border-color: var(
-    --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_border-color
-  );
+  border-color: var(--recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_border-color);
   background-color: var(
     --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_background-color
   );
 }
 :host-context([data-recursica-theme]) .root[data-error] .paneHeader {
-  color: var(
-    --recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_header-color
-  );
+  color: var(--recursica_ui-kit_components_transfer-list_variants_states_error_properties_colors_header-color);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled] .pane {
@@ -216,12 +165,8 @@
   background-color: var(
     --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_background-color
   );
-  opacity: var(
-    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_opacity
-  );
+  opacity: var(--recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_opacity);
 }
 :host-context([data-recursica-theme]) .root[data-disabled] .paneHeader {
-  color: var(
-    --recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_header-color
-  );
+  color: var(--recursica_ui-kit_components_transfer-list_variants_states_disabled_properties_colors_header-color);
 }

@@ -128,6 +128,7 @@ const APPEARANCE_MAP: Record<
       [disableRipple]="disableRipple ?? false"
       [attr.disabledInteractive]="disabledInteractive ? '' : null"
       [attr.aria-label]="ariaLabel ?? null"
+      [tabIndex]="buttonTabIndex"
       [attr.aria-busy]="loading ? 'true' : null"
     >
       @if (icon) {
@@ -196,6 +197,9 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
    * `iconOnly` is `true` and this is falsy.
    */
   @Input() ariaLabel?: string;
+
+  /** Tab order of the inner native button — set to `-1` for a button that must stay out of the tab order (e.g. Tree's expand chevron). */
+  @Input() buttonTabIndex?: number;
 
   @Input() overStyled = false;
   @Input() overClass?: string;

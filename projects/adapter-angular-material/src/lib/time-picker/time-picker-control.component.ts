@@ -174,7 +174,12 @@ function clamp(value: number, min: number, max: number): number {
         [disabled]="disabled"
         [error]="error"
         [overStyled]="true"
-        [overStyle]="{ width: '6rem', 'flex-shrink': '0' }"
+        [overStyle]="{
+          width: '6rem',
+          'min-width': '0',
+          'max-width': 'none',
+          'flex-shrink': '0',
+        }"
         (valueChange)="onMeridiemChange($event)"
       />
     </div>
