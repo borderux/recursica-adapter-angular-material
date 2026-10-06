@@ -19,6 +19,14 @@ export interface TreeContext {
   isSelected(value: string): boolean;
   toggleExpanded(value: string): void;
   select(value: string): void;
+  /** Roving tabindex: the one node (by value) that is currently a Tab stop. */
+  isFocusTarget(value: string): boolean;
+  setFocusTarget(value: string): void;
+  /** Moves DOM focus between visible nodes (`ArrowUp`/`ArrowDown`/`Home`/`End`, `ArrowLeft` to the parent, `ArrowRight` to the first child). */
+  moveFocus(
+    from: HTMLElement,
+    direction: "next" | "prev" | "first" | "last" | "parent" | "child",
+  ): void;
 }
 
 export const TREE_CONTEXT = new InjectionToken<TreeContext>(

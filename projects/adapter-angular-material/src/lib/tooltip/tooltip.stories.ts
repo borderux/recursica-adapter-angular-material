@@ -14,6 +14,8 @@ import { GroupComponent } from "../group/group.component";
  */
 const meta: Meta<TooltipComponent> = {
   title: "UI-Kit/Tooltip",
+  // Matches the reference story's Storybook layout.
+  parameters: { layout: "centered" },
   component: TooltipComponent,
   decorators: [
     moduleMetadata({

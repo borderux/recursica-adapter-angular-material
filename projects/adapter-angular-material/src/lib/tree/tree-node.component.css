@@ -32,12 +32,10 @@
    nested `.subtree`) is not — without the `>`, focusing a parent node would draw the ring on
    every expanded descendant's label too. Same reasoning the reference's own identical rule
    documents. */
-:host-context([data-recursica-theme]):host(:focus-visible) > .row .label {
+:host(:focus-visible) > .row .label {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -54,10 +52,7 @@
      for why this adapter has no equivalent); --tree-level is set directly per node
      (tree-node.component.ts's own [style.--tree-level] binding) and multiplied by the real
      indent token here instead. */
-  margin-left: calc(
-    var(--tree-level, 0) *
-      var(--recursica_ui-kit_components_tree_properties_indent)
-  );
+  margin-left: calc(var(--tree-level, 0) * var(--recursica_ui-kit_components_tree_properties_indent));
   gap: var(--recursica_ui-kit_components_tree_properties_button-node-gap);
 }
 
@@ -122,28 +117,16 @@
   padding: var(--recursica_ui-kit_components_tree_properties_vertical-padding)
     var(--recursica_ui-kit_components_tree_properties_horizontal-padding);
   border-width: var(--recursica_ui-kit_components_tree_properties_border-size);
-  border-radius: var(
-    --recursica_ui-kit_components_tree_properties_border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_tree_properties_border-radius);
 
-  font-family: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-weight
-  );
+  font-family: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_font-weight);
   letter-spacing: var(
     --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_letter-spacing
   );
-  line-height: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_line-height
-  );
+  line-height: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_line-height);
   text-decoration: var(
     --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_text-decoration
   );
@@ -151,9 +134,7 @@
     --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_text_text-transform
   );
 
-  color: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_text-color);
   background-color: var(
     --recursica_ui-kit_components_tree_variants_selection-states_unselected_properties_colors_background-color
   );
@@ -183,24 +164,14 @@
 }
 
 :host-context([data-recursica-theme]) .label[data-selected] {
-  font-family: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-weight
-  );
+  font-family: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_font-weight);
   letter-spacing: var(
     --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_letter-spacing
   );
-  line-height: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_line-height
-  );
+  line-height: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_line-height);
   text-decoration: var(
     --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_text-decoration
   );
@@ -208,9 +179,7 @@
     --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_text_text-transform
   );
 
-  color: var(
-    --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_text-color);
   background-color: var(
     --recursica_ui-kit_components_tree_variants_selection-states_selected_properties_colors_background-color
   );

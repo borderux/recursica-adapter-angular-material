@@ -150,7 +150,9 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit {
    */
   private readonly _uncontrolledValue = signal<string | undefined>(undefined);
 
-  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+  private readonly cva = new RecursicaValueAccessor<string | undefined>(
+    (v) => (this.value = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);

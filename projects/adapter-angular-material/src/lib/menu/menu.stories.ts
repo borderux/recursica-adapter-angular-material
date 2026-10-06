@@ -6,7 +6,6 @@ import { MenuDividerComponent } from "./menu-divider.component";
 import { MenuLabelComponent } from "./menu-label.component";
 import { MenuTriggerForDirective } from "./menu-trigger-for.directive";
 import { ButtonComponent } from "../button/button.component";
-import { StackComponent } from "../stack/stack.component";
 
 /**
  * Real implementation stories (docs/CREATING_AN_ADAPTER.md step 10) — not a
@@ -24,7 +23,6 @@ const meta: Meta<MenuComponent> = {
         MenuLabelComponent,
         MenuTriggerForDirective,
         ButtonComponent,
-        StackComponent,
       ],
     }),
   ],
@@ -45,20 +43,19 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="padding: 64px;">
-        <rec-button variant="solid" [recMenuTriggerFor]="menu">Toggle Menu</rec-button>
+      ${menuIconsTemplate}${searchIconTemplate}
+        <rec-button variant="solid" [recMenuTriggerFor]="menu" [recMenuInitiallyOpen]="true">Toggle Menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-label>Application</rec-menu-label>
-          <rec-menu-item>Settings</rec-menu-item>
-          <rec-menu-item>Messages</rec-menu-item>
-          <rec-menu-item>Gallery</rec-menu-item>
-          <rec-menu-item>Search</rec-menu-item>
+          <rec-menu-item [leftSection]="settingsIcon">Settings</rec-menu-item>
+          <rec-menu-item [leftSection]="messageIcon">Messages</rec-menu-item>
+          <rec-menu-item [leftSection]="imageIcon">Gallery</rec-menu-item>
+          <rec-menu-item [leftSection]="searchIcon">Search</rec-menu-item>
           <rec-menu-divider />
           <rec-menu-label>Danger zone</rec-menu-label>
-          <rec-menu-item>Transfer my data</rec-menu-item>
-          <rec-menu-item>Delete my account</rec-menu-item>
+          <rec-menu-item [leftSection]="arrowsIcon">Transfer my data</rec-menu-item>
+          <rec-menu-item [leftSection]="trashIcon">Delete my account</rec-menu-item>
         </rec-menu>
-      </rec-stack>
     `,
   }),
 };
@@ -67,7 +64,6 @@ export const WithLabelAndSelection: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-label>Sort by</rec-menu-label>
@@ -75,7 +71,6 @@ export const WithLabelAndSelection: Story = {
           <rec-menu-item>Date modified</rec-menu-item>
           <rec-menu-item>Size</rec-menu-item>
         </rec-menu>
-      </rec-stack>
     `,
   }),
 };
@@ -89,15 +84,14 @@ export const WithDisabledItems: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="padding: 64px;">
-        <rec-button variant="solid" [recMenuTriggerFor]="menu">Menu with Disabled</rec-button>
+      ${menuIconsTemplate}${searchIconTemplate}
+        <rec-button variant="solid" [recMenuTriggerFor]="menu" [recMenuInitiallyOpen]="true">Menu with Disabled</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
-          <rec-menu-item>Settings</rec-menu-item>
-          <rec-menu-item [disabled]="true">Search (disabled)</rec-menu-item>
-          <rec-menu-item>Messages</rec-menu-item>
-          <rec-menu-item [disabled]="true">Delete (disabled)</rec-menu-item>
+          <rec-menu-item [leftSection]="settingsIcon">Settings</rec-menu-item>
+          <rec-menu-item [leftSection]="searchIcon" [disabled]="true">Search (disabled)</rec-menu-item>
+          <rec-menu-item [leftSection]="messageIcon">Messages</rec-menu-item>
+          <rec-menu-item [leftSection]="trashIcon" [disabled]="true">Delete (disabled)</rec-menu-item>
         </rec-menu>
-      </rec-stack>
     `,
   }),
 };
@@ -114,8 +108,7 @@ export const WithSubmenus: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <rec-stack style="padding: 64px;">
-        <rec-button variant="solid" [recMenuTriggerFor]="menu">Menu with Submenus</rec-button>
+        <rec-button variant="solid" [recMenuTriggerFor]="menu" [recMenuInitiallyOpen]="true">Menu with Submenus</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-item>Dashboard</rec-menu-item>
           <rec-menu-item [subMenu]="productsMenu">Products</rec-menu-item>
@@ -131,7 +124,6 @@ export const WithSubmenus: Story = {
           <rec-menu-item>Completed</rec-menu-item>
           <rec-menu-item>Cancelled</rec-menu-item>
         </rec-menu>
-      </rec-stack>
     `,
   }),
 };
@@ -145,67 +137,45 @@ const searchIconTemplate = `
   </ng-template>
 `;
 
+/** Icon templates matching the reference story's 14px stroke icons (settings/message/gallery/trash/transfer). */
+const menuIconsTemplate = `
+  <ng-template #settingsIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+  </ng-template>
+  <ng-template #messageIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </ng-template>
+  <ng-template #imageIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+  </ng-template>
+  <ng-template #trashIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    </svg>
+  </ng-template>
+  <ng-template #arrowsIcon>
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+    </svg>
+  </ng-template>
+`;
+
 export const WithIcons: Story = {
   render: (args) => ({
     props: args,
     template: `
       ${searchIconTemplate}
-      <rec-stack style="padding: 64px;">
         <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
         <rec-menu #menu [xPosition]="xPosition" [yPosition]="yPosition">
           <rec-menu-item [leftSection]="searchIcon">Search</rec-menu-item>
           <rec-menu-item [leftSection]="searchIcon">Find replace</rec-menu-item>
         </rec-menu>
-      </rec-stack>
-    `,
-  }),
-};
-
-/**
- * `overStyled` escape hatch: `overClass` is only forwarded onto the real
- * dropdown panel (via `MatMenu`'s `panelClass`) when `overStyled` is
- * `true` — see `menu.component.ts`'s class doc comment for why there's no
- * `overStyle` counterpart, same reasoning as `Tooltip`.
- *
- * The override rule is injected straight into `document.head` via plain
- * DOM APIs, not written as a `<style>` tag in this story's own template —
- * see `tooltip.stories.ts`'s identical demo plumbing for why a template
- * `<style>` tag silently fails here (Angular's `ViewEncapsulation.Emulated`
- * scopes it, and the overlay-rendered panel never carries that scoping
- * attribute).
- */
-if (
-  typeof document !== "undefined" &&
-  !document.getElementById("rec-menu-overstyled-demo-style")
-) {
-  const style = document.createElement("style");
-  style.id = "rec-menu-overstyled-demo-style";
-  style.textContent = `
-    .mat-mdc-menu-panel.rec-menu-overstyled-demo {
-      background-color: #2962ff !important;
-    }
-    .mat-mdc-menu-panel.rec-menu-overstyled-demo .mat-mdc-menu-item {
-      color: white !important;
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-export const OverStyledEscapeHatch: Story = {
-  args: {
-    overStyled: true,
-    overClass: "rec-menu-overstyled-demo",
-  },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-stack style="padding: 64px;">
-        <rec-button variant="solid" [recMenuTriggerFor]="menu">Open menu</rec-button>
-        <rec-menu #menu [overStyled]="overStyled" [overClass]="overClass">
-          <rec-menu-item>Profile</rec-menu-item>
-          <rec-menu-item>Settings</rec-menu-item>
-        </rec-menu>
-      </rec-stack>
     `,
   }),
 };

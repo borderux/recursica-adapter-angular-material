@@ -110,6 +110,10 @@ export type RecursicaSliderValue = number | [number, number];
         </span>
       }
 
+      @if (showMinMaxLabels) {
+        <span class="minMaxGuide">{{ minLabel ?? min }}</span>
+      }
+
       <div class="sliderWrapper">
         <div class="track" [id]="id" [attr.aria-describedby]="describedByAttr">
           <div
@@ -173,11 +177,15 @@ export type RecursicaSliderValue = number | [number, number];
               }}</span>
             }
           </div>
-        } @else if (showMinMaxLabels) {
-          <div class="minMaxLabels">
-            <span class="minMaxLabel">{{ minLabel ?? min }}</span>
-            <span class="minMaxLabel">{{ maxLabel ?? max }}</span>
-          </div>
+        }
+      </div>
+
+      <div class="rightGuide">
+        @if (!showInput) {
+          <span class="currentValue">{{ displayValue }}</span>
+        }
+        @if (showMinMaxLabels) {
+          <span class="minMaxGuide">{{ maxLabel ?? max }}</span>
         }
       </div>
 
@@ -239,7 +247,7 @@ export class SliderControlComponent implements RecursicaFormControl {
   @Input() error = false;
 
   @Input() marks?: RecursicaSliderMark[];
-  @Input() showMinMaxLabels = false;
+  @Input() showMinMaxLabels = true;
   @Input() minLabel?: string;
   @Input() maxLabel?: string;
   @Input() showInput = false;
@@ -266,6 +274,13 @@ export class SliderControlComponent implements RecursicaFormControl {
 
   setDescribedByIds(ids: string[]): void {
     this.describedByIds = ids;
+  }
+
+  /** The value(s) shown above the max label when there is no number input; ranges join with an en dash. */
+  get displayValue(): string {
+    return this.isRange
+      ? `${this.startValue} – ${this.endValue}`
+      : `${this.endValue}`;
   }
 
   get isRange(): boolean {

@@ -315,7 +315,9 @@ export class CheckboxComponent
     optional: true,
   });
 
-  private readonly cva = new RecursicaValueAccessor<boolean>();
+  private readonly cva = new RecursicaValueAccessor<boolean>(
+    (v) => (this.checked = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledChecked.set(this.defaultChecked);

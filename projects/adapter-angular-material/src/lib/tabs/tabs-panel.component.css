@@ -14,3 +14,9 @@
   flex: 1;
   min-width: 0;
 }
+
+/* Vertical: the panel takes the remaining width beside the list. */
+:host-context([data-orientation="vertical"]) {
+  flex: 1 1 0;
+  min-width: 0;
+}

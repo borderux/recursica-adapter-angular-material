@@ -41,11 +41,7 @@ import { LayerComponent } from "../src/lib/layer/layer.component";
   imports: [LayerComponent],
   encapsulation: ViewEncapsulation.None,
   template: `
-    <rec-layer
-      [layer]="layer"
-      [contentsOnly]="!withLayer"
-      [style]="withLayer ? 'padding: 48px; display: block;' : null"
-    >
+    <rec-layer [layer]="layer" [contentsOnly]="!withLayer">
       <ng-content />
     </rec-layer>
   `,

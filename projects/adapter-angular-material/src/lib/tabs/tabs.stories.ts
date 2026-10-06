@@ -14,6 +14,8 @@ import { TabPanelComponent } from "./tabs-panel.component";
  */
 const meta: Meta<TabsComponent> = {
   title: "UI-Kit/Tabs",
+  // Matches the reference story's Storybook layout.
+  parameters: { layout: "centered" },
   component: TabsComponent,
   decorators: [
     moduleMetadata({
@@ -51,8 +53,8 @@ type Story = StoryObj<TabsComponent>;
  * rendered as an empty `<span>` until switched to this approach.
  */
 const template = `
-  <div style="width: 600px;">
-    <rec-tabs [variant]="variant" [orientation]="orientation" [inverted]="inverted" defaultValue="gallery">
+  <div style="display: flex; width: 600px; height: 300px;">
+    <rec-tabs style="width: 100%;" [variant]="variant" [orientation]="orientation" [inverted]="inverted" defaultValue="gallery">
       <rec-tabs-list>
         <rec-tabs-tab value="gallery" [leftSection]="galleryTpl">Gallery</rec-tabs-tab>
         <rec-tabs-tab value="messages" [leftSection]="messagesTpl">Messages</rec-tabs-tab>

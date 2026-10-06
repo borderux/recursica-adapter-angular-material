@@ -71,17 +71,15 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
-          <rec-dropdown
-            [data]="${COUNTRIES_NG_LIST}"
-            [placeholder]="placeholder"
-            [disabled]="disabled"
-            [required]="required"
-            [error]="error"
-          ></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
+        <rec-dropdown
+          [data]="${COUNTRIES_NG_LIST}"
+          [placeholder]="placeholder"
+          [disabled]="disabled"
+          [required]="required"
+          [error]="error"
+        ></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -90,16 +88,13 @@ export const Clearable: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Clearable Options" assistiveText="Select your country of origin.">
-          <rec-dropdown
-            [data]="${COUNTRIES_NG_LIST}"
-            value="Canada"
-            [placeholder]="placeholder"
-            [clearable]="true"
-          ></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Clearable Options" assistiveText="Select your country of origin.">
+        <rec-dropdown
+          [data]="${COUNTRIES_NG_LIST}"
+          [placeholder]="placeholder"
+          [clearable]="true"
+        ></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -118,15 +113,13 @@ export const WithLeadingIcon: Story = {
     props: args,
     template: `
       ${pinIconTemplate}
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Destination" assistiveText="Select your country of origin.">
-          <rec-dropdown
-            [data]="${COUNTRIES_NG_LIST}"
-            [placeholder]="placeholder"
-            [leftSection]="pinIcon"
-          ></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Destination" assistiveText="Select your country of origin.">
+        <rec-dropdown
+          [data]="${COUNTRIES_NG_LIST}"
+          [placeholder]="placeholder"
+          [leftSection]="pinIcon"
+        ></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -151,14 +144,12 @@ export const WithRichOptions: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
-        <rec-form-control-wrapper
-          label="Assignee"
-          assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
-        >
-          <rec-dropdown [data]="${richOptionsData}" placeholder="Pick a team member"></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper
+        label="Assignee"
+        assistiveText="Each option can show a leading icon and supporting text — see MANTINE_ADAPTER_RICH_OPTION_DATA.md."
+      >
+        <rec-dropdown [data]="${richOptionsData}" placeholder="Pick a team member"></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -173,18 +164,16 @@ export const WithRichOptionsWrapped: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <div style="width: 320px;">
-        <rec-form-control-wrapper
-          label="Assignee"
-          assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
-        >
-          <rec-dropdown
-            [data]="${wrappedRichOptionsData}"
-            placeholder="Pick a team member"
-            [wrapItemText]="true"
-          ></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper
+        label="Assignee"
+        assistiveText="wrapItemText=true — long label/supportingText wrap instead of truncating."
+      >
+        <rec-dropdown
+          [data]="${wrappedRichOptionsData}"
+          placeholder="Pick a team member"
+          [wrapItemText]="true"
+        ></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -211,7 +200,7 @@ export const RichOptionRowPreview: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <div style="width: 320px; padding-bottom: 260px;">
+      <div style="padding-bottom: 260px;">
         <rec-form-control-wrapper label="Assignee">
           <rec-dropdown [data]="${previewRowsData}" placeholder="Pick a team member" [debugForceOpen]="true"></rec-dropdown>
         </rec-form-control-wrapper>
@@ -227,7 +216,7 @@ export const RichOptionRowPreviewWrapped: Story = {
     props: args,
     template: `
       ${userIconTemplate}
-      <div style="width: 320px; padding-bottom: 320px;">
+      <div style="padding-bottom: 320px;">
         <rec-form-control-wrapper label="Assignee">
           <rec-dropdown
             [data]="${previewRowsData}"
@@ -250,11 +239,9 @@ export const StaticError: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin." error="You must choose a valid destination.">
-          <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Invalid Island" [error]="true"></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin." error="You must choose a valid destination.">
+        <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Invalid Island" [error]="true"></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -263,11 +250,9 @@ export const StaticDisabled: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
-          <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="United States" [disabled]="true"></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Country Selection" assistiveText="Select your country of origin.">
+        <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="United States" [disabled]="true"></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -276,11 +261,9 @@ export const StaticReadOnly: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Read Only View" assistiveText="Select your country of origin.">
-          <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Canada" [readOnly]="true"></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Read Only View" assistiveText="Select your country of origin.">
+        <rec-dropdown [data]="${COUNTRIES_NG_LIST}" value="Canada" [readOnly]="true"></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };
@@ -295,11 +278,9 @@ export const ReactiveForms: Story = {
   render: () => ({
     props: { ctrl: new FormControl("Canada") },
     template: `
-      <div style="width: 320px;">
-        <rec-form-control-wrapper label="Reactive Forms Dropdown">
-          <rec-dropdown [data]="${COUNTRIES_NG_LIST}" [formControl]="ctrl"></rec-dropdown>
-        </rec-form-control-wrapper>
-      </div>
+      <rec-form-control-wrapper label="Reactive Forms Dropdown">
+        <rec-dropdown [data]="${COUNTRIES_NG_LIST}" [formControl]="ctrl"></rec-dropdown>
+      </rec-form-control-wrapper>
     `,
   }),
 };

@@ -23,57 +23,29 @@
  */
 
 [data-recursica-theme] .mat-mdc-tooltip.rec-tooltip {
-  --mat-tooltip-container-color: var(
-    --recursica_ui-kit_components_tooltip_properties_colors_background-color
-  );
-  --mat-tooltip-supporting-text-color: var(
-    --recursica_ui-kit_components_tooltip_properties_colors_text-color
-  );
-  --mat-tooltip-container-shape: var(
-    --recursica_ui-kit_components_tooltip_properties_border-radius
-  );
-  --mat-tooltip-supporting-text-font: var(
-    --recursica_ui-kit_components_tooltip_properties_text_font-family
-  );
-  --mat-tooltip-supporting-text-size: var(
-    --recursica_ui-kit_components_tooltip_properties_text_font-size
-  );
-  --mat-tooltip-supporting-text-weight: var(
-    --recursica_ui-kit_components_tooltip_properties_text_font-weight
-  );
-  --mat-tooltip-supporting-text-line-height: var(
-    --recursica_ui-kit_components_tooltip_properties_text_line-height
-  );
-  --mat-tooltip-supporting-text-tracking: var(
-    --recursica_ui-kit_components_tooltip_properties_text_letter-spacing
-  );
+  --mat-tooltip-container-color: var(--recursica_ui-kit_components_tooltip_properties_colors_background-color);
+  --mat-tooltip-supporting-text-color: var(--recursica_ui-kit_components_tooltip_properties_colors_text-color);
+  --mat-tooltip-container-shape: var(--recursica_ui-kit_components_tooltip_properties_border-radius);
+  --mat-tooltip-supporting-text-font: var(--recursica_ui-kit_components_tooltip_properties_text_font-family);
+  --mat-tooltip-supporting-text-size: var(--recursica_ui-kit_components_tooltip_properties_text_font-size);
+  --mat-tooltip-supporting-text-weight: var(--recursica_ui-kit_components_tooltip_properties_text_font-weight);
+  --mat-tooltip-supporting-text-line-height: var(--recursica_ui-kit_components_tooltip_properties_text_line-height);
+  --mat-tooltip-supporting-text-tracking: var(--recursica_ui-kit_components_tooltip_properties_text_letter-spacing);
 }
 
 [data-recursica-theme] .mat-mdc-tooltip.rec-tooltip .mat-mdc-tooltip-surface {
-  padding: var(
-      --recursica_ui-kit_components_tooltip_properties_vertical-padding
-    )
+  padding: var(--recursica_ui-kit_components_tooltip_properties_vertical-padding)
     var(--recursica_ui-kit_components_tooltip_properties_horizontal-padding);
   min-width: var(--recursica_ui-kit_components_tooltip_properties_min-width);
   max-width: var(--recursica_ui-kit_components_tooltip_properties_max-width);
   min-height: var(--recursica_ui-kit_components_tooltip_properties_min-height);
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_tooltip_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_tooltip_properties_colors_border-color
-  );
+  border-width: var(--recursica_ui-kit_components_tooltip_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_tooltip_properties_colors_border-color);
   box-shadow: var(--recursica_ui-kit_components_tooltip_properties_elevation);
-  font-style: var(
-    --recursica_ui-kit_components_tooltip_properties_text_font-style
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_tooltip_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_tooltip_properties_text_text-transform
-  );
+  font-style: var(--recursica_ui-kit_components_tooltip_properties_text_font-style);
+  text-decoration: var(--recursica_ui-kit_components_tooltip_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_tooltip_properties_text_text-transform);
 }
 
 /*
@@ -94,62 +66,32 @@
 [data-recursica-theme] .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
   content: "";
   position: absolute;
-  width: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071
-  );
-  height: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071
-  );
-  background-color: var(
-    --recursica_ui-kit_components_tooltip_properties_colors_background-color
-  );
+  width: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071);
+  height: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * 0.7071);
+  background-color: var(--recursica_ui-kit_components_tooltip_properties_colors_background-color);
   transform: rotate(45deg);
 }
 
-[data-recursica-theme]
-  .mat-mdc-tooltip-panel-below
-  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
-  top: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+[data-recursica-theme] .mat-mdc-tooltip-panel-below .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  top: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
   left: 50%;
-  margin-left: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+  margin-left: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
 }
 
-[data-recursica-theme]
-  .mat-mdc-tooltip-panel-above
-  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
-  bottom: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+[data-recursica-theme] .mat-mdc-tooltip-panel-above .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  bottom: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
   left: 50%;
-  margin-left: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+  margin-left: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
 }
 
-[data-recursica-theme]
-  .mat-mdc-tooltip-panel-right
-  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
-  left: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+[data-recursica-theme] .mat-mdc-tooltip-panel-right .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  left: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
   top: 50%;
-  margin-top: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+  margin-top: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
 }
 
-[data-recursica-theme]
-  .mat-mdc-tooltip-panel-left
-  .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
-  right: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+[data-recursica-theme] .mat-mdc-tooltip-panel-left .mat-mdc-tooltip.rec-tooltip.rec-tooltip-beak::after {
+  right: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
   top: 50%;
-  margin-top: calc(
-    var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536
-  );
+  margin-top: calc(var(--recursica_ui-kit_components_tooltip_properties_beak-size) * -0.3536);
 }

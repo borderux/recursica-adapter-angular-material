@@ -217,7 +217,9 @@ export class RadioGroupComponent
 
   private readonly _uncontrolledValue = signal<string | undefined>(undefined);
 
-  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+  private readonly cva = new RecursicaValueAccessor<string | undefined>(
+    (v) => (this.value = v),
+  );
 
   /**
    * Seeds the uncontrolled-`value` signal from `defaultValue` here, not in

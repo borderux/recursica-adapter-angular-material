@@ -224,7 +224,9 @@ export class SwitchGroupComponent
 
   private readonly _uncontrolledValue = signal<string[]>([]);
 
-  private readonly cva = new RecursicaValueAccessor<string[] | undefined>();
+  private readonly cva = new RecursicaValueAccessor<string[] | undefined>(
+    (v) => (this.value = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);

@@ -65,10 +65,8 @@
 }
 :host-context([data-recursica-theme]) .step:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -87,6 +85,7 @@
 }
 
 .stepIcon {
+  box-sizing: border-box; /* the indicator-size token includes the border, like Mantine's */
   width: var(--stepper-indicator-size);
   height: var(--stepper-indicator-size);
   min-width: var(--stepper-indicator-size);
@@ -110,36 +109,20 @@
 }
 
 :host-context([data-recursica-theme]) .stepIcon {
-  background-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-border-color
-  );
-  color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-text
-  );
+  background-color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-background-color);
+  border-color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-border-color);
+  color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-indicator-text);
 }
 
 :host-context([data-recursica-theme]) .stepIcon[data-completed] {
-  background-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-border-color
-  );
+  background-color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-indicator-background-color);
+  border-color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-indicator-border-color);
 }
 
 :host-context([data-recursica-theme]) .stepIcon[data-progress] {
-  background-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-border-color
-  );
-  color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_current-indicator-text
-  );
+  background-color: var(--recursica_ui-kit_components_stepper_properties_colors_current-indicator-background-color);
+  border-color: var(--recursica_ui-kit_components_stepper_properties_colors_current-indicator-border-color);
+  color: var(--recursica_ui-kit_components_stepper_properties_colors_current-indicator-text);
 }
 
 .stepCompletedIcon svg {
@@ -148,9 +131,7 @@
 }
 
 :host-context([data-recursica-theme]) .stepCompletedIcon {
-  color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_completed-indicator-text
-  );
+  color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-indicator-text);
 }
 
 /* ---------------------------------
@@ -176,30 +157,18 @@
      ever renders `.separator` for horizontal orientation, so that base
      rule's left/right values would always be dead code here and are
      omitted rather than ported literally). */
-  margin-left: calc(
-    -1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2
-  );
-  margin-right: calc(
-    -1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2
-  );
+  margin-left: calc(-1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2);
+  margin-right: calc(-1 * (var(--stepper-max-text-width) - var(--stepper-indicator-size)) / 2);
 }
 
 :host-context([data-recursica-theme]) .separator {
-  background-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color
-  );
-  height: var(
-    --recursica_ui-kit_components_stepper_properties_upcoming-connector-size
-  );
+  background-color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color);
+  height: var(--recursica_ui-kit_components_stepper_properties_upcoming-connector-size);
 }
 
 :host-context([data-recursica-theme]) .separator[data-active] {
-  background-color: var(
-    --recursica_ui-kit_components_stepper_properties_colors_completed-connector-color
-  );
-  height: var(
-    --recursica_ui-kit_components_stepper_properties_completed-connector-size
-  );
+  background-color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-connector-color);
+  height: var(--recursica_ui-kit_components_stepper_properties_completed-connector-size);
 }
 
 /* Vertical — lives *inside* this step's own `.stepWrapper`, spanning from
@@ -222,23 +191,13 @@
 }
 
 :host-context([data-recursica-theme]) .verticalSeparator {
-  border-inline-start: var(
-      --recursica_ui-kit_components_stepper_properties_upcoming-connector-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color
-    );
+  border-inline-start: var(--recursica_ui-kit_components_stepper_properties_upcoming-connector-size) solid
+    var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-connector-color);
 }
 
 :host-context([data-recursica-theme]) .verticalSeparator[data-active] {
-  border-inline-start: var(
-      --recursica_ui-kit_components_stepper_properties_completed-connector-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_stepper_properties_colors_completed-connector-color
-    );
+  border-inline-start: var(--recursica_ui-kit_components_stepper_properties_completed-connector-size) solid
+    var(--recursica_ui-kit_components_stepper_properties_colors_completed-connector-color);
 }
 
 /* ---------------------------------
@@ -272,57 +231,25 @@
 }
 
 .stepLabel {
-  font-family: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_stepper_properties_label-text_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_stepper_properties_label-text_font-family);
+  font-size: var(--recursica_ui-kit_components_stepper_properties_label-text_font-size);
+  font-style: var(--recursica_ui-kit_components_stepper_properties_label-text_font-style);
+  font-weight: var(--recursica_ui-kit_components_stepper_properties_label-text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_stepper_properties_label-text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_stepper_properties_label-text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_stepper_properties_label-text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_stepper_properties_label-text_text-transform);
 }
 
 .stepDescription {
-  font-family: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_stepper_properties_description-text_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_stepper_properties_description-text_font-family);
+  font-size: var(--recursica_ui-kit_components_stepper_properties_description-text_font-size);
+  font-style: var(--recursica_ui-kit_components_stepper_properties_description-text_font-style);
+  font-weight: var(--recursica_ui-kit_components_stepper_properties_description-text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_stepper_properties_description-text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_stepper_properties_description-text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_stepper_properties_description-text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_stepper_properties_description-text_text-transform);
 }
 
 /* State colors — `[data-completed]`/`[data-progress]` live on `.step`
@@ -338,38 +265,26 @@
 :host-context([data-recursica-theme]) {
   .step[data-completed] {
     .stepLabel {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_completed-label-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-label-color);
     }
     .stepDescription {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_completed-description-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_completed-description-color);
     }
   }
   .step[data-progress] {
     .stepLabel {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_current-label-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_current-label-color);
     }
     .stepDescription {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_current-description-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_current-description-color);
     }
   }
   .step:not([data-completed]):not([data-progress]) {
     .stepLabel {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_upcoming-label-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-label-color);
     }
     .stepDescription {
-      color: var(
-        --recursica_ui-kit_components_stepper_properties_colors_upcoming-description-color
-      );
+      color: var(--recursica_ui-kit_components_stepper_properties_colors_upcoming-description-color);
     }
   }
 }

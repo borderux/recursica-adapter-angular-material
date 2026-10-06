@@ -32,9 +32,9 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  margin-bottom: var(
-    --recursica_ui-kit_globals_form_properties_vertical-item-gap
-  );
+  /* A control can override the bottom margin with its own layout token (the reference's
+     `--form-control-margin-bottom`), e.g. Slider. */
+  margin-bottom: var(--form-control-margin-bottom, var(--recursica_ui-kit_globals_form_properties_vertical-item-gap));
 }
 
 .root[data-form-layout="stacked"] {
@@ -76,40 +76,24 @@
 
 :host-context([data-recursica-theme]) .root[data-form-layout="stacked"] {
   .leftSection {
-    padding-bottom: var(
-      --recursica_ui-kit_components_label_variants_layouts_stacked_properties_bottom-padding
-    );
-    min-height: var(
-      --recursica_ui-kit_components_label_variants_layouts_stacked_properties_min-height
-    );
+    padding-bottom: var(--recursica_ui-kit_components_label_variants_layouts_stacked_properties_bottom-padding);
+    min-height: var(--recursica_ui-kit_components_label_variants_layouts_stacked_properties_min-height);
 
     &[data-size="default"] {
-      width: var(
-        --recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_default_properties_width
-      );
+      width: var(--recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_default_properties_width);
     }
     &[data-size="small"] {
-      width: var(
-        --recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_small_properties_width
-      );
+      width: var(--recursica_ui-kit_components_label_variants_layouts_stacked_variants_sizes_small_properties_width);
     }
   }
 }
 
 :host-context([data-recursica-theme]) .root[data-form-layout="side-by-side"] {
   .leftSection {
-    padding-top: var(
-      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding
-    );
-    padding-bottom: var(
-      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding
-    );
-    min-height: var(
-      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_min-height
-    );
-    margin-right: var(
-      --recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_gutter
-    );
+    padding-top: var(--recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding);
+    padding-bottom: var(--recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_vertical-padding);
+    min-height: var(--recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_min-height);
+    margin-right: var(--recursica_ui-kit_components_label_variants_layouts_side-by-side_properties_gutter);
 
     &[data-size="default"] {
       width: var(

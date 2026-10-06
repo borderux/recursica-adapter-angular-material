@@ -13,6 +13,12 @@
  * different ancestor elements).
  */
 
+/* The list element itself is the flex item of the Tabs root, so in vertical orientation it
+   stretches to the full height and its divider line spans the whole control. */
+:host {
+  display: contents;
+}
+
 .list {
   box-sizing: border-box;
   display: flex;

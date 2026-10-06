@@ -84,8 +84,8 @@ let nextId = 0;
       [style]="resolvedOverStyle.style"
       [formLayout]="formLayout"
       [labelSize]="labelSize"
-      [controlMaxWidth]="controlMaxWidth"
-      [controlMinWidth]="controlMinWidth"
+      [controlMaxWidth]="resolvedControlMaxWidth"
+      [controlMinWidth]="resolvedControlMinWidth"
       [leftSection]="label ? labelTemplate : undefined"
     >
       <ng-template #labelTemplate>
@@ -178,6 +178,21 @@ export class FormControlWrapperComponent
   readonly errorId = `${this.baseId}-error`;
 
   controlId: string | undefined = undefined;
+
+  /** Explicit input wins; otherwise the projected control's own design-system width. */
+  get resolvedControlMaxWidth(): string | undefined {
+    return (
+      this.controlMaxWidth ??
+      this.control?.getControlWidths?.(this.formLayout).max
+    );
+  }
+
+  get resolvedControlMinWidth(): string | undefined {
+    return (
+      this.controlMinWidth ??
+      this.control?.getControlWidths?.(this.formLayout).min
+    );
+  }
 
   /** `assistiveText` takes priority over the native-API fallback aliases, matching the React reference. */
   get resolvedAssistive(): string | TemplateRef<unknown> | undefined {

@@ -72,7 +72,7 @@ let nextId = 0;
       [description]="description"
       [assistiveText]="assistiveText"
       [helperText]="helperText"
-      [error]="error"
+      [error]="errorMessage"
       [assistiveWithIcon]="assistiveWithIcon"
       [controlMaxWidth]="resolvedControlMaxWidth"
       [controlMinWidth]="resolvedControlMinWidth"
@@ -115,8 +115,13 @@ export class NumberInputComponent implements ControlValueAccessor, OnInit {
   @Input() required = false;
   @Input() readOnly = false;
 
+  /** Message text only: `true` (visual-only error, no text) shows no assistive message, like the reference. */
+  get errorMessage(): string | undefined {
+    return typeof this.error === "string" ? this.error : undefined;
+  }
+
   /** Doubles as the wrapper's error message and the control's visual flag — mirrors `TextArea`'s identical `error` input. */
-  @Input() error?: string;
+  @Input() error?: string | boolean;
 
   @Input() min?: number;
   @Input() max?: number;
@@ -156,7 +161,9 @@ export class NumberInputComponent implements ControlValueAccessor, OnInit {
    */
   private readonly _uncontrolledValue = signal<number | undefined>(undefined);
 
-  private readonly cva = new RecursicaValueAccessor<number | undefined>();
+  private readonly cva = new RecursicaValueAccessor<number | undefined>(
+    (v) => (this.value = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue);

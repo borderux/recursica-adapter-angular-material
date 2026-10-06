@@ -188,7 +188,9 @@ export class SegmentedControlComponent
   private _uncontrolledValue?: string;
   private resizeObserver?: ResizeObserver;
 
-  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+  private readonly cva = new RecursicaValueAccessor<string | undefined>(
+    (v) => (this.value = v),
+  );
 
   get normalizedData(): RecursicaSegmentedControlItem[] {
     return this.data.map(normalizeSegmentedControlItem);

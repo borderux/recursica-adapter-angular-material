@@ -32,6 +32,13 @@ import { InjectionToken } from "@angular/core";
 export interface RecursicaFormControl {
   readonly id: string;
   setDescribedByIds(ids: string[]): void;
+  /**
+   * Optional: this control's design-system min/max width for the given form layout (CSS values,
+   * e.g. `var(--recursica_ui-kit_components_text-field_..._max-width)`). `FormControlWrapper` uses
+   * them unless its own `controlMaxWidth`/`controlMinWidth` inputs are set — the Angular
+   * equivalent of the reference's controls passing these to their built-in wrapper.
+   */
+  getControlWidths?(formLayout: string): { max: string; min: string };
 }
 
 export const RECURSICA_FORM_CONTROL = new InjectionToken<RecursicaFormControl>(

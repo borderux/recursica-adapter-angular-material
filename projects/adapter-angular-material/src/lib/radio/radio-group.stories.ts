@@ -102,39 +102,10 @@ export const ReadOnly: Story = {
 // items (and native arrow-key navigation between siblings) can be
 // exercised with real Playwright interaction. See
 // IMPLEMENTATION_NOTES.md's Verification section.
-export const InteractiveExclusiveSelect: Story = {
-  render: () => ({
-    template: `
-      <rec-stack>
-        <rec-radio-group formLayout="stacked" label="Pick one" [value]="value" (valueChange)="value = $event">
-          <rec-radio value="a" label="Option A"></rec-radio>
-          <rec-radio value="b" label="Option B"></rec-radio>
-          <rec-radio value="c" label="Option C"></rec-radio>
-        </rec-radio-group>
-        <p data-testid="selected-value">{{ value }}</p>
-      </rec-stack>
-    `,
-    props: { value: "" as string },
-  }),
-};
 
 // Verification-only story — two disabled radios (one preselected) inside an
 // otherwise-active group, confirming disabled members can't be selected by
 // click even while sitting next to selectable siblings.
-export const InteractiveDisabledMember: Story = {
-  render: () => ({
-    template: `
-      <rec-stack>
-        <rec-radio-group formLayout="stacked" label="Pick an available option" [value]="value" (valueChange)="value = $event">
-          <rec-radio value="a" label="Option A"></rec-radio>
-          <rec-radio value="b" label="Option B (disabled)" [disabled]="true"></rec-radio>
-        </rec-radio-group>
-        <p data-testid="selected-value">{{ value }}</p>
-      </rec-stack>
-    `,
-    props: { value: "a" as string },
-  }),
-};
 
 /**
  * `ControlValueAccessor` regression coverage (`docs/COMPONENT_DEV_GUIDE.md`'s

@@ -77,12 +77,15 @@ export type RecursicaTimelineBulletVariant =
         @if (title) {
           <div class="itemTitle">{{ title }}</div>
         }
+        <ng-template #content><ng-content /></ng-template>
         <div class="itemContent">
           @if (timestamp) {
-            <div class="description"><ng-content /></div>
+            <div class="description">
+              <ng-container [ngTemplateOutlet]="content" />
+            </div>
             <div class="timestamp">{{ timestamp }}</div>
           } @else {
-            <ng-content />
+            <ng-container [ngTemplateOutlet]="content" />
           }
         </div>
       </div>

@@ -34,7 +34,7 @@
 
 .groupRoot[data-layout="side-by-side"] {
   flex-direction: column;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 :host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
@@ -57,9 +57,7 @@
 }
 
 :host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
-  margin-top: var(
-    --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_top-bottom-margin
-  );
+  margin-top: var(--recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_top-bottom-margin);
   margin-bottom: var(
     --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_top-bottom-margin
   );
@@ -72,18 +70,16 @@
 }
 
 :host-context([data-recursica-theme]) .groupRoot[data-layout="stacked"] {
-  gap: var(
-    --recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_label-field-gap
-  );
+  gap: var(--recursica_ui-kit_components_checkbox-group_variants_layouts_stacked_properties_label-field-gap);
 }
 
+/* Side-by-side only places the label beside the control; the items themselves are always a
+   vertical stack. */
 .groupRoot[data-layout="side-by-side"] {
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
 :host-context([data-recursica-theme]) .groupRoot[data-layout="side-by-side"] {
-  gap: var(
-    --recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_gutter
-  );
+  gap: var(--recursica_ui-kit_components_checkbox-group_variants_layouts_side-by-side_properties_gutter);
 }

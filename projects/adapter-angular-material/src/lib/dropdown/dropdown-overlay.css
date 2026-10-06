@@ -40,39 +40,20 @@
   overflow: auto;
   max-height: 320px;
   box-sizing: border-box;
-  background-color: var(
-    --recursica_ui-kit_components_dropdown_properties_colors_background-color
-  );
-  border: 1px solid
-    var(--recursica_ui-kit_components_dropdown_properties_colors_border-color);
-  border-radius: var(
-    --recursica_ui-kit_components_dropdown_properties_border-radius
-  );
-  padding-top: var(
-    --recursica_ui-kit_components_dropdown_properties_vertical-padding
-  );
-  padding-bottom: var(
-    --recursica_ui-kit_components_dropdown_properties_vertical-padding
-  );
+  background-color: var(--recursica_ui-kit_components_dropdown_properties_colors_background-color);
+  border: 1px solid var(--recursica_ui-kit_components_dropdown_properties_colors_border-color);
+  border-radius: var(--recursica_ui-kit_components_dropdown_properties_border-radius);
+  padding-top: var(--recursica_ui-kit_components_dropdown_properties_vertical-padding);
+  padding-bottom: var(--recursica_ui-kit_components_dropdown_properties_vertical-padding);
 }
 
 [data-recursica-theme] .rec-dropdown-panel .option {
   cursor: pointer;
-  font-family: var(
-    --recursica_ui-kit_components_dropdown_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_dropdown_properties_text_font-size
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_dropdown_properties_text_font-weight
-  );
-  color: var(
-    --recursica_ui-kit_components_dropdown_properties_colors_text-color
-  );
-  padding: var(
-      --recursica_ui-kit_components_menu-item_properties_vertical-padding
-    )
+  font-family: var(--recursica_ui-kit_components_dropdown_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_dropdown_properties_text_font-size);
+  font-weight: var(--recursica_ui-kit_components_dropdown_properties_text_font-weight);
+  color: var(--recursica_ui-kit_components_dropdown_properties_colors_text-color);
+  padding: var(--recursica_ui-kit_components_menu-item_properties_vertical-padding)
     var(--recursica_ui-kit_components_menu-item_properties_horizontal-padding);
   margin-bottom: var(--recursica_ui-kit_components_menu_properties_item-gap);
 }
@@ -91,8 +72,7 @@
 [data-recursica-theme] .rec-dropdown-panel .option[data-hovered="true"] {
   background-color: color-mix(
     in srgb,
-    var(--recursica_brand_states_hover_color)
-      calc(var(--recursica_brand_states_hover_opacity) * 100%),
+    var(--recursica_brand_states_hover_color) calc(var(--recursica_brand_states_hover_opacity) * 100%),
     transparent
   );
 }
@@ -101,9 +81,7 @@
   background-color: var(
     --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_background-color
   );
-  color: var(
-    --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_text-color);
 }
 
 [data-recursica-theme] .rec-dropdown-panel .optionContent {
@@ -115,12 +93,8 @@
 [data-recursica-theme] .rec-dropdown-panel .optionIcon {
   display: flex;
   flex-shrink: 0;
-  width: var(
-    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
-  );
-  height: var(
-    --recursica_ui-kit_components_menu-item_properties_icon-leading-size
-  );
+  width: var(--recursica_ui-kit_components_menu-item_properties_icon-leading-size);
+  height: var(--recursica_ui-kit_components_menu-item_properties_icon-leading-size);
   color: var(
     --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_leading-icon-color
   );
@@ -131,10 +105,7 @@
   height: 100%;
 }
 
-[data-recursica-theme]
-  .rec-dropdown-panel
-  .option[data-selected="true"]
-  .optionIcon {
+[data-recursica-theme] .rec-dropdown-panel .option[data-selected="true"] .optionIcon {
   color: var(
     --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_leading-icon-color
   );
@@ -156,10 +127,7 @@
 }
 
 [data-recursica-theme] .rec-dropdown-panel .optionTextWrap .optionLabel,
-[data-recursica-theme]
-  .rec-dropdown-panel
-  .optionTextWrap
-  .optionSupportingText {
+[data-recursica-theme] .rec-dropdown-panel .optionTextWrap .optionSupportingText {
   overflow: visible;
   text-overflow: clip;
   white-space: normal;
@@ -167,24 +135,12 @@
 }
 
 [data-recursica-theme] .rec-dropdown-panel .optionSupportingText {
-  font-family: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_menu-item_properties_supporting-text_line-height
-  );
+  font-family: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_font-family);
+  font-size: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_font-size);
+  font-style: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_font-style);
+  font-weight: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_menu-item_properties_supporting-text_line-height);
   color: var(
     --recursica_ui-kit_components_menu-item_variants_selection-states_unselected_properties_colors_supporting-text-color
   );
@@ -194,10 +150,7 @@
   white-space: nowrap;
 }
 
-[data-recursica-theme]
-  .rec-dropdown-panel
-  .option[data-selected="true"]
-  .optionSupportingText {
+[data-recursica-theme] .rec-dropdown-panel .option[data-selected="true"] .optionSupportingText {
   color: var(
     --recursica_ui-kit_components_menu-item_variants_selection-states_selected_properties_colors_supporting-text-color
   );
