@@ -81,8 +81,9 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
-    <ng-template #fcw let-content>
+    <ng-template #fcw let-content let-isActive="isActive">
       <rec-form-control-wrapper
+        [controlIdOverride]="isActive ? controlId : undefined"
         [formLayout]="formLayout"
         [labelSize]="labelSize"
         [labelAlignment]="labelAlignment"
@@ -112,7 +113,10 @@ import {
       @if (readOnlyTemplate) {
         <ng-container
           [ngTemplateOutlet]="fcw"
-          [ngTemplateOutletContext]="{ $implicit: readOnlyTemplate }"
+          [ngTemplateOutletContext]="{
+            $implicit: readOnlyTemplate,
+            isActive: false,
+          }"
         />
       } @else {
         <rec-read-only-field
@@ -146,7 +150,10 @@ import {
     } @else {
       <ng-container
         [ngTemplateOutlet]="fcw"
-        [ngTemplateOutletContext]="{ $implicit: activeTemplate }"
+        [ngTemplateOutletContext]="{
+          $implicit: activeTemplate,
+          isActive: true,
+        }"
       />
     }
   `,
@@ -163,6 +170,9 @@ export class WithReadOnlyWrapperComponent implements RecursicaOverStyled {
    * Mirrors `readOnlyComponent`/`readOnlyNativeProps`.
    */
   @Input() readOnlyTemplate?: TemplateRef<unknown>;
+
+  /** `id` of the control inside `activeTemplate`, so the label's `for` points at it (see `FormControlWrapperComponent.controlIdOverride`). */
+  @Input() controlId?: string;
 
   @Input() readOnlyValue?: unknown;
   @Input() readOnlyType: RecursicaReadOnlyFieldType = "text";

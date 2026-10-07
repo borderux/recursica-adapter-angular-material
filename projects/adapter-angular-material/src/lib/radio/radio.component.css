@@ -28,6 +28,8 @@
 
 .root {
   display: inline-block;
+  /* Top-aligned so the host's line box (baseline strut) doesn't add extra height below the row. */
+  vertical-align: top;
 }
 
 :host-context([data-recursica-theme]) .root {

@@ -58,6 +58,7 @@ const READ_ONLY_FORMAT: Intl.DateTimeFormatOptions = {
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
+      [controlId]="id"
       [activeTemplate]="active"
       readOnlyType="text"
       [readOnlyValue]="formattedReadOnlyValue"

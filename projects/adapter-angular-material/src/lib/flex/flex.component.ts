@@ -55,6 +55,8 @@ export type RecursicaFlexWrap = "wrap" | "nowrap" | "wrap-reverse";
     "[style.row-gap]": "resolvedRowGap",
     "[style.column-gap]": "resolvedColumnGap",
     "[style.align-items]": "align ?? null",
+    // A static `align="…"` would otherwise stay on the host as the legacy HTML `align` attribute, which Chrome maps to `text-align`.
+    "[attr.align]": "null",
     "[style.justify-content]": "justify ?? null",
   },
   template: `<ng-content />`,

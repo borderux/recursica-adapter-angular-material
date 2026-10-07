@@ -124,10 +124,23 @@ export class ThemeProviderComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.document.documentElement.removeAttribute(THEME_ATTRIBUTE);
+    const root = this.document.documentElement;
+    root.removeAttribute(THEME_ATTRIBUTE);
+    root.style.removeProperty("font-family");
   }
 
+  /**
+   * Also sets the brand font on `<html>` so text nothing else styles (e.g. the
+   * description elements Material's tooltip appends to `<body>`) inherits it
+   * instead of falling back to the browser's serif default. Elements and
+   * apps that set their own `font-family` still win.
+   */
   private applyTheme(): void {
-    this.document.documentElement.setAttribute(THEME_ATTRIBUTE, this.theme);
+    const root = this.document.documentElement;
+    root.setAttribute(THEME_ATTRIBUTE, this.theme);
+    root.style.setProperty(
+      "font-family",
+      "var(--recursica_brand_fonts_primary)",
+    );
   }
 }

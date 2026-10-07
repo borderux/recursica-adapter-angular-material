@@ -25,6 +25,8 @@ export type RecursicaGroupWrap = "wrap" | "nowrap" | "wrap-reverse";
     "[style.flex-wrap]": "wrap",
     "[style.justify-content]": "justify",
     "[style.align-items]": "align",
+    // A static `align="…"` would otherwise stay on the host as the legacy HTML `align` attribute, which Chrome maps to `text-align`.
+    "[attr.align]": "null",
     "[style.gap]": "resolvedGap",
     "[style.row-gap]": "resolvedRowGap",
     "[style.column-gap]": "resolvedColumnGap",

@@ -75,6 +75,7 @@ let nextId = 0;
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
+      [controlId]="id"
       [activeTemplate]="active"
       readOnlyType="text"
       [readOnlyValue]="currentValue"
