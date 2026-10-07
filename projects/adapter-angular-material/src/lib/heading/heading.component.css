@@ -1,3 +1,14 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Text and Heading have no ui-kit component tokens; text color, status colors and emphasis come directly
+ * from the brand layer / text-emphasis tokens.
+ *   recursica-allow-brand: --recursica_brand_layer_elements_text_alert
+ *   recursica-allow-brand: --recursica_brand_layer_elements_text_color
+ *   recursica-allow-brand: --recursica_brand_layer_elements_text_success
+ *   recursica-allow-brand: --recursica_brand_layer_elements_text_warning
+ *   recursica-allow-brand: --recursica_brand_text-emphasis_high
+ *   recursica-allow-brand: --recursica_brand_text-emphasis_low
+ */
+
 /*
  * Ported from the genesis adapter's `Heading.module.css`. The typography
  * itself comes from the pre-existing global `.recursica_brand_typography_h{1-6}`
