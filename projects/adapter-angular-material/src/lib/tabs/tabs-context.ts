@@ -14,6 +14,8 @@ export interface TabsContext {
   /** The currently active tab's `value`, or `null` if none is active. */
   readonly activeValue: string | null;
   readonly orientation: "horizontal" | "vertical";
+  /** When `false`, arrow keys only move focus; a tab is activated by Enter/Space or click. */
+  readonly activateTabWithKeyboard: boolean;
   /** Activates the tab identified by `value` — called on click and on roving-focus keyboard navigation. */
   select(value: string): void;
 }

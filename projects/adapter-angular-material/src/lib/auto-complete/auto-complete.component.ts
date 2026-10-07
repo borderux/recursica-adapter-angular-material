@@ -14,6 +14,7 @@ import type {
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
+import type { RecursicaDropdownOption } from "../dropdown/dropdown-option";
 import { RecursicaDropdownData } from "../dropdown/dropdown-option";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
 import {
@@ -81,7 +82,9 @@ let nextId = 0;
         [wrapItemText]="wrapItemText"
         [leftSection]="leftSection"
         [rightSection]="rightSection"
+        [filter]="filter"
         (valueChange)="onValueChange($event)"
+        (optionSubmit)="optionSubmit.emit($event)"
         (blurred)="onBlur()"
       />
     </ng-template>
@@ -93,6 +96,15 @@ export class AutoCompleteComponent implements ControlValueAccessor, OnInit {
   @Input() value?: string;
   @Input() defaultValue?: string;
   @Output() valueChange = new EventEmitter<string | undefined>();
+
+  /**
+   * Custom option filter, called with each option and the typed text. Defaults to a case-insensitive
+   * match on the option label. Use it to also match other fields, e.g. an email in `supportingText`.
+   */
+  @Input() filter?: (option: RecursicaDropdownOption, query: string) => boolean;
+
+  /** Fires only when the user picks an option (click or Enter), not while typing — `valueChange` fires for both. */
+  @Output() optionSubmit = new EventEmitter<RecursicaDropdownOption>();
 
   @Input() placeholder?: string;
   @Input() name?: string;

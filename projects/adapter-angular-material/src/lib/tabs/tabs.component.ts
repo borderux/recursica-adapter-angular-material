@@ -86,6 +86,14 @@ export class TabsComponent implements TabsContext, RecursicaOverStyled, OnInit {
    */
   @Input() orientation: RecursicaTabsOrientation = "horizontal";
 
+  /**
+   * Whether arrow-key navigation activates the focused tab (automatic activation, the default). Set
+   * `false` for manual activation: arrows only move focus, and Enter/Space or a click activates. Use
+   * it when each tab is a route, so arrowing does not navigate. Same name and default as Mantine's
+   * `activateTabWithKeyboard`.
+   */
+  @Input() activateTabWithKeyboard = true;
+
   /** `RecursicaTabsProps.inverted` — tab list at the bottom/right instead of top/left. Horizontal only, see IMPLEMENTATION_NOTES.md. */
   @Input() inverted = false;
 
