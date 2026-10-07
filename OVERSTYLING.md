@@ -31,7 +31,7 @@ export interface RecursicaOverStyled {
 
 The shared `resolveOverStyle()` helper forwards `overClass`/`overStyle` onto the wrapped Material element **only** when `overStyled` is `true`. Otherwise they are discarded, even if set. Appearance-affecting Material inputs we don't want exposed (such as `MatButton`'s `color`) are blocked by never declaring them.
 
-Layout primitives (`Layer`, `RecursicaThemeProvider`, and `Flex`/`Stack`/`Group`/`Grid` once built) are exempt. They have no look to protect, so their native `class`/`style` pass through.
+Layout primitives (`Layer`, `RecursicaThemeProvider`, and `Flex`/`Stack`/`Group`/`LayoutGrid`) are exempt. They have no look to protect, so their native `class`/`style` pass through.
 
 ## How to use it
 

@@ -119,12 +119,11 @@ export class ToastComponent implements RecursicaOverStyled {
   @Input() withCloseButton = true;
 
   /**
-   * A caller-supplied `role` always wins over the `"alert"` default — same
-   * override pattern as `AssistiveElement`'s `role`. Mantine's own compiled
-   * `Notification.mjs` unconditionally defaults to `role: role || "alert"`
-   * regardless of variant (verified directly against the real source), so
-   * unlike `AssistiveElement` (only `error` defaults to `"alert"`) this
-   * defaults to `"alert"` for every variant.
+   * A caller-supplied `role` always wins. Otherwise the default depends on
+   * the variant: `"status"` (polite) for `default` and `success`, `"alert"`
+   * (assertive) for every other variant. Mantine's own `Notification.mjs`
+   * defaults to `"alert"` for every variant — this is a deliberate
+   * accessibility divergence, so a success toast is not announced urgently.
    */
   @Input() role?: string;
 
@@ -143,7 +142,12 @@ export class ToastComponent implements RecursicaOverStyled {
   @Input() overStyle?: Record<string, string>;
 
   get resolvedRole(): string {
-    return this.role ?? "alert";
+    return (
+      this.role ??
+      (this.variant === "default" || this.variant === "success"
+        ? "status"
+        : "alert")
+    );
   }
 
   get resolvedOverStyle(): {

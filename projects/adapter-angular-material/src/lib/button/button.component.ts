@@ -131,6 +131,11 @@ const APPEARANCE_MAP: Record<
       [tabIndex]="buttonTabIndex"
       [attr.aria-current]="ariaCurrent ?? null"
       [attr.aria-busy]="loading ? 'true' : null"
+      [attr.type]="type"
+      [attr.form]="form ?? null"
+      [attr.aria-expanded]="ariaExpanded ?? null"
+      [attr.aria-controls]="ariaControls ?? null"
+      [attr.aria-haspopup]="ariaHasPopup ?? null"
     >
       @if (icon) {
         <span class="iconWrapper" aria-hidden="true">
@@ -204,6 +209,32 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
 
   /** `aria-current` of the inner native button, e.g. `"page"` for the active Pagination page. */
   @Input() ariaCurrent?: string;
+
+  /**
+   * Native button `type` of the inner `<button>`. Defaults to `"button"` (like the React reference),
+   * so a Button inside a `<form>` does not submit it unless `type="submit"` is set.
+   */
+  @Input() type: "button" | "submit" | "reset" = "button";
+
+  /** `form` attribute of the inner `<button>`: associates a submit button with a form elsewhere in the page by id. */
+  @Input() form?: string;
+
+  /** `aria-expanded` of the inner native button (disclosure buttons, menu triggers). */
+  @Input() ariaExpanded?: boolean | "true" | "false";
+
+  /** `aria-controls` of the inner native button — the id of the element it controls. */
+  @Input() ariaControls?: string;
+
+  /** `aria-haspopup` of the inner native button, e.g. `"menu"` or `"listbox"`. */
+  @Input() ariaHasPopup?:
+    | boolean
+    | "menu"
+    | "listbox"
+    | "tree"
+    | "grid"
+    | "dialog"
+    | "true"
+    | "false";
 
   @Input() overStyled = false;
   @Input() overClass?: string;

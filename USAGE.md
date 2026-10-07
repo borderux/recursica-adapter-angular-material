@@ -35,20 +35,29 @@ export class ExampleComponent {}
 
 Our components strictly separate logical structural layout from visual design tokens.
 
-- **DO NOT** rely on Angular's own `[ngClass]`/`[style]`/`[class]` template bindings on a Recursica component's host element to reach into its internal styling. These are framework-level template bindings, not props the component chooses to accept — see [OVERSTYLING.md](OVERSTYLING.md) for the current, still-unresolved status of this adapter's generic styling escape hatch.
+- **DO NOT** rely on Angular's own `[ngClass]`/`[style]`/`[class]` template bindings on a Recursica component's host element to reach into its internal styling. These are framework-level template bindings, not props the component chooses to accept — see [OVERSTYLING.md](OVERSTYLING.md) for this adapter's styling escape hatch, `overStyled`.
 - **DO** use the component's own declared `@Input()`s — a Recursica component in this adapter never declares an input for a blocked, appearance-affecting Angular Material prop (see [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §6/§7), so there is nothing to "accidentally" pass through the way a React adapter's prop-spreading model allows.
-- When passing sizes to layout wrappers (`Flex`/`Stack`/`Group` — currently stubs, see `llms.txt`), use the `rec-` prefixed sizes explicitly mapped in the library once built (e.g., `"rec-sm"`, `"rec-default"`, `"rec-md"`, `"rec-lg"`, `"rec-xl"`). Angular Material itself has no native margin/gap/padding props on any component — spacing is entirely the caller's own CSS responsibility, so these layout primitives are the only place `rec-*` spacing tokens have anywhere to attach (`docs/ADAPTER_INTEGRATION_REPORT.md` Q4).
+- When passing sizes to layout wrappers (`Flex`/`Stack`/`Group`/`LayoutGrid`), use the `rec-` prefixed sizes (e.g., `"rec-sm"`, `"rec-default"`, `"rec-md"`, `"rec-lg"`, `"rec-xl"`). Angular Material itself has no native margin/gap/padding props on any component — spacing is entirely the caller's own CSS responsibility, so these layout primitives are the only place `rec-*` spacing tokens have anywhere to attach (`docs/ADAPTER_INTEGRATION_REPORT.md` Q4).
 - **DO NOT** directly access Recursica CSS styles, CSS variables, or JSON token definitions to use in your own styling. These are not considered stable and will change between releases.
 
-## 4. The `overStyled` Escape Hatch — not yet implemented
+## 4. The `overStyled` Escape Hatch
 
-Every other Recursica adapter (Mantine, Beam) offers an explicit `overStyled={true}`/`[overStyled]="true"` escape hatch, backed by a `RecursicaOverStyled<T>` type and runtime prop-stripping. This adapter has ported the framework-agnostic `RecursicaOverStyled<T>` type itself (see `docs/ADAPTER_INTEGRATION_REPORT.md` Crosscutting Finding A), but has **not yet designed or built the runtime mechanism** — Angular's `[ngClass]`/`[style]`/`[class]` host bindings bypass a component's declared `@Input()` surface in a way no prior (React) adapter had to solve, and `docs/STYLING_SYSTEM.md` §6 leaves this fully open pending a per-component design decision.
+Every Recursica adapter offers an explicit, greppable escape hatch for styling a component from outside. In this adapter it is a trio of inputs: `overStyled`, `overClass` and `overStyle`. `overClass`/`overStyle` are applied to the component's wrapped element only when `overStyled` is `true`, and are discarded otherwise.
 
-**Until this is resolved, there is no working `overStyled` input to reach for.** See [OVERSTYLING.md](OVERSTYLING.md) for the full status and what's already decided vs. still open.
+```html
+<rec-button
+  overStyled
+  overClass="my-class"
+  [overStyle]="{ 'min-width': '200px' }"
+  >Save</rec-button
+>
+```
+
+Prefer design-system inputs and tokens first. See [OVERSTYLING.md](OVERSTYLING.md) for why it works this way in Angular and what it can and cannot prevent.
 
 ## 5. Fallback Behavior for Missing Components
 
-If the adapter does not yet implement a required component (most of the catalog — see `llms.txt`), the preferred approach is to pause integration, navigate into the `adapter-angular-material` package, and natively build the missing wrapper component following the `CONTRIBUTING.md` guidelines. If this is not possible, then utilize the underlying Angular Material component/directive directly using the project's preferred styling approach (check `SETUP.md` for details).
+If the adapter does not yet implement a required component (see `llms.txt` for the current component list), the preferred approach is to pause integration, navigate into the `adapter-angular-material` package, and natively build the missing wrapper component following the `CONTRIBUTING.md` guidelines. If this is not possible, then utilize the underlying Angular Material component/directive directly using the project's preferred styling approach (check `SETUP.md` for details).
 
 ## 6. Managing CSS Changes with PostCSS Plugin
 

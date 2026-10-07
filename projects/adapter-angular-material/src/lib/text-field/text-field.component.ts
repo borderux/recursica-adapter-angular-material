@@ -165,6 +165,8 @@ let nextId = 0;
         [readonly]="readOnly"
         [attr.name]="name ?? null"
         [attr.autocomplete]="autocomplete ?? null"
+        [attr.maxlength]="maxLength ?? null"
+        [attr.spellcheck]="spellcheck ?? null"
         [attr.aria-describedby]="describedByAttr"
         [value]="currentValue"
         (input)="onInput($event)"
@@ -193,6 +195,12 @@ export class TextFieldComponent
   @Input() type = "text";
   @Input() name?: string;
   @Input() autocomplete?: string;
+
+  /** Native `maxlength` of the inner `<input>`. */
+  @Input() maxLength?: number;
+
+  /** Native `spellcheck` of the inner `<input>`. */
+  @Input() spellcheck?: boolean;
 
   @Input() disabled = false;
   @Input() required = false;

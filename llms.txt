@@ -20,8 +20,8 @@ This adapter converts Recursica design tokens into Angular Material-specific the
 
 ## Components
 
-Components marked ✅ below are real implementations — everything else is a
-`🚧` in-development stub
+Components marked ✅ below are real implementations; any entry marked
+`🚧` is an in-development stub (currently none)
 (see [CONTRIBUTING.md](CONTRIBUTING.md) and
 [docs/ADAPTER_INTEGRATION_REPORT.md](docs/ADAPTER_INTEGRATION_REPORT.md) §9
 for the build order). No component in this adapter has a per-component

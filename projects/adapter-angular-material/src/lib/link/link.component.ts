@@ -75,6 +75,8 @@ import {
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
       [attr.href]="href ?? null"
+      [attr.aria-label]="ariaLabel ?? null"
+      [attr.aria-current]="ariaCurrent ?? null"
       [attr.data-has-icon]="icon ? '' : null"
     >
       @if (icon) {
@@ -89,6 +91,12 @@ import {
 export class LinkComponent implements RecursicaOverStyled {
   /** Native anchor `href` — see class doc comment for why this is an explicit `@Input()`. */
   @Input() href?: string;
+
+  /** `aria-label` of the inner `<a>` (e.g. for an icon-only link). */
+  @Input() ariaLabel?: string;
+
+  /** `aria-current` of the inner `<a>`, e.g. `"page"` for the active navigation link. */
+  @Input() ariaCurrent?: string;
 
   /** Rendered via `*ngTemplateOutlet` — see class doc comment. */
   @Input() icon?: TemplateRef<unknown>;

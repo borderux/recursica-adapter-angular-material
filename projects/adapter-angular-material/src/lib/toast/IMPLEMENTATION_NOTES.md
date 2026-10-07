@@ -111,8 +111,9 @@ the _base_ component underneath it):
   `flex-start`, even though both are "icon + text" compositions).
 - Layout order is icon → body (title above description) → close button,
   left to right.
-- `role` defaults to `"alert"` unconditionally (`role={role || "alert"}` in
-  the real source), not variant-conditional.
+- `role` defaults to `"status"` for the `default` and `success` variants and `"alert"` for the rest,
+  a deliberate accessibility divergence from the real source (`role={role || "alert"}`,
+  unconditional), so a success toast is not announced urgently. A caller `role` always wins.
 - The close button's icon is hardcoded to `iconSize: 16` in the real
   source — no Recursica token governs this size (only its _color_, via the
   `..._colors_button` token below), so `16px` is ported as a literal, not

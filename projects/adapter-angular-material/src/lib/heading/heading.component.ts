@@ -65,6 +65,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h1>
@@ -76,6 +78,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h2>
@@ -87,6 +91,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h3>
@@ -98,6 +104,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h4>
@@ -109,6 +117,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h5>
@@ -120,6 +130,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [style]="resolvedOverStyle.style"
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
+          [attr.id]="headingId ?? null"
+          [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
         </h6>
@@ -129,6 +141,12 @@ export type RecursicaHeadingEmphasis = "high" | "low";
 })
 export class HeadingComponent implements RecursicaOverStyled {
   @Input() order: RecursicaHeadingOrder = 1;
+
+  /** `id` of the rendered `h1`–`h6` (for linking, or for moving focus after a route change). */
+  @Input() headingId?: string;
+
+  /** `tabindex` of the rendered `h1`–`h6`; set `-1` to make it programmatically focusable. */
+  @Input() headingTabIndex?: number;
 
   /** Semantic text color, bound to the active layer's text-element tokens via `data-color` —
    * ported from the reference's own identical `color`/`data-color` mapping (see

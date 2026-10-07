@@ -99,9 +99,11 @@
 
 /* Loading state: label stays in the DOM (exactly one <ng-content />, never
  * conditionally removed — see button.component.ts's doc comment) but is
- * visually hidden while the composed Loader is showing. */
+ * visually hidden while the composed Loader is showing. `opacity: 0`, not
+ * `visibility: hidden`, so the label stays in the accessibility tree and the
+ * button keeps its accessible name while loading. */
 .root[data-loading="true"] .labelText {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .loader {

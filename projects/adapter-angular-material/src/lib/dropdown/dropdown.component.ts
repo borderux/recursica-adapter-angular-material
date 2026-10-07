@@ -238,6 +238,7 @@ let nextId = 0;
           [attr.aria-activedescendant]="activeDescendantId"
           [attr.aria-required]="required ? 'true' : null"
           [attr.aria-describedby]="describedByAttr"
+          [attr.aria-label]="ariaLabel ?? null"
           [disabled]="disabled"
           (click)="toggle()"
           (keydown)="onTriggerKeydown($event)"
@@ -377,6 +378,9 @@ export class DropdownComponent
   @Input() disabled = false;
   @Input() required = false;
   @Input() clearable = false;
+
+  /** `aria-label` of the inner combobox button — use when there is no visible label. */
+  @Input() ariaLabel?: string;
   @Input() wrapItemText = false;
 
   /**

@@ -92,12 +92,20 @@ import {
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
+      [attr.aria-label]="ariaLabel ?? null"
+      [attr.aria-labelledby]="ariaLabelledby ?? null"
     >
       <ng-content />
     </table>
   `,
 })
 export class TableComponent implements RecursicaOverStyled {
+  /** `aria-label` of the inner `<table>` — a static attribute on `<rec-table>` lands on the host, not the table. */
+  @Input() ariaLabel?: string;
+
+  /** `aria-labelledby` of the inner `<table>` — the id of the element that names it. */
+  @Input() ariaLabelledby?: string;
+
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
