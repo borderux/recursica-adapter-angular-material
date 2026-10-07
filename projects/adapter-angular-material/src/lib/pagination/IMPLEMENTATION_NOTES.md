@@ -2,6 +2,27 @@
 
 **Status**: REAL implementation (`docs/CREATING_AN_ADAPTER.md` step 10).
 
+## Architecture: Recursica Buttons driven by the manifest
+
+Forge's `ui-kit.components.pagination` defines its page and navigation controls as `Button` variants
+(`active-pages`, `inactive-pages`, `navigation-controls`, each with a `selected-variants` style and
+size). Pagination therefore renders `rec-button`s with those values and does no button styling of its
+own (radius, padding, colors, hover and disabled all come from `Button`), mirroring the Mantine
+adapter's `Pagination/IMPLEMENTATION_NOTES.md`. It replaced hand-styled `<button>`s that copied
+button tokens by hand.
+
+- The style and size per role are read from the manifest through `injectRecursicaManifest()`
+  (`utils/recursica-manifest.ts`), fed by `<rec-theme-provider [manifest]="manifest">`. It throws if
+  there is no manifest or a role has no `selected-variants`. The values go to `rec-button` as is, with
+  no validation and no fallbacks.
+- `content` is not read: `rec-button` derives it from its icon and label, so page numbers are
+  `label`, navigation buttons are `icon-only`, and `icon-label` with `withLabels`.
+- Next/Last with labels put the icon after the text (projected into the button's label), sized by the
+  button's icon token for that size; First/Prev use the button's own leading `icon`.
+- The active page sets `aria-current="page"` on the native button (`rec-button`'s `ariaCurrent`
+  input). The root is a `<nav aria-label="Pagination">`; dots use the inactive-pages size.
+- `setPage` ignores a page equal to the current one, so a disabled-looking edge control never re-emits.
+
 ## `Category: REQUIRES WORK` re-confirmed — no `MatPaginator` adoption
 
 The stub's own `IMPLEMENTATION_NOTES.md` already flagged `MatPaginator` as

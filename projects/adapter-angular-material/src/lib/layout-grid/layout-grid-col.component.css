@@ -1,0 +1,113 @@
+/*
+ * `rec-layout-grid-col` — column width math, see `layout-grid-col.component.ts`.
+ *
+ * The component sets `--col-basis-*`, `--col-max-*`, `--col-grow-*` and `--col-offset-*` for every
+ * breakpoint (already resolved mobile-first, so each value is always defined). This file only
+ * picks the right set per `@media` block. Breakpoints (`36em`/`48em`/`62em`/`75em`/`88em` for
+ * xs/sm/md/lg/xl) are Mantine's defaults — no Recursica breakpoint token exists to reference.
+ *
+ * `:host(...)` selectors, not element selectors: under `ViewEncapsulation.Emulated` a component
+ * stylesheet only reaches its own host through `:host`.
+ */
+
+:host {
+  display: block;
+  box-sizing: border-box;
+  min-width: 0;
+  flex-shrink: 0;
+  flex-basis: var(--col-basis-base);
+  max-width: var(--col-max-base);
+  flex-grow: var(--col-grow-base);
+  margin-inline-start: var(--col-offset-base);
+}
+
+@media (min-width: 36em) {
+  :host {
+    flex-basis: var(--col-basis-xs);
+    max-width: var(--col-max-xs);
+    flex-grow: var(--col-grow-xs);
+    margin-inline-start: var(--col-offset-xs);
+  }
+  :host([data-hidden-from="xs"]) {
+    display: none;
+  }
+}
+@media (max-width: 35.99em) {
+  :host([data-visible-from="xs"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 48em) {
+  :host {
+    flex-basis: var(--col-basis-sm);
+    max-width: var(--col-max-sm);
+    flex-grow: var(--col-grow-sm);
+    margin-inline-start: var(--col-offset-sm);
+  }
+  :host([data-hidden-from="sm"]) {
+    display: none;
+  }
+}
+@media (max-width: 47.99em) {
+  :host([data-visible-from="sm"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 62em) {
+  :host {
+    flex-basis: var(--col-basis-md);
+    max-width: var(--col-max-md);
+    flex-grow: var(--col-grow-md);
+    margin-inline-start: var(--col-offset-md);
+  }
+  :host([data-hidden-from="md"]) {
+    display: none;
+  }
+}
+@media (max-width: 61.99em) {
+  :host([data-visible-from="md"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 75em) {
+  :host {
+    flex-basis: var(--col-basis-lg);
+    max-width: var(--col-max-lg);
+    flex-grow: var(--col-grow-lg);
+    margin-inline-start: var(--col-offset-lg);
+  }
+  :host([data-hidden-from="lg"]) {
+    display: none;
+  }
+}
+@media (max-width: 74.99em) {
+  :host([data-visible-from="lg"]) {
+    display: none;
+  }
+}
+
+@media (min-width: 88em) {
+  :host {
+    flex-basis: var(--col-basis-xl);
+    max-width: var(--col-max-xl);
+    flex-grow: var(--col-grow-xl);
+    margin-inline-start: var(--col-offset-xl);
+  }
+  :host([data-hidden-from="xl"]) {
+    display: none;
+  }
+}
+@media (max-width: 87.99em) {
+  :host([data-visible-from="xl"]) {
+    display: none;
+  }
+}
+
+/* A grown column keeps Mantine's `max-width: 100%` instead of its span width. */
+:host-context(.root[data-grow]) {
+  flex-grow: 1;
+  max-width: 100%;
+}

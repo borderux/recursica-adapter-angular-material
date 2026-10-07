@@ -129,6 +129,7 @@ const APPEARANCE_MAP: Record<
       [attr.disabledInteractive]="disabledInteractive ? '' : null"
       [attr.aria-label]="ariaLabel ?? null"
       [tabIndex]="buttonTabIndex"
+      [attr.aria-current]="ariaCurrent ?? null"
       [attr.aria-busy]="loading ? 'true' : null"
     >
       @if (icon) {
@@ -200,6 +201,9 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
 
   /** Tab order of the inner native button — set to `-1` for a button that must stay out of the tab order (e.g. Tree's expand chevron). */
   @Input() buttonTabIndex?: number;
+
+  /** `aria-current` of the inner native button, e.g. `"page"` for the active Pagination page. */
+  @Input() ariaCurrent?: string;
 
   @Input() overStyled = false;
   @Input() overClass?: string;

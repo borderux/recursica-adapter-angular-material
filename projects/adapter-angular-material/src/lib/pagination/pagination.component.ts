@@ -5,9 +5,17 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
   ViewEncapsulation,
   signal,
 } from "@angular/core";
+import { ButtonComponent } from "../button/button.component";
+import type {
+  RecursicaButtonSize,
+  RecursicaButtonVariant,
+} from "../button/button.component";
+import { injectRecursicaManifest } from "../utils/recursica-manifest";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -17,6 +25,12 @@ import {
   RecursicaPaginationRangeItem,
   computePaginationRange,
 } from "./pagination-range";
+
+type PaginationRole = "active-pages" | "inactive-pages" | "navigation-controls";
+interface RoleVariant {
+  variant: RecursicaButtonVariant;
+  size: RecursicaButtonSize;
+}
 
 export type RecursicaPaginationIconType = "next" | "prev" | "first" | "last";
 
@@ -69,114 +83,153 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
   selector: "rec-pagination",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./pagination.component.css",
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, ButtonComponent],
   template: `
-    <div
+    <nav
       class="root"
+      aria-label="Pagination"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
     >
       @if (withEdges) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue <= 1"
-          [attr.aria-label]="'First page'"
-          (click)="setPage(1)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'first' }"
-          />
-        </button>
+        <ng-container
+          [ngTemplateOutlet]="navTpl"
+          [ngTemplateOutletContext]="{
+            type: 'first',
+            page: 1,
+            isDisabled: currentValue <= 1,
+            label: 'First page',
+          }"
+        />
       }
       @if (withControls) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue <= 1"
-          [attr.aria-label]="'Previous page'"
-          (click)="setPage(currentValue - 1)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'prev' }"
-          />
-        </button>
+        <ng-container
+          [ngTemplateOutlet]="navTpl"
+          [ngTemplateOutletContext]="{
+            type: 'prev',
+            page: currentValue - 1,
+            isDisabled: currentValue <= 1,
+            label: 'Previous page',
+          }"
+        />
       }
 
       @for (item of rangeItems; track $index) {
         @if (item === dots) {
-          <span class="dots" aria-hidden="true">&hellip;</span>
+          <span class="dots" aria-hidden="true" [attr.data-size]="dotsSize"
+            >&hellip;</span
+          >
         } @else {
-          <button
-            type="button"
-            class="control"
-            [attr.data-active]="item === currentValue ? '' : null"
-            [attr.aria-current]="item === currentValue ? 'page' : null"
-            [attr.aria-label]="'Page ' + item"
+          <rec-button
+            [variant]="pageRole(item === currentValue).variant"
+            [size]="pageRole(item === currentValue).size"
+            [ariaLabel]="'Page ' + item"
+            [ariaCurrent]="item === currentValue ? 'page' : undefined"
             [disabled]="disabled"
             (click)="setPage(item)"
           >
             {{ item }}
-          </button>
+          </rec-button>
         }
       }
 
       @if (withControls) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue >= total"
-          [attr.aria-label]="'Next page'"
-          (click)="setPage(currentValue + 1)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'next' }"
-          />
-        </button>
+        <ng-container
+          [ngTemplateOutlet]="navTpl"
+          [ngTemplateOutletContext]="{
+            type: 'next',
+            page: currentValue + 1,
+            isDisabled: currentValue >= total,
+            label: 'Next page',
+          }"
+        />
       }
       @if (withEdges) {
-        <button
-          type="button"
-          class="control"
-          data-variant="text"
-          [disabled]="disabled || currentValue >= total"
-          [attr.aria-label]="'Last page'"
-          (click)="setPage(total)"
-        >
-          <ng-container
-            [ngTemplateOutlet]="iconTpl"
-            [ngTemplateOutletContext]="{ $implicit: 'last' }"
-          />
-        </button>
+        <ng-container
+          [ngTemplateOutlet]="navTpl"
+          [ngTemplateOutletContext]="{
+            type: 'last',
+            page: total,
+            isDisabled: currentValue >= total,
+            label: 'Last page',
+          }"
+        />
       }
-    </div>
+    </nav>
 
-    <ng-template #iconTpl let-type>
-      @if (withLabels && (type === "next" || type === "last")) {
-        <span class="iconWithLabel">
-          <span>{{ iconLabel(type) }}</span>
-          <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-            <path [attr.d]="iconPath(type)" fill="currentColor" />
-          </svg>
-        </span>
-      } @else if (withLabels) {
-        <span class="iconWithLabel">
-          <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-            <path [attr.d]="iconPath(type)" fill="currentColor" />
-          </svg>
-          <span>{{ iconLabel(type) }}</span>
-        </span>
-      } @else {
-        <svg class="baseIcon" viewBox="0 0 16 16" aria-hidden="true">
-          <path [attr.d]="iconPath(type)" fill="currentColor" />
-        </svg>
-      }
+    <!-- A navigation button: icon-only, or icon + text label with \`withLabels\`. -->
+    <ng-template
+      #navTpl
+      let-type="type"
+      let-page="page"
+      let-isDisabled="isDisabled"
+      let-label="label"
+    >
+      <rec-button
+        [variant]="navRole.variant"
+        [size]="navRole.size"
+        [iconOnly]="!withLabels"
+        [icon]="
+          withLabels && (type === 'next' || type === 'last')
+            ? undefined
+            : iconTemplates[type]
+        "
+        [ariaLabel]="label"
+        [disabled]="disabled || isDisabled"
+        (click)="setPage(page)"
+      >
+        @if (withLabels) {
+          @if (type === "next" || type === "last") {
+            <span class="labelWithIcon" [attr.data-size]="navRole.size">
+              {{ iconLabel(type) }}
+              <ng-container [ngTemplateOutlet]="iconTemplates[type]" />
+            </span>
+          } @else {
+            {{ iconLabel(type) }}
+          }
+        }
+      </rec-button>
+    </ng-template>
+
+    <ng-template #firstIcon>
+      <svg
+        class="baseIcon"
+        [attr.data-size]="navRole.size"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+      >
+        <path [attr.d]="iconPath('first')" fill="currentColor" />
+      </svg>
+    </ng-template>
+    <ng-template #prevIcon>
+      <svg
+        class="baseIcon"
+        [attr.data-size]="navRole.size"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+      >
+        <path [attr.d]="iconPath('prev')" fill="currentColor" />
+      </svg>
+    </ng-template>
+    <ng-template #nextIcon>
+      <svg
+        class="baseIcon"
+        [attr.data-size]="navRole.size"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+      >
+        <path [attr.d]="iconPath('next')" fill="currentColor" />
+      </svg>
+    </ng-template>
+    <ng-template #lastIcon>
+      <svg
+        class="baseIcon"
+        [attr.data-size]="navRole.size"
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+      >
+        <path [attr.d]="iconPath('last')" fill="currentColor" />
+      </svg>
     </ng-template>
   `,
 })
@@ -198,6 +251,69 @@ export class PaginationComponent implements RecursicaOverStyled, OnInit {
   @Input() overStyle?: Record<string, string>;
 
   readonly dots = PAGINATION_DOTS;
+
+  private readonly readManifest = injectRecursicaManifest("Pagination");
+
+  @ViewChild("firstIcon", { static: true }) firstIcon!: TemplateRef<unknown>;
+  @ViewChild("prevIcon", { static: true }) prevIcon!: TemplateRef<unknown>;
+  @ViewChild("nextIcon", { static: true }) nextIcon!: TemplateRef<unknown>;
+  @ViewChild("lastIcon", { static: true }) lastIcon!: TemplateRef<unknown>;
+
+  get iconTemplates(): Record<string, TemplateRef<unknown>> {
+    return {
+      first: this.firstIcon,
+      prev: this.prevIcon,
+      next: this.nextIcon,
+      last: this.lastIcon,
+    };
+  }
+
+  /** Button style/size the manifest selects for the active page, other pages, and the navigation buttons. */
+  private role(role: PaginationRole): RoleVariant {
+    const selected = (
+      this.readManifest() as {
+        "ui-kit"?: {
+          components?: {
+            pagination?: {
+              properties?: Record<
+                string,
+                {
+                  $extensions?: {
+                    "recursica.component"?: {
+                      "selected-variants"?: { style?: string; size?: string };
+                    };
+                  };
+                }
+              >;
+            };
+          };
+        };
+      }
+    )["ui-kit"]?.components?.pagination?.properties?.[role]?.$extensions?.[
+      "recursica.component"
+    ]?.["selected-variants"];
+    if (!selected) {
+      throw new Error(
+        `Pagination: manifest has no ui-kit.components.pagination.properties.${role} selected-variants`,
+      );
+    }
+    return {
+      variant: selected.style as RecursicaButtonVariant,
+      size: selected.size as RecursicaButtonSize,
+    };
+  }
+
+  pageRole(active: boolean): RoleVariant {
+    return this.role(active ? "active-pages" : "inactive-pages");
+  }
+
+  get navRole(): RoleVariant {
+    return this.role("navigation-controls");
+  }
+
+  get dotsSize(): RecursicaButtonSize {
+    return this.role("inactive-pages").size;
+  }
 
   private readonly _uncontrolledValue = signal(1);
 
@@ -238,6 +354,9 @@ export class PaginationComponent implements RecursicaOverStyled, OnInit {
       return;
     }
     const clamped = page <= 0 ? 1 : page > this.total ? this.total : page;
+    if (clamped === this.currentValue) {
+      return;
+    }
     if (this.value === undefined) {
       this._uncontrolledValue.set(clamped);
     }

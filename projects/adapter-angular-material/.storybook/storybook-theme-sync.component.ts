@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
+import manifest from "../../../recursica_manifest.json";
 import { ThemeProviderComponent } from "../src/lib/theme-provider/theme-provider.component";
 
 /**
@@ -50,11 +51,14 @@ import { ThemeProviderComponent } from "../src/lib/theme-provider/theme-provider
   imports: [ThemeProviderComponent],
   encapsulation: ViewEncapsulation.None,
   template: `
-    <rec-theme-provider [theme]="theme">
+    <rec-theme-provider [theme]="theme" [manifest]="manifest">
       <ng-content />
     </rec-theme-provider>
   `,
 })
 export class StorybookThemeSyncComponent {
   @Input() theme: "light" | "dark" = "light";
+
+  /** The Forge manifest, for components whose variants it selects (Pagination). */
+  readonly manifest = manifest;
 }

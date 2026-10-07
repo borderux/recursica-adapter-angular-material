@@ -1,0 +1,23 @@
+/*
+ * Recursica LayoutGrid — see `layout-grid.component.ts`'s class doc comment.
+ *
+ * Column gutter, row gutter and margin come straight from the responsive layout-grid alias, which
+ * Forge redefines per breakpoint, so no fallback values are needed. The column width math lives
+ * in `layout-grid-col.component.css`.
+ */
+
+:host {
+  display: block;
+}
+
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+:host-context([data-recursica-theme]) .root {
+  column-gap: var(--recursica_brand_layout-grids_column-gutter);
+  row-gap: var(--recursica_brand_layout-grids_row-gutter);
+  margin: var(--recursica_brand_layout-grids_margin);
+}
