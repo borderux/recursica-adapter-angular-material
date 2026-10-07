@@ -1,5 +1,12 @@
 # @recursica/adapter-angular-material
 
+## 0.6.0
+
+### Minor Changes
+
+- c4dafdf: Replace `Grid` with `LayoutGrid` (`rec-layout-grid`, `rec-layout-grid-col`), driven by the Recursica layout-grid tokens. `columns`, gutter and margin inputs are removed.
+- c4dafdf: Pagination renders Recursica Buttons whose style and size come from the Forge manifest. `rec-theme-provider` now needs `[manifest]` for it (it throws without one).
+
 ## 0.5.1
 
 ### Patch Changes
