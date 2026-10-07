@@ -118,11 +118,9 @@ export const TruncatedLabel: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="max-width: 250px;">
-        ${withLabel(
-          "This is an exceptionally long button label designed to demonstrate how the component handles text overflow by applying an ellipsis rather than breaking the layout or wrapping to multiple lines.",
-        )}
-      </div>
+      ${withLabel(
+        "This is an exceptionally long button label designed to demonstrate how the component handles text overflow by applying an ellipsis rather than breaking the layout or wrapping to multiple lines.",
+      )}
     `,
   }),
 };

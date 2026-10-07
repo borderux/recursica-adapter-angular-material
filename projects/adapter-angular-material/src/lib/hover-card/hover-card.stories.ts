@@ -17,6 +17,8 @@ import { AvatarComponent } from "../avatar/avatar.component";
  */
 const meta: Meta<HoverCardComponent> = {
   title: "UI-Kit/HoverCard",
+  // Matches the reference story's Storybook layout.
+  parameters: { layout: "centered" },
   component: HoverCardComponent,
   decorators: [
     moduleMetadata({

@@ -1,3 +1,4 @@
+import { readBeakSize } from "../utils/beak-size";
 import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
@@ -212,7 +213,12 @@ export class HoverCardComponent
   }
 
   get positions(): ConnectedPosition[] {
-    return [toConnectedPosition(this.position, this.offset)];
+    return [
+      toConnectedPosition(
+        this.position,
+        this.offset + (this.resolvedWithBeak ? readBeakSize() / 2 : 0),
+      ),
+    ];
   }
 
   get resolvedOverStyle(): {

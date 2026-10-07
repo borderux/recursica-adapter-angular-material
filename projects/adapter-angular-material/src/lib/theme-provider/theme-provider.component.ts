@@ -1,3 +1,7 @@
+import {
+  RecursicaManifest,
+  RecursicaManifestStore,
+} from "../utils/recursica-manifest";
 import { DOCUMENT } from "@angular/common";
 import {
   Component,
@@ -81,6 +85,20 @@ export class ThemeProviderComponent implements OnInit, OnChanges, OnDestroy {
    * where in the tree layer 0 starts).
    */
   @Input() initLayer0 = true;
+
+  /**
+   * The parsed Forge `recursica_manifest.json`. Components whose variants are chosen by Forge
+   * (currently `Pagination`) read it from here and throw without it.
+   */
+  @Input()
+  set manifest(value: RecursicaManifest | undefined) {
+    this.manifestStore.manifest = value;
+  }
+  get manifest(): RecursicaManifest | undefined {
+    return this.manifestStore.manifest;
+  }
+
+  private readonly manifestStore = inject(RecursicaManifestStore);
 
   private readonly document = inject(DOCUMENT);
 

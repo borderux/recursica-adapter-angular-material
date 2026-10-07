@@ -67,6 +67,10 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, SliderControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./slider.component.css",
+  host: {
+    "[style.--form-control-margin-bottom]":
+      "'var(--recursica_ui-kit_components_slider_variants_layouts_' + formLayout + '_properties_top-bottom-margin)'",
+  },
   providers: [recursicaValueAccessorProvider(SliderComponent)],
   template: `
     <rec-with-read-only-wrapper
@@ -134,7 +138,7 @@ export class SliderComponent implements ControlValueAccessor, OnInit {
   @Input() step = 1;
 
   @Input() marks?: RecursicaSliderMark[];
-  @Input() showMinMaxLabels = false;
+  @Input() showMinMaxLabels = true;
   @Input() minLabel?: string;
   @Input() maxLabel?: string;
   @Input() showInput = false;
@@ -176,7 +180,7 @@ export class SliderComponent implements ControlValueAccessor, OnInit {
 
   private readonly cva = new RecursicaValueAccessor<
     RecursicaSliderValue | undefined
-  >();
+  >((v) => (this.value = v));
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? this.min);

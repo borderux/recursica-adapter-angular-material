@@ -36,43 +36,8 @@ export const Default: Story = {
       <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
         A new version of the application is available to download. Please
         restart your browser to apply the latest security patches and
-        feature updates.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const Success: Story = {
-  args: { variant: "success", title: "Changes Saved" },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        Your changes have been saved successfully.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const ErrorState: Story = {
-  args: { variant: "error", title: "Action Required" },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        You must complete your profile setup before accessing this feature.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const WithoutCloseButton: Story = {
-  args: { withCloseButton: false },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton">
-        This notification has no dismiss affordance.
+        feature updates. If you ignore this message, the update will
+        automatically install during your next session.
       </rec-toast>
     `,
   }),
@@ -85,35 +50,17 @@ export const WithoutCloseButton: Story = {
  * for a direct visual comparison.
  */
 const warningIconTemplate = `
-  <ng-template #warningIcon>
-    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-      <path d="M12 9v4" />
-      <path d="M12 17h.01" />
-    </svg>
-  </ng-template>
+  <ng-template #warningIcon>⚠️</ng-template>
 `;
 
 export const WithIcon: Story = {
-  args: { variant: "error", title: "Action Required" },
+  args: { variant: "default", title: "Action Required" },
   render: (args) => ({
     props: args,
     template: `
       ${warningIconTemplate}
       <rec-toast [variant]="variant" [title]="title" [withCloseButton]="withCloseButton" [icon]="warningIcon">
         You must complete your profile setup before accessing this feature.
-      </rec-toast>
-    `,
-  }),
-};
-
-export const NoTitle: Story = {
-  args: { title: undefined },
-  render: (args) => ({
-    props: args,
-    template: `
-      <rec-toast [variant]="variant" [withCloseButton]="withCloseButton">
-        A message with no title, just a description.
       </rec-toast>
     `,
   }),

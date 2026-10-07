@@ -63,16 +63,10 @@
 
 :host-context([data-recursica-theme]) .root {
   border-style: solid;
-  border-radius: var(
-    --recursica_ui-kit_components_toast_properties_border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_toast_properties_border-radius);
   border-width: var(--recursica_ui-kit_components_toast_properties_border-size);
-  border-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_border-color
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_toast_properties_elevation_layer-0
-  );
+  border-color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_border-color);
+  box-shadow: var(--recursica_ui-kit_components_toast_properties_elevation_layer-0);
   padding: var(--recursica_ui-kit_components_toast_properties_vertical-padding)
     var(--recursica_ui-kit_components_toast_properties_horizontal-padding);
   min-width: var(--recursica_ui-kit_components_toast_properties_min-width);
@@ -80,12 +74,8 @@
   min-height: var(--recursica_ui-kit_components_toast_properties_min-height);
   gap: var(--recursica_ui-kit_components_toast_properties_spacing);
 
-  background-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_background-color
-  );
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
-  );
+  background-color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_background-color);
+  color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color);
 }
 
 /* ======================================
@@ -102,9 +92,7 @@
 :host-context([data-recursica-theme]) .iconWrapper {
   width: var(--recursica_ui-kit_components_toast_properties_icon);
   height: var(--recursica_ui-kit_components_toast_properties_icon);
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color);
 }
 
 .iconWrapper > * {
@@ -133,31 +121,15 @@
 
 :host-context([data-recursica-theme]) .title,
 :host-context([data-recursica-theme]) .description {
-  font-family: var(
-    --recursica_ui-kit_components_toast_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_toast_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_toast_properties_text_font-size);
-  font-style: var(
-    --recursica_ui-kit_components_toast_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_toast_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_toast_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_toast_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_toast_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_toast_properties_text_text-transform
-  );
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color
-  );
+  font-style: var(--recursica_ui-kit_components_toast_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_toast_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_toast_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_toast_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_toast_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_toast_properties_text_text-transform);
+  color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_text-color);
 }
 
 /* ======================================
@@ -180,9 +152,7 @@
 }
 
 :host-context([data-recursica-theme]) .closeButton {
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_default_properties_colors_button
-  );
+  color: var(--recursica_ui-kit_components_toast_variants_styles_default_properties_colors_button);
 }
 
 .closeButton:focus-visible {
@@ -219,33 +189,21 @@
  * `docs/DEVELOPMENT_ISSUES.md`).
  */
 :host-context([data-recursica-theme]) .root[data-variant="error"] {
-  background-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_border-color
-  );
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
-  );
+  background-color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_background-color);
+  border-color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_border-color);
+  color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color);
 
   & .iconWrapper {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color);
   }
 
   & .title,
   & .description {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_text-color);
   }
 
   & .closeButton {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_error_properties_colors_button
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_error_properties_colors_button);
   }
 }
 
@@ -254,32 +212,20 @@
    ====================================== */
 
 :host-context([data-recursica-theme]) .root[data-variant="success"] {
-  background-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_border-color
-  );
-  color: var(
-    --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
-  );
+  background-color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_background-color);
+  border-color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_border-color);
+  color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color);
 
   & .iconWrapper {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color);
   }
 
   & .title,
   & .description {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_text-color);
   }
 
   & .closeButton {
-    color: var(
-      --recursica_ui-kit_components_toast_variants_styles_success_properties_colors_button
-    );
+    color: var(--recursica_ui-kit_components_toast_variants_styles_success_properties_colors_button);
   }
 }

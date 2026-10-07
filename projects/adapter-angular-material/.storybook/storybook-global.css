@@ -1,0 +1,8 @@
+/* Storybook only (not shipped). Mantine's global stylesheet gives <body> a system sans-serif font,
+   so raw story markup (e.g. the FormControlLayout placeholder div) renders sans-serif in the
+   source-of-truth goldens; without this it falls back to the browser's serif default. */
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+}

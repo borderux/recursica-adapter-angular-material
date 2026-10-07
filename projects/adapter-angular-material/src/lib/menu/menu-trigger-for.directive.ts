@@ -1,4 +1,10 @@
-import { Directive, Input, OnChanges, inject } from "@angular/core";
+import {
+  AfterViewInit,
+  Directive,
+  Input,
+  OnChanges,
+  inject,
+} from "@angular/core";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MenuComponent } from "./menu.component";
 
@@ -27,12 +33,21 @@ import { MenuComponent } from "./menu.component";
     },
   ],
 })
-export class MenuTriggerForDirective implements OnChanges {
+export class MenuTriggerForDirective implements OnChanges, AfterViewInit {
   @Input({ required: true }) recMenuTriggerFor!: MenuComponent;
+
+  /** Opens the menu once when the view first renders (used by stories that must be diffable without an interaction step). */
+  @Input() recMenuInitiallyOpen = false;
 
   private readonly trigger = inject(MatMenuTrigger, { self: true });
 
   ngOnChanges(): void {
     this.trigger.menu = this.recMenuTriggerFor.matMenuPanel;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.recMenuInitiallyOpen) {
+      Promise.resolve().then(() => this.trigger.openMenu());
+    }
   }
 }

@@ -153,7 +153,9 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
     undefined,
   );
 
-  private readonly cva = new RecursicaValueAccessor<Date | null | undefined>();
+  private readonly cva = new RecursicaValueAccessor<Date | null | undefined>(
+    (v) => (this.value = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? null);

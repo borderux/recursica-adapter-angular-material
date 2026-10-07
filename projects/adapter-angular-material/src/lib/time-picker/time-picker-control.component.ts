@@ -174,7 +174,14 @@ function clamp(value: number, min: number, max: number): number {
         [disabled]="disabled"
         [error]="error"
         [overStyled]="true"
-        [overStyle]="{ width: '6rem', 'flex-shrink': '0' }"
+        [overStyle]="{
+          width:
+            'var(--recursica_ui-kit_components_time-picker_properties_width)',
+          'min-width':
+            'var(--recursica_ui-kit_components_time-picker_properties_width)',
+          'max-width': 'none',
+          'flex-shrink': '0',
+        }"
         (valueChange)="onMeridiemChange($event)"
       />
     </div>

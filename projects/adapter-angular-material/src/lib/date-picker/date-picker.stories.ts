@@ -42,12 +42,10 @@ type Story = StoryObj<DatePickerComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-date-picker
-          label="Project Deadline"
-          assistiveText="Specify the absolute cutoff for code submission."
-        ></rec-date-picker>
-      </div>
+      <rec-date-picker
+        label="Project Deadline"
+        assistiveText="Specify the absolute cutoff for code submission."
+      ></rec-date-picker>
     `,
   }),
 };
@@ -55,13 +53,11 @@ export const Default: Story = {
 export const FormsSideBySide: Story = {
   render: () => ({
     template: `
-      <div style="width: 480px;">
-        <rec-date-picker
-          formLayout="side-by-side"
-          label="Incident Start Date"
-          assistiveText="When did the incident originally occur?"
-        ></rec-date-picker>
-      </div>
+      <rec-date-picker
+        formLayout="side-by-side"
+        label="Incident Start Date"
+        assistiveText="When did the incident originally occur?"
+      ></rec-date-picker>
     `,
   }),
 };
@@ -81,9 +77,7 @@ export const WithLeadingIcon: Story = {
   render: () => ({
     template: `
       ${boxIconTemplate}
-      <div style="width: 320px;">
-        <rec-date-picker label="Launch Date" [leftSection]="boxIcon"></rec-date-picker>
-      </div>
+      <rec-date-picker label="Launch Date" [leftSection]="boxIcon"></rec-date-picker>
     `,
   }),
 };
@@ -91,9 +85,7 @@ export const WithLeadingIcon: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-date-picker label="Disabled Date Range" [disabled]="true"></rec-date-picker>
-      </div>
+      <rec-date-picker label="Disabled Date Range" [disabled]="true"></rec-date-picker>
     `,
   }),
 };
@@ -101,13 +93,11 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-date-picker
-          label="Execution Date"
-          error="The chosen date conflicts with an existing deployment freeze."
-          [required]="true"
-        ></rec-date-picker>
-      </div>
+      <rec-date-picker
+        label="Execution Date"
+        error="The chosen date conflicts with an existing deployment freeze."
+        [required]="true"
+      ></rec-date-picker>
     `,
   }),
 };
@@ -115,7 +105,7 @@ export const ErrorState: Story = {
 export const OpenedCalendar: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px; height: 420px;">
+      <div style="height: 420px;">
         <rec-date-picker
           label="Meeting Date"
           assistiveText="Calendar rendered open by default for styling review."
@@ -133,9 +123,7 @@ export const OpenedCalendar: Story = {
 export const StaticReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-date-picker label="Static ReadOnly Review" [value]="reviewDate" [readOnly]="true"></rec-date-picker>
-      </div>
+      <rec-date-picker label="Static ReadOnly Review" [value]="reviewDate" [readOnly]="true"></rec-date-picker>
     `,
     props: {
       reviewDate: new Date(2026, 4, 21),
@@ -146,14 +134,12 @@ export const StaticReadOnly: Story = {
 export const EditableReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-date-picker
-          label="Editable ReadOnly Review"
-          [defaultValue]="reviewDate"
-          [readOnly]="true"
-          [labelWithEditIcon]="true"
-        ></rec-date-picker>
-      </div>
+      <rec-date-picker
+        label="Editable ReadOnly Review"
+        [defaultValue]="reviewDate"
+        [readOnly]="true"
+        [labelWithEditIcon]="true"
+      ></rec-date-picker>
     `,
     props: {
       reviewDate: new Date(2026, 5, 1),

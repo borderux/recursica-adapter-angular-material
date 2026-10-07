@@ -66,9 +66,7 @@
    * `line-height: 1` above. Match the link's font directly instead of
    * depending on an inherited default.
    */
-  font-family: var(
-    --recursica_ui-kit_components_link_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_link_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
 }
 
@@ -79,43 +77,47 @@
 }
 
 :host-context([data-recursica-theme]) .link {
-  font-family: var(
-    --recursica_ui-kit_components_link_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_link_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
-  font-style: var(
-    --recursica_ui-kit_components_link_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_link_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_link_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_link_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_link_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_link_properties_text_text-transform
-  );
+  font-style: var(--recursica_ui-kit_components_link_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_link_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_link_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_link_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_link_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_link_properties_text_text-transform);
   color: var(--recursica_ui-kit_components_link_properties_colors_text-color);
 }
 
-.link:visited {
-  color: var(
-    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color
-  );
+/* Hover: same as Link — no per-component hover token, driven by the brand-level decoration
+   token (resolves to `underline`). */
+:host-context([data-recursica-theme]) .link:hover {
+  text-decoration: var(--recursica_brand_states_link_decoration);
+}
+
+:host-context([data-recursica-theme]) .link:visited {
+  color: var(--recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color);
+}
+
+/* Focus: same recursica focus ring as Link, replacing the native outline. */
+.link {
+  cursor: pointer;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+:host-context([data-recursica-theme]) .link:focus-visible {
+  box-shadow:
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
+      var(--recursica_brand_states_focus_color);
 }
 
 /* Current-page item (last crumb) — real plain text by construction (see class doc comment), not a
    defensive backstop against a stray Link the way the reference's identical rule is. Matches
    Link's font (per product decision, same as the reference), not its color/decoration. */
 :host-context([data-recursica-theme]) .current {
-  font-family: var(
-    --recursica_ui-kit_components_link_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_link_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
 }

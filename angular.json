@@ -40,6 +40,7 @@
             "port": 6006,
             "styles": [
               "recursica_variables_scoped.css",
+              "projects/adapter-angular-material/.storybook/storybook-global.css",
               "projects/adapter-angular-material/src/lib/tooltip/tooltip-overlay.css",
               "projects/adapter-angular-material/src/lib/menu/menu-overlay.css",
               "projects/adapter-angular-material/src/lib/dropdown/dropdown-overlay.css",
@@ -67,6 +68,7 @@
             "outputDir": "storybook-static",
             "styles": [
               "recursica_variables_scoped.css",
+              "projects/adapter-angular-material/.storybook/storybook-global.css",
               "projects/adapter-angular-material/src/lib/tooltip/tooltip-overlay.css",
               "projects/adapter-angular-material/src/lib/menu/menu-overlay.css",
               "projects/adapter-angular-material/src/lib/dropdown/dropdown-overlay.css",

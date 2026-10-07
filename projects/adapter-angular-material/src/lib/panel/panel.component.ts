@@ -192,9 +192,14 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.dialogRef = this.dialog.open(this.contentTemplate, {
       id: this.id,
       panelClass: ["rec-panel-panel", `rec-panel-panel-${this.placement}`],
+      backdropClass: "rec-panel-backdrop",
       hasBackdrop: this.withOverlay,
       disableClose: !this.closeOnClickOutside,
       autoFocus: "dialog",
+      // Slide in/out from the placement edge (see `panel-overlay.css`); durations match Mantine
+      // Drawer's default 200ms transition and keep the pane mounted while it slides out.
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms",
       position: this.edgePosition(this.placement),
     });
     this.dialogRef.afterClosed().subscribe(() => {

@@ -1,7 +1,9 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
+  inject,
   OnInit,
   Output,
   ViewEncapsulation,
@@ -114,6 +116,8 @@ export class TreeComponent implements TreeContext, RecursicaOverStyled, OnInit {
 
   private readonly expandedValues = signal<Set<string>>(new Set());
   private readonly selectedValues = signal<Set<string>>(new Set());
+  private readonly focusTarget = signal<string | undefined>(undefined);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   ngOnInit(): void {
     if (this.initialExpandedValues === "*") {
@@ -139,6 +143,58 @@ export class TreeComponent implements TreeContext, RecursicaOverStyled, OnInit {
 
   isExpanded(value: string): boolean {
     return this.expandedValues().has(value);
+  }
+
+  /** Only one node is a Tab stop (roving tabindex): the last focused one, else the first selected, else the first node. */
+  isFocusTarget(value: string): boolean {
+    const target =
+      this.focusTarget() ??
+      [...this.selectedValues()][0] ??
+      this.data[0]?.value;
+    return target === value;
+  }
+
+  setFocusTarget(value: string): void {
+    this.focusTarget.set(value);
+  }
+
+  moveFocus(
+    from: HTMLElement,
+    direction: "next" | "prev" | "first" | "last" | "parent" | "child",
+  ): void {
+    const root = (this.host.nativeElement as HTMLElement).querySelector(
+      '[role="tree"]',
+    );
+    if (!root) return;
+    const items = Array.from(
+      root.querySelectorAll<HTMLElement>('[role="treeitem"]'),
+    );
+    const index = items.indexOf(from);
+    let target: HTMLElement | undefined;
+    switch (direction) {
+      case "next":
+        target = items[index + 1];
+        break;
+      case "prev":
+        target = items[index - 1];
+        break;
+      case "first":
+        target = items[0];
+        break;
+      case "last":
+        target = items[items.length - 1];
+        break;
+      case "parent":
+        target =
+          from.parentElement?.closest<HTMLElement>('[role="treeitem"]') ??
+          undefined;
+        break;
+      case "child":
+        target =
+          from.querySelector<HTMLElement>('[role="treeitem"]') ?? undefined;
+        break;
+    }
+    target?.focus();
   }
 
   isSelected(value: string): boolean {

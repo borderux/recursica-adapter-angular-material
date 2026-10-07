@@ -46,22 +46,13 @@
   min-width: var(--recursica_ui-kit_components_modal_properties_min-width);
   max-width: var(--recursica_ui-kit_components_modal_properties_max-width);
   min-height: var(--recursica_ui-kit_components_modal_properties_min-height);
-  max-height: min(
-    var(--recursica_ui-kit_components_modal_properties_max-height),
-    calc(100vh - 4rem)
-  );
+  max-height: min(var(--recursica_ui-kit_components_modal_properties_max-height), calc(100dvh - 10dvh));
 
   border-style: solid;
   border-width: var(--recursica_ui-kit_components_modal_properties_border-size);
-  border-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_border-color
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_modal_properties_border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_content-background-color
-  );
+  border-color: var(--recursica_ui-kit_components_modal_properties_colors_border-color);
+  border-radius: var(--recursica_ui-kit_components_modal_properties_border-radius);
+  background-color: var(--recursica_ui-kit_components_modal_properties_colors_content-background-color);
   box-shadow: var(--recursica_ui-kit_components_modal_properties_elevation);
 }
 
@@ -78,15 +69,9 @@
   align-items: center;
   justify-content: space-between;
   flex: 0 0 auto;
-  padding: var(
-      --recursica_ui-kit_components_modal_properties_header-footer-vertical-padding
-    )
-    var(
-      --recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding
-    );
-  background-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_header-background-color
-  );
+  padding: var(--recursica_ui-kit_components_modal_properties_header-footer-vertical-padding)
+    var(--recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding);
+  background-color: var(--recursica_ui-kit_components_modal_properties_colors_header-background-color);
 }
 
 [data-recursica-theme] .rec-modal-panel-content .title {
@@ -99,30 +84,14 @@
   margin: 0;
 
   color: var(--recursica_ui-kit_components_modal_properties_colors_title);
-  font-family: var(
-    --recursica_ui-kit_components_modal_properties_header-style_fontFamily
-  );
-  font-size: var(
-    --recursica_ui-kit_components_modal_properties_header-style_fontSize
-  );
-  font-style: var(
-    --recursica_ui-kit_components_modal_properties_header-style_fontStyle
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_modal_properties_header-style_fontWeight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_modal_properties_header-style_letterSpacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_modal_properties_header-style_lineHeight
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_modal_properties_header-style_textCase
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_modal_properties_header-style_textDecoration
-  );
+  font-family: var(--recursica_ui-kit_components_modal_properties_header-style_fontFamily);
+  font-size: var(--recursica_ui-kit_components_modal_properties_header-style_fontSize);
+  font-style: var(--recursica_ui-kit_components_modal_properties_header-style_fontStyle);
+  font-weight: var(--recursica_ui-kit_components_modal_properties_header-style_fontWeight);
+  letter-spacing: var(--recursica_ui-kit_components_modal_properties_header-style_letterSpacing);
+  line-height: var(--recursica_ui-kit_components_modal_properties_header-style_lineHeight);
+  text-transform: var(--recursica_ui-kit_components_modal_properties_header-style_textCase);
+  text-decoration: var(--recursica_ui-kit_components_modal_properties_header-style_textDecoration);
 }
 
 [data-recursica-theme] .rec-modal-panel-content .bodyWrapper {
@@ -139,60 +108,28 @@
   min-height: 0;
   box-sizing: border-box;
   transition: border-color 0.15s ease;
-  border-top: var(
-      --recursica_ui-kit_components_modal_properties_scroll-divider-size
-    )
-    solid transparent;
-  border-bottom: var(
-      --recursica_ui-kit_components_modal_properties_scroll-divider-size
-    )
-    solid transparent;
+  border-top: var(--recursica_ui-kit_components_modal_properties_scroll-divider-size) solid transparent;
+  border-bottom: var(--recursica_ui-kit_components_modal_properties_scroll-divider-size) solid transparent;
 
-  padding: var(
-      --recursica_ui-kit_components_modal_properties_content-vertical-padding
-    )
-    var(
-      --recursica_ui-kit_components_modal_properties_content-horizontal-padding
-    );
+  padding: var(--recursica_ui-kit_components_modal_properties_content-vertical-padding)
+    var(--recursica_ui-kit_components_modal_properties_content-horizontal-padding);
   color: var(--recursica_ui-kit_components_modal_properties_colors_content);
-  font-family: var(
-    --recursica_ui-kit_components_modal_properties_content-style_fontFamily
-  );
-  font-size: var(
-    --recursica_ui-kit_components_modal_properties_content-style_fontSize
-  );
-  font-style: var(
-    --recursica_ui-kit_components_modal_properties_content-style_fontStyle
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_modal_properties_content-style_fontWeight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_modal_properties_content-style_letterSpacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_modal_properties_content-style_lineHeight
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_modal_properties_content-style_textCase
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_modal_properties_content-style_textDecoration
-  );
+  font-family: var(--recursica_ui-kit_components_modal_properties_content-style_fontFamily);
+  font-size: var(--recursica_ui-kit_components_modal_properties_content-style_fontSize);
+  font-style: var(--recursica_ui-kit_components_modal_properties_content-style_fontStyle);
+  font-weight: var(--recursica_ui-kit_components_modal_properties_content-style_fontWeight);
+  letter-spacing: var(--recursica_ui-kit_components_modal_properties_content-style_letterSpacing);
+  line-height: var(--recursica_ui-kit_components_modal_properties_content-style_lineHeight);
+  text-transform: var(--recursica_ui-kit_components_modal_properties_content-style_textCase);
+  text-decoration: var(--recursica_ui-kit_components_modal_properties_content-style_textDecoration);
 }
 
 [data-recursica-theme] .rec-modal-panel-content .scrollArea[data-scrolled-top] {
-  border-top-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_scroll-divider
-  );
+  border-top-color: var(--recursica_ui-kit_components_modal_properties_colors_scroll-divider);
 }
 
-[data-recursica-theme]
-  .rec-modal-panel-content
-  .scrollArea[data-scrolled-bottom] {
-  border-bottom-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_scroll-divider
-  );
+[data-recursica-theme] .rec-modal-panel-content .scrollArea[data-scrolled-bottom] {
+  border-bottom-color: var(--recursica_ui-kit_components_modal_properties_colors_scroll-divider);
 }
 
 /* Close button — matches Button's text-variant, icon-only, small-size visual treatment
@@ -209,9 +146,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
-  height: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
-  );
+  height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_height);
   min-width: var(
     --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_min-width
   );
@@ -223,27 +158,15 @@
     --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_border-radius
   );
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color
-  );
-  background-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color
-  );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color
-  );
+  border-width: var(--recursica_ui-kit_components_button_variants_styles_text_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color);
+  background-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color);
+  color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color);
 }
 
 [data-recursica-theme] .rec-modal-panel-content .close svg {
-  width: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
-  );
-  height: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
-  );
+  width: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon);
+  height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon);
   position: relative;
   z-index: 1;
 }
@@ -260,18 +183,20 @@
   background-color: var(--recursica_brand_states_hover_color);
 }
 
-[data-recursica-theme]
-  .rec-modal-panel-content
-  .close:hover:not(:disabled)::after {
+[data-recursica-theme] .rec-modal-panel-content .close:hover:not(:disabled)::after {
   opacity: var(--recursica_brand_states_hover_opacity);
 }
 
 [data-recursica-theme] .rec-modal-panel-content .close:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
+}
+
+/* Overlay: Mantine's default black overlay at 0.6 opacity (no Recursica token exists for it);
+   Material's own backdrop is a much lighter rgba(0, 0, 0, 0.32). */
+.cdk-overlay-backdrop.rec-modal-backdrop {
+  background-color: rgb(0 0 0 / 0.6);
 }

@@ -18,6 +18,7 @@ import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-
 import { BadgeComponent } from "../badge/badge.component";
 import { ButtonComponent } from "../button/button.component";
 import { CheckboxComponent } from "../checkbox/checkbox.component";
+import { CheckboxGroupComponent } from "../checkbox/checkbox-group.component";
 import { TextFieldComponent } from "../text-field/text-field.component";
 import {
   RecursicaTransferListData,
@@ -58,18 +59,12 @@ interface RecursicaTransferListPaneView {
  * `TransferList.tsx` composition (Badge/Button/TextField/Checkbox/
  * CheckboxGroup) almost 1:1.
  *
- * ## `Checkbox`, not `CheckboxGroup` — this adapter's own `CheckboxGroupComponent` grew a second `FormControlWrapper` layer
+ * ## `CheckboxGroup` per pane block
  *
- * The reference composes Mantine's own headless `CheckboxGroup` purely for
- * ARIA grouping — a thin wrapper, no visible chrome of its own. This
- * adapter's own `CheckboxGroupComponent` is not that: it composes
- * `FormControlWrapperComponent` directly (see its own class doc comment),
- * meaning nesting one inside each pane would render a second, unwanted
- * label/description/assistive-text/error chrome block per group. Each
- * pane instead renders plain `<rec-checkbox>` elements directly inside a
- * `role="group"` div (`.groupBlock`, `aria-label` set to the group name)
- * — real ARIA grouping semantics with none of `CheckboxGroupComponent`'s
- * own extra form-field chrome.
+ * Mirrors the reference: the ungrouped items sit in one `<rec-checkbox-group>`, and each named
+ * group is its own `<rec-checkbox-group>` labelled with the group name (`labelSize="small"`).
+ * The checkboxes bind `checked` directly (no `value`), so the group only supplies layout,
+ * spacing and ARIA grouping — selection stays owned by this component.
  *
  * ## One shared `#paneTpl`, not two duplicated pane blocks
  *
@@ -101,6 +96,7 @@ interface RecursicaTransferListPaneView {
     BadgeComponent,
     ButtonComponent,
     CheckboxComponent,
+    CheckboxGroupComponent,
     TextFieldComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -163,7 +159,7 @@ interface RecursicaTransferListPaneView {
           }
 
           @if (pane.ungrouped.length > 0) {
-            <div class="groupBlock" role="group">
+            <rec-checkbox-group>
               @for (item of pane.ungrouped; track item.value) {
                 <rec-checkbox
                   [id]="id + '-' + pane.side + '-' + item.value"
@@ -173,12 +169,11 @@ interface RecursicaTransferListPaneView {
                   [disabled]="disabled"
                 />
               }
-            </div>
+            </rec-checkbox-group>
           }
 
           @for (group of pane.groups; track group.name) {
-            <div class="groupBlock" role="group" [attr.aria-label]="group.name">
-              <div class="groupLabel">{{ group.name }}</div>
+            <rec-checkbox-group [label]="group.name" labelSize="small">
               @for (item of group.items; track item.value) {
                 <rec-checkbox
                   [id]="id + '-' + pane.side + '-' + item.value"
@@ -188,7 +183,7 @@ interface RecursicaTransferListPaneView {
                   [disabled]="disabled"
                 />
               }
-            </div>
+            </rec-checkbox-group>
           }
         </div>
       </div>

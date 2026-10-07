@@ -91,6 +91,7 @@ let nextId = 0;
       [style]="resolvedOverStyle.style"
       [formLayout]="formLayout"
       [labelSize]="labelSize"
+      controlMaxWidth="var(--recursica_ui-kit_globals_form_field_size_max-width)"
       [labelAlignment]="labelAlignment"
       [labelOptionalText]="labelOptionalText"
       [labelWithEditIcon]="labelWithEditIcon"

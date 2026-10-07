@@ -1,4 +1,11 @@
-import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewEncapsulation,
+  inject,
+} from "@angular/core";
+import { ButtonComponent } from "../button/button.component";
 import { TREE_CONTEXT } from "./tree-context";
 import { RecursicaTreeNode } from "./tree-node-data";
 
@@ -55,19 +62,20 @@ import { RecursicaTreeNode } from "./tree-node-data";
  */
 @Component({
   selector: "rec-tree-node",
-  imports: [TreeNodeComponent],
+  imports: [TreeNodeComponent, ButtonComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./tree-node.component.css",
   host: {
     class: "node",
     role: "treeitem",
-    tabindex: "0",
+    "[attr.tabindex]": "context?.isFocusTarget(node.value) ? 0 : -1",
+    "(focus)": "context?.setFocusTarget(node.value)",
     "[attr.data-value]": "node.value",
     "[attr.aria-expanded]":
       "hasChildren ? (isExpanded ? 'true' : 'false') : null",
     "[attr.aria-selected]": "isSelected ? 'true' : 'false'",
     "[style.--tree-level]": "level",
-    "(click)": "onRowClick()",
+    "(click)": "onRowClick($event)",
     "(keydown)": "onKeydown($event)",
   },
   template: `
@@ -76,15 +84,25 @@ import { RecursicaTreeNode } from "./tree-node-data";
       [attr.data-has-children]="hasChildren ? '' : null"
       [attr.data-expanded]="hasChildren && isExpanded ? '' : null"
     >
-      <button
-        type="button"
+      <!-- Mantine's reference renders a real Recursica text-variant small Button here; same
+           here. Stays out of the tab order and off the a11y tree — the row is the only focusable
+           element. -->
+      <span
         class="expandButton"
-        aria-label="Toggle subtree"
         aria-hidden="true"
-        tabindex="-1"
         (mousedown)="$event.preventDefault()"
         (click)="onToggleClick($event)"
       >
+        <rec-button
+          variant="text"
+          size="small"
+          [iconOnly]="true"
+          ariaLabel="Toggle subtree"
+          [buttonTabIndex]="-1"
+          [icon]="expandGlyph"
+        />
+      </span>
+      <ng-template #expandGlyph>
         <svg
           class="expandGlyph"
           viewBox="0 0 16 16"
@@ -99,7 +117,7 @@ import { RecursicaTreeNode } from "./tree-node-data";
         >
           <path d="M5 3l5 5-5 5" />
         </svg>
-      </button>
+      </ng-template>
       <span class="label" [attr.data-selected]="isSelected ? '' : null">{{
         node.label
       }}</span>
@@ -118,7 +136,8 @@ export class TreeNodeComponent {
   @Input({ required: true }) node!: RecursicaTreeNode;
   @Input() level = 0;
 
-  private readonly context = inject(TREE_CONTEXT, { optional: true });
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly context = inject(TREE_CONTEXT, { optional: true });
 
   get hasChildren(): boolean {
     return this.node.children !== undefined;
@@ -132,7 +151,10 @@ export class TreeNodeComponent {
     return this.context?.isSelected(this.node.value) ?? false;
   }
 
-  onRowClick(): void {
+  onRowClick(event: MouseEvent): void {
+    // This host sits inside its parent node's host (the subtree is nested) — without this the
+    // click would bubble and also select every ancestor, the last one winning.
+    event.stopPropagation();
     this.context?.select(this.node.value);
   }
 
@@ -150,16 +172,38 @@ export class TreeNodeComponent {
         event.preventDefault();
         this.context?.select(this.node.value);
         return;
+      case "ArrowDown":
+        event.preventDefault();
+        this.context?.moveFocus(this.element.nativeElement, "next");
+        return;
+      case "ArrowUp":
+        event.preventDefault();
+        this.context?.moveFocus(this.element.nativeElement, "prev");
+        return;
+      case "Home":
+        event.preventDefault();
+        this.context?.moveFocus(this.element.nativeElement, "first");
+        return;
+      case "End":
+        event.preventDefault();
+        this.context?.moveFocus(this.element.nativeElement, "last");
+        return;
       case "ArrowRight":
-        if (this.hasChildren && !this.isExpanded) {
+        if (this.hasChildren) {
           event.preventDefault();
-          this.context?.toggleExpanded(this.node.value);
+          if (!this.isExpanded) {
+            this.context?.toggleExpanded(this.node.value);
+          } else {
+            this.context?.moveFocus(this.element.nativeElement, "child");
+          }
         }
         return;
       case "ArrowLeft":
+        event.preventDefault();
         if (this.hasChildren && this.isExpanded) {
-          event.preventDefault();
           this.context?.toggleExpanded(this.node.value);
+        } else {
+          this.context?.moveFocus(this.element.nativeElement, "parent");
         }
         return;
       default:

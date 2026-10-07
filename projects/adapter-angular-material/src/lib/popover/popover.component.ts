@@ -1,3 +1,4 @@
+import { readBeakSize } from "../utils/beak-size";
 import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
@@ -226,7 +227,12 @@ export class PopoverComponent
   }
 
   get positions(): ConnectedPosition[] {
-    return [toConnectedPosition(this.position, this.offset)];
+    return [
+      toConnectedPosition(
+        this.position,
+        this.offset + (this.withBeak ? readBeakSize() / 2 : 0),
+      ),
+    ];
   }
 
   get resolvedOverStyle(): {

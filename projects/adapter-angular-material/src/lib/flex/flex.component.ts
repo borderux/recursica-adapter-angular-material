@@ -73,10 +73,12 @@ export class FlexComponent {
   }
 
   get resolvedRowGap(): string | undefined {
-    return resolveSpacing(this.rowGap);
+    // Always set explicitly: a bound-but-undefined `row-gap` would otherwise clear the longhand
+    // that the `gap` shorthand binding just set.
+    return resolveSpacing(this.rowGap ?? this.gap);
   }
 
   get resolvedColumnGap(): string | undefined {
-    return resolveSpacing(this.columnGap);
+    return resolveSpacing(this.columnGap ?? this.gap);
   }
 }

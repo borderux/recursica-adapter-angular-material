@@ -36,9 +36,11 @@
 .item::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
+  /* From the bottom of this item's bullet to the top of the next one (through the item gap),
+     centered on the bullet. `--tl-bullet-size` is set per bullet variant below. */
+  left: calc(var(--tl-bullet-size) / 2);
+  top: var(--tl-bullet-size);
+  bottom: calc(-1 * var(--recursica_ui-kit_components_timeline_properties_item-gap));
   border-left-style: solid;
   transform: translateX(-50%);
   z-index: 0;
@@ -279,4 +281,19 @@
 }
 :host-context([data-recursica-theme]) .item[data-active] .timestamp {
   color: var(--recursica_ui-kit_components_timeline_variants_selection-states_active_properties_colors_timestamp-color);
+}
+
+:host-context([data-recursica-theme]) .item[data-variant="default"] {
+  --tl-bullet-size: var(--recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size);
+}
+:host-context([data-recursica-theme]) .item[data-variant="icon"] {
+  --tl-bullet-size: var(--recursica_ui-kit_components_timeline-bullet_variants_types_icon_properties_bullet-size);
+}
+:host-context([data-recursica-theme]) .item[data-variant="icon-alternative"] {
+  --tl-bullet-size: var(
+    --recursica_ui-kit_components_timeline-bullet_variants_types_icon-alternative_properties_bullet-size
+  );
+}
+:host-context([data-recursica-theme]) .item[data-variant="avatar"] {
+  --tl-bullet-size: var(--recursica_ui-kit_components_timeline-bullet_variants_types_default_properties_bullet-size);
 }

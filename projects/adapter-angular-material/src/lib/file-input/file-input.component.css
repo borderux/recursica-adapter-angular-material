@@ -52,38 +52,27 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  min-height: var(
-    --recursica_ui-kit_components_file-input_properties_min-height
+  min-height: var(--recursica_ui-kit_components_file-input_properties_min-height);
+  /* Fixed to the empty control's height (icon row + padding + border): the min-height token
+     (48px) is smaller than that, so it never governed the height, and content taller than the
+     icon (the chip, the clear button) used to grow the control when a file was added. Taller
+     content now overflows its row, centered, instead. */
+  height: calc(
+    var(--recursica_ui-kit_components_file-input_properties_icon-size) + 2 *
+      var(--recursica_ui-kit_components_file-input_properties_vertical-padding) + 2 *
+      var(--recursica_ui-kit_components_file-input_properties_border-size)
   );
   gap: var(--recursica_ui-kit_components_file-input_properties_icon-text-gap);
-  padding-top: var(
-    --recursica_ui-kit_components_file-input_properties_vertical-padding
-  );
-  padding-bottom: var(
-    --recursica_ui-kit_components_file-input_properties_vertical-padding
-  );
-  padding-left: var(
-    --recursica_ui-kit_components_file-input_properties_horizontal-padding
-  );
-  padding-right: var(
-    --recursica_ui-kit_components_file-input_properties_horizontal-padding
-  );
-  border-width: var(
-    --recursica_ui-kit_components_file-input_properties_border-size
-  );
+  padding-top: var(--recursica_ui-kit_components_file-input_properties_vertical-padding);
+  padding-bottom: var(--recursica_ui-kit_components_file-input_properties_vertical-padding);
+  padding-left: var(--recursica_ui-kit_components_file-input_properties_horizontal-padding);
+  padding-right: var(--recursica_ui-kit_components_file-input_properties_horizontal-padding);
+  border-width: var(--recursica_ui-kit_components_file-input_properties_border-size);
   border-style: solid;
-  border-radius: var(
-    --recursica_ui-kit_components_file-input_properties_border-radius
-  );
-  background-color: var(
-    --recursica_ui-kit_components_file-input_properties_colors_background-color
-  );
-  border-color: var(
-    --recursica_ui-kit_components_file-input_properties_colors_border-color
-  );
-  color: var(
-    --recursica_ui-kit_components_file-input_properties_colors_text-color
-  );
+  border-radius: var(--recursica_ui-kit_components_file-input_properties_border-radius);
+  background-color: var(--recursica_ui-kit_components_file-input_properties_colors_background-color);
+  border-color: var(--recursica_ui-kit_components_file-input_properties_colors_border-color);
+  color: var(--recursica_ui-kit_components_file-input_properties_colors_text-color);
 }
 
 /* Dragging-over state: reuses the generic hover overlay recipe (same as Button) for the
@@ -120,9 +109,7 @@
 :host-context([data-recursica-theme]) .leadingIcon {
   width: var(--recursica_ui-kit_components_file-input_properties_icon-size);
   height: var(--recursica_ui-kit_components_file-input_properties_icon-size);
-  color: var(
-    --recursica_ui-kit_components_file-input_properties_colors_leading-icon
-  );
+  color: var(--recursica_ui-kit_components_file-input_properties_colors_leading-icon);
 }
 
 .leadingIcon svg {
@@ -147,36 +134,18 @@
 }
 
 :host-context([data-recursica-theme]) .value {
-  font-family: var(
-    --recursica_ui-kit_components_file-input_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_file-input_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_file-input_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_file-input_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_file-input_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_file-input_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_file-input_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_file-input_properties_text_text-transform
-  );
+  font-family: var(--recursica_ui-kit_components_file-input_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_file-input_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_file-input_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_file-input_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_file-input_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_file-input_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_file-input_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_file-input_properties_text_text-transform);
 }
 
 :host-context([data-recursica-theme]) .value[data-placeholder="true"] {
-  opacity: var(
-    --recursica_ui-kit_components_file-input_properties_placeholder-opacity
-  );
+  opacity: var(--recursica_ui-kit_components_file-input_properties_placeholder-opacity);
 }
 
 .chipRow {
@@ -209,55 +178,52 @@
   flex: none;
 }
 
+/* The clear button is a small Button, taller than the control's single-line content (the icon
+   row), so it made the whole control grow when a file was added. Negative block margins cancel
+   the difference: it still renders full-size, centered, but no longer adds height. */
+:host-context([data-recursica-theme]) .trailingIcon {
+  margin-block: calc(
+    (
+        var(--recursica_ui-kit_components_file-input_properties_icon-size) -
+          var(--recursica_ui-kit_components_button_variants_sizes_small_properties_height)
+      ) /
+      2
+  );
+}
+
 /* -------------------------------------
    STATE CASCADE ARCHITECTURE
 -------------------------------------- */
 
 :host-context([data-recursica-theme]) .root:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
 :host-context([data-recursica-theme]) .root[data-error="true"] {
-  border-color: var(
-    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_border-color
-  );
+  border-color: var(--recursica_ui-kit_components_file-input_variants_states_error_properties_colors_border-color);
   background-color: var(
     --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_background-color
   );
-  color: var(
-    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_file-input_variants_states_error_properties_colors_text-color);
 }
 
 :host-context([data-recursica-theme]) .root[data-error="true"] .leadingIcon {
-  color: var(
-    --recursica_ui-kit_components_file-input_variants_states_error_properties_colors_leading-icon
-  );
+  color: var(--recursica_ui-kit_components_file-input_variants_states_error_properties_colors_leading-icon);
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled="true"] {
-  border-color: var(
-    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_border-color
-  );
+  border-color: var(--recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_border-color);
   background-color: var(
     --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_background-color
   );
-  color: var(
-    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_text-color
-  );
-  opacity: var(
-    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_opacity
-  );
+  color: var(--recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_text-color);
+  opacity: var(--recursica_ui-kit_components_file-input_variants_states_disabled_properties_opacity);
   cursor: not-allowed;
 }
 
 :host-context([data-recursica-theme]) .root[data-disabled="true"] .leadingIcon {
-  color: var(
-    --recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_leading-icon
-  );
+  color: var(--recursica_ui-kit_components_file-input_variants_states_disabled_properties_colors_leading-icon);
 }

@@ -421,7 +421,9 @@ export class DropdownComponent
   @Input() id = this.baseId;
   readonly panelId = `${this.baseId}-panel`;
 
-  private readonly cva = new RecursicaValueAccessor<string | null>();
+  private readonly cva = new RecursicaValueAccessor<string | null>(
+    (v) => (this.value = v),
+  );
 
   private describedByIds: string[] = [];
 
@@ -480,6 +482,11 @@ export class DropdownComponent
 
   setDescribedByIds(ids: string[]): void {
     this.describedByIds = ids;
+  }
+
+  getControlWidths(formLayout: string): { max: string; min: string } {
+    const base = `--recursica_ui-kit_components_dropdown_variants_layouts_${formLayout}_properties`;
+    return { max: `var(${base}_max-width)`, min: `var(${base}_min-width)` };
   }
 
   toggle(): void {

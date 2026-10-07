@@ -330,7 +330,9 @@ export class SwitchComponent
 
   private readonly groupCtx = inject(SWITCH_GROUP_CONTEXT, { optional: true });
 
-  private readonly cva = new RecursicaValueAccessor<boolean>();
+  private readonly cva = new RecursicaValueAccessor<boolean>(
+    (v) => (this.checked = v),
+  );
 
   /**
    * Seeds the uncontrolled-`checked` signal from `defaultChecked` here, not

@@ -51,11 +51,7 @@
     "USAGE.md",
     "ARCHITECTURE.md",
     "SETUP.md",
-    "OVERSTYLING.md",
-    "recursica_variables_scoped.css",
-    "recursica_brand.json",
-    "recursica_tokens.json",
-    "recursica_ui-kit.json"
+    "OVERSTYLING.md"
   ],
   "engines": {
     "node": ">=20"
@@ -106,7 +102,7 @@
     "@compodoc/compodoc": "^2.0.0",
     "@eslint/js": "^9.25.0",
     "@playwright/test": "^1.63.0",
-    "@recursica/adapter-tester": "^5.2.0",
+    "@recursica/adapter-tester": "^5.3.0",
     "@storybook/addon-docs": "9.1.20",
     "@storybook/addon-onboarding": "9.1.20",
     "@storybook/angular": "9.1.20",

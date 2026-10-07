@@ -192,6 +192,9 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.dialogRef = this.dialog.open(this.contentTemplate, {
       id: this.id,
       panelClass: "rec-modal-panel",
+      backdropClass: "rec-modal-backdrop",
+      // Mantine's default (non-centered) placement: top-aligned, 5dvh from the top edge.
+      position: { top: "5dvh" },
       hasBackdrop: this.withOverlay,
       disableClose: !this.closeOnClickOutside,
       autoFocus: "dialog",

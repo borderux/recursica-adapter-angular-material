@@ -17,6 +17,12 @@
  * consumed by the one unconditional `.tab { ... }` rule beneath it.
  */
 
+/* The button is the flex item of the list, so in vertical orientation every tab stretches to the
+   list's width. */
+:host {
+  display: contents;
+}
+
 .tab {
   box-sizing: border-box;
   min-width: var(--tabs-min-width);
@@ -208,11 +214,62 @@
   border-top-width: var(--tabs-active-border-size);
   border-top-color: transparent;
 }
+/* Inverted: pull the tab up over the list's top divider so the active indicator sits on the
+   divider line rather than just below it. */
+:host-context([data-variant="default"][data-orientation="horizontal"][data-inverted]) .tab {
+  margin-top: calc(
+    -1 *
+      var(
+        --recursica_ui-kit_components_tabs-item_variants_styles_default_variants_selection-states_inactive_properties_border-size
+      )
+  );
+}
+:host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .tab {
+  margin-top: calc(
+    -1 *
+      var(
+        --recursica_ui-kit_components_tabs-item_variants_styles_outline_variants_selection-states_inactive_properties_border-size
+      )
+  );
+}
 :host-context([data-variant="default"][data-orientation="vertical"]) .tab,
 :host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
   border-right-style: solid;
   border-right-width: var(--tabs-active-border-size);
   border-right-color: transparent;
+}
+
+/* Outline (horizontal, not inverted): Mantine's model — a bordered box on all four sides, the
+   active tab's bottom border painted in the page surface color so it hides the baseline divider
+   running under all tabs and the selected tab appears to sit on top of it. */
+:host-context([data-variant="outline"][data-orientation="horizontal"]) .tab {
+  border: var(--tabs-active-border-size) solid transparent;
+  margin-bottom: calc(-1 * var(--tabs-inactive-border-size));
+  position: relative;
+}
+:host-context([data-recursica-theme]):host-context([data-variant="outline"][data-orientation="horizontal"])
+  .tab[data-active] {
+  z-index: 1;
+  border-bottom-color: var(--recursica_brand_layer_properties_surface);
+}
+
+/* Vertical (default/outline): overlap the list's divider line by one border width so the selected
+   tab's indicator sits on top of it rather than beside it. */
+:host-context([data-variant="default"][data-orientation="vertical"]) .tab,
+:host-context([data-variant="outline"][data-orientation="vertical"]) .tab {
+  margin-right: calc(-1 * var(--tabs-inactive-border-size));
+  position: relative;
+}
+:host-context([data-variant="default"][data-orientation="vertical"]) .tab[data-active],
+:host-context([data-variant="outline"][data-orientation="vertical"]) .tab[data-active] {
+  z-index: 1;
+}
+
+/* Inverted keeps the original one-sided (top) border. */
+:host-context([data-variant="outline"][data-orientation="horizontal"][data-inverted]) .tab {
+  border-width: 0;
+  border-top: var(--tabs-active-border-size) solid transparent;
+  margin-bottom: 0;
 }
 
 /* ---------------------------------

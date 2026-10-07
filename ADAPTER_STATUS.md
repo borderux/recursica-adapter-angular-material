@@ -95,12 +95,12 @@ components are listed under §2, with the reason in their own `IMPLEMENTATION_NO
 | Flex                | Material has no flex primitive (CDK layout is media-query only).                                          |
 | FormControlLayout   | Recursica-specific label/field/assistive composition; no Material concept.                                |
 | FormControlWrapper  | Composes Label + FormControlLayout + AssistiveElement instead of `MatFormField`.                          |
-| Grid                | `MatGridList` is a false friend (different model); hand-built.                                            |
 | Group               | No Material equivalent.                                                                                   |
 | Heading             | Material typography is Sass-only; no heading component.                                                   |
 | HoverCard           | `MatTooltip` only takes a string; built on CDK Overlay.                                                   |
 | Label               | `MatLabel` only works inside `MatFormField`.                                                              |
 | Layer               | Recursica-specific token-scoping primitive.                                                               |
+| LayoutGrid          | `MatGridList` is a false friend (different model); hand-built flex layout on the layout-grid tokens.      |
 | Link                | No Material link component or styler.                                                                     |
 | Pagination          | `MatPaginator` rejected — see `pagination/IMPLEMENTATION_NOTES.md`.                                       |
 | Popover             | No packaged Material candidate; built on CDK Overlay.                                                     |

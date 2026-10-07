@@ -17,12 +17,15 @@
 
 :host-context([data-recursica-theme]) .root {
   gap: var(--recursica_ui-kit_components_slider_properties_input-gap);
-  margin-top: var(--recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin);
-  margin-bottom: var(--recursica_ui-kit_components_slider_variants_layouts_stacked_properties_top-bottom-margin);
 }
 
 .root[data-disabled] {
   cursor: not-allowed;
+}
+
+/* Disabled: the whole control (track, labels, current value, inputs) fades, like the reference. */
+:host-context([data-recursica-theme]) .root[data-disabled] {
+  opacity: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_opacity);
 }
 
 .icon {
@@ -192,25 +195,49 @@
 
 :host-context([data-recursica-theme]) .thumbInput:disabled::-webkit-slider-thumb,
 :host-context([data-recursica-theme]) .thumbInput:disabled::-moz-range-thumb {
-  background-color: var(--recursica_ui-kit_components_slider_variants_states_disabled_properties_colors_thumb);
+  /* The reference shows no thumb at all when disabled. */
+  background-color: transparent;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
 /* ==== MARK LABELS / MIN-MAX LABELS ==== */
 
-.markLabels,
-.minMaxLabels {
+.markLabels {
   position: relative;
   display: flex;
 }
 
-.minMaxLabels {
-  justify-content: space-between;
+/* Min label | track | max label (with the current value above it), like the reference. */
+.rightGuide {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+:host-context([data-recursica-theme]) .currentValue {
+  position: absolute;
+  bottom: calc(100% + var(--recursica_ui-kit_globals_form_properties_label-field-gap-vertical));
+  right: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  display: inline-block;
+  width: var(--recursica_ui-kit_components_slider_properties_input-width);
+  text-align: right;
+  font-family: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-family);
+  font-size: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-size);
+  font-style: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-style);
+  font-weight: var(--recursica_ui-kit_components_slider_properties_read-only-value_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_slider_properties_read-only-value_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_slider_properties_read-only-value_line-height);
+  text-decoration: var(--recursica_ui-kit_components_slider_properties_read-only-value_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_slider_properties_read-only-value_text-transform);
 }
 
 :host-context([data-recursica-theme]) .markLabels,
-:host-context([data-recursica-theme]) .minMaxLabels {
-  margin-top: var(--recursica_ui-kit_components_slider_properties_step-indicator-width);
+:host-context([data-recursica-theme]) .minMaxGuide {
   font-family: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-family);
   font-size: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-size);
   font-style: var(--recursica_ui-kit_components_slider_properties_min-max-label_font-style);
@@ -219,6 +246,10 @@
   line-height: var(--recursica_ui-kit_components_slider_properties_min-max-label_line-height);
   text-decoration: var(--recursica_ui-kit_components_slider_properties_min-max-label_text-decoration);
   text-transform: var(--recursica_ui-kit_components_slider_properties_min-max-label_text-transform);
+}
+
+:host-context([data-recursica-theme]) .markLabels {
+  margin-top: var(--recursica_ui-kit_components_slider_properties_step-indicator-width);
 }
 
 .markLabel {

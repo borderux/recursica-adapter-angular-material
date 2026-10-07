@@ -237,7 +237,9 @@ export class TextFieldComponent
    */
   private readonly _uncontrolledValue = signal("");
 
-  private readonly cva = new RecursicaValueAccessor<string | undefined>();
+  private readonly cva = new RecursicaValueAccessor<string | undefined>(
+    (v) => (this.value = v),
+  );
 
   ngOnInit(): void {
     this._uncontrolledValue.set(this.defaultValue ?? "");
@@ -260,6 +262,11 @@ export class TextFieldComponent
 
   setDescribedByIds(ids: string[]): void {
     this.describedByIds = ids;
+  }
+
+  getControlWidths(formLayout: string): { max: string; min: string } {
+    const base = `--recursica_ui-kit_components_text-field_variants_layouts_${formLayout}_properties`;
+    return { max: `var(${base}_max-width)`, min: `var(${base}_min-width)` };
   }
 
   onInput(event: Event): void {

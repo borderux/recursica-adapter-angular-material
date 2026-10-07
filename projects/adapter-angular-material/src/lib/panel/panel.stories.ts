@@ -15,6 +15,8 @@ import { ButtonComponent } from "../button/button.component";
  */
 const meta: Meta<PanelComponent> = {
   title: "UI-Kit/Panel",
+  // Matches the reference story's Storybook layout.
+  parameters: { layout: "fullscreen" },
   component: PanelComponent,
   decorators: [
     moduleMetadata({

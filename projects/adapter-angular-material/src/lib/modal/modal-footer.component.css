@@ -12,14 +12,8 @@
 }
 
 :host-context([data-recursica-theme]) .footer {
-  padding: var(
-      --recursica_ui-kit_components_modal_properties_header-footer-vertical-padding
-    )
-    var(
-      --recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding
-    );
-  background-color: var(
-    --recursica_ui-kit_components_modal_properties_colors_footer-background-color
-  );
+  padding: var(--recursica_ui-kit_components_modal_properties_header-footer-vertical-padding)
+    var(--recursica_ui-kit_components_modal_properties_header-footer-horizontal-padding);
+  background-color: var(--recursica_ui-kit_components_modal_properties_colors_footer-background-color);
   gap: var(--recursica_ui-kit_components_modal_properties_button-gap);
 }

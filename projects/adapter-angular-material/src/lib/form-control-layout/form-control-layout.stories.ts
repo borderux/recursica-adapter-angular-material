@@ -56,7 +56,7 @@ export const Default: Story = {
 const withLabelTemplate = `
   <ng-template #left><rec-label [labelSize]="labelSize">A fairly long label to show the stacked-layout width cap in action</rec-label></ng-template>
   <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize" [leftSection]="left">
-    <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+    <rec-switch label="Input area content"></rec-switch>
   </rec-form-control-layout>
 `;
 
@@ -84,7 +84,7 @@ export const SideBySideLayout: Story = {
     props: args,
     template: `
       <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize">
-        <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+        <rec-switch label="Input area content"></rec-switch>
       </rec-form-control-layout>
     `,
   }),
@@ -96,7 +96,7 @@ export const StackedLayout: Story = {
     props: args,
     template: `
       <rec-form-control-layout [formLayout]="formLayout" [labelSize]="labelSize">
-        <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+        <rec-switch label="Input area content"></rec-switch>
       </rec-form-control-layout>
     `,
   }),
@@ -122,7 +122,7 @@ export const OverStyledEscapeHatch: Story = {
         [overStyled]="overStyled"
         [overStyle]="overStyle"
       >
-        <input type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;" />
+        <rec-switch label="Input area content"></rec-switch>
       </rec-form-control-layout>
     `,
   }),

@@ -141,6 +141,19 @@ import { ThemeProviderComponent } from "@recursica/adapter-angular-material";
 export class AppComponent {}
 ```
 
+### Pass the manifest
+
+Some components (currently `Pagination`) render Recursica `Button`s whose style and size Forge selects in `recursica_manifest.json`. Pass the parsed manifest to the provider; those components throw without it. It is stored in a root singleton, so it also reaches content declared outside the provider's own template.
+
+```ts
+import manifest from "./recursica_manifest.json";
+
+// template: <rec-theme-provider theme="light" [manifest]="manifest">
+export class AppComponent {
+  readonly manifest = manifest;
+}
+```
+
 To switch themes at runtime, bind `[theme]` to a component property instead of a literal string. `rec-theme-provider` reactively re-applies `data-recursica-theme` whenever a _bound_ `theme` input changes — and per step 2 above, that single attribute write already drives Angular Material's own theme too. There is no separate provider to wrap this one in (contrast with Beam, which needs both `BeamThemeProvider` and `RecursicaThemeProvider`, or Mantine, which needs `MantineProvider` and `RecursicaThemeProvider`) — Angular Material has no runtime provider component to wrap at all.
 
 ---

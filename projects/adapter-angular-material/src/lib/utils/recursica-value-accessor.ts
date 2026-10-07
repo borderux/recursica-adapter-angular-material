@@ -12,9 +12,19 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
 export class RecursicaValueAccessor<T> {
   private onChangeFn: (value: T) => void = () => {};
   private onTouchedFn: () => void = () => {};
+  private bound = false;
+
+  /**
+   * @param syncValue Called with each user-driven value while a form control is bound. A bound
+   *   control's value was last set by `writeValue`, which makes the component's own value input
+   *   "controlled"; without syncing it here the component would keep rendering the stale value
+   *   after the user interacts (Angular forms only calls `writeValue` for model-to-view changes).
+   */
+  constructor(private readonly syncValue?: (value: T) => void) {}
 
   registerOnChange(fn: (value: T) => void): void {
     this.onChangeFn = fn;
+    this.bound = true;
   }
 
   registerOnTouched(fn: () => void): void {
@@ -23,6 +33,9 @@ export class RecursicaValueAccessor<T> {
 
   /** Call alongside the component's own `valueChange`/`checkedChange` emit. */
   notifyChange(value: T): void {
+    if (this.bound) {
+      this.syncValue?.(value);
+    }
     this.onChangeFn(value);
   }
 

@@ -6,6 +6,8 @@
  */
 
 .root {
+  /* Mantine's Text resets the browser's default <p> margins; spacing comes from the layout. */
+  margin: 0;
   /* HARDCODE: balances wrapped line lengths (product decision, not a design token — matches the
      genesis reference's own identical hardcode). */
   text-wrap: balance;

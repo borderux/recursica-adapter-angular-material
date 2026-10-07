@@ -56,14 +56,12 @@ type Story = StoryObj<FileInputComponent>;
 export const Default: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Resume"
-          [files]="files"
-          (filesAdded)="files = toFileItems($event)"
-          (fileRemove)="files = []"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Resume"
+        [files]="files"
+        (filesAdded)="files = toFileItems($event)"
+        (fileRemove)="files = []"
+      ></rec-file-input>
     `,
     props: { files: [] as RecursicaFileUploadItem[], toFileItems },
   }),
@@ -72,14 +70,12 @@ export const Default: Story = {
 export const WithFile: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Resume"
-          [files]="files"
-          (filesAdded)="files = toFileItems($event)"
-          (fileRemove)="files = []"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Resume"
+        [files]="files"
+        (filesAdded)="files = toFileItems($event)"
+        (fileRemove)="files = []"
+      ></rec-file-input>
     `,
     props: {
       files: [{ file: mockFile("resume.pdf") }] as RecursicaFileUploadItem[],
@@ -91,16 +87,14 @@ export const WithFile: Story = {
 export const MultipleFiles: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Attachments"
-          assistiveText="Up to 5 files"
-          [multiple]="true"
-          [files]="files"
-          (filesAdded)="files = files.concat(toFileItems($event))"
-          (fileRemove)="files = removeFileItem(files, $event)"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Attachments"
+        assistiveText="Up to 5 files"
+        [multiple]="true"
+        [files]="files"
+        (filesAdded)="files = files.concat(toFileItems($event))"
+        (fileRemove)="files = removeFileItem(files, $event)"
+      ></rec-file-input>
     `,
     props: {
       files: [
@@ -117,16 +111,14 @@ export const MultipleFiles: Story = {
 export const SideBySide: Story = {
   render: () => ({
     template: `
-      <div style="width: 480px;">
-        <rec-file-input
-          label="Resume"
-          assistiveText="PDF or Word document"
-          formLayout="side-by-side"
-          [files]="files"
-          (filesAdded)="files = toFileItems($event)"
-          (fileRemove)="files = []"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Resume"
+        assistiveText="PDF or Word document"
+        formLayout="side-by-side"
+        [files]="files"
+        (filesAdded)="files = toFileItems($event)"
+        (fileRemove)="files = []"
+      ></rec-file-input>
     `,
     props: { files: [] as RecursicaFileUploadItem[], toFileItems },
   }),
@@ -135,9 +127,7 @@ export const SideBySide: Story = {
 export const Disabled: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input label="Resume" [disabled]="true" [files]="files"></rec-file-input>
-      </div>
+      <rec-file-input label="Resume" [disabled]="true" [files]="files"></rec-file-input>
     `,
     props: {
       files: [{ file: mockFile("resume.pdf") }] as RecursicaFileUploadItem[],
@@ -148,9 +138,7 @@ export const Disabled: Story = {
 export const ErrorState: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input label="Resume" error="A file is required."></rec-file-input>
-      </div>
+      <rec-file-input label="Resume" error="A file is required."></rec-file-input>
     `,
   }),
 };
@@ -158,15 +146,13 @@ export const ErrorState: Story = {
 export const ReadOnly: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Attachments"
-          assistiveText="Submitted files cannot be changed"
-          [multiple]="true"
-          [readOnly]="true"
-          [files]="files"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Attachments"
+        assistiveText="Submitted files cannot be changed"
+        [multiple]="true"
+        [readOnly]="true"
+        [files]="files"
+      ></rec-file-input>
     `,
     props: {
       files: [
@@ -180,16 +166,14 @@ export const ReadOnly: Story = {
 export const AcceptRestriction: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Resume"
-          assistiveText="Only .pdf files are accepted"
-          accept=".pdf"
-          [files]="files"
-          (filesAdded)="files = toFileItems($event)"
-          (fileRemove)="files = []"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Resume"
+        assistiveText="Only .pdf files are accepted"
+        accept=".pdf"
+        [files]="files"
+        (filesAdded)="files = toFileItems($event)"
+        (fileRemove)="files = []"
+      ></rec-file-input>
     `,
     props: { files: [] as RecursicaFileUploadItem[], toFileItems },
   }),
@@ -198,17 +182,15 @@ export const AcceptRestriction: Story = {
 export const MaxFilesRestriction: Story = {
   render: () => ({
     template: `
-      <div style="width: 320px;">
-        <rec-file-input
-          label="Attachments"
-          assistiveText="Up to 2 files allowed"
-          [multiple]="true"
-          [maxFiles]="2"
-          [files]="files"
-          (filesAdded)="files = files.concat(toFileItems($event))"
-          (fileRemove)="files = removeFileItem(files, $event)"
-        ></rec-file-input>
-      </div>
+      <rec-file-input
+        label="Attachments"
+        assistiveText="Up to 2 files allowed"
+        [multiple]="true"
+        [maxFiles]="2"
+        [files]="files"
+        (filesAdded)="files = files.concat(toFileItems($event))"
+        (fileRemove)="files = removeFileItem(files, $event)"
+      ></rec-file-input>
     `,
     props: {
       files: [

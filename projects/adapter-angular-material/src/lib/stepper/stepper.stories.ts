@@ -3,6 +3,7 @@ import { moduleMetadata } from "@storybook/angular";
 import { StepperComponent } from "./stepper.component";
 import { StepComponent } from "./stepper-step.component";
 import { StepperCompletedComponent } from "./stepper-completed.component";
+import { ButtonComponent } from "../button/button.component";
 import { GroupComponent } from "../group/group.component";
 
 /**
@@ -29,6 +30,8 @@ import { GroupComponent } from "../group/group.component";
  */
 const meta: Meta<StepperComponent> = {
   title: "UI-Kit/Stepper",
+  // Matches the reference story's Storybook layout.
+  parameters: { layout: "centered" },
   component: StepperComponent,
   decorators: [
     moduleMetadata({
@@ -37,6 +40,7 @@ const meta: Meta<StepperComponent> = {
         StepComponent,
         StepperCompletedComponent,
         GroupComponent,
+        ButtonComponent,
       ],
     }),
   ],
@@ -55,11 +59,6 @@ export default meta;
 
 type Story = StoryObj<StepperComponent>;
 
-const buttonStyle =
-  "border: 1px solid #c40033; color: #c40033; background: none; border-radius: 999px; padding: 8px 20px; cursor: pointer;";
-const buttonStyleDisabled =
-  "border: 1px solid #c9c9c9; color: #c9c9c9; background: none; border-radius: 999px; padding: 8px 20px; cursor: not-allowed;";
-
 const template = `
   <div style="width: 600px;">
     <rec-stepper [active]="active" [size]="size" [orientation]="orientation" (stepClick)="active = $event">
@@ -76,16 +75,8 @@ const template = `
     </rec-stepper>
 
     <rec-group justify="center" wrap="nowrap" gap="8px" style="margin-top: 24px;">
-      <button
-        [attr.style]="active === 0 ? disabledStyle : enabledStyle"
-        [disabled]="active === 0"
-        (click)="active = active > 0 ? active - 1 : active"
-      >Previous step</button>
-      <button
-        [attr.style]="active === 3 ? disabledStyle : enabledStyle"
-        [disabled]="active === 3"
-        (click)="active = active < 3 ? active + 1 : active"
-      >Next step</button>
+      <rec-button variant="outline" [disabled]="active === 0" (click)="active = active > 0 ? active - 1 : active">Previous step</rec-button>
+      <rec-button variant="outline" [disabled]="active === 3" (click)="active = active < 3 ? active + 1 : active">Next step</rec-button>
     </rec-group>
   </div>
 `;
@@ -106,16 +97,8 @@ const stressTestTemplate = `
     </rec-stepper>
 
     <rec-group justify="center" wrap="nowrap" gap="8px" style="margin-top: 24px;">
-      <button
-        [attr.style]="active === 0 ? disabledStyle : enabledStyle"
-        [disabled]="active === 0"
-        (click)="active = active > 0 ? active - 1 : active"
-      >Previous step</button>
-      <button
-        [attr.style]="active === 3 ? disabledStyle : enabledStyle"
-        [disabled]="active === 3"
-        (click)="active = active < 3 ? active + 1 : active"
-      >Next step</button>
+      <rec-button variant="outline" [disabled]="active === 0" (click)="active = active > 0 ? active - 1 : active">Previous step</rec-button>
+      <rec-button variant="outline" [disabled]="active === 3" (click)="active = active < 3 ? active + 1 : active">Next step</rec-button>
     </rec-group>
   </div>
 `;
@@ -125,8 +108,6 @@ export const Default: Story = {
     props: {
       ...args,
       active: 1,
-      enabledStyle: buttonStyle,
-      disabledStyle: buttonStyleDisabled,
     },
     template,
   }),
@@ -141,8 +122,6 @@ export const Small: Story = {
     props: {
       ...args,
       active: 1,
-      enabledStyle: buttonStyle,
-      disabledStyle: buttonStyleDisabled,
     },
     template,
   }),
@@ -157,8 +136,6 @@ export const Vertical: Story = {
     props: {
       ...args,
       active: 1,
-      enabledStyle: buttonStyle,
-      disabledStyle: buttonStyleDisabled,
     },
     template,
   }),
@@ -173,8 +150,6 @@ export const LayoutStressTest: Story = {
     props: {
       ...args,
       active: 1,
-      enabledStyle: buttonStyle,
-      disabledStyle: buttonStyleDisabled,
     },
     template: stressTestTemplate,
   }),
