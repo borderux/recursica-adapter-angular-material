@@ -168,18 +168,22 @@ Install the plugin as a dev dependency:
 npm install @recursica/recursica-postcss-vars --save-dev
 ```
 
-Then, configure it in your `postcss.config.js`:
+Then add a `.postcssrc.json` next to your Angular project's `angular.json` (the app's root directory). The Angular CLI reads PostCSS configuration **only from JSON files** (`postcss.config.json` or `.postcssrc.json`); a `postcss.config.js` is ignored. Plugins are listed by name:
 
-```javascript
-export default {
-  plugins: {
+```json
+{
+  "plugins": {
     "@recursica/recursica-postcss-vars": {
-      cssPath: "./path/to/recursica_variables_scoped.css",
-      strict: process.env.NODE_ENV === "production",
-    },
-  },
-};
+      "cssPath": "./path/to/recursica_variables_scoped.css",
+      "strict": false
+    }
+  }
+}
 ```
+
+The plugin then checks `var(--recursica…)` references in your component styles at build time. For a library built with ng-packagr, put the file in the library's project directory (next to `ng-package.json`), not the workspace root. It also runs under Storybook.
+
+`strict: true` halts the build with `process.exit(1)` on the first missing variable. Since JSON can't read `NODE_ENV`, use a separate config file or leave it `false` and treat the warnings as build output to review.
 
 ## 7. Configure ESLint Plugin (Optional but Recommended)
 
