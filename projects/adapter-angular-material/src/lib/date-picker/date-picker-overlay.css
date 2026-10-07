@@ -7,6 +7,8 @@
  *   recursica-allow-brand: --recursica_brand_states_focus_margin
  *   recursica-allow-brand: --recursica_brand_states_hover_color
  *   recursica-allow-brand: --recursica_brand_states_hover_opacity
+ * calendar day-cell radius; the ui-kit date-picker radius is the form-field radius, a different value
+ *   recursica-allow-brand: --recursica_brand_dimensions_border-radii_default
  */
 
 /*

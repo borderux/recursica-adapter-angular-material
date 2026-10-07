@@ -7,6 +7,8 @@
  *   recursica-allow-brand: --recursica_brand_states_focus_margin
  *   recursica-allow-brand: --recursica_brand_states_hover_color
  *   recursica-allow-brand: --recursica_brand_states_hover_opacity
+ * selected outline tab blends into the layer surface behind it; no ui-kit token for this
+ *   recursica-allow-brand: --recursica_brand_layer_properties_surface
  */
 
 /*
