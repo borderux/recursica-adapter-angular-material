@@ -59,7 +59,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "npm run storybook",
-    "build": "node scripts/sync-lib-version.mjs && ng build adapter-angular-material",
+    "build": "cross-env NODE_ENV=production node scripts/sync-lib-version.mjs && cross-env NODE_ENV=production ng build adapter-angular-material",
     "lint": "eslint .",
     "validate-adapter-status": "node scripts/validate-adapter-status.mjs",
     "check-types": "tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json",
@@ -109,6 +109,7 @@
     "@storybook/angular": "9.1.20",
     "@types/node": "^24.0.0",
     "angular-eslint": "^22.5.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.25.0",
     "eslint-plugin-storybook": "9.1.20",
     "husky": "^9.1.7",
