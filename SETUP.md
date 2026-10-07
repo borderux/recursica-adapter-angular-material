@@ -183,7 +183,7 @@ Then add a `.postcssrc.json` next to your Angular project's `angular.json` (the 
 
 The plugin then checks `var(--recursica…)` references in your component styles at build time. For a library built with ng-packagr, put the file in the library's project directory (next to `ng-package.json`), not the workspace root. It also runs under Storybook.
 
-`strict: true` halts the build with `process.exit(1)` on the first missing variable. Since JSON can't read `NODE_ENV`, use a separate config file or leave it `false` and treat the warnings as build output to review.
+By default (`strict` omitted) the plugin only logs a warning in development, and **fails the build** when `NODE_ENV=production` (via `process.exit(1)` on the first missing variable). The Angular CLI does not set `NODE_ENV` itself, so for CI run the build as `NODE_ENV=production npm run build` to enforce it. Set `"strict": false` to always warn only, or `"strict": true` to always fail.
 
 ## 7. Configure ESLint Plugin (Optional but Recommended)
 

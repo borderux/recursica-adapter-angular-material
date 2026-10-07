@@ -1,8 +1,7 @@
 {
   "plugins": {
     "@recursica/recursica-postcss-vars": {
-      "cssPath": "./recursica_variables_scoped.css",
-      "strict": false
+      "cssPath": "./recursica_variables_scoped.css"
     }
   }
 }
