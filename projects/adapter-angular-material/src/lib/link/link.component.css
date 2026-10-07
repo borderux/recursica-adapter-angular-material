@@ -1,3 +1,12 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_focus_blur
+ *   recursica-allow-brand: --recursica_brand_states_focus_border-size
+ *   recursica-allow-brand: --recursica_brand_states_focus_color
+ *   recursica-allow-brand: --recursica_brand_states_focus_margin
+ *   recursica-allow-brand: --recursica_brand_states_link_decoration
+ */
+
 /*
  * Ported conceptually from the React source of truth's own
  * `Link.module.css` (recursica-adapter-mantine-v8) — same
@@ -45,28 +54,14 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  font-family: var(
-    --recursica_ui-kit_components_link_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_link_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_link_properties_text_font-size);
-  font-style: var(
-    --recursica_ui-kit_components_link_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_link_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_link_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_link_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_link_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_link_properties_text_text-transform
-  );
+  font-style: var(--recursica_ui-kit_components_link_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_link_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_link_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_link_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_link_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_link_properties_text_text-transform);
   color: var(--recursica_ui-kit_components_link_properties_colors_text-color);
 }
 
@@ -83,9 +78,7 @@
 }
 
 :host-context([data-recursica-theme]) .root:visited {
-  color: var(
-    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_link_variants_states_visited_properties_colors_text-color);
 }
 
 /* Hover: no per-component hover token exists — driven by the brand-level
@@ -102,10 +95,8 @@
 
 :host-context([data-recursica-theme]) .root:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -130,9 +121,7 @@
 }
 
 :host-context([data-recursica-theme]) .root:visited .iconWrapper {
-  color: var(
-    --recursica_ui-kit_components_link_variants_states_visited_properties_colors_icon-color
-  );
+  color: var(--recursica_ui-kit_components_link_variants_states_visited_properties_colors_icon-color);
 }
 
 /* Label text wrapper */

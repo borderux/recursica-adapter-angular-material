@@ -1,3 +1,14 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_disabled
+ *   recursica-allow-brand: --recursica_brand_states_focus_blur
+ *   recursica-allow-brand: --recursica_brand_states_focus_border-size
+ *   recursica-allow-brand: --recursica_brand_states_focus_color
+ *   recursica-allow-brand: --recursica_brand_states_focus_margin
+ *   recursica-allow-brand: --recursica_brand_states_hover_color
+ *   recursica-allow-brand: --recursica_brand_states_hover_opacity
+ */
+
 /*
  * Recursica DatePicker — global calendar-popup styling.
  *
@@ -46,32 +57,17 @@
  */
 
 [data-recursica-theme] mat-datepicker-content {
-  background-color: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_colors_background-color
-  );
-  border: var(
-      --recursica_ui-kit_components_hover-card-popover_properties_border-size
-    )
-    solid
-    var(
-      --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
-    );
-  border-radius: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_border-radius
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_elevation
-  );
-  font-family: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_content-text_font-family
-  );
+  background-color: var(--recursica_ui-kit_components_hover-card-popover_properties_colors_background-color);
+  border: var(--recursica_ui-kit_components_hover-card-popover_properties_border-size) solid
+    var(--recursica_ui-kit_components_hover-card-popover_properties_colors_border-color);
+  border-radius: var(--recursica_ui-kit_components_hover-card-popover_properties_border-radius);
+  box-shadow: var(--recursica_ui-kit_components_hover-card-popover_properties_elevation);
+  font-family: var(--recursica_ui-kit_components_hover-card-popover_properties_content-text_font-family);
 }
 
 [data-recursica-theme] .rec-date-picker-calendar .mat-calendar-header,
 [data-recursica-theme] .rec-date-picker-calendar .mat-calendar-table-header {
-  color: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_colors_content
-  );
+  color: var(--recursica_ui-kit_components_hover-card-popover_properties_colors_content);
 }
 
 /* Month/year label + prev/next nav: functionally buttons, styled with Button's own
@@ -82,39 +78,17 @@
 [data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button {
   position: relative;
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color
-  );
-  background-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_elevation
-  );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color
-  );
-  font-family: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing
-  );
-  height: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
-  );
+  border-width: var(--recursica_ui-kit_components_button_variants_styles_text_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color);
+  background-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color);
+  box-shadow: var(--recursica_ui-kit_components_button_variants_styles_text_properties_elevation);
+  color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color);
+  font-family: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing);
+  height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_height);
   transition: all 0.2s ease;
 }
 
@@ -126,9 +100,7 @@
   border-radius: var(
     --recursica_ui-kit_components_button_variants_content_icon-only_variants_sizes_small_properties_border-radius
   );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color
-  );
+  color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color);
 }
 
 [data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button {
@@ -136,80 +108,46 @@
     --recursica_ui-kit_components_button_variants_content_label_variants_sizes_small_properties_border-radius
   );
   padding: 0
-    var(
-      --recursica_ui-kit_components_button_variants_content_label_variants_sizes_small_properties_horizontal-padding
-    );
+    var(--recursica_ui-kit_components_button_variants_content_label_variants_sizes_small_properties_horizontal-padding);
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-period-button:hover:not(:disabled),
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-previous-button:hover:not(:disabled),
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-next-button:hover:not(:disabled) {
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button:hover:not(:disabled),
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-previous-button:hover:not(:disabled),
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button:hover:not(:disabled) {
   background-color: var(--recursica_brand_states_hover_color);
   opacity: var(--recursica_brand_states_hover_opacity);
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-period-button:disabled,
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-previous-button:disabled,
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-next-button:disabled {
-  opacity: var(
-    --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_opacity
-  );
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button:disabled,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-previous-button:disabled,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button:disabled {
+  opacity: var(--recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_opacity);
   box-shadow: var(
     --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_elevation
   );
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-period-button:focus-visible,
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-previous-button:focus-visible,
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-next-button:focus-visible {
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-period-button:focus-visible,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-previous-button:focus-visible,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-next-button:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
 /* Day cells: `.mat-calendar-body-cell` is the real <button>; `.mat-calendar-body-cell-content`
    (a span inside it) is where Material toggles `-selected`/`-today` — see
    date-picker-control.component.ts's class doc comment for how this was confirmed. */
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-body-cell-content {
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-body-cell-content {
   position: relative;
-  color: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_colors_content
-  );
+  color: var(--recursica_ui-kit_components_hover-card-popover_properties_colors_content);
   border-radius: var(--recursica_brand_dimensions_border-radii_default);
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-body-cell:disabled
-  .mat-calendar-body-cell-content,
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-body-disabled
-  .mat-calendar-body-cell-content {
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-body-cell:disabled .mat-calendar-body-cell-content,
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-body-disabled .mat-calendar-body-cell-content {
   opacity: var(--recursica_brand_states_disabled);
   cursor: not-allowed;
 }
@@ -231,39 +169,22 @@
 /* Today marker: no dedicated token, reuses the popover's own border tokens (same as the reference). */
 [data-recursica-theme]
   .rec-date-picker-calendar
-  .mat-calendar-body-cell-content.mat-calendar-body-today:not(
-    .mat-calendar-body-selected
-  ) {
+  .mat-calendar-body-cell-content.mat-calendar-body-today:not(.mat-calendar-body-selected) {
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_hover-card-popover_properties_colors_border-color
-  );
+  border-width: var(--recursica_ui-kit_components_hover-card-popover_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_hover-card-popover_properties_colors_border-color);
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-body-cell-content.mat-calendar-body-selected {
-  background-color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color
-  );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color
-  );
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-body-cell-content.mat-calendar-body-selected {
+  background-color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color);
+  color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color);
   opacity: 1;
 }
 
-[data-recursica-theme]
-  .rec-date-picker-calendar
-  .mat-calendar-body-cell:focus-visible
-  .mat-calendar-body-cell-content {
+[data-recursica-theme] .rec-date-picker-calendar .mat-calendar-body-cell:focus-visible .mat-calendar-body-cell-content {
   outline: none;
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }

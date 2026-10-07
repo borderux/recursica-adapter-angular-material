@@ -1,3 +1,8 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_disabled
+ */
+
 /*
  * Ported from the source-of-truth `Accordion.module.css`'s `.item`/
  * `.noDivider`. `[data-active]`/`[data-disabled]` are this component's own
@@ -21,24 +26,12 @@
   padding: var(--recursica_ui-kit_components_accordion-item_properties_padding);
 
   border-style: solid;
-  border-color: var(
-    --recursica_ui-kit_components_accordion-item_properties_colors_border-color
-  );
-  border-width: var(
-    --recursica_ui-kit_components_accordion-item_properties_border-size
-  );
-  border-bottom-color: var(
-    --recursica_ui-kit_components_accordion_properties_colors_divider-color
-  );
-  border-bottom-width: var(
-    --recursica_ui-kit_components_accordion_properties_divider-size
-  );
-  border-radius: var(
-    --recursica_ui-kit_components_accordion-item_properties_border-radius
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_accordion-item_properties_elevation
-  );
+  border-color: var(--recursica_ui-kit_components_accordion-item_properties_colors_border-color);
+  border-width: var(--recursica_ui-kit_components_accordion-item_properties_border-size);
+  border-bottom-color: var(--recursica_ui-kit_components_accordion_properties_colors_divider-color);
+  border-bottom-width: var(--recursica_ui-kit_components_accordion_properties_divider-size);
+  border-radius: var(--recursica_ui-kit_components_accordion-item_properties_border-radius);
+  box-shadow: var(--recursica_ui-kit_components_accordion-item_properties_elevation);
 
   transition: opacity 0.2s ease;
 }

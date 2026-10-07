@@ -1,3 +1,8 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_disabled
+ */
+
 /*
  * Ported from the reference's own `Tree.module.css`'s `.root` rule. Hand-
  * built — no Material component wrapped (see `tree.component.ts`'s class

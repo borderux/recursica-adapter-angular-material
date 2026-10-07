@@ -1,3 +1,13 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_focus_blur
+ *   recursica-allow-brand: --recursica_brand_states_focus_border-size
+ *   recursica-allow-brand: --recursica_brand_states_focus_color
+ *   recursica-allow-brand: --recursica_brand_states_focus_margin
+ *   recursica-allow-brand: --recursica_brand_states_hover_color
+ *   recursica-allow-brand: --recursica_brand_states_hover_opacity
+ */
+
 /*
  * Ported conceptually from the React source of truth's Button.module.css
  * (recursica-adapter-mantine-v8) — same Recursica token names
@@ -61,38 +71,20 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  font-family: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_letter-spacing
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-transform
-  );
-  gap: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap
-  );
+  font-family: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_letter-spacing);
+  text-decoration: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-transform);
+  gap: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap);
 
   /* `::ng-deep` needed here too — see the `.root ::ng-deep .mdc-button__label`
    * rule's doc comment above for why a plain nested (non-`::ng-deep`)
    * selector silently never matches Material's internally-rendered span. */
   ::ng-deep .mdc-button__label {
-    gap: var(
-      --recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap
-    );
+    gap: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_icon-text-gap);
   }
 }
 
@@ -135,12 +127,8 @@
 /* ==== SIZES ==== */
 
 :host-context([data-recursica-theme]) .root[data-size="default"] {
-  height: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_height
-  );
-  min-width: var(
-    --recursica_ui-kit_components_button_variants_sizes_default_properties_min-width
-  );
+  height: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_height);
+  min-width: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_min-width);
   --mat-button-filled-container-height: var(
     --recursica_ui-kit_components_button_variants_sizes_default_properties_height
   );
@@ -161,17 +149,11 @@
   );
 
   .labelText {
-    max-width: var(
-      --recursica_ui-kit_components_button_variants_sizes_default_properties_max-label-width
-    );
+    max-width: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_max-label-width);
   }
   .iconWrapper {
-    width: var(
-      --recursica_ui-kit_components_button_variants_sizes_default_properties_icon
-    );
-    height: var(
-      --recursica_ui-kit_components_button_variants_sizes_default_properties_icon
-    );
+    width: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_icon);
+    height: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_icon);
   }
 
   &[data-content="label"] {
@@ -250,21 +232,15 @@
 }
 
 :host-context([data-recursica-theme]) .root[data-size="small"] {
-  height: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
-  );
-  min-width: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_min-width
-  );
+  height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_height);
+  min-width: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_min-width);
   --mat-button-filled-container-height: var(
     --recursica_ui-kit_components_button_variants_sizes_small_properties_height
   );
   --mat-button-outlined-container-height: var(
     --recursica_ui-kit_components_button_variants_sizes_small_properties_height
   );
-  --mat-button-text-container-height: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
-  );
+  --mat-button-text-container-height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_height);
   --mat-button-filled-horizontal-padding: var(
     --recursica_ui-kit_components_button_variants_sizes_small_properties_horizontal-padding
   );
@@ -275,51 +251,27 @@
     --recursica_ui-kit_components_button_variants_sizes_small_properties_horizontal-padding
   );
 
-  font-family: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-family
-  );
-  font-size: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size
-  );
-  font-style: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style
-  );
-  font-weight: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-transform
-  );
-  gap: var(
-    --recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap
-  );
+  font-family: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-family);
+  font-size: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size);
+  font-style: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style);
+  font-weight: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight);
+  letter-spacing: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing);
+  text-decoration: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-transform);
+  gap: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap);
 
   /* `::ng-deep` needed here too — see the `.root ::ng-deep .mdc-button__label`
    * rule's doc comment near the top of this file. */
   ::ng-deep .mdc-button__label {
-    gap: var(
-      --recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap
-    );
+    gap: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon-text-gap);
   }
 
   .labelText {
-    max-width: var(
-      --recursica_ui-kit_components_button_variants_sizes_small_properties_max-label-width
-    );
+    max-width: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_max-label-width);
   }
   .iconWrapper {
-    width: var(
-      --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
-    );
-    height: var(
-      --recursica_ui-kit_components_button_variants_sizes_small_properties_icon
-    );
+    width: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon);
+    height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_icon);
   }
 
   &[data-content="label"] {
@@ -401,21 +353,11 @@
 /* SOLID → appearance="filled" */
 :host-context([data-recursica-theme]) .root[data-variant="solid"] {
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_border-color
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_elevation
-  );
-  background-color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color
-  );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color
-  );
+  border-width: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_border-color);
+  box-shadow: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_elevation);
+  background-color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color);
+  color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color);
   --mat-button-filled-container-color: var(
     --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_background-color
   );
@@ -425,20 +367,14 @@
   /* Exposed so the composed loading-state <rec-loader> (button.component.ts's
      loaderOverStyleStyle) matches this exact text-color token — internal
      composition only, never part of this component's own public API. */
-  --rec-button-color: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color
-  );
+  --rec-button-color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_text-color);
 
   .iconWrapper {
-    color: var(
-      --recursica_ui-kit_components_button_variants_styles_solid_properties_colors_icon-color
-    );
+    color: var(--recursica_ui-kit_components_button_variants_styles_solid_properties_colors_icon-color);
   }
 }
 :host-context([data-recursica-theme]) .root[data-variant="solid"]:disabled {
-  opacity: var(
-    --recursica_ui-kit_components_button_variants_styles_solid_variants_states_disabled_properties_opacity
-  );
+  opacity: var(--recursica_ui-kit_components_button_variants_styles_solid_variants_states_disabled_properties_opacity);
   box-shadow: var(
     --recursica_ui-kit_components_button_variants_styles_solid_variants_states_disabled_properties_elevation
   );
@@ -447,21 +383,13 @@
 /* OUTLINE → appearance="outlined" */
 :host-context([data-recursica-theme]) .root[data-variant="outline"] {
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_button_variants_styles_outline_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_border-color
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_button_variants_styles_outline_properties_elevation
-  );
+  border-width: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_colors_border-color);
+  box-shadow: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_elevation);
   background-color: var(
     --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_background-color
   );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_text-color
-  );
+  color: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_colors_text-color);
   --mat-button-outlined-outline-color: var(
     --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_border-color
   );
@@ -471,14 +399,10 @@
   --mat-button-outlined-label-text-color: var(
     --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_text-color
   );
-  --rec-button-color: var(
-    --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_text-color
-  );
+  --rec-button-color: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_colors_text-color);
 
   .iconWrapper {
-    color: var(
-      --recursica_ui-kit_components_button_variants_styles_outline_properties_colors_icon-color
-    );
+    color: var(--recursica_ui-kit_components_button_variants_styles_outline_properties_colors_icon-color);
   }
 }
 :host-context([data-recursica-theme]) .root[data-variant="outline"]:disabled {
@@ -493,38 +417,22 @@
 /* TEXT → appearance="text" */
 :host-context([data-recursica-theme]) .root[data-variant="text"] {
   border-style: solid;
-  border-width: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_border-size
-  );
-  border-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color
-  );
-  box-shadow: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_elevation
-  );
-  background-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color
-  );
-  color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color
-  );
+  border-width: var(--recursica_ui-kit_components_button_variants_styles_text_properties_border-size);
+  border-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_border-color);
+  box-shadow: var(--recursica_ui-kit_components_button_variants_styles_text_properties_elevation);
+  background-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_background-color);
+  color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color);
   --mat-button-text-label-text-color: var(
     --recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color
   );
-  --rec-button-color: var(
-    --recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color
-  );
+  --rec-button-color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_text-color);
 
   .iconWrapper {
-    color: var(
-      --recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color
-    );
+    color: var(--recursica_ui-kit_components_button_variants_styles_text_properties_colors_icon-color);
   }
 }
 :host-context([data-recursica-theme]) .root[data-variant="text"]:disabled {
-  opacity: var(
-    --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_opacity
-  );
+  opacity: var(--recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_opacity);
   box-shadow: var(
     --recursica_ui-kit_components_button_variants_styles_text_variants_states_disabled_properties_elevation
   );
@@ -558,9 +466,7 @@
 }
 :host-context([data-recursica-theme]) .root:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }

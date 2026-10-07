@@ -1,3 +1,12 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * Global hover/focus/disabled state tokens (recursica_variables_scoped.css header, 'Hover & Focus states' / 'Disabled state' — implicit rule for every interactive element; components must not define their own per-component treatment).
+ *   recursica-allow-brand: --recursica_brand_states_disabled
+ *   recursica-allow-brand: --recursica_brand_states_focus_blur
+ *   recursica-allow-brand: --recursica_brand_states_focus_border-size
+ *   recursica-allow-brand: --recursica_brand_states_focus_color
+ *   recursica-allow-brand: --recursica_brand_states_focus_margin
+ */
+
 /*
  * Ported from the React source of truth:
  * recursica-adapter-mantine-v8/src/components/Chip/Chip.module.css
@@ -67,32 +76,16 @@
   border-width: var(--recursica_ui-kit_components_chip_properties_border-size);
   padding: var(--recursica_ui-kit_components_chip_properties_vertical-padding)
     var(--recursica_ui-kit_components_chip_properties_horizontal-padding);
-  border-radius: var(
-    --recursica_ui-kit_components_chip_properties_border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_chip_properties_border-radius);
 
-  font-family: var(
-    --recursica_ui-kit_components_chip_properties_text_font-family
-  );
+  font-family: var(--recursica_ui-kit_components_chip_properties_text_font-family);
   font-size: var(--recursica_ui-kit_components_chip_properties_text_font-size);
-  font-weight: var(
-    --recursica_ui-kit_components_chip_properties_text_font-weight
-  );
-  font-style: var(
-    --recursica_ui-kit_components_chip_properties_text_font-style
-  );
-  letter-spacing: var(
-    --recursica_ui-kit_components_chip_properties_text_letter-spacing
-  );
-  line-height: var(
-    --recursica_ui-kit_components_chip_properties_text_line-height
-  );
-  text-decoration: var(
-    --recursica_ui-kit_components_chip_properties_text_text-decoration
-  );
-  text-transform: var(
-    --recursica_ui-kit_components_chip_properties_text_text-transform
-  );
+  font-weight: var(--recursica_ui-kit_components_chip_properties_text_font-weight);
+  font-style: var(--recursica_ui-kit_components_chip_properties_text_font-style);
+  letter-spacing: var(--recursica_ui-kit_components_chip_properties_text_letter-spacing);
+  line-height: var(--recursica_ui-kit_components_chip_properties_text_line-height);
+  text-decoration: var(--recursica_ui-kit_components_chip_properties_text_text-decoration);
+  text-transform: var(--recursica_ui-kit_components_chip_properties_text_text-transform);
 
   background-color: var(--chip-bg);
   border-color: var(--chip-border);
@@ -117,10 +110,8 @@
 }
 :host-context([data-recursica-theme]) .label:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 
@@ -131,9 +122,7 @@
   --chip-border: var(
     --recursica_ui-kit_components_chip_variants_selection-states_selected_properties_colors_border-color
   );
-  --chip-text: var(
-    --recursica_ui-kit_components_chip_variants_selection-states_selected_properties_colors_text-color
-  );
+  --chip-text: var(--recursica_ui-kit_components_chip_variants_selection-states_selected_properties_colors_text-color);
   --chip-icon: var(
     --recursica_ui-kit_components_chip_variants_selection-states_selected_properties_colors_selected-icon-color
   );
@@ -237,10 +226,8 @@
 }
 :host-context([data-recursica-theme]) .deleteIcon:focus-visible {
   box-shadow:
-    0 0 0 var(--recursica_brand_states_focus_border-size)
-      var(--recursica_brand_states_focus_color),
-    0 0 var(--recursica_brand_states_focus_blur)
-      var(--recursica_brand_states_focus_margin)
+    0 0 0 var(--recursica_brand_states_focus_border-size) var(--recursica_brand_states_focus_color),
+    0 0 var(--recursica_brand_states_focus_blur) var(--recursica_brand_states_focus_margin)
       var(--recursica_brand_states_focus_color);
 }
 

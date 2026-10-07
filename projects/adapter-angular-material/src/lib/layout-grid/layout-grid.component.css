@@ -1,3 +1,11 @@
+/* Brand-layer exemptions (recursica-allow-brand) — see recursica-token-analyzer README.md.
+ * The layout grid has no ui-kit component tokens; gutters and margin come from the responsive
+ * brand layout-grid alias that Forge redefines per breakpoint.
+ *   recursica-allow-brand: --recursica_brand_layout-grids_column-gutter
+ *   recursica-allow-brand: --recursica_brand_layout-grids_margin
+ *   recursica-allow-brand: --recursica_brand_layout-grids_row-gutter
+ */
+
 /*
  * Recursica LayoutGrid — see `layout-grid.component.ts`'s class doc comment.
  *
