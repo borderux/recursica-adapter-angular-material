@@ -11,37 +11,30 @@
 /*
  * Recursica Panel — global overlay styling.
  *
- * `MatDialog.open(templateRef, config)` instantiates `rec-panel`'s content
- * through `@angular/cdk/dialog`'s own portal mechanism — the same
+ * `rec-panel` renders its content into a plain CDK `Overlay` through a
+ * `TemplatePortal` (see `panel.component.ts`), so the content lives in the
+ * overlay container, outside the component's own DOM — the same
  * reachability problem `modal-overlay.css` documents for `Modal`. Every
  * selector here is scoped under `.rec-panel-panel-content` (applied
  * directly in `panel.component.ts`'s template) and gated behind
  * `[data-recursica-theme]`.
  *
- * `.rec-panel-panel` (the shared `panelClass` entry) neutralizes
- * Material's own default pane sizing so this adapter's own
- * `.rec-panel-panel-content` box is what actually constrains the dialog.
+ * `.rec-panel-panel` (the shared `panelClass` entry) is the CDK pane.
  * `.rec-panel-panel-<placement>` (the placement-specific `panelClass`
- * entry) positions/sizes the outer CDK pane flush against the requested
- * screen edge — `MatDialogConfig.position` (set in `panel.component.ts`)
- * only anchors the pane's origin corner; full-bleed edge sizing still
- * needs to be expressed in CSS.
+ * entry) sizes the pane flush against the requested screen edge — the
+ * global position strategy (set in `panel.component.ts`) only anchors the
+ * pane's origin corner; full-bleed edge sizing still needs to be expressed
+ * in CSS.
  */
 
 .rec-panel-panel {
-  --mat-dialog-container-max-width: none;
-  --mat-dialog-container-min-width: 0;
-  --mat-dialog-container-max-height: none;
-  --mat-dialog-container-min-height: 0;
+  /* CDK overlay pane for the panel; sized per placement below. */
   margin: 0 !important;
 }
 
-[data-recursica-theme] .rec-panel-panel .mat-mdc-dialog-surface {
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  overflow: visible;
+/* The container takes programmatic focus on open so the panel is announced; no ring. */
+.rec-panel-panel-content:focus {
+  outline: none;
 }
 
 [data-recursica-theme] .rec-panel-panel-content {
@@ -208,14 +201,7 @@
       var(--recursica_brand_states_focus_color);
 }
 
-/* Overlay: Mantine's default black overlay at 0.6 opacity (no Recursica token exists for it);
-   Material's own backdrop is a much lighter rgba(0, 0, 0, 0.32). */
-.cdk-overlay-backdrop.rec-panel-backdrop {
-  background-color: rgb(0 0 0 / 0.6);
-}
-
-/* Slide in from / out to the placement edge, like Mantine's Drawer (200ms ease), instead of
-   Material's own scale-and-fade dialog animation. */
+/* Slide in from / out to the placement edge, like Mantine's Drawer (200ms ease). */
 @keyframes rec-panel-in-left {
   from {
     transform: translateX(-100%);
@@ -281,36 +267,28 @@
   }
 }
 
-.rec-panel-panel .mat-mdc-dialog-container {
-  --mat-dialog-transition-duration: 0ms;
-}
-.rec-panel-panel .mat-mdc-dialog-surface {
-  transition: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-.rec-panel-panel-left .mat-mdc-dialog-container.mdc-dialog--opening {
+.rec-panel-panel-left.rec-panel-opening .rec-panel-panel-content {
   animation: rec-panel-in-left 200ms ease both;
 }
-.rec-panel-panel-left .mat-mdc-dialog-container.mdc-dialog--closing {
+.rec-panel-panel-left.rec-panel-closing .rec-panel-panel-content {
   animation: rec-panel-out-left 200ms ease both;
 }
-.rec-panel-panel-right .mat-mdc-dialog-container.mdc-dialog--opening {
+.rec-panel-panel-right.rec-panel-opening .rec-panel-panel-content {
   animation: rec-panel-in-right 200ms ease both;
 }
-.rec-panel-panel-right .mat-mdc-dialog-container.mdc-dialog--closing {
+.rec-panel-panel-right.rec-panel-closing .rec-panel-panel-content {
   animation: rec-panel-out-right 200ms ease both;
 }
-.rec-panel-panel-top .mat-mdc-dialog-container.mdc-dialog--opening {
+.rec-panel-panel-top.rec-panel-opening .rec-panel-panel-content {
   animation: rec-panel-in-top 200ms ease both;
 }
-.rec-panel-panel-top .mat-mdc-dialog-container.mdc-dialog--closing {
+.rec-panel-panel-top.rec-panel-closing .rec-panel-panel-content {
   animation: rec-panel-out-top 200ms ease both;
 }
-.rec-panel-panel-bottom .mat-mdc-dialog-container.mdc-dialog--opening {
+.rec-panel-panel-bottom.rec-panel-opening .rec-panel-panel-content {
   animation: rec-panel-in-bottom 200ms ease both;
 }
-.rec-panel-panel-bottom .mat-mdc-dialog-container.mdc-dialog--closing {
+.rec-panel-panel-bottom.rec-panel-closing .rec-panel-panel-content {
   animation: rec-panel-out-bottom 200ms ease both;
 }
 

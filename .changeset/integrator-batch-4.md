@@ -2,4 +2,4 @@
 "@recursica/adapter-angular-material": minor
 ---
 
-Add Link and Breadcrumb `routerLink` support (new `@angular/router` peer dependency), native `td[recTableTd]`/`th[recTableTh]` cells for `colspan`, and Panel `trapFocus`, `lockScroll`, `returnFocus` and `closeOnEscape` for a non-modal panel.
+Add Link and Breadcrumb `routerLink` support (new `@angular/router` peer dependency) and native `td[recTableTd]`/`th[recTableTh]` cells for `colspan`. Panel is now always non-modal, as in React: Escape closes it, clicking the page behind does not. Breaking: the `withOverlay` and `closeOnClickOutside` inputs are removed.

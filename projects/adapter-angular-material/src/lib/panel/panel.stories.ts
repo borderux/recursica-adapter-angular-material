@@ -94,31 +94,3 @@ export const LongTitle: Story = {
     props: { opened: true },
   }),
 };
-
-/**
- * Non-modal side panel: no overlay, no focus trap, no scroll lock, and
- * focus is not returned on close. The page beside it stays usable.
- * `closeOnEscape` still closes it.
- */
-export const NonModal: Story = {
-  render: () => ({
-    template: `
-      <rec-panel
-        title="Details"
-        placement="right"
-        [withOverlay]="false"
-        [trapFocus]="false"
-        [lockScroll]="false"
-        [returnFocus]="false"
-        [closeOnClickOutside]="false"
-        [opened]="opened"
-        (openedChange)="opened = $event"
-      >
-        The page behind this panel stays interactive and scrollable.
-      </rec-panel>
-      <rec-button variant="solid" (click)="opened = !opened">Toggle panel</rec-button>
-      <input aria-label="Page input" placeholder="Still focusable" />
-    `,
-    props: { opened: true },
-  }),
-};

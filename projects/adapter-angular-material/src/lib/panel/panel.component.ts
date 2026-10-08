@@ -1,25 +1,27 @@
 import {
   AfterViewInit,
   Component,
+  DOCUMENT,
   EventEmitter,
+  Injector,
   Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
-  Injector,
   TemplateRef,
   ViewChild,
-  afterNextRender,
+  ViewContainerRef,
   ViewEncapsulation,
+  afterNextRender,
   inject,
 } from "@angular/core";
-import { Overlay } from "@angular/cdk/overlay";
 import {
-  MatDialog,
-  MatDialogConfig,
-  MatDialogRef,
-} from "@angular/material/dialog";
+  GlobalPositionStrategy,
+  Overlay,
+  OverlayRef,
+} from "@angular/cdk/overlay";
+import { TemplatePortal } from "@angular/cdk/portal";
 
 export type RecursicaPanelPlacement = "left" | "right" | "top" | "bottom";
 
@@ -37,21 +39,19 @@ let nextId = 0;
  * adapter's other single drop-in components don't impose on callers).
  * Re-confirmed at build time — not adopted.
  *
- * ## `MatDialog` adopted instead — same reasoning as `Modal`, anchored to an edge
+ * ## A CDK overlay, not `MatDialog` — Panel is always non-modal
  *
- * Panel's own declarative API (`opened`/`onClose`/`title`/`withOverlay`/
- * `withCloseButton`) is structurally identical to `Modal`'s — the real
- * difference is *where* the content sits (anchored to a screen edge,
- * full-bleed along that edge) and *how* it enters (sliding in from that
- * edge), not the open/close/focus-trap/backdrop mechanics. Reusing
- * `MatDialog` here (rather than duplicating `Modal`'s dialog-lifecycle code
- * with a second, unrelated primitive) inherits the same real, valuable
- * accessibility behavior `Modal`'s own class doc comment documents (focus
- * trap, focus restoration, `Escape`/backdrop-click closing, scroll lock,
- * `role="dialog"`/`aria-modal`) with no `MatSidenavContainer` structural
- * commitment. `MatDialogConfig.position` anchors the dialog's own CDK pane
- * to the requested edge (`{ top: '0', right: '0' }` for `placement="right"`,
- * etc.) instead of Material's own default viewport-centering.
+ * Panel is never modal (React's Panel is always non-modal, with no props to
+ * change it — see `IMPLEMENTATION_NOTES.md`): no backdrop, no focus trap, no
+ * `aria-modal`, no `aria-hidden` on the rest of the page, no scroll lock,
+ * `Escape` always closes it and clicking the page behind never does. `MatDialog`
+ * cannot do that: its CDK container always adds focus-trap sentinels and always
+ * sets `aria-hidden="true"` on every sibling of the overlay container while a
+ * dialog is open (confirmed in `@angular/cdk/dialog`). So Panel renders its
+ * content into a plain CDK `Overlay` (global position strategy anchored to the
+ * placement edge, `TemplatePortal`) and handles `Escape`, focus on open and
+ * focus return itself. It is a `role="dialog"` with `aria-modal="false"` — a
+ * non-modal dialog — named by its title or by `ariaLabel`/`ariaLabelledby`.
  *
  * ## Global overlay CSS — same reachability finding as `Modal`/`Dropdown`/`HoverCard`
  *
@@ -105,18 +105,27 @@ let nextId = 0;
     <ng-template #contentTpl>
       <div
         class="root rec-panel-panel-content"
+        role="dialog"
+        aria-modal="false"
+        tabindex="-1"
+        [id]="panelId"
         [attr.data-placement]="placement"
+        [attr.aria-label]="ariaLabel ?? null"
+        [attr.aria-labelledby]="
+          ariaLabelledby ?? (!ariaLabel && title ? titleId : null)
+        "
+        [attr.aria-describedby]="ariaDescribedby ?? null"
       >
         @if (title || withCloseButton) {
           <div class="header">
             @if (title) {
-              <h2 class="title">{{ title }}</h2>
+              <h2 class="title" [id]="titleId">{{ title }}</h2>
             }
             @if (withCloseButton) {
               <button
                 type="button"
                 class="close"
-                aria-label="Close"
+                [attr.aria-label]="closeButtonLabel"
                 (click)="requestClose()"
               >
                 <svg
@@ -155,36 +164,32 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() title?: string;
   @Input() placement: RecursicaPanelPlacement = "right";
   @Input() withCloseButton = true;
-  @Input() withOverlay = true;
-  @Input() closeOnClickOutside = true;
 
-  /**
-   * Press `Escape` to close. Independent of `closeOnClickOutside` (Mantine
-   * Drawer's own split) — see `IMPLEMENTATION_NOTES.md` § Modal vs non-modal.
-   */
-  @Input() closeOnEscape = true;
+  /** `aria-label` of the panel (`role="dialog"`). Without it, the panel is named by its `title`. */
+  @Input() ariaLabel?: string;
 
-  /**
-   * Keep `Tab` focus inside the panel and mark it `aria-modal`. Set `false`
-   * for a non-modal side panel the rest of the page stays usable beside.
-   */
-  @Input() trapFocus = true;
+  /** `aria-labelledby` of the panel; overrides the title as its name. */
+  @Input() ariaLabelledby?: string;
 
-  /** Block page scrolling behind the panel while it is open. */
-  @Input() lockScroll = true;
+  /** `aria-describedby` of the panel. */
+  @Input() ariaDescribedby?: string;
 
-  /** Return focus to the element that opened the panel when it closes. */
-  @Input() returnFocus = true;
+  /** Accessible name of the close button. */
+  @Input() closeButtonLabel = "Close";
 
   @ViewChild("contentTpl")
   private readonly contentTemplate!: TemplateRef<unknown>;
 
-  private readonly dialog = inject(MatDialog);
-  private readonly id = `rec-panel-${nextId++}`;
   private readonly overlay = inject(Overlay);
+  private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
-  private dialogRef?: MatDialogRef<unknown>;
-  private cleanup: Array<() => void> = [];
+  private readonly document = inject(DOCUMENT);
+  private readonly uid = `rec-panel-${nextId++}`;
+  protected readonly panelId = this.uid;
+  protected readonly titleId = `${this.uid}-title`;
+  private overlayRef?: OverlayRef;
+  private opener: HTMLElement | null = null;
+  private closing = false;
   private viewInitialized = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -192,134 +197,109 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
       return;
     }
     if (this.opened) {
-      this.openDialog();
+      this.openPanel();
     } else {
-      this.dialogRef?.close();
+      this.closePanel();
     }
   }
 
   ngAfterViewInit(): void {
     this.viewInitialized = true;
     if (this.opened) {
-      this.openDialog();
+      this.openPanel();
     }
   }
 
   ngOnDestroy(): void {
-    this.dialogRef?.close();
+    this.overlayRef?.dispose();
+    this.overlayRef = undefined;
   }
 
-  private openDialog(): void {
-    if (this.dialogRef) {
+  private openPanel(): void {
+    if (this.overlayRef) {
       return;
     }
-    this.dialogRef = this.dialog.open(this.contentTemplate, {
-      id: this.id,
+    this.closing = false;
+    this.opener = this.document.activeElement as HTMLElement | null;
+    const overlayRef = this.overlay.create({
       panelClass: ["rec-panel-panel", `rec-panel-panel-${this.placement}`],
-      backdropClass: "rec-panel-backdrop",
-      hasBackdrop: this.withOverlay,
-      // Closing is decided here, not by MatDialog: its single `disableClose` flag would tie
-      // Escape to `closeOnClickOutside`. See the `keydownEvents`/`backdropClick` handlers below.
-      disableClose: true,
-      ariaModal: this.trapFocus,
-      restoreFocus: this.returnFocus,
-      scrollStrategy: this.lockScroll
-        ? this.overlay.scrollStrategies.block()
-        : this.overlay.scrollStrategies.noop(),
-      autoFocus: "dialog",
-      // Slide in/out from the placement edge (see `panel-overlay.css`); durations match Mantine
-      // Drawer's default 200ms transition and keep the pane mounted while it slides out.
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms",
-      position: this.edgePosition(this.placement),
+      // Always non-modal (see IMPLEMENTATION_NOTES.md): no backdrop, no scroll lock.
+      hasBackdrop: false,
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      positionStrategy: this.edgePosition(this.placement),
     });
-    const ref = this.dialogRef;
-    ref.keydownEvents().subscribe((event) => {
-      if (event.key === "Escape" && this.closeOnEscape) {
+    this.overlayRef = overlayRef;
+    overlayRef.attach(
+      new TemplatePortal(this.contentTemplate, this.viewContainerRef),
+    );
+    // Slide in from the placement edge (see `panel-overlay.css`).
+    overlayRef.addPanelClass("rec-panel-opening");
+    // `Escape` closes the panel; clicking the page behind never does. The dispatcher only
+    // forwards keydown to the topmost overlay, so an open popover or dropdown handles it first.
+    overlayRef.keydownEvents().subscribe((event) => {
+      if (event.key === "Escape") {
         event.preventDefault();
-        ref.close();
+        this.requestClose();
       }
     });
-    ref.backdropClick().subscribe(() => {
-      if (this.closeOnClickOutside) {
-        ref.close();
+    // The container takes focus so assistive technology announces the panel.
+    afterNextRender(
+      () =>
+        overlayRef.overlayElement
+          .querySelector<HTMLElement>(".rec-panel-panel-content")
+          ?.focus(),
+      {
+        injector: this.injector,
+      },
+    );
+  }
+
+  private closePanel(): void {
+    const overlayRef = this.overlayRef;
+    if (!overlayRef || this.closing) {
+      return;
+    }
+    this.closing = true;
+    overlayRef.removePanelClass("rec-panel-opening");
+    overlayRef.addPanelClass("rec-panel-closing");
+    // Keep the pane mounted while it slides out (200ms, matching Mantine Drawer's transition).
+    setTimeout(() => {
+      overlayRef.dispose();
+      if (this.overlayRef === overlayRef) {
+        this.overlayRef = undefined;
       }
-    });
-    if (!this.trapFocus) {
-      this.releaseFocusTrap();
-    }
-    if (!this.withOverlay) {
-      this.watchOutsideClicks(ref);
-    }
-    ref.afterClosed().subscribe(() => {
-      this.cleanup.forEach((fn) => fn());
-      this.cleanup = [];
-      this.dialogRef = undefined;
+      this.closing = false;
+      // Return focus to whatever opened the panel, if it is still on the page.
+      if (this.opener && this.document.contains(this.opener)) {
+        this.opener.focus();
+      }
+      this.opener = null;
       if (this.opened) {
         this.opened = false;
         this.openedChange.emit(false);
       }
       this.closed.emit();
-    });
-  }
-
-  /**
-   * MatDialog always renders the CDK focus-trap sentinels around its container, so a
-   * non-trapping panel removes them: with no sentinels `Tab` leaves the panel into the page
-   * (and back) instead of wrapping.
-   */
-  private releaseFocusTrap(): void {
-    // The container's `id` binding only lands after the next render.
-    afterNextRender(
-      () =>
-        document
-          .getElementById(this.id)
-          ?.parentElement?.querySelectorAll(".cdk-focus-trap-anchor")
-          .forEach((anchor) => anchor.remove()),
-      { injector: this.injector },
-    );
-  }
-
-  /** Without a backdrop there is no `backdropClick`, so listen for pointer presses outside. */
-  private watchOutsideClicks(ref: MatDialogRef<unknown>): void {
-    const onPointerDown = (event: PointerEvent) => {
-      const pane = document.getElementById(this.id);
-      if (
-        this.closeOnClickOutside &&
-        pane &&
-        !pane.contains(event.target as Node)
-      ) {
-        ref.close();
-      }
-    };
-    // Deferred so the click that opened the panel does not close it again.
-    const timer = setTimeout(
-      () => document.addEventListener("pointerdown", onPointerDown, true),
-      0,
-    );
-    this.cleanup.push(() => {
-      clearTimeout(timer);
-      document.removeEventListener("pointerdown", onPointerDown, true);
-    });
+    }, 200);
   }
 
   private edgePosition(
     placement: RecursicaPanelPlacement,
-  ): MatDialogConfig["position"] {
+  ): GlobalPositionStrategy {
+    const position = this.overlay.position().global();
     switch (placement) {
       case "left":
-        return { top: "0", left: "0" };
+        return position.top("0").left("0");
       case "top":
-        return { top: "0", left: "0" };
+        return position.top("0").left("0");
       case "bottom":
-        return { bottom: "0", left: "0" };
+        return position.bottom("0").left("0");
       case "right":
       default:
-        return { top: "0", right: "0" };
+        return position.top("0").right("0");
     }
   }
 
   requestClose(): void {
-    this.dialogRef?.close();
+    this.closePanel();
   }
 }
