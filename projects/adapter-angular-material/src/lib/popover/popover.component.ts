@@ -12,7 +12,11 @@ import {
   ViewEncapsulation,
   forwardRef,
 } from "@angular/core";
-import { ConnectedPosition, OverlayModule } from "@angular/cdk/overlay";
+import {
+  ConnectedOverlayPositionChange,
+  ConnectedPosition,
+  OverlayModule,
+} from "@angular/cdk/overlay";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -83,6 +87,29 @@ function toConnectedPosition(
       };
 }
 
+const OPPOSITE_SIDE: Record<
+  RecursicaPopoverBaseSide,
+  RecursicaPopoverBaseSide
+> = {
+  top: "bottom",
+  bottom: "top",
+  left: "right",
+  right: "left",
+};
+
+/** The same position on the opposite side (`top-start` → `bottom-start`), used as the flip fallback. */
+function oppositePosition(
+  position: RecursicaPopoverPosition,
+): RecursicaPopoverPosition {
+  const [side, align] = position.split("-") as [
+    RecursicaPopoverBaseSide,
+    RecursicaPopoverAlign | undefined,
+  ];
+  return (
+    align ? `${OPPOSITE_SIDE[side]}-${align}` : OPPOSITE_SIDE[side]
+  ) as RecursicaPopoverPosition;
+}
+
 /**
  * Recursica `Popover` — Angular Material adapter.
  *
@@ -128,12 +155,11 @@ function toConnectedPosition(
  * `dropdown.component.ts`'s class doc comments for the underlying
  * CDK-portal reachability finding this repeats.
  *
- * ## No automatic position-flip fallback — same documented scope cut as `HoverCard`
+ * ## Position flip fallback
  *
- * Only the single, exact `ConnectedPosition` the caller's `position` input
- * maps to is supplied — none of the 3 golden stories exercise a
- * viewport-edge scenario, so replicating the reference's underlying
- * Floating UI auto-flip behavior would be speculative scope.
+ * The caller's `position` is tried first; if the panel would not fit in the viewport, the same
+ * position on the opposite side is used (CDK picks the first candidate that fits). The beak follows
+ * the side actually used via `(positionChange)`, so a flipped popover points back at its target.
  *
  * ## Not built: the granular composition beyond `Target`/`Dropdown`
  *
@@ -165,13 +191,14 @@ function toConnectedPosition(
         cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
         (backdropClick)="close()"
         (overlayOutsideClick)="close()"
+        (positionChange)="onPositionChange($event)"
         (detach)="close()"
       >
         <div
           class="dropdown rec-popover-panel"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
-          [attr.data-position]="baseSide"
+          [attr.data-position]="actualSide ?? baseSide"
           [attr.data-beak]="withBeak ? '' : null"
         >
           @if (withBeak) {
@@ -227,12 +254,26 @@ export class PopoverComponent
   }
 
   get positions(): ConnectedPosition[] {
+    const offset = this.offset + (this.withBeak ? readBeakSize() / 2 : 0);
     return [
-      toConnectedPosition(
-        this.position,
-        this.offset + (this.withBeak ? readBeakSize() / 2 : 0),
-      ),
+      toConnectedPosition(this.position, offset),
+      toConnectedPosition(oppositePosition(this.position), offset),
     ];
+  }
+
+  /** Side the panel was actually placed on (differs from `position` after a flip); drives the beak. */
+  actualSide: RecursicaPopoverBaseSide | null = null;
+
+  onPositionChange(change: ConnectedOverlayPositionChange): void {
+    const { originX, originY } = change.connectionPair;
+    const vertical = this.baseSide === "top" || this.baseSide === "bottom";
+    this.actualSide = vertical
+      ? originY === "top"
+        ? "top"
+        : "bottom"
+      : originX === "start"
+        ? "left"
+        : "right";
   }
 
   get resolvedOverStyle(): {

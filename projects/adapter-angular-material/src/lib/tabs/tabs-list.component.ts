@@ -34,10 +34,11 @@ import { TABS_CONTEXT } from "./tabs-context";
  * real content children of this component's own view, not built by a
  * different component's internal template).
  *
- * Navigation activates on focus ("automatic activation", matching the
- * genesis adapter's real Mantine-backed keyboard behavior) — moving focus
- * with an arrow key calls `ctx.select()` immediately, not just moving
- * `:focus` without changing the active tab.
+ * Navigation activates on focus by default ("automatic activation") —
+ * moving focus with an arrow key calls `ctx.select()` immediately, not just
+ * moving `:focus` without changing the active tab. With
+ * `activateTabWithKeyboard` set `false` on `rec-tabs`, arrows only move
+ * focus, and Enter/Space or a click activates (manual activation).
  */
 @Component({
   selector: "rec-tabs-list",
@@ -75,7 +76,9 @@ export class TabsListComponent implements AfterContentInit, OnDestroy {
 
     this.changeSubscription = this.keyManager.change.subscribe(() => {
       const active = this.keyManager?.activeItem;
-      if (active) this.ctx?.select(active.value);
+      if (active && this.ctx?.activateTabWithKeyboard !== false) {
+        this.ctx?.select(active.value);
+      }
     });
   }
 

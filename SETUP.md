@@ -15,7 +15,7 @@ npm install @recursica/adapter-angular-material @angular/material @angular/cdk
 This library requires the following peer dependencies. Ensure they are installed in your project (see this package's `package.json` for the authoritative version ranges):
 
 ```bash
-npm install @angular/core @angular/common @angular/forms @angular/platform-browser rxjs
+npm install @angular/core @angular/common @angular/forms @angular/platform-browser @angular/router rxjs
 ```
 
 ---
@@ -55,6 +55,8 @@ html[data-recursica-theme="dark"] {
   );
 }
 ```
+
+`Roboto` above is a placeholder: pass the typeface your brand actually loads (see step 4), otherwise Material's own text falls back to a default font. `rec-theme-provider` also sets the brand font (`--recursica_brand_fonts_primary`) on `<html>`, so text nothing else styles inherits it.
 
 Call `mat.theme()` **twice**, each scoped under the exact `[data-recursica-theme="light"|"dark"]` selector that `RecursicaThemeProvider` (`rec-theme-provider`, see step 5 below) sets on `document.documentElement`. This isn't cosmetic — because both selectors' compiled CSS is present in the document at once and the browser's cascade picks whichever one matches, a single already-necessary `RecursicaThemeProvider` attribute write drives **both** Recursica's own CSS and Angular Material's `--mat-sys-*` variables in lockstep, with no separate JS sync bridge (unlike Beam, which needs a hand-written sync component because `BeamThemeProvider`'s theme prop is mount-only). See [`docs/STYLING_SYSTEM.md`](docs/STYLING_SYSTEM.md) §4 for the full reasoning.
 

@@ -24,7 +24,7 @@ import { RecursicaTableCellVariant } from "./table-th.component";
  * body-cell tokens with footer-specific ones.
  */
 @Component({
-  selector: "rec-table-td",
+  selector: "rec-table-td, td[recTableTd]",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./table-td.component.css",
   host: {

@@ -199,3 +199,23 @@ rendering of custom elements with `display: table-*` (versus a real
 states, and screen-reader announcement of the `role="row"`/`"columnheader"`/
 `"cell"` overrides were reasoned from the code and CSS/ARIA spec behavior,
 not click- or screen-reader-verified.
+
+## Native `td`/`th` for column spans: `td[recTableTd]`, `th[recTableTh]`
+
+A `colspan` only exists on real `<td>`/`<th>` elements, so `rec-table-td` and
+`rec-table-th` also match as attributes on the native tags
+(`selector: "rec-table-td, td[recTableTd]"`, the same dual form `MatRow` uses).
+The element form keeps working unchanged; use the attribute form wherever a
+cell has to span columns:
+
+```html
+<rec-table-tr>
+  <td recTableTd colspan="3">Spans all three columns</td>
+</rec-table-tr>
+```
+
+The cell styling is on `:host`, so both forms look identical. Verified in
+Storybook (`ColumnSpan` story): a `colspan="2"` header measured the width of
+the two columns it spans, and a `colspan="3"` cell the full row. The
+`@angular-eslint/component-selector` rule is turned off for these two files
+only, since it requires element selectors.

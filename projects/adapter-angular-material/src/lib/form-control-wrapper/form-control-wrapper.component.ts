@@ -177,7 +177,19 @@ export class FormControlWrapperComponent
   readonly assistiveId = `${this.baseId}-assistive`;
   readonly errorId = `${this.baseId}-error`;
 
-  controlId: string | undefined = undefined;
+  /** `id` of the projected control, resolved by the `RECURSICA_FORM_CONTROL` content query. */
+  private projectedControlId: string | undefined = undefined;
+
+  /**
+   * Explicit `id` of the control the label points at. Needed when the control is rendered through a
+   * `TemplateRef` declared elsewhere (as `rec-with-read-only-wrapper` does): the content query above
+   * cannot see through that boundary, so the label would otherwise render without `for`.
+   */
+  @Input() controlIdOverride?: string;
+
+  get controlId(): string | undefined {
+    return this.controlIdOverride ?? this.projectedControlId;
+  }
 
   /** Explicit input wins; otherwise the projected control's own design-system width. */
   get resolvedControlMaxWidth(): string | undefined {
@@ -217,10 +229,7 @@ export class FormControlWrapperComponent
   }
 
   ngAfterContentChecked(): void {
-    const newControlId = this.control?.id ?? undefined;
-    if (newControlId !== this.controlId) {
-      this.controlId = newControlId;
-    }
+    this.projectedControlId = this.control?.id ?? undefined;
     this.control?.setDescribedByIds(
       this.error
         ? [this.errorId]

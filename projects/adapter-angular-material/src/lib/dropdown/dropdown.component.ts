@@ -196,6 +196,7 @@ let nextId = 0;
       [attr.data-with-right-section]="readOnly ? null : ''"
       [attr.data-disabled]="disabled ? '' : null"
       [attr.data-error]="error ? '' : null"
+      [attr.data-size]="size"
     >
       @if (readOnly) {
         <!--
@@ -378,6 +379,13 @@ export class DropdownComponent
   @Input() disabled = false;
   @Input() required = false;
   @Input() clearable = false;
+
+  /**
+   * `"small"` sizes the field to the small Button height (for dense layouts such as a status dropdown
+   * in a table row). The design system has no dedicated small dropdown token, so this reuses
+   * `button_variants_sizes_small_properties_height`.
+   */
+  @Input() size: "default" | "small" = "default";
 
   /** `aria-label` of the inner combobox button — use when there is no visible label. */
   @Input() ariaLabel?: string;

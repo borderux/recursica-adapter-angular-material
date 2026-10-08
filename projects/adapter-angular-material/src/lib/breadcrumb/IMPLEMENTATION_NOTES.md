@@ -61,3 +61,9 @@ inside the double-quoted `[items]="..."` attribute).
 browser/Playwright tooling available, so the rendered separator spacing
 and link/current-item token styling were reasoned from the code, not
 visually verified.
+
+## Angular Router integration
+
+`RecursicaBreadcrumbItem` accepts `routerLink` (the value `RouterLink` takes).
+It wins over `href`, renders the crumb as a `RouterLink` anchor, and the last
+crumb stays non-interactive as before.

@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -7,6 +8,8 @@ import {
 export interface RecursicaBreadcrumbItem {
   label: string;
   href?: string;
+  /** Angular Router target (same value `RouterLink` accepts); wins over `href`. */
+  routerLink?: string | readonly unknown[];
 }
 
 /**
@@ -67,6 +70,7 @@ export interface RecursicaBreadcrumbItem {
  */
 @Component({
   selector: "rec-breadcrumb",
+  imports: [RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./breadcrumb.component.css",
   template: `
@@ -81,6 +85,12 @@ export interface RecursicaBreadcrumbItem {
           <li class="item">
             @if (isLast) {
               <span class="current" aria-current="page">{{ item.label }}</span>
+            } @else if (
+              item.routerLink !== undefined && item.routerLink !== null
+            ) {
+              <a class="link" [routerLink]="item.routerLink">{{
+                item.label
+              }}</a>
             } @else if (item.href) {
               <a class="link" [href]="item.href">{{ item.label }}</a>
             } @else {

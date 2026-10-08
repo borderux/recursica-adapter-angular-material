@@ -99,6 +99,7 @@ let nextId = 0;
     <ng-template #active>
       <rec-slider-control
         [id]="id"
+        [accessibleName]="labelText"
         [value]="currentValue"
         [min]="min"
         [max]="max"
@@ -165,6 +166,11 @@ export class SliderComponent implements ControlValueAccessor, OnInit {
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
+
+  /** The label as plain text, for the range input's accessible name; a template label has none. */
+  get labelText(): string | undefined {
+    return typeof this.label === "string" ? this.label : undefined;
+  }
 
   private readonly baseId = `rec-slider-${nextId++}`;
   @Input() id = this.baseId;

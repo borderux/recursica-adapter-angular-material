@@ -64,6 +64,7 @@ function formatReadOnlyTime(value: string | undefined): string | undefined {
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
+      [controlId]="id"
       [activeTemplate]="active"
       readOnlyType="text"
       [readOnlyValue]="formattedReadOnlyValue"

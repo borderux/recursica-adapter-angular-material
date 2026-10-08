@@ -86,6 +86,14 @@
   cursor: default;
 }
 
+/* `size="small"`: re-point the height/padding tokens (inherited by `.input`) at the small Button size. */
+:host-context([data-recursica-theme]) .root[data-size="small"] {
+  --recursica_ui-kit_components_dropdown_properties_min-height: var(
+    --recursica_ui-kit_components_button_variants_sizes_small_properties_height
+  );
+  --recursica_ui-kit_components_dropdown_properties_vertical-padding: 0px;
+}
+
 :host-context([data-recursica-theme]) .input {
   min-height: var(--recursica_ui-kit_components_dropdown_properties_min-height);
   padding-top: var(--recursica_ui-kit_components_dropdown_properties_vertical-padding);

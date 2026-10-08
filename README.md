@@ -17,7 +17,7 @@ npm install @recursica/adapter-angular-material @angular/material @angular/cdk
 This library requires the following peer dependencies to be installed in your project (see this package's own `package.json` `peerDependencies` for the authoritative version ranges):
 
 ```bash
-npm install @angular/cdk@^20.2.14 @angular/material@^20.2.14 @angular/core @angular/common @angular/forms @angular/platform-browser rxjs
+npm install @angular/cdk@^20.2.14 @angular/material@^20.2.14 @angular/core @angular/common @angular/forms @angular/platform-browser @angular/router rxjs
 ```
 
 ## Philosophy

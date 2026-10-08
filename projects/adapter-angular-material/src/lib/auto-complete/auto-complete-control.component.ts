@@ -209,6 +209,12 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
   @Output() valueChange = new EventEmitter<string | undefined>();
   @Output() blurred = new EventEmitter<void>();
 
+  /** Custom option filter; defaults to a case-insensitive "label contains the typed text" match. */
+  @Input() filter?: (option: RecursicaDropdownOption, query: string) => boolean;
+
+  /** Fires only when the user picks an option (click or Enter), never while typing. */
+  @Output() optionSubmit = new EventEmitter<RecursicaDropdownOption>();
+
   @Input() placeholder?: string;
   @Input() name?: string;
   @Input() disabled = false;
@@ -268,7 +274,11 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
     if (!query) {
       return all;
     }
-    return all.filter((opt) => (opt.label ?? "").toLowerCase().includes(query));
+    const matches =
+      this.filter ??
+      ((opt: RecursicaDropdownOption, q: string) =>
+        (opt.label ?? "").toLowerCase().includes(q));
+    return all.filter((opt) => matches(opt, query));
   }
 
   get activeDescendantId(): string | null {
@@ -327,6 +337,7 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
   selectOption(opt: RecursicaDropdownOption): void {
     this.value = opt.label;
     this.valueChange.emit(opt.label);
+    this.optionSubmit.emit(opt);
     this.close();
     this.triggerRef?.nativeElement.focus();
   }

@@ -80,5 +80,16 @@ export default tseslint.config(
       "@angular-eslint/component-selector": "off",
     },
   },
+  {
+    // `rec-table-td`/`rec-table-th` also match the native `td[recTableTd]`/`th[recTableTh]` —
+    // the only way to get a real `colspan`/`rowspan` (see table/IMPLEMENTATION_NOTES.md).
+    files: [
+      "projects/adapter-angular-material/src/lib/table/table-td.component.ts",
+      "projects/adapter-angular-material/src/lib/table/table-th.component.ts",
+    ],
+    rules: {
+      "@angular-eslint/component-selector": "off",
+    },
+  },
   storybook.configs["flat/recommended"],
 );

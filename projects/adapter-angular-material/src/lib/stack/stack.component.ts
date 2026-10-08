@@ -20,6 +20,8 @@ import { resolveSpacing } from "../utils/recursica-spacing";
     "[style.display]": "'flex'",
     "[style.flex-direction]": "'column'",
     "[style.align-items]": "align",
+    // A static `align="…"` would otherwise stay on the host as the legacy HTML `align` attribute, which Chrome maps to `text-align`.
+    "[attr.align]": "null",
     "[style.justify-content]": "justify",
     "[style.gap]": "resolvedGap",
   },

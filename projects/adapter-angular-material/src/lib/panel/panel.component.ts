@@ -7,11 +7,14 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
+  Injector,
   TemplateRef,
   ViewChild,
+  afterNextRender,
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import { Overlay } from "@angular/cdk/overlay";
 import {
   MatDialog,
   MatDialogConfig,
@@ -155,12 +158,33 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() withOverlay = true;
   @Input() closeOnClickOutside = true;
 
+  /**
+   * Press `Escape` to close. Independent of `closeOnClickOutside` (Mantine
+   * Drawer's own split) — see `IMPLEMENTATION_NOTES.md` § Modal vs non-modal.
+   */
+  @Input() closeOnEscape = true;
+
+  /**
+   * Keep `Tab` focus inside the panel and mark it `aria-modal`. Set `false`
+   * for a non-modal side panel the rest of the page stays usable beside.
+   */
+  @Input() trapFocus = true;
+
+  /** Block page scrolling behind the panel while it is open. */
+  @Input() lockScroll = true;
+
+  /** Return focus to the element that opened the panel when it closes. */
+  @Input() returnFocus = true;
+
   @ViewChild("contentTpl")
   private readonly contentTemplate!: TemplateRef<unknown>;
 
   private readonly dialog = inject(MatDialog);
   private readonly id = `rec-panel-${nextId++}`;
+  private readonly overlay = inject(Overlay);
+  private readonly injector = inject(Injector);
   private dialogRef?: MatDialogRef<unknown>;
+  private cleanup: Array<() => void> = [];
   private viewInitialized = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -194,7 +218,14 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
       panelClass: ["rec-panel-panel", `rec-panel-panel-${this.placement}`],
       backdropClass: "rec-panel-backdrop",
       hasBackdrop: this.withOverlay,
-      disableClose: !this.closeOnClickOutside,
+      // Closing is decided here, not by MatDialog: its single `disableClose` flag would tie
+      // Escape to `closeOnClickOutside`. See the `keydownEvents`/`backdropClick` handlers below.
+      disableClose: true,
+      ariaModal: this.trapFocus,
+      restoreFocus: this.returnFocus,
+      scrollStrategy: this.lockScroll
+        ? this.overlay.scrollStrategies.block()
+        : this.overlay.scrollStrategies.noop(),
       autoFocus: "dialog",
       // Slide in/out from the placement edge (see `panel-overlay.css`); durations match Mantine
       // Drawer's default 200ms transition and keep the pane mounted while it slides out.
@@ -202,13 +233,73 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
       exitAnimationDuration: "200ms",
       position: this.edgePosition(this.placement),
     });
-    this.dialogRef.afterClosed().subscribe(() => {
+    const ref = this.dialogRef;
+    ref.keydownEvents().subscribe((event) => {
+      if (event.key === "Escape" && this.closeOnEscape) {
+        event.preventDefault();
+        ref.close();
+      }
+    });
+    ref.backdropClick().subscribe(() => {
+      if (this.closeOnClickOutside) {
+        ref.close();
+      }
+    });
+    if (!this.trapFocus) {
+      this.releaseFocusTrap();
+    }
+    if (!this.withOverlay) {
+      this.watchOutsideClicks(ref);
+    }
+    ref.afterClosed().subscribe(() => {
+      this.cleanup.forEach((fn) => fn());
+      this.cleanup = [];
       this.dialogRef = undefined;
       if (this.opened) {
         this.opened = false;
         this.openedChange.emit(false);
       }
       this.closed.emit();
+    });
+  }
+
+  /**
+   * MatDialog always renders the CDK focus-trap sentinels around its container, so a
+   * non-trapping panel removes them: with no sentinels `Tab` leaves the panel into the page
+   * (and back) instead of wrapping.
+   */
+  private releaseFocusTrap(): void {
+    // The container's `id` binding only lands after the next render.
+    afterNextRender(
+      () =>
+        document
+          .getElementById(this.id)
+          ?.parentElement?.querySelectorAll(".cdk-focus-trap-anchor")
+          .forEach((anchor) => anchor.remove()),
+      { injector: this.injector },
+    );
+  }
+
+  /** Without a backdrop there is no `backdropClick`, so listen for pointer presses outside. */
+  private watchOutsideClicks(ref: MatDialogRef<unknown>): void {
+    const onPointerDown = (event: PointerEvent) => {
+      const pane = document.getElementById(this.id);
+      if (
+        this.closeOnClickOutside &&
+        pane &&
+        !pane.contains(event.target as Node)
+      ) {
+        ref.close();
+      }
+    };
+    // Deferred so the click that opened the panel does not close it again.
+    const timer = setTimeout(
+      () => document.addEventListener("pointerdown", onPointerDown, true),
+      0,
+    );
+    this.cleanup.push(() => {
+      clearTimeout(timer);
+      document.removeEventListener("pointerdown", onPointerDown, true);
     });
   }
 

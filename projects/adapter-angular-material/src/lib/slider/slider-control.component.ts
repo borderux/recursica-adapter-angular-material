@@ -138,7 +138,9 @@ export type RecursicaSliderValue = number | [number, number];
               [step]="step"
               [disabled]="disabled"
               [value]="startValue"
-              [attr.aria-label]="'Minimum value'"
+              [attr.aria-label]="
+                accessibleName ? accessibleName + ' minimum' : 'Minimum value'
+              "
               (input)="onRangeInput($event, 'start')"
             />
             <input
@@ -150,7 +152,9 @@ export type RecursicaSliderValue = number | [number, number];
               [step]="step"
               [disabled]="disabled"
               [value]="endValue"
-              [attr.aria-label]="'Maximum value'"
+              [attr.aria-label]="
+                accessibleName ? accessibleName + ' maximum' : 'Maximum value'
+              "
               (input)="onRangeInput($event, 'end')"
             />
           } @else {
@@ -164,6 +168,7 @@ export type RecursicaSliderValue = number | [number, number];
               [disabled]="disabled"
               [required]="required"
               [value]="endValue"
+              [attr.aria-label]="accessibleName ?? null"
               (input)="onSingleInput($event)"
             />
           }
@@ -254,6 +259,12 @@ export class SliderControlComponent implements RecursicaFormControl {
 
   @Input() icon?: TemplateRef<unknown>;
   @Input() trailingIcon?: TemplateRef<unknown>;
+
+  /**
+   * Accessible name of the range input(s). The label's `for` cannot point at the slider (its `id` is on the
+   * track `<div>`, which is not labelable), so the host passes its label text here instead.
+   */
+  @Input() accessibleName?: string;
 
   private readonly baseId = `rec-slider-${nextId++}`;
   private _id?: string;

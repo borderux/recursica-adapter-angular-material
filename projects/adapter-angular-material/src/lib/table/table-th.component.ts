@@ -22,7 +22,7 @@ export type RecursicaTableCellVariant = "default" | "currency";
  * `form-control-wrapper.component.ts`'s label area already uses.
  */
 @Component({
-  selector: "rec-table-th",
+  selector: "rec-table-th, th[recTableTh]",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./table-th.component.css",
   host: {

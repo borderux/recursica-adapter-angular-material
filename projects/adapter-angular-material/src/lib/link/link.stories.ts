@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/angular";
-import { moduleMetadata } from "@storybook/angular";
+import { applicationConfig, moduleMetadata } from "@storybook/angular";
+import { provideRouter } from "@angular/router";
 import { LinkComponent } from "./link.component";
 
 /**
@@ -65,5 +66,18 @@ export const InlineText: Story = {
     template: `
       <p>Here is some text with an <rec-link href="#">inline link</rec-link> inside it.</p>
     `,
+  }),
+};
+
+/**
+ * `routerLink` renders a real Angular `RouterLink` on the inner anchor: a
+ * resolved `href`, client-side navigation, and `aria-current="page"` while
+ * the route is active. Storybook has no routes, so the link only resolves
+ * its `href` here.
+ */
+export const WithRouterLink: Story = {
+  decorators: [applicationConfig({ providers: [provideRouter([])] })],
+  render: () => ({
+    template: `<rec-link [routerLink]="['/users', 42]" [queryParams]="{ tab: 'profile' }">User profile</rec-link>`,
   }),
 };
