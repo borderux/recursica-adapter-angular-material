@@ -1,5 +1,18 @@
 # @recursica/adapter-angular-material
 
+## 0.7.0
+
+### Minor Changes
+
+- 0be8d59: Link labels to AutoComplete, DatePicker, NumberInput, TextArea and TimePicker inputs and name the Slider; stop a static `align` leaking `text-align`; set the brand font on `<html>`; fix the Radio row height; add Dropdown `size`.
+- a0c2d1d: Add Tabs `activateTabWithKeyboard` (manual activation), AutoComplete `filter` input and `optionSubmit` output, and a flip fallback for Popover.
+- e829fcd: Add Link and Breadcrumb `routerLink` support (new `@angular/router` peer dependency), native `td[recTableTd]`/`th[recTableTh]` cells for `colspan`, and Panel `trapFocus`, `lockScroll`, `returnFocus` and `closeOnEscape` for a non-modal panel.
+- b2cf608: Export the menu trigger, item, label and divider; add Button `type`/`form`/ARIA inputs and Link, Dropdown, Heading, Table and TextField a11y inputs; keep a loading Button's name; Toast defaults to `role="status"` for default/success.
+
+### Patch Changes
+
+- dfe33ce: Fixes to token analyzer and tokens
+
 ## 0.6.0
 
 ### Minor Changes
