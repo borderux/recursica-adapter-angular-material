@@ -335,3 +335,12 @@ Withheld:
 - Material `disableRipple`, `color`, `appearance`: tokens own styling (not used here).
 - `tabindex` on the host or the group div: focus belongs to the native inputs.
 - `title`, `data-*`: skipped by default per the audit.
+
+## Description and error (round 2)
+
+`description` and `error` (`string | TemplateRef`) are inputs on `rec-radio`, matching the canonical props. The React adapter forwards them to Mantine's native description/error with no Recursica tokens of its own, so there is nothing to copy token-for-token; here they render with the shared `rec-assistive-element` (help variant for the description, error variant with its icon and `role="alert"` for the error), which carries the design system's assistive-text tokens.
+
+- Placement: under the control, outside the `<label>` (so the text is not folded into the accessible name), indented past the control by control size + label gap (`.assistive` in `radio.component.css`). Both render when both are set, as in Mantine.
+- Wiring: the inner input gets `aria-describedby` = caller's `aria-describedby` + the description id + the error id (`aria.describedBy(...)`), and `aria-invalid="true"` when `error` is set. Ids are `<id>-description` / `<id>-error`.
+- No invalid visual state: React defines none for the atomic control (its CSS has no error rule), so none is added. The groups keep using the form-control wrapper and are unchanged.
+- Story: `WithDescriptionAndError`.

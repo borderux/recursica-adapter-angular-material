@@ -140,11 +140,13 @@ export type RecursicaSliderValue = number | [number, number];
               [disabled]="disabled"
               [value]="startValue"
               [attr.aria-label]="
-                rangeName ? rangeName + ' minimum' : 'Minimum value'
+                rangeName ? rangeName + ' minimum' : minimumLabel
               "
+              [attr.aria-valuetext]="valueText(startValue)"
               [attr.aria-labelledby]="ariaLabelledby ?? null"
               [attr.aria-describedby]="describedByAttr"
               (input)="onRangeInput($event, 'start')"
+              (change)="onRangeCommit($event, 'start')"
             />
             <input
               type="range"
@@ -156,11 +158,13 @@ export type RecursicaSliderValue = number | [number, number];
               [disabled]="disabled"
               [value]="endValue"
               [attr.aria-label]="
-                rangeName ? rangeName + ' maximum' : 'Maximum value'
+                rangeName ? rangeName + ' maximum' : maximumLabel
               "
+              [attr.aria-valuetext]="valueText(endValue)"
               [attr.aria-labelledby]="ariaLabelledby ?? null"
               [attr.aria-describedby]="describedByAttr"
               (input)="onRangeInput($event, 'end')"
+              (change)="onRangeCommit($event, 'end')"
             />
           } @else {
             <input
@@ -177,7 +181,9 @@ export type RecursicaSliderValue = number | [number, number];
               [attr.aria-label]="ariaLabel ?? accessibleName ?? null"
               [attr.aria-labelledby]="ariaLabelledby ?? null"
               [attr.aria-describedby]="describedByAttr"
+              [attr.aria-valuetext]="valueText(endValue)"
               (input)="onSingleInput($event)"
+              (change)="onSingleCommit($event)"
             />
           }
         </div>
@@ -218,7 +224,7 @@ export type RecursicaSliderValue = number | [number, number];
             [step]="step"
             [disabled]="disabled"
             [value]="startValue"
-            [attr.aria-label]="'Minimum value'"
+            [attr.aria-label]="minimumLabel"
             (change)="onNumberInputChange($event, 'start')"
           />
           <input
@@ -229,7 +235,7 @@ export type RecursicaSliderValue = number | [number, number];
             [step]="step"
             [disabled]="disabled"
             [value]="endValue"
-            [attr.aria-label]="'Maximum value'"
+            [attr.aria-label]="maximumLabel"
             (change)="onNumberInputChange($event, 'end')"
           />
         } @else {
@@ -275,6 +281,21 @@ export class SliderControlComponent implements RecursicaFormControl {
   @Input() accessibleName?: string;
 
   /**
+   * Formats the current value (canonical `tooltipLabel`): a function is
+   * applied to each thumb's value, a string is used as-is. Drives the value
+   * readout next to the track and each range input's `aria-valuetext`.
+   */
+  @Input() tooltipLabel?: string | ((value: number) => string);
+
+  /** `aria-label` of the start thumb / its number field in range mode when there is no accessible name. */
+  @Input() minimumLabel = "Minimum value";
+  /** `aria-label` of the end thumb / its number field in range mode when there is no accessible name. */
+  @Input() maximumLabel = "Maximum value";
+
+  /** Fires when the user commits a value (thumb released, key step applied): the native `change` event of the range input(s). */
+  @Output() changeEnd = new EventEmitter<RecursicaSliderValue>();
+
+  /**
    * Caller-supplied names, forwarded by `rec-slider`. They go on the range input(s); `ariaLabel` overrides
    * `accessibleName`. In range mode `ariaLabel` is suffixed with " minimum"/" maximum" like `accessibleName`,
    * and `ariaLabelledby`/`ariaDescribedby` are applied to both thumbs.
@@ -313,10 +334,22 @@ export class SliderControlComponent implements RecursicaFormControl {
   }
 
   /** The value(s) shown above the max label when there is no number input; ranges join with an en dash. */
+  /** `tooltipLabel` applied to one value; undefined when none is set (callers fall back to the raw number). */
+  formatValue(v: number): string | undefined {
+    const t = this.tooltipLabel;
+    return typeof t === "function" ? t(v) : t;
+  }
+
+  /** `aria-valuetext` for a thumb: only set when a `tooltipLabel` exists (the native value is announced otherwise). */
+  valueText(v: number): string | null {
+    return this.formatValue(v) ?? null;
+  }
+
   get displayValue(): string {
-    return this.isRange
-      ? `${this.startValue} – ${this.endValue}`
-      : `${this.endValue}`;
+    if (typeof this.tooltipLabel === "string") return this.tooltipLabel;
+    const start = this.formatValue(this.startValue) ?? `${this.startValue}`;
+    const end = this.formatValue(this.endValue) ?? `${this.endValue}`;
+    return this.isRange ? `${start} – ${end}` : end;
   }
 
   get isRange(): boolean {
@@ -349,16 +382,26 @@ export class SliderControlComponent implements RecursicaFormControl {
     this.valueChange.emit(next);
   }
 
-  onRangeInput(event: Event, thumb: "start" | "end"): void {
+  onSingleCommit(event: Event): void {
+    this.changeEnd.emit((event.target as HTMLInputElement).valueAsNumber);
+  }
+
+  private rangeFrom(event: Event, thumb: "start" | "end"): [number, number] {
     const next = (event.target as HTMLInputElement).valueAsNumber;
     const [start, end] = Array.isArray(this.value)
       ? this.value
       : [this.min, this.value];
-    if (thumb === "start") {
-      this.valueChange.emit([Math.min(next, end), end]);
-    } else {
-      this.valueChange.emit([start, Math.max(next, start)]);
-    }
+    return thumb === "start"
+      ? [Math.min(next, end), end]
+      : [start, Math.max(next, start)];
+  }
+
+  onRangeInput(event: Event, thumb: "start" | "end"): void {
+    this.valueChange.emit(this.rangeFrom(event, thumb));
+  }
+
+  onRangeCommit(event: Event, thumb: "start" | "end"): void {
+    this.changeEnd.emit(this.rangeFrom(event, thumb));
   }
 
   onNumberInputChange(event: Event, thumb: "start" | "end"): void {

@@ -126,6 +126,9 @@ export class TreeComponent implements TreeContext, RecursicaOverStyled, OnInit {
   @Input() multiple = false;
   @Input() disabled = false;
 
+  /** Accessible name of each node's expand/collapse toggle button (i18n). Passed to nodes via `TREE_CONTEXT`. */
+  @Input() toggleLabel = "Toggle subtree";
+
   @Output() nodeExpand = new EventEmitter<string>();
   @Output() nodeCollapse = new EventEmitter<string>();
   @Output() selectedChange = new EventEmitter<string[]>();

@@ -116,6 +116,8 @@ let nextId = 0;
         [max]="max"
         [step]="step"
         [hideControls]="hideControls"
+        [incrementLabel]="incrementLabel"
+        [decrementLabel]="decrementLabel"
         [leftSection]="leftSection"
         [rightSection]="rightSection"
         (valueChange)="onValueChange($event)"
@@ -147,6 +149,10 @@ export class NumberInputComponent implements ControlValueAccessor, OnInit {
   @Input() max?: number;
   @Input() step?: number;
   @Input() hideControls = false;
+  /** Accessible name of the increment button (default "Increment"). */
+  @Input() incrementLabel = "Increment";
+  /** Accessible name of the decrement button (default "Decrement"). */
+  @Input() decrementLabel = "Decrement";
 
   /** Native `autocomplete` of the inner `<input>`. */
   @Input() autocomplete?: string;

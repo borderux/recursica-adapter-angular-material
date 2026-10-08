@@ -89,3 +89,18 @@ export const Accessibility: Story = {
     `,
   }),
 };
+
+/** `description` + `error` (string and TemplateRef); error also sets `aria-invalid`. */
+export const WithDescriptionAndError: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <rec-switch label="With description" description="Helper text under the label."></rec-switch>
+        <rec-switch label="With error" error="This field is required."></rec-switch>
+        <rec-switch label="With both" description="Helper text." error="Something is wrong."></rec-switch>
+        <ng-template #tpl><strong>Rich</strong> description</ng-template>
+        <rec-switch label="Rich template" [description]="tpl"></rec-switch>
+      </div>
+    `,
+  }),
+};

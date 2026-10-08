@@ -6,11 +6,14 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  NgZone,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
   ViewEncapsulation,
   forwardRef,
+  inject,
 } from "@angular/core";
 import {
   ConnectedOverlayPositionChange,
@@ -28,6 +31,12 @@ import {
   RecursicaPopoverBaseSide,
   RecursicaPopoverPosition,
 } from "./popover-context";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
+
+let nextId = 0;
 
 /**
  * Same 12-position → `ConnectedPosition` translation as `HoverCard`'s own
@@ -132,11 +141,9 @@ function oppositePosition(
  * architecture (`POPOVER_CONTEXT` mirrors `HOVER_CARD_CONTEXT`) and its
  * exact position-translation math, swapping hover-intent timers
  * (`requestOpen`/`requestClose` with open/close delays) for a single
- * click-toggle plus `Dropdown`'s own already-solved click-outside-close
- * pattern (`hasBackdrop` + transparent backdrop class + `(backdropClick)`/
- * `(overlayOutsideClick)` — see `dropdown.component.ts`'s class doc
- * comment for why a transparent backdrop, not `hasBackdrop: false`, is the
- * right primitive for "close on outside click" here).
+ * click-toggle plus a document-level `pointerdown` listener for
+ * click-outside-close (no backdrop: see `IMPLEMENTATION_NOTES.md`,
+ * "Outside click and trigger/panel accessibility").
  *
  * ## Controlled/uncontrolled `opened`: same convention as `Pagination`'s `value`
  *
@@ -172,6 +179,12 @@ function oppositePosition(
   imports: [OverlayModule, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./popover.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   providers: [
     {
       provide: POPOVER_CONTEXT,
@@ -187,15 +200,18 @@ function oppositePosition(
         [cdkConnectedOverlayOpen]="isOpen && !disabled"
         [cdkConnectedOverlayPositions]="positions"
         [cdkConnectedOverlayWidth]="width ?? ''"
-        [cdkConnectedOverlayHasBackdrop]="closeOnClickOutside"
-        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-        (backdropClick)="close()"
-        (overlayOutsideClick)="close()"
+        [cdkConnectedOverlayHasBackdrop]="false"
         (positionChange)="onPositionChange($event)"
-        (detach)="close()"
+        (attach)="watchOutsidePresses()"
+        (detach)="onDetach()"
       >
         <div
           class="dropdown rec-popover-panel"
+          role="dialog"
+          [id]="panelId"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
           [attr.data-position]="actualSide ?? baseSide"
@@ -211,8 +227,15 @@ function oppositePosition(
   `,
 })
 export class PopoverComponent
-  implements PopoverContext, RecursicaOverStyled, OnInit
+  implements PopoverContext, RecursicaOverStyled, OnInit, OnDestroy
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  private readonly zone = inject(NgZone);
+  private stopWatching?: () => void;
+
+  /** Generated id of the panel; the trigger's `aria-controls` points at it. */
+  readonly panelId = `rec-popover-${nextId++}`;
+
   @Input() position: RecursicaPopoverPosition = "top";
   @Input() withBeak = true;
   @Input() offset = 5;
@@ -243,6 +266,40 @@ export class PopoverComponent
     if (this.closeOnEscape && event.key === "Escape" && this.isOpen) {
       this.close();
     }
+  }
+
+  /**
+   * Closes on a press outside the target and the panel. A document-level capture listener
+   * rather than a backdrop: a backdrop swallows the first outside click, this lets it through
+   * to the page (Mantine's behaviour). The target is ignored because its own click toggles.
+   */
+  watchOutsidePresses(): void {
+    this.stopWatching?.();
+    const onPointerDown = (event: PointerEvent) => {
+      if (!this.closeOnClickOutside) return;
+      const node = event.target as Node | null;
+      if (
+        node &&
+        (this.origin?.nativeElement.contains(node) ||
+          document.getElementById(this.panelId)?.contains(node))
+      ) {
+        return;
+      }
+      this.zone.run(() => this.close());
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    this.stopWatching = () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
+  }
+
+  onDetach(): void {
+    this.stopWatching?.();
+    this.stopWatching = undefined;
+    this.close();
+  }
+
+  ngOnDestroy(): void {
+    this.stopWatching?.();
   }
 
   get isOpen(): boolean {

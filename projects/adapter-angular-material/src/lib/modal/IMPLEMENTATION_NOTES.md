@@ -77,6 +77,33 @@ image finishing loading); `ResizeObserver` catches both, a real
 improvement available here with no React-hook dependency-array to
 translate.
 
+## Dismissal, focus and accessible name (round 2)
+
+- `disableClose: true` always; Escape and backdrop click are handled in the
+  component via `ref.keydownEvents()` / `ref.backdropClick()`. This makes
+  `closeOnEscape` independent of `closeOnClickOutside` (Mantine's split);
+  `disableClose: !closeOnClickOutside` used to tie them together.
+- New inputs, all default `true`: `closeOnEscape`, `trapFocus`, `returnFocus`
+  (`restoreFocus`), `lockScroll` (block vs noop scroll strategy). `trapFocus=false`
+  removes the `.cdk-focus-trap-anchor` sentinels after the next render (same
+  approach as the earlier Panel).
+- Earlier text here said the container sets `aria-modal`; the code never did.
+  It is now set explicitly (`ariaModal: true`), and `role` is an input
+  (`"dialog" | "alertdialog"`, default `dialog`).
+- Name: `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` (both spellings, via
+  `RecursicaAriaLabelling`) map onto `MatDialogConfig`. If the caller gives
+  neither `ariaLabel` nor `ariaLabelledby`, `ariaLabelledBy` points at the
+  title `<h2>` (id `<dialog id>-title`). The aria values are read when the
+  dialog opens; changing them while open has no effect.
+- `closeButtonLabel` (default "Close") is the close button's `aria-label`.
+- Host `title` is nulled (`[attr.title]: null`) so the input is not also a
+  native tooltip on `<rec-modal>`.
+- NG0100 fix: `ModalScrollDividerDirective` wrote `data-scrolled-*` through
+  `@HostBinding` from `ngAfterViewInit`, which changes a binding after its
+  check. It now sets/removes the attributes directly on the element.
+- Deviation from React: none intended; `withOverlay=false` has no outside-click
+  close (as before).
+
 ## Not built: the granular `Modal.Root`/`.Overlay`/`.Content`/`.Header`/`.Title`/`.CloseButton`/`.Body`
 
 Confirmed by reading `Modal.stories.tsx` directly: all 3 golden stories use

@@ -92,3 +92,19 @@ compiling with zero webpack errors in a live Storybook dev server (port
 browser/Playwright tooling available, so the hover-intent open/close
 timing, the beak rendering, and the full 12-position math are all reasoned
 from the code, not click-verified.
+
+## Trigger/panel accessibility and Escape (round 2)
+
+- Panel div gets a generated `id` (`rec-hover-card-N`) and the standard
+  `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` inputs (both spellings, via
+  `RecursicaAriaLabelling` on `rec-hover-card`). The panel has no `role`.
+- `rec-hover-card-target` puts `aria-describedby="<panel id>"` on its first
+  focusable descendant (shared helper `utils/recursica-trigger-aria.ts`; see
+  Popover notes). For a `rec-button` trigger it is merged onto the inner
+  `<button>` (Button has no input for it that is not the caller's own
+  `ariaDescribedby`); it is applied in `ngAfterViewChecked` so the Button's own
+  bindings do not overwrite it. The panel is only in the DOM while open.
+- `closeOnEscape` (default `true`): a document `keydown` Escape closes the open
+  card immediately and cancels pending timers (WCAG 1.4.13 dismissible). While
+  the pointer is still over the trigger it will not reopen until the pointer
+  or focus leaves and re-enters.

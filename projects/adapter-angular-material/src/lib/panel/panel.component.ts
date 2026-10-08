@@ -119,7 +119,13 @@ let nextId = 0;
         @if (title || withCloseButton) {
           <div class="header">
             @if (title) {
-              <h2 class="title" [id]="titleId">{{ title }}</h2>
+              <h2
+                class="title"
+                [id]="titleId"
+                [attr.data-truncate]="wrapHeaderText ? '' : null"
+              >
+                {{ title }}
+              </h2>
             }
             @if (withCloseButton) {
               <button
@@ -164,6 +170,13 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() title?: string;
   @Input() placement: RecursicaPanelPlacement = "right";
   @Input() withCloseButton = true;
+
+  /**
+   * `RecursicaPanelProps.wrapHeaderText` (default `true`, same as React). Despite the name,
+   * `true` keeps the title on a single line and truncates overflow with an ellipsis (React's
+   * `styles.titleTruncate`); `false` lets a long title wrap onto several lines (`styles.title`).
+   */
+  @Input() wrapHeaderText = true;
 
   /** `aria-label` of the panel (`role="dialog"`). Without it, the panel is named by its `title`. */
   @Input() ariaLabel?: string;

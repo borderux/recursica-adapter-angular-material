@@ -82,6 +82,7 @@ let nextAccordionId = 0;
   template: `
     <div
       class="root"
+      [attr.data-variant]="variant"
       [attr.id]="elementId.id ?? null"
       [attr.aria-label]="aria.ariaLabel ?? null"
       [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
@@ -101,6 +102,13 @@ export class AccordionComponent
 
   /** Per-instance prefix so two accordions using the same `value`s never share ids; the `id` input wins when set. */
   private readonly uid = `rec-accordion-${nextAccordionId++}`;
+
+  /**
+   * `RecursicaAccordionProps.variant` — `"default"` is the only variant with dedicated
+   * Recursica styling; any other string is accepted for custom theming and is exposed as
+   * `data-variant` on the root (a CSS hook) with no built-in styling. See IMPLEMENTATION_NOTES.md.
+   */
+  @Input() variant: "default" | (string & {}) = "default";
 
   /** `RecursicaAccordionProps.multiple` — allow more than one item open at once. When this
    * flips from `true` to `false` with more than one item open, only the first (by open order)

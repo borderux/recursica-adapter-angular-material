@@ -96,10 +96,6 @@
 [data-recursica-theme] .rec-panel-panel-content .title {
   flex: 1 1 auto;
   min-width: 0;
-  overflow: clip;
-  overflow-clip-margin: 0.35em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   margin: 0;
 
   color: var(--recursica_ui-kit_components_panel_properties_colors_title);
@@ -111,6 +107,15 @@
   line-height: var(--recursica_ui-kit_components_panel_properties_header-style_lineHeight);
   text-transform: var(--recursica_ui-kit_components_panel_properties_header-style_textCase);
   text-decoration: var(--recursica_ui-kit_components_panel_properties_header-style_textDecoration);
+}
+
+/* `wrapHeaderText` (default true) = React's `styles.titleTruncate`: single line, ellipsis.
+   When false the title is React's plain `styles.title`: it wraps onto multiple lines. */
+[data-recursica-theme] .rec-panel-panel-content .title[data-truncate] {
+  overflow: clip;
+  overflow-clip-margin: 0.35em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 [data-recursica-theme] .rec-panel-panel-content .bodyWrapper {

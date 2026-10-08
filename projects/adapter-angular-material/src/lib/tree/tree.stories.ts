@@ -91,6 +91,14 @@ export const Disabled: Story = {
   },
 };
 
+export const CustomToggleLabel: Story = {
+  args: {
+    data: sampleData,
+    initialExpandedValues: ["documents"],
+    toggleLabel: "Alternar subárbol",
+  },
+};
+
 export const LayerOne: Story = {
   render: () => ({
     template: `

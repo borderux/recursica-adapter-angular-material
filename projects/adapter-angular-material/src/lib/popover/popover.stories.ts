@@ -106,3 +106,20 @@ export const WithoutBeak: Story = {
     `,
   }),
 };
+
+/** Trigger a11y check: the trigger is a `rec-button`; its inner button gets haspopup/expanded/controls. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-popover position="bottom" [defaultOpened]="true" aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+        <rec-popover-target>
+          <rec-button id="a11y-trigger" variant="solid">Toggle Popover</rec-button>
+        </rec-popover-target>
+        <rec-popover-dropdown>
+          <rec-text>Popover content.</rec-text>
+        </rec-popover-dropdown>
+      </rec-popover>
+      <span id="a11y-desc" hidden>Description</span>
+    `,
+  }),
+};

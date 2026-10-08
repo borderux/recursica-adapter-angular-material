@@ -236,3 +236,20 @@
   opacity: var(--recursica_ui-kit_components_radio-button-item_variants_states_disabled_properties_opacity);
   color: var(--recursica_ui-kit_components_radio-button-item_properties_colors_disabled-text);
 }
+
+/*
+ * Description / error text (canonical `description` / `error`). Rendered with
+ * the shared `rec-assistive-element` (its own tokens), outside the `<label>`
+ * so the text is not folded into the control's accessible name, and indented
+ * past the control so it lines up with the label text.
+ */
+.assistive {
+  display: block;
+}
+
+:host-context([data-recursica-theme]) .assistive {
+  margin-inline-start: calc(
+    var(--recursica_ui-kit_components_radio-button_properties_size) +
+      var(--recursica_ui-kit_components_radio-button-item_properties_label-gap)
+  );
+}

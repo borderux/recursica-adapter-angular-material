@@ -105,3 +105,16 @@ Withheld:
 
 - `tabindex`: the root is a container; the inner controls are the tab stops.
 - `name`, `form`, `autocomplete` and other text-input attributes: not a native input.
+
+## Round 2: translatable strings
+
+Every hard-coded English string is now an input; defaults reproduce the previous text. The pane titles (`sourceLabel` / `targetLabel`) and `searchPlaceholder` already existed.
+
+| Input                            | Default                           | Used for                                          |
+| -------------------------------- | --------------------------------- | ------------------------------------------------- |
+| `emptyLabel`                     | "No items"                        | empty pane text                                   |
+| `filterLabel(pane)`              | `Filter ${pane.toLowerCase()}`    | visually hidden label of each pane's filter field |
+| `moveAllLabel(destination)`      | `Move all to ${destination}`      | aria-label of the two "move all" buttons          |
+| `moveSelectedLabel(destination)` | `Move selected to ${destination}` | aria-label of the two "move selected" buttons     |
+
+The functions receive the label of the pane the items move to (or of the pane being filtered), so word order can differ per language. Story: `CustomLabels`.

@@ -94,3 +94,21 @@ export const LongTitle: Story = {
     props: { opened: true },
   }),
 };
+
+export const WrapHeaderText: Story = {
+  render: () => ({
+    template: `
+      <rec-panel
+        title="This is a ridiculously long panel title designed to wrap onto several lines because wrapHeaderText is false"
+        placement="right"
+        [wrapHeaderText]="false"
+        [opened]="opened"
+        (openedChange)="opened = $event"
+      >
+        With wrapHeaderText false the title wraps instead of truncating.
+      </rec-panel>
+      <rec-button variant="solid" (click)="opened = true">Open Wrapping Title Panel</rec-button>
+    `,
+    props: { opened: true },
+  }),
+};

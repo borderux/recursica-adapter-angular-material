@@ -108,3 +108,35 @@ browser/Playwright tooling available, so the actual click-toggle open/close,
 outside-click dismissal, Escape handling, and beak positioning at real
 viewport coordinates were reasoned from the code (and from `HoverCard`'s/
 `Dropdown`'s own already-working foundations), not click-verified.
+
+## Outside click and trigger/panel accessibility (round 2)
+
+**Outside click**: the transparent backdrop is gone. It swallowed the first
+outside click (the press hit the backdrop, not the page). The overlay now
+opens with `hasBackdrop: false`; on `(attach)` a capture-phase `pointerdown`
+listener is added to `document` and removed on `(detach)`/destroy. A press
+closes the popover unless it lands inside the target or the panel, so an
+outside click both closes it and still reaches the page, as in Mantine. The
+target is ignored because its own click already toggles. `closeOnClickOutside`
+and `closeOnEscape` keep their meaning. Limitation: an overlay opened from
+inside the panel (e.g. a nested dropdown) lives in a separate overlay pane, so
+pressing in it counts as outside; Mantine's React portals bubble through the
+React tree and do not.
+
+**Panel**: `role="dialog"`, a generated `id` (`rec-popover-N`), and
+`ariaLabel`/`ariaLabelledby`/`ariaDescribedby` (both spellings, via
+`RecursicaAriaLabelling` on `rec-popover`) on the panel div. No default
+`aria-labelledby`: a popover with no name has role dialog and whatever label
+the caller gives.
+
+**Trigger**: `rec-popover-target` finds its first focusable descendant
+(`firstFocusable` in `utils/recursica-trigger-aria.ts`: button, a[href],
+input, select, textarea, summary, `[tabindex]` >= 0) and puts
+`aria-haspopup="dialog"`, `aria-expanded` and `aria-controls` (panel id) on it.
+If that element is inside a `rec-button`, the Button's `ariaHasPopup`/
+`ariaExpanded`/`ariaControls` inputs are set instead (found with a
+`ContentChildren(ButtonComponent)` query); Button is default change detection
+so they render on the same pass. The helper runs in `ngAfterContentChecked`
+and `ngAfterViewChecked`. `aria-controls` is set while the panel is closed
+too (the id is absent from the DOM then; allowed with `aria-expanded="false"`).
+The same helper is used by Menu and HoverCard.

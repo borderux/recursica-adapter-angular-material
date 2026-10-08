@@ -116,7 +116,7 @@ bug to begin with, since `checked` alone was never going to satisfy `EventEmitte
 binding purely to become interactive (matching the reference's own `onChange={() => {}}` on the
 identical two stories) — screenshotted, both render with the pointer-cursor-eligible
 `data-interactive` attribute present on `.root`. The `Unselected`/`ErrorState`/`WithLeadingIcon`
-stories bind nothing and render `tabindex="-1"`/`aria-hidden="true"` on `.label`, confirmed via
+stories bind nothing and (as originally verified) rendered `tabindex="-1"`/`aria-hidden="true"` on `.label`; that was changed in round 2, see Passthrough, confirmed via
 Playwright's rendered `outerHTML`.
 
 ## Accessibility: `role="checkbox"` + `aria-checked`, not `role="button"`
@@ -214,9 +214,9 @@ Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabe
 | `id`                                                                                                     | `span.label[role=checkbox]` |                                            |
 | `title`                                                                                                  | `span.label[role=checkbox]` | Host `title` is cleared.                   |
 
-Known anomaly: a non-interactive chip (no `checkedChange` or `remove` listener) keeps `aria-hidden="true"` on the labelled element, so a name given to it is not exposed.
+Non-interactive chips (no `checkedChange` or `remove` listener) deliberately differ from React: the React Chip sets `aria-hidden="true"` and `tabIndex={-1}` on them. Here the label span is not hidden, has no `role`/`aria-checked`/`aria-disabled`/`tabindex`, and is read as plain text; `ariaLabel`/`title`/`id` are still rendered on it. The interactive case is identical to React (`role="checkbox"`, `aria-checked`, `tabindex` 0 or -1 when disabled). No visual change: the CSS keys off classes and `data-*` attributes only. Caveat: `aria-label` on a role-less span is not reliably announced by assistive tech (ARIA naming is prohibited on generic elements); prefer visible text as the name for non-interactive chips.
 
 Withheld:
 
 - `tabindex` / `aria-hidden`: derived from `isInteractive` and `disabled`, left hard-coded
-- `role`: fixed to `checkbox`
+- `role`: fixed (`checkbox` when interactive, none otherwise)

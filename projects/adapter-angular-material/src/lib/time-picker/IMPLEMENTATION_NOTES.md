@@ -107,3 +107,12 @@ Withheld:
 
 - `placeholder`: fixed by `withSeconds`.
 - `autocomplete`, `minlength`, `maxlength`, `spellcheck`, `inputmode`: not added; the field is a parsed-on-blur time mask.
+
+## Round 2: `minTime` / `maxTime`
+
+Strings "HH:mm" or "HH:mm:ss" (24-hour), as in the canonical props. React forwards them to Mantine as `min`/`max`, which clamps entered times into the range (`clampTime`). Here:
+
+- On commit (field blur, AM/PM change) the time is clamped to `minTime`..`maxTime` before `valueChange` is emitted, and the field text is reset to the clamped time (needed because the bound value may not change).
+- A `value` set from outside that lies outside the range is flagged invalid: `data-error` on the control, `aria-invalid="true"` on the input, and the AM/PM dropdown gets its error state. Nothing is clamped silently in that case.
+- Seconds are only compared when present in the strings; with `withSeconds` unset the emitted value stays "HH:mm".
+- Story: `MinMaxTime`.

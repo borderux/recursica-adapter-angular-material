@@ -355,6 +355,10 @@ instance) via Playwright (chromium):
 and `npx eslint 'projects/adapter-angular-material/src/lib/accordion/**/*.ts'`
 both run clean.
 
+## `variant`
+
+`rec-accordion` `[variant]` (`"default" | string`, default `"default"`) is rendered as `data-variant` on `div.root`. React maps `"default"` to Mantine's `unstyled` variant (`mapVariant` in `Accordion.tsx`) purely to switch off Mantine's built-in variant CSS; `Accordion.module.css` has no variant-specific selectors or tokens, so all Recursica styling is the same for every value. There is nothing equivalent to switch off here (no Mantine), so `"default"` and any custom string render identically; `data-variant` is a hook for consumer theming. No new tokens were added. Deviation: React passes a non-default string through to Mantine, whose own built-in styles (contained, separated, filled) then apply; those do not exist in this adapter.
+
 ## Passthrough
 
 | Input                                                          | Forwarded to                            | Notes                                                                                                                                         |
@@ -370,4 +374,3 @@ Control and panel ids are now `<prefix>-control-<value>` / `<prefix>-panel-<valu
 Withheld:
 
 - `aria-expanded`, `aria-controls`, control/panel ids: derived from state.
-- `variant`: canonical prop, not added in this pass.

@@ -87,6 +87,10 @@ dropped.
 slot (no leading/trailing split the way Recursica's tokens expect), so
 `MenuItemComponent` renders its own wrapper spans instead of relying on it.
 
+## `maxHeight`
+
+`rec-menu` `[maxHeight]` (`string | number`, number = px) mirrors the React Menu's `maxHeight`: a per-instance override of the token dropdown `max-height`, with `overflow-y: auto` so items scroll. Mechanism: the panel is created in a CDK overlay with no stable element to bind a style to, so each `rec-menu` gets a unique `panelClass` (`rec-menu-mh-N`) whose rule sets `--rec-menu-max-height` in a small `<style>` element appended to `document.head` (updated on change, removed on destroy). `menu-overlay.css` reads `max-height: var(--rec-menu-max-height, <token>)` and sets `overflow-y: auto`. Deviation from React: React applies inline style on the dropdown; here it is a class-scoped custom property, with the same visible result. Under a strict CSP the injected `<style>` needs a nonce / `style-src` allowance.
+
 ## Passthrough
 
 | Input                                                                                | Forwarded to                                                        | Notes                                                    |
@@ -100,5 +104,21 @@ Withheld:
 
 - `disableRipple` (menu item): Material-only; removed from the public API.
 - `hasBackdrop` (menu): Material-only; removed from the public API. The panel keeps `hasBackdrop` fixed to `true`, as before.
-- `maxHeight`: canonical prop, not added in this pass (separate step).
 - The trigger aria (`aria-haspopup`/`aria-expanded`/`aria-controls` from `recMenuTriggerFor`) is handled separately.
+
+## Trigger aria on a `rec-button` host (round 2)
+
+`recMenuTriggerFor` composes `MatMenuTrigger` as a host directive, whose host
+bindings write `aria-haspopup`/`aria-expanded`/`aria-controls` on whatever
+element carries the directive. On `<rec-button [recMenuTriggerFor]>` that is the
+`<rec-button>` host, not the focused inner `<button>`. When the host is a
+`rec-button` (`inject(ButtonComponent, { optional: true, self: true })`), the
+directive now sets the Button's `ariaHasPopup` (`"menu"` when a menu is
+attached), `ariaExpanded` (`trigger.menuOpen`) and `ariaControls`
+(`menu.panelId` while open) inputs in `ngDoCheck`, which runs before the
+Button's view is refreshed, so they render on the inner button in the same
+pass. Button uses default change detection (not OnPush), so nothing else is
+needed. Material's host bindings rewrite the three attributes whenever their
+value changes, so `ngAfterViewChecked` removes them from the host again. Any
+other host element keeps Material's behaviour unchanged. The `Accessibility`
+story's trigger is a `rec-button` (`id="a11y-trigger"`).

@@ -1,10 +1,16 @@
 import {
+  AfterContentChecked,
+  AfterViewChecked,
   AfterViewInit,
   Component,
+  ContentChildren,
+  QueryList,
   ElementRef,
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import { ButtonComponent } from "../button/button.component";
+import { applyTriggerAria } from "../utils/recursica-trigger-aria";
 import { POPOVER_CONTEXT } from "./popover-context";
 
 /**
@@ -49,12 +55,47 @@ import { POPOVER_CONTEXT } from "./popover-context";
   },
   template: `<ng-content />`,
 })
-export class PopoverTargetComponent implements AfterViewInit {
+export class PopoverTargetComponent
+  implements AfterViewInit, AfterContentChecked, AfterViewChecked
+{
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+
+  @ContentChildren(ButtonComponent, { descendants: true })
+  private readonly buttons!: QueryList<ButtonComponent>;
+  @ContentChildren(ButtonComponent, { descendants: true, read: ElementRef })
+  private readonly buttonElements!: QueryList<ElementRef<HTMLElement>>;
 
   readonly context = inject(POPOVER_CONTEXT, { optional: true });
 
   ngAfterViewInit(): void {
     this.context?.registerOrigin(this.elementRef);
+  }
+
+  // Applied in both hooks: before the projected `rec-button` renders (so its inputs show up in
+  // this pass) and after (so attributes set directly on a native element, or merged
+  // `aria-describedby`, are not overwritten by the Button's own first-render bindings).
+  ngAfterContentChecked(): void {
+    this.applyAria();
+  }
+
+  ngAfterViewChecked(): void {
+    this.applyAria();
+  }
+
+  private applyAria(): void {
+    if (!this.context) return;
+    const elements = this.buttonElements.toArray();
+    applyTriggerAria(
+      this.elementRef.nativeElement,
+      this.buttons.map((button, i) => ({
+        button,
+        element: elements[i].nativeElement,
+      })),
+      {
+        hasPopup: "dialog",
+        expanded: this.context.isOpen && !this.context.disabled,
+        controls: this.context.panelId,
+      },
+    );
   }
 }

@@ -127,6 +127,10 @@ let nextId = 0;
         [minLabel]="minLabel"
         [maxLabel]="maxLabel"
         [showInput]="showInput"
+        [tooltipLabel]="tooltipLabel"
+        [minimumLabel]="minimumLabel"
+        [maximumLabel]="maximumLabel"
+        (changeEnd)="changeEnd.emit($event)"
         [icon]="icon"
         [trailingIcon]="trailingIcon"
         (valueChange)="onValueChange($event)"
@@ -160,6 +164,15 @@ export class SliderComponent implements ControlValueAccessor, OnInit {
   @Input() minLabel?: string;
   @Input() maxLabel?: string;
   @Input() showInput = false;
+
+  /** Formats the value (canonical `tooltipLabel`): function per thumb, or a static string. Drives the value readout, the read-only value and `aria-valuetext`. */
+  @Input() tooltipLabel?: string | ((value: number) => string);
+  /** Accessible name of the start thumb / number field in range mode (default "Minimum value"). */
+  @Input() minimumLabel = "Minimum value";
+  /** Accessible name of the end thumb / number field in range mode (default "Maximum value"). */
+  @Input() maximumLabel = "Maximum value";
+  /** Fires once the user commits a value (thumb released, keyboard step applied). Canonical `onChangeEnd`, named without the `on` prefix per Angular output conventions. */
+  @Output() changeEnd = new EventEmitter<RecursicaSliderValue>();
 
   @Input() icon?: TemplateRef<unknown>;
   @Input() trailingIcon?: TemplateRef<unknown>;
@@ -216,7 +229,10 @@ export class SliderComponent implements ControlValueAccessor, OnInit {
 
   get formattedReadOnlyValue(): string {
     const v = this.currentValue;
-    return Array.isArray(v) ? `${v[0]} – ${v[1]}` : `${v}`;
+    const t = this.tooltipLabel;
+    if (typeof t === "string") return t;
+    const f = (n: number) => (t ? t(n) : `${n}`);
+    return Array.isArray(v) ? `${f(v[0])} – ${f(v[1])}` : f(v);
   }
 
   onValueChange(next: RecursicaSliderValue): void {

@@ -40,6 +40,12 @@ function parseTimeValue(
   return { hour24, minute, second: Number.isNaN(second) ? 0 : second };
 }
 
+/** Seconds since midnight for an "HH:mm" / "HH:mm:ss" string, or undefined when it is not a time. */
+function timeToSeconds(value: string | undefined): number | undefined {
+  const p = parseTimeValue(value);
+  return p ? p.hour24 * 3600 + p.minute * 60 + p.second : undefined;
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -143,7 +149,7 @@ function clamp(value: number, min: number, max: number): number {
     <div
       class="root"
       [attr.data-disabled]="disabled ? 'true' : null"
-      [attr.data-error]="error ? 'true' : null"
+      [attr.data-error]="invalid ? 'true' : null"
     >
       <div
         class="timeWrapper"
@@ -164,6 +170,7 @@ function clamp(value: number, min: number, max: number): number {
           [attr.name]="name ?? null"
           [attr.tabindex]="inputTabIndex ?? null"
           [attr.form]="form ?? null"
+          [attr.aria-invalid]="invalid ? 'true' : null"
           [attr.aria-label]="ariaLabel ?? null"
           [attr.aria-labelledby]="ariaLabelledby ?? null"
           [attr.aria-describedby]="describedByAttr"
@@ -177,7 +184,7 @@ function clamp(value: number, min: number, max: number): number {
         [value]="isPM ? 'PM' : 'AM'"
         ariaLabel="AM or PM"
         [disabled]="disabled"
-        [error]="error"
+        [error]="invalid"
         [overStyled]="true"
         [overStyle]="{
           width:
@@ -212,6 +219,11 @@ export class TimePickerControlComponent implements RecursicaFormControl {
   @Input() error = false;
   @Input() withSeconds = false;
 
+  /** Earliest allowed time, "HH:mm" (or "HH:mm:ss"). Typed values earlier than this are clamped to it on commit; a `value` set from outside that is earlier is flagged invalid. */
+  @Input() minTime?: string;
+  /** Latest allowed time, same format as `minTime`. */
+  @Input() maxTime?: string;
+
   @Input() leftSection?: TemplateRef<unknown>;
 
   readonly amPmData = AM_PM_DATA;
@@ -242,13 +254,31 @@ export class TimePickerControlComponent implements RecursicaFormControl {
     return parseTimeValue(this.value);
   }
 
+  /** True when the current value lies outside `minTime`..`maxTime` (it can only get there from outside: typed values are clamped). */
+  get outOfRange(): boolean {
+    const t = timeToSeconds(this.value);
+    if (t === undefined) {
+      return false;
+    }
+    const min = timeToSeconds(this.minTime);
+    const max = timeToSeconds(this.maxTime);
+    return (min !== undefined && t < min) || (max !== undefined && t > max);
+  }
+
+  get invalid(): boolean {
+    return this.error || this.outOfRange;
+  }
+
   get isPM(): boolean {
     const p = this.parsed;
     return p !== undefined && p.hour24 >= 12;
   }
 
   get fieldText(): string {
-    const p = this.parsed;
+    return this.formatField(this.parsed);
+  }
+
+  private formatField(p: ParsedTime | undefined): string {
     if (!p) {
       return "";
     }
@@ -298,7 +328,10 @@ export class TimePickerControlComponent implements RecursicaFormControl {
       : hour12 === 12
         ? 0
         : hour12;
-    this.emitTime(hour24, minute, second);
+    const shown = this.emitTime(hour24, minute, second);
+    // The bound `[value]` does not change when the clamped result equals the
+    // previous value, so reset the DOM text explicitly.
+    (event.target as HTMLInputElement).value = this.formatField(shown);
   }
 
   onMeridiemChange(next: string | null): void {
@@ -314,7 +347,20 @@ export class TimePickerControlComponent implements RecursicaFormControl {
     this.emitTime(nextHour, p.minute, p.second);
   }
 
-  private emitTime(hour24: number, minute: number, second: number): void {
+  /** Clamps to `minTime`..`maxTime`, emits the result and returns what was emitted. */
+  private emitTime(hour24: number, minute: number, second: number): ParsedTime {
+    let total = hour24 * 3600 + minute * 60 + second;
+    const min = timeToSeconds(this.minTime);
+    const max = timeToSeconds(this.maxTime);
+    if (min !== undefined) {
+      total = Math.max(min, total);
+    }
+    if (max !== undefined) {
+      total = Math.min(max, total);
+    }
+    hour24 = Math.floor(total / 3600);
+    minute = Math.floor((total % 3600) / 60);
+    second = total % 60;
     const parts = [
       String(hour24).padStart(2, "0"),
       String(minute).padStart(2, "0"),
@@ -323,5 +369,6 @@ export class TimePickerControlComponent implements RecursicaFormControl {
       parts.push(String(second).padStart(2, "0"));
     }
     this.valueChange.emit(parts.join(":"));
+    return { hour24, minute, second };
   }
 }

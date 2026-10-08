@@ -113,3 +113,19 @@ export const RichContent: Story = {
     `,
   }),
 };
+
+/** Trigger a11y check: the trigger is a `rec-button`; its inner button gets `aria-describedby` = panel id. Hover or focus it to open the card; Escape dismisses it. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-hover-card position="bottom" aria-label="A11Y-LABEL">
+        <rec-hover-card-target>
+          <rec-button id="a11y-trigger" variant="solid">Hover me</rec-button>
+        </rec-hover-card-target>
+        <rec-hover-card-dropdown>
+          <rec-text>Hover card content.</rec-text>
+        </rec-hover-card-dropdown>
+      </rec-hover-card>
+    `,
+  }),
+};

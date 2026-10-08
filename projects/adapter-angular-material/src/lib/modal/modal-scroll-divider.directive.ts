@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Directive,
   ElementRef,
-  HostBinding,
   HostListener,
   OnDestroy,
   inject,
@@ -38,10 +37,6 @@ import {
   selector: "[recModalScrollDivider]",
 })
 export class ModalScrollDividerDirective implements AfterViewInit, OnDestroy {
-  @HostBinding("attr.data-scrolled-top") scrolledTop: string | null = null;
-  @HostBinding("attr.data-scrolled-bottom") scrolledBottom: string | null =
-    null;
-
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private resizeObserver?: ResizeObserver;
 
@@ -59,8 +54,21 @@ export class ModalScrollDividerDirective implements AfterViewInit, OnDestroy {
   @HostListener("window:resize")
   check(): void {
     const el = this.elementRef.nativeElement;
-    this.scrolledTop = el.scrollTop > 0 ? "" : null;
-    this.scrolledBottom =
-      Math.ceil(el.scrollTop + el.clientHeight) < el.scrollHeight ? "" : null;
+    // Attributes are written directly, not through `@HostBinding`: `check()` runs from
+    // `ngAfterViewInit`, and a host binding changed there throws NG0100 in dev mode.
+    this.toggle(el, "data-scrolled-top", el.scrollTop > 0);
+    this.toggle(
+      el,
+      "data-scrolled-bottom",
+      Math.ceil(el.scrollTop + el.clientHeight) < el.scrollHeight,
+    );
+  }
+
+  private toggle(el: HTMLElement, name: string, on: boolean): void {
+    if (on) {
+      el.setAttribute(name, "");
+    } else {
+      el.removeAttribute(name);
+    }
   }
 }

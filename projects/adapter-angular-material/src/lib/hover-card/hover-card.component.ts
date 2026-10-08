@@ -3,11 +3,13 @@ import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnDestroy,
   TemplateRef,
   ViewEncapsulation,
   forwardRef,
+  inject,
 } from "@angular/core";
 import { ConnectedPosition, OverlayModule } from "@angular/cdk/overlay";
 import {
@@ -21,6 +23,12 @@ import {
   RecursicaHoverCardBaseSide,
   RecursicaHoverCardPosition,
 } from "./hover-card-context";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
+
+let nextId = 0;
 
 /**
  * Translates every `RecursicaHoverCardPosition` (12 values: `top`/`bottom`/
@@ -148,6 +156,12 @@ function toConnectedPosition(
   imports: [OverlayModule, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./hover-card.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   providers: [
     {
       provide: HOVER_CARD_CONTEXT,
@@ -166,6 +180,10 @@ function toConnectedPosition(
       >
         <div
           class="dropdown rec-hover-card-panel"
+          [id]="panelId"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [class]="resolvedOverStyle.class"
           [style]="resolvedOverStyle.style"
           [attr.data-position]="baseSide"
@@ -185,6 +203,11 @@ function toConnectedPosition(
 export class HoverCardComponent
   implements HoverCardContext, RecursicaOverStyled, OnDestroy
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
+  /** Generated id of the panel; the trigger's `aria-describedby` points at it. */
+  readonly panelId = `rec-hover-card-${nextId++}`;
+
   @Input() position: RecursicaHoverCardPosition = "top";
   @Input() withBeak = true;
   @Input() withArrow?: boolean;
@@ -192,6 +215,9 @@ export class HoverCardComponent
   @Input() openDelay = 0;
   @Input() closeDelay = 150;
   @Input() disabled = false;
+
+  /** Press `Escape` to dismiss the open card without moving the pointer (WCAG 1.4.13). */
+  @Input() closeOnEscape = true;
 
   @Input() overStyled = false;
   @Input() overClass?: string;
@@ -203,6 +229,22 @@ export class HoverCardComponent
 
   private openTimeout?: ReturnType<typeof setTimeout>;
   private closeTimeout?: ReturnType<typeof setTimeout>;
+
+  @HostListener("document:keydown", ["$event"])
+  onDocumentKeydown(event: KeyboardEvent): void {
+    if (!this.closeOnEscape || event.key !== "Escape" || !this.isOpen) {
+      return;
+    }
+    if (this.openTimeout) {
+      clearTimeout(this.openTimeout);
+      this.openTimeout = undefined;
+    }
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+      this.closeTimeout = undefined;
+    }
+    this.isOpen = false;
+  }
 
   get resolvedWithBeak(): boolean {
     return this.withBeak ?? this.withArrow ?? true;

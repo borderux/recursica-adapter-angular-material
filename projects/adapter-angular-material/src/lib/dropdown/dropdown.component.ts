@@ -198,7 +198,11 @@ let nextId = 0;
       inputs: RECURSICA_ARIA_LABELLING_INPUTS,
     },
   ],
-  host: { "[attr.id]": "null" },
+  host: {
+    "[attr.id]": "null",
+    "[style.width]": "resolvedContainerWidth",
+    "[style.display]": "containerWidth != null ? 'block' : null",
+  },
   template: `
     <div
       class="root"
@@ -279,7 +283,7 @@ let nextId = 0;
                 class="clearButton"
                 role="button"
                 tabindex="0"
-                aria-label="Clear selection"
+                [attr.aria-label]="clearLabel"
                 (click)="clear($event)"
                 (keydown)="onClearKeydown($event)"
               >
@@ -396,6 +400,19 @@ export class DropdownComponent
   @Input() disabled = false;
   @Input() required = false;
   @Input() clearable = false;
+  /** Accessible name of the clear button (default "Clear selection"). */
+  @Input() clearLabel = "Clear selection";
+
+  /** Width of the whole dropdown (canonical `containerWidth`): a CSS length string, or a number in px. Unset keeps the default (fills the container, up to the token max-width). */
+  @Input() containerWidth?: string | number;
+
+  get resolvedContainerWidth(): string | null {
+    const w = this.containerWidth;
+    if (w == null || w === "") {
+      return null;
+    }
+    return typeof w === "number" ? `${w}px` : w;
+  }
 
   /**
    * `"small"` sizes the field to the small Button height (for dense layouts such as a status dropdown

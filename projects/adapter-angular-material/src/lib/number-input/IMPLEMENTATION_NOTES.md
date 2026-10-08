@@ -103,3 +103,7 @@ Withheld:
 - Material `appearance`, `color`, `floatLabel`, `subscriptSizing`, `hideRequiredMarker`, `errorStateMatcher`: tokens own styling.
 - `minlength`, `maxlength`, `spellcheck`: not valid on `type=number`.
 - Hard-coded `Increment`/`Decrement` button labels are unchanged (out of scope).
+
+## Round 2: translatable button labels
+
+`incrementLabel` / `decrementLabel` (defaults "Increment" / "Decrement") set the `aria-label` of the stepper buttons. Added on `rec-number-input` and passed to `rec-number-input-control`. Story: `CustomLabels`.

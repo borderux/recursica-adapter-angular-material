@@ -26,6 +26,8 @@ const meta: Meta<TooltipComponent> = {
     position: { control: "radio", options: ["top", "bottom", "left", "right"] },
     disabled: { control: "boolean" },
     withBeak: { control: "boolean" },
+    openDelay: { control: "number" },
+    closeDelay: { control: "number" },
     overStyled: { control: "boolean" },
     overClass: { control: "text" },
   },
@@ -101,6 +103,25 @@ export const LongContent: Story = {
           [opened]="true"
         >
           <rec-button variant="solid">Long Content</rec-button>
+        </rec-tooltip>
+      </rec-group>
+    `,
+  }),
+};
+
+/** Uses the `openDelay`/`closeDelay` inputs (`showDelay`/`hideDelay` are deprecated aliases). Tab to the button to open it by keyboard. */
+export const WithDelays: Story = {
+  render: (args) => ({
+    props: args,
+    template: `
+      <rec-group justify="center" wrap="nowrap" style="padding: 64px;">
+        <rec-tooltip
+          label="Opens after 500ms, closes after 300ms"
+          [position]="position"
+          [openDelay]="500"
+          [closeDelay]="300"
+        >
+          <rec-button variant="solid">Hover or focus me</rec-button>
         </rec-tooltip>
       </rec-group>
     `,

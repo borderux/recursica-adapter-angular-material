@@ -1,11 +1,16 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   Component,
+  ContentChildren,
   ElementRef,
+  QueryList,
   ViewChild,
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import { ButtonComponent } from "../button/button.component";
+import { applyTriggerAria } from "../utils/recursica-trigger-aria";
 import { HOVER_CARD_CONTEXT } from "./hover-card-context";
 
 /**
@@ -44,12 +49,33 @@ import { HOVER_CARD_CONTEXT } from "./hover-card-context";
     </span>
   `,
 })
-export class HoverCardTargetComponent implements AfterViewInit {
+export class HoverCardTargetComponent
+  implements AfterViewInit, AfterViewChecked
+{
+  @ContentChildren(ButtonComponent, { descendants: true })
+  private readonly buttons!: QueryList<ButtonComponent>;
+  @ContentChildren(ButtonComponent, { descendants: true, read: ElementRef })
+  private readonly buttonElements!: QueryList<ElementRef<HTMLElement>>;
+
   @ViewChild("origin") private readonly originRef!: ElementRef<HTMLElement>;
 
   readonly context = inject(HOVER_CARD_CONTEXT, { optional: true });
 
   ngAfterViewInit(): void {
     this.context?.registerOrigin(this.originRef);
+  }
+
+  /** The real focusable child describes itself with the panel; after the Button's own bindings ran. */
+  ngAfterViewChecked(): void {
+    if (!this.context) return;
+    const elements = this.buttonElements.toArray();
+    applyTriggerAria(
+      this.originRef.nativeElement,
+      this.buttons.map((button, i) => ({
+        button,
+        element: elements[i].nativeElement,
+      })),
+      { describedBy: this.context.panelId },
+    );
   }
 }

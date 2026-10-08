@@ -122,3 +122,7 @@ The earlier `withOverlay`, `closeOnClickOutside`, `closeOnEscape`, `trapFocus`,
 `disableClose` flag for both. Initial focus still lands on the panel container
 (`autoFocus: "dialog"`), which has to take focus for assistive technology to
 announce the panel.
+
+## `wrapHeaderText`
+
+`rec-panel` `[wrapHeaderText]` (default `true`, as in React). React picks `styles.titleTruncate` when `true` and `styles.title` when `false`. Reading `Panel.module.css`: `.titleTruncate` composes `.title` and adds `white-space: nowrap`, clipped overflow with `text-overflow: ellipsis`, `flex: 1`, `min-width: 0`; plain `.title` has only the typography tokens, so it wraps. So the name is inverted from the behaviour: `true` = single line with ellipsis, `false` = wraps. Here the truncation rules in `panel-overlay.css` apply only to `.title[data-truncate]`, which the template sets when `wrapHeaderText` is true; `false` omits it and the title wraps. The existing `flex: 1 1 auto; min-width: 0` stays in both cases (harmless when wrapping; keeps the close button at the end). No new tokens. Overlay behaviour is unchanged.

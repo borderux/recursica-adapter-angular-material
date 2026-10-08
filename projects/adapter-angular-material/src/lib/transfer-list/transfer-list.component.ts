@@ -153,7 +153,7 @@ interface RecursicaTransferListPaneView {
             <label
               class="visuallyHidden"
               [for]="id + '-' + pane.side + '-search'"
-              >{{ "Filter " + pane.label.toLowerCase() }}</label
+              >{{ filterLabel(pane.label) }}</label
             >
             <rec-text-field
               [id]="id + '-' + pane.side + '-search'"
@@ -167,7 +167,7 @@ interface RecursicaTransferListPaneView {
 
         <div class="paneList">
           @if (pane.items.length === 0) {
-            <div class="emptyState">No items</div>
+            <div class="emptyState">{{ emptyLabel }}</div>
           }
 
           @if (pane.ungrouped.length > 0) {
@@ -225,7 +225,7 @@ interface RecursicaTransferListPaneView {
               size="small"
               [iconOnly]="true"
               [icon]="chevronsRightIcon"
-              [ariaLabel]="'Move all to ' + targetLabel"
+              [ariaLabel]="moveAllLabel(targetLabel)"
               [disabled]="disabled || currentValue[0].length === 0"
               (click)="transferAll('source')"
             />
@@ -234,7 +234,7 @@ interface RecursicaTransferListPaneView {
               size="small"
               [iconOnly]="true"
               [icon]="chevronRightIcon"
-              [ariaLabel]="'Move selected to ' + targetLabel"
+              [ariaLabel]="moveSelectedLabel(targetLabel)"
               [disabled]="disabled || sourceSelected().size === 0"
               (click)="transferSelected('source')"
             />
@@ -243,7 +243,7 @@ interface RecursicaTransferListPaneView {
               size="small"
               [iconOnly]="true"
               [icon]="chevronLeftIcon"
-              [ariaLabel]="'Move selected to ' + sourceLabel"
+              [ariaLabel]="moveSelectedLabel(sourceLabel)"
               [disabled]="disabled || targetSelected().size === 0"
               (click)="transferSelected('target')"
             />
@@ -252,7 +252,7 @@ interface RecursicaTransferListPaneView {
               size="small"
               [iconOnly]="true"
               [icon]="chevronsLeftIcon"
-              [ariaLabel]="'Move all to ' + sourceLabel"
+              [ariaLabel]="moveAllLabel(sourceLabel)"
               [disabled]="disabled || currentValue[1].length === 0"
               (click)="transferAll('target')"
             />
@@ -337,6 +337,18 @@ export class TransferListComponent implements OnInit {
   @Input() targetLabel = "Selected";
   @Input() searchable = true;
   @Input() searchPlaceholder = "Filter items...";
+
+  /** Text of a pane with no (visible) items. */
+  @Input() emptyLabel = "No items";
+  /** Visually hidden label of a pane's filter field; receives the pane's label ("Available" -> "Filter available"). */
+  @Input() filterLabel: (pane: string) => string = (pane) =>
+    `Filter ${pane.toLowerCase()}`;
+  /** Accessible name of the "move all" buttons; receives the label of the pane the items move to. */
+  @Input() moveAllLabel: (destination: string) => string = (destination) =>
+    `Move all to ${destination}`;
+  /** Accessible name of the "move selected" buttons; receives the label of the pane the items move to. */
+  @Input() moveSelectedLabel: (destination: string) => string = (destination) =>
+    `Move selected to ${destination}`;
   @Input() disabled = false;
   @Input() readOnly = false;
 

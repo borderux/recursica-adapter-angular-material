@@ -187,3 +187,24 @@ export const Accessibility: Story = {
     `,
   }),
 };
+
+export const Variants: Story = {
+  render: () => ({
+    template: `
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <rec-accordion variant="default" defaultValue="a">
+          <rec-accordion-item value="a">
+            <rec-accordion-control>Default variant</rec-accordion-control>
+            <rec-accordion-panel>Uses the Recursica accordion tokens.</rec-accordion-panel>
+          </rec-accordion-item>
+        </rec-accordion>
+        <rec-accordion variant="custom" defaultValue="b">
+          <rec-accordion-item value="b">
+            <rec-accordion-control>Custom variant (data-variant="custom")</rec-accordion-control>
+            <rec-accordion-panel>No dedicated styling; same tokens, exposed as a theming hook.</rec-accordion-panel>
+          </rec-accordion-item>
+        </rec-accordion>
+      </div>
+    `,
+  }),
+};

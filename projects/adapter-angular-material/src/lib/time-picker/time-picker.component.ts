@@ -113,6 +113,8 @@ function formatReadOnlyTime(value: string | undefined): string | undefined {
         [ariaLabelledby]="aria.ariaLabelledby"
         [ariaDescribedby]="aria.ariaDescribedby"
         [withSeconds]="withSeconds"
+        [minTime]="minTime"
+        [maxTime]="maxTime"
         [leftSection]="leftSection"
         (valueChange)="onValueChange($event)"
         (blurred)="onBlur()"
@@ -140,6 +142,11 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit {
   @Input() error?: string;
 
   @Input() withSeconds = false;
+
+  /** Earliest allowed time, "HH:mm" (or "HH:mm:ss"): typed values are clamped to it, an earlier `value` is flagged invalid. */
+  @Input() minTime?: string;
+  /** Latest allowed time, same format as `minTime`. */
+  @Input() maxTime?: string;
 
   @Input() leftSection?: TemplateRef<unknown>;
 

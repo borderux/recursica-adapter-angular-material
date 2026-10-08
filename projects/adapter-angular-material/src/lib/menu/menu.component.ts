@@ -1,8 +1,11 @@
+import { DOCUMENT } from "@angular/common";
 import {
   AfterContentInit,
   Component,
   ContentChildren,
   Input,
+  OnChanges,
+  OnDestroy,
   QueryList,
   ViewChild,
   ViewEncapsulation,
@@ -16,6 +19,8 @@ import {
   RecursicaAriaLabelling,
 } from "../utils/recursica-aria";
 import { MenuItemComponent } from "./menu-item.component";
+
+let nextMaxHeightId = 0;
 
 export type RecursicaMenuPositionX = "before" | "after";
 export type RecursicaMenuPositionY = "above" | "below";
@@ -103,12 +108,22 @@ export type RecursicaMenuPositionY = "above" | "below";
     </mat-menu>
   `,
 })
-export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
+export class MenuComponent
+  implements RecursicaOverStyled, AfterContentInit, OnChanges, OnDestroy
+{
   protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() xPosition: RecursicaMenuPositionX = "after";
   @Input() yPosition: RecursicaMenuPositionY = "below";
   @Input() overlapTrigger = false;
+
+  /**
+   * `RecursicaMenuProps.maxHeight` — per-instance override of the token
+   * `max-height` on the dropdown panel; the panel scrolls (`overflow-y:
+   * auto`) when items exceed it. A number is treated as pixels, a string is
+   * used as a CSS length verbatim. Leave unset for the token default.
+   */
+  @Input() maxHeight?: string | number;
 
   @ContentChildren(forwardRef(() => MenuItemComponent))
   private readonly items?: QueryList<MenuItemComponent>;
@@ -130,11 +145,53 @@ export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
     return this.panel;
   }
 
+  private readonly doc = inject(DOCUMENT);
+  private readonly maxHeightClass = `rec-menu-mh-${nextMaxHeightId++}`;
+  private maxHeightStyle?: HTMLStyleElement;
+
   /** Forwarded to `MatMenu`'s `panelClass` — see class doc comment's global-CSS note. */
   get panelClasses(): string {
     const classes = ["rec-menu"];
+    if (this.hasMaxHeight) classes.push(this.maxHeightClass);
     if (this.overStyled && this.overClass) classes.push(this.overClass);
     return classes.join(" ");
+  }
+
+  private get hasMaxHeight(): boolean {
+    return (
+      this.maxHeight !== undefined &&
+      this.maxHeight !== null &&
+      this.maxHeight !== ""
+    );
+  }
+
+  /**
+   * The panel lives in a CDK overlay with no stable element to bind a style
+   * to, so the value travels as a CSS custom property on a per-instance
+   * class (`panelClass`) whose rule is kept in one small `<style>` element.
+   * `menu-overlay.css` reads `--rec-menu-max-height`.
+   */
+  ngOnChanges(): void {
+    if (!this.hasMaxHeight) {
+      this.maxHeightStyle?.remove();
+      this.maxHeightStyle = undefined;
+      return;
+    }
+    const value =
+      typeof this.maxHeight === "number"
+        ? `${this.maxHeight}px`
+        : String(this.maxHeight);
+    if (!this.maxHeightStyle) {
+      this.maxHeightStyle = this.doc.createElement("style");
+      this.doc.head.appendChild(this.maxHeightStyle);
+    }
+    // Strip characters that could close the declaration/rule.
+    const safe = value.replace(/[;{}<>]/g, "");
+    this.maxHeightStyle.textContent = `.${this.maxHeightClass}{--rec-menu-max-height:${safe};}`;
+  }
+
+  ngOnDestroy(): void {
+    this.maxHeightStyle?.remove();
   }
 
   /** Rebuilds `MatMenu._directDescendantItems` from this menu's own `<rec-menu-item>`s, in DOM order. */

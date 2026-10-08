@@ -99,7 +99,7 @@ import { RecursicaTreeNode } from "./tree-node-data";
           variant="text"
           size="small"
           [iconOnly]="true"
-          ariaLabel="Toggle subtree"
+          [ariaLabel]="context?.toggleLabel ?? 'Toggle subtree'"
           [buttonTabIndex]="-1"
           [icon]="expandGlyph"
         />

@@ -140,3 +140,17 @@ export const Accessibility: Story = {
     `,
   }),
 };
+
+/** Translated increment / decrement button names. */
+export const CustomLabels: Story = {
+  render: () => ({
+    template: `
+      <rec-number-input
+        label="Quantité"
+        [defaultValue]="3"
+        incrementLabel="Augmenter"
+        decrementLabel="Diminuer"
+      ></rec-number-input>
+    `,
+  }),
+};

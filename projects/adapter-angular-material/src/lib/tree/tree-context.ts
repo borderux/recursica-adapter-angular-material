@@ -15,6 +15,8 @@ import { InjectionToken } from "@angular/core";
 export interface TreeContext {
   readonly multiple: boolean;
   readonly disabled: boolean;
+  /** Accessible name of every node's expand/collapse toggle (`rec-tree` `toggleLabel`). */
+  readonly toggleLabel: string;
   isExpanded(value: string): boolean;
   isSelected(value: string): boolean;
   toggleExpanded(value: string): void;

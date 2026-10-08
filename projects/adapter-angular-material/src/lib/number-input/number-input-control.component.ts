@@ -140,7 +140,7 @@ let nextId = 0;
             class="control"
             data-direction="up"
             [disabled]="disabled || readOnly"
-            aria-label="Increment"
+            [attr.aria-label]="incrementLabel"
             (click)="increment(inputEl)"
           >
             <svg
@@ -162,7 +162,7 @@ let nextId = 0;
             class="control"
             data-direction="down"
             [disabled]="disabled || readOnly"
-            aria-label="Decrement"
+            [attr.aria-label]="decrementLabel"
             (click)="decrement(inputEl)"
           >
             <svg
@@ -202,6 +202,10 @@ export class NumberInputControlComponent implements RecursicaFormControl {
   @Input() max?: number;
   @Input() step?: number;
   @Input() hideControls = false;
+  /** Accessible name of the increment button. */
+  @Input() incrementLabel = "Increment";
+  /** Accessible name of the decrement button. */
+  @Input() decrementLabel = "Decrement";
 
   @Input() autocomplete?: string;
   @Input() inputMode?: string;

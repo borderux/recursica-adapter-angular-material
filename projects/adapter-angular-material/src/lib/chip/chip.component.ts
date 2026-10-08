@@ -140,18 +140,17 @@ import {
     >
       <span
         class="label"
-        role="checkbox"
+        [attr.role]="isInteractive ? 'checkbox' : null"
         [attr.id]="elementId.id ?? null"
         [attr.aria-label]="aria.ariaLabel ?? null"
         [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
         [attr.aria-describedby]="aria.ariaDescribedby ?? null"
         [attr.title]="title ?? null"
         [attr.aria-checked]="isInteractive ? checkedValue : null"
-        [attr.aria-disabled]="disabled ? true : null"
-        [attr.aria-hidden]="!isInteractive ? true : null"
+        [attr.aria-disabled]="isInteractive && disabled ? true : null"
         [attr.data-checked]="checkedValue ? '' : null"
         [attr.data-disabled]="disabled ? '' : null"
-        [attr.tabindex]="isInteractive && !disabled ? 0 : -1"
+        [attr.tabindex]="isInteractive ? (disabled ? -1 : 0) : null"
         (click)="onClick($event)"
         (keydown)="onKeydown($event)"
       >
@@ -210,7 +209,7 @@ export class ChipComponent implements RecursicaOverStyled, OnInit {
   protected readonly aria = inject(RecursicaAriaLabelling);
   protected readonly elementId = inject(RecursicaElementId);
 
-  /** Native `title` of the inner `span[role=checkbox]`. */
+  /** Native `title` of the inner label span (`role=checkbox` when interactive, plain text otherwise). */
   @Input() title?: string;
 
   /** `RecursicaChipProps.error` — applies the error-state token variant. */

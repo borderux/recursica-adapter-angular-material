@@ -11,6 +11,7 @@ import {
   signal,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
+import { AssistiveElementComponent } from "../assistive-element/assistive-element.component";
 import {
   FormControlLayoutComponent,
   RecursicaFormControlLabelSize,
@@ -146,7 +147,11 @@ let nextId = 0;
     },
   ],
   host: { "[attr.id]": "null" },
-  imports: [NgTemplateOutlet, FormControlLayoutComponent],
+  imports: [
+    NgTemplateOutlet,
+    FormControlLayoutComponent,
+    AssistiveElementComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./checkbox.component.css",
   providers: [recursicaValueAccessorProvider(CheckboxComponent)],
@@ -190,7 +195,8 @@ let nextId = 0;
                 [attr.id]="id"
                 [attr.aria-label]="aria.ariaLabel ?? null"
                 [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
-                [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+                [attr.aria-describedby]="aria.describedBy(describedByIds)"
+                [attr.aria-invalid]="error ? 'true' : null"
               ></span>
               @if (checkedValue || indeterminate) {
                 <svg
@@ -232,7 +238,8 @@ let nextId = 0;
                 [id]="id"
                 [attr.aria-label]="aria.ariaLabel ?? null"
                 [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
-                [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+                [attr.aria-describedby]="aria.describedBy(describedByIds)"
+                [attr.aria-invalid]="error ? 'true' : null"
                 [attr.tabindex]="inputTabIndex ?? null"
                 [attr.form]="form ?? null"
                 [checked]="checkedValue"
@@ -276,6 +283,32 @@ let nextId = 0;
             }
           </label>
         }
+        @if (description || error) {
+          <div class="assistive">
+            @if (description) {
+              <rec-assistive-element
+                [id]="descriptionId"
+                assistiveVariant="help"
+                [assistiveWithIcon]="false"
+              >
+                @if (isTemplate(description)) {
+                  <ng-container [ngTemplateOutlet]="asTemplate(description)" />
+                } @else {
+                  {{ description }}
+                }
+              </rec-assistive-element>
+            }
+            @if (error) {
+              <rec-assistive-element [id]="errorId" assistiveVariant="error">
+                @if (isTemplate(error)) {
+                  <ng-container [ngTemplateOutlet]="asTemplate(error)" />
+                } @else {
+                  {{ error }}
+                }
+              </rec-assistive-element>
+            }
+          </div>
+        }
       </div>
     </ng-template>
   `,
@@ -286,6 +319,10 @@ export class CheckboxComponent
   protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() label?: string | TemplateRef<unknown>;
+  /** Helper text under the control (canonical `description`). Wired into `aria-describedby`. */
+  @Input() description?: string | TemplateRef<unknown>;
+  /** Error text under the control (canonical `error`). Sets `aria-invalid` and is wired into `aria-describedby`. */
+  @Input() error?: string | TemplateRef<unknown>;
 
   /** Controlled `checked`. Leave unbound for uncontrolled (see class doc comment). Ignored when this checkbox is a value-bound member of a `<rec-checkbox-group>`. */
   @Input() checked?: boolean;
@@ -334,6 +371,23 @@ export class CheckboxComponent
 
   private readonly baseId = `rec-checkbox-${nextId++}`;
   @Input() id = this.baseId;
+
+  get descriptionId(): string {
+    return `${this.id}-description`;
+  }
+
+  get errorId(): string {
+    return `${this.id}-error`;
+  }
+
+  /** Ids of the rendered description/error elements, merged with the caller's `aria-describedby`. */
+  get describedByIds(): string | null {
+    const ids = [
+      this.description ? this.descriptionId : null,
+      this.error ? this.errorId : null,
+    ].filter(Boolean);
+    return ids.length ? ids.join(" ") : null;
+  }
 
   private readonly _uncontrolledChecked = signal(false);
 

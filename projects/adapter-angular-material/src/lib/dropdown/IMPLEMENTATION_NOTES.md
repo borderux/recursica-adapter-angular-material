@@ -270,3 +270,8 @@ Withheld:
 
 - `debugForceOpen`: stories-only, left as is and not part of the contract.
 - Material `appearance`, `color`, `panelClass`, `disableRipple`: tokens own them.
+
+## Round 2: `containerWidth`, `clearLabel`
+
+- `containerWidth` (`string | number`, canonical): bound as the host's `style.width` (numbers become px, strings pass through), with `display: block` set on the host only while it is set so the width applies. React puts the width on its wrapper (default `100%`); unset here keeps the previous behaviour. The `.root` token `max-width` still caps the trigger. `withAsterisk` is left to the wrapper. Story: `ContainerWidth`.
+- `clearLabel` (default "Clear selection"): `aria-label` of the clear button. Story: `CustomLabels`.

@@ -125,3 +125,9 @@ Withheld:
 
 - `tabindex`: native range inputs are already focusable; not requested for this component.
 - `name`, `form`, `autocomplete` and the other text-input attributes: not text-like.
+
+## Round 2: `changeEnd`, `tooltipLabel`, translatable labels
+
+- `changeEnd` output (canonical `onChangeEnd`, named without the `on` prefix per Angular output conventions): emits the number, or `[number, number]` in range mode, from the native range input's `change` event, i.e. once per commit (pointer release, key step), never per drag tick. Not emitted for the show-input number fields. Story `OnChangeEnd` has a visible commit counter.
+- `tooltipLabel` (`string | (value: number) => string`): drives the value readout above the right guide, the read-only value and `aria-valuetext` on the range input(s). A function is applied per thumb (range mode joins them with an en dash, as in React); a string is used as-is. Deviation from React: the floating bubble over the thumb that Mantine draws is still not built (see "tooltipLabel: not built" above); the readout and `aria-valuetext` carry the formatted value instead. `aria-valuetext` is only set when `tooltipLabel` is set. Story `TooltipLabel`.
+- `minimumLabel` / `maximumLabel` (default "Minimum value" / "Maximum value"): `aria-label` of the range thumbs (when there is no accessible name) and of the range show-input number fields. Caveat: when an accessible name exists the thumbs are still named "<name> minimum" / "<name> maximum" (English suffix, unchanged). Story `CustomLabels`.
