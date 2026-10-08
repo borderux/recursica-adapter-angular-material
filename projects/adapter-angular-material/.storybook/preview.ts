@@ -68,6 +68,9 @@ const preview: Preview = {
     },
   },
   parameters: {
+    options: {
+      storySort: { order: ["Introduction", "Tokens", "UI-Kit", "*"] },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
