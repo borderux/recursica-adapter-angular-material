@@ -6,6 +6,13 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import {
+  type Params,
+  RouterLink,
+  RouterLinkActive,
+  type QueryParamsHandling,
+} from "@angular/router";
+import type { ActivatedRoute } from "@angular/router";
+import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
@@ -66,31 +73,82 @@ import {
  */
 @Component({
   selector: "rec-link",
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, RouterLink, RouterLinkActive],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./link.component.css",
   template: `
-    <a
-      class="root"
-      [class]="resolvedOverStyle.class"
-      [style]="resolvedOverStyle.style"
-      [attr.href]="href ?? null"
-      [attr.aria-label]="ariaLabel ?? null"
-      [attr.aria-current]="ariaCurrent ?? null"
-      [attr.data-has-icon]="icon ? '' : null"
-    >
+    @if (routerLink !== undefined && routerLink !== null) {
+      <a
+        class="root"
+        [class]="resolvedOverStyle.class"
+        [style]="resolvedOverStyle.style"
+        [routerLink]="routerLink"
+        [queryParams]="queryParams"
+        [queryParamsHandling]="queryParamsHandling"
+        [fragment]="fragment"
+        [preserveFragment]="preserveFragment"
+        [replaceUrl]="replaceUrl"
+        [skipLocationChange]="skipLocationChange"
+        [state]="state"
+        [relativeTo]="relativeTo"
+        [target]="target"
+        [attr.aria-label]="ariaLabel ?? null"
+        [attr.aria-current]="ariaCurrent ?? null"
+        [attr.data-has-icon]="icon ? '' : null"
+        routerLinkActive
+        ariaCurrentWhenActive="page"
+      >
+        <ng-container [ngTemplateOutlet]="content" />
+      </a>
+    } @else {
+      <a
+        class="root"
+        [class]="resolvedOverStyle.class"
+        [style]="resolvedOverStyle.style"
+        [attr.href]="href ?? null"
+        [attr.target]="target ?? null"
+        [attr.aria-label]="ariaLabel ?? null"
+        [attr.aria-current]="ariaCurrent ?? null"
+        [attr.data-has-icon]="icon ? '' : null"
+      >
+        <ng-container [ngTemplateOutlet]="content" />
+      </a>
+    }
+    <ng-template #content>
       @if (icon) {
         <span class="iconWrapper" aria-hidden="true">
           <ng-container [ngTemplateOutlet]="icon" />
         </span>
       }
       <span class="labelText"><ng-content /></span>
-    </a>
+    </ng-template>
   `,
 })
 export class LinkComponent implements RecursicaOverStyled {
   /** Native anchor `href` — see class doc comment for why this is an explicit `@Input()`. */
   @Input() href?: string;
+
+  /**
+   * Angular Router navigation target — same value `RouterLink` accepts
+   * (`"/users"`, `["/users", id]`, a `UrlTree`). When set, the inner `<a>`
+   * is a real `RouterLink` (client-side navigation, a resolved `href`,
+   * and `aria-current="page"` while its route is active), and `href` is
+   * ignored. See `IMPLEMENTATION_NOTES.md`.
+   */
+  @Input() routerLink?: string | readonly unknown[] | null;
+
+  /** `RouterLink` pass-throughs — only meaningful together with `routerLink`. */
+  @Input() queryParams?: Params | null;
+  @Input() queryParamsHandling?: QueryParamsHandling | null;
+  @Input() fragment?: string;
+  @Input() preserveFragment = false;
+  @Input() replaceUrl = false;
+  @Input() skipLocationChange = false;
+  @Input() state?: Record<string, unknown>;
+  @Input() relativeTo?: ActivatedRoute | null;
+
+  /** Native anchor `target`, e.g. `"_blank"`. */
+  @Input() target?: string;
 
   /** `aria-label` of the inner `<a>` (e.g. for an icon-only link). */
   @Input() ariaLabel?: string;

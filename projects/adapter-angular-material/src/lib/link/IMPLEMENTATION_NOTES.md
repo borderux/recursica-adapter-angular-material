@@ -138,3 +138,25 @@ clean (does not yet include this file in its module graph — it isn't
 registered in `src/lib/index.ts`/`llms.txt` yet, deliberately, to avoid a
 parallel-agent edit collision; see this component's own PR/handoff notes
 for the exact export line to add).
+
+## Angular Router integration: `routerLink`
+
+`rec-link` takes the same navigation inputs `RouterLink` does: `routerLink`
+(string, commands array, or `UrlTree`), `queryParams`, `queryParamsHandling`,
+`fragment`, `preserveFragment`, `replaceUrl`, `skipLocationChange`, `state`,
+`relativeTo` and `target`. When `routerLink` is set, the inner `<a>` carries a
+real `RouterLink` directive, so it gets a resolved `href`, client-side
+navigation, and open-in-new-tab behaviour. A `RouterLinkActive` with
+`ariaCurrentWhenActive="page"` sets `aria-current="page"` while its route is
+active. An explicit `ariaCurrent` input is still honoured.
+
+Why the directive lives in `rec-link`'s template and not on the host: `RouterLink`
+on `<rec-link routerLink="/x">` would attach to the custom element, which is not
+an anchor (no `href`, no link role). The inputs are forwarded to the inner `<a>`
+instead, the same pattern as `href`/`ariaLabel`.
+
+Without `routerLink`, `href` is used as before. `@angular/router` is now a peer
+dependency; `Router` is root-provided, so apps that never call `provideRouter`
+still work as long as they do not set `routerLink`. Verified in Storybook that
+`routerLink` + `queryParams` resolve to `/users/42?tab=profile`.
+Not verified: the active-route `aria-current` (needs real routes).

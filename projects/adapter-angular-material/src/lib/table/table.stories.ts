@@ -164,3 +164,33 @@ export const CurrencyColumnWithFooter: Story = {
     };
   },
 };
+
+/**
+ * `colspan` needs a real `<td>`/`<th>`: a CSS `display: table-cell` custom
+ * element has no `colspan` of its own. Use the attribute form of the cell,
+ * `td[recTableTd]`/`th[recTableTh]`, wherever a cell must span columns.
+ */
+export const ColumnSpan: Story = {
+  render: () => ({
+    template: `
+      <rec-table>
+        <rec-table-thead>
+          <rec-table-tr>
+            <th recTableTh colspan="2">Element</th>
+            <rec-table-th>Atomic mass</rec-table-th>
+          </rec-table-tr>
+        </rec-table-thead>
+        <rec-table-tbody>
+          <rec-table-tr>
+            <td recTableTd>6</td>
+            <td recTableTd>Carbon</td>
+            <td recTableTd>12.011</td>
+          </rec-table-tr>
+          <rec-table-tr>
+            <td recTableTd colspan="3">Spans all three columns</td>
+          </rec-table-tr>
+        </rec-table-tbody>
+      </rec-table>
+    `,
+  }),
+};
