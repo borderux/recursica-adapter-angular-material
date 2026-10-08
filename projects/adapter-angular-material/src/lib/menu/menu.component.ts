@@ -7,9 +7,14 @@ import {
   ViewChild,
   ViewEncapsulation,
   forwardRef,
+  inject,
 } from "@angular/core";
 import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { RecursicaOverStyled } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { MenuItemComponent } from "./menu-item.component";
 
 export type RecursicaMenuPositionX = "before" | "after";
@@ -75,6 +80,12 @@ export type RecursicaMenuPositionY = "above" | "below";
   selector: "rec-menu",
   imports: [MatMenuModule],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   styleUrl: "./menu.component.css",
   template: `
     <mat-menu
@@ -83,17 +94,21 @@ export type RecursicaMenuPositionY = "above" | "below";
       [xPosition]="xPosition"
       [yPosition]="yPosition"
       [overlapTrigger]="overlapTrigger"
-      [hasBackdrop]="hasBackdrop ?? true"
+      [hasBackdrop]="true"
+      [aria-label]="aria.ariaLabel ?? ''"
+      [aria-labelledby]="aria.ariaLabelledby ?? ''"
+      [aria-describedby]="aria.ariaDescribedby ?? ''"
     >
       <ng-content />
     </mat-menu>
   `,
 })
 export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() xPosition: RecursicaMenuPositionX = "after";
   @Input() yPosition: RecursicaMenuPositionY = "below";
   @Input() overlapTrigger = false;
-  @Input() hasBackdrop?: boolean;
 
   @ContentChildren(forwardRef(() => MenuItemComponent))
   private readonly items?: QueryList<MenuItemComponent>;

@@ -134,3 +134,17 @@ export const EditableReadOnly: Story = {
     `,
   }),
 };
+
+/** Passthrough check: aria and id values land on the inner time input only. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-time-picker
+        label="Meeting Time"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-time-picker>
+    `,
+  }),
+};

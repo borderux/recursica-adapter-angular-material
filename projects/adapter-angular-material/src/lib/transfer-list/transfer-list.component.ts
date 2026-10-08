@@ -7,6 +7,7 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import type {
@@ -20,6 +21,10 @@ import { ButtonComponent } from "../button/button.component";
 import { CheckboxComponent } from "../checkbox/checkbox.component";
 import { CheckboxGroupComponent } from "../checkbox/checkbox-group.component";
 import { TextFieldComponent } from "../text-field/text-field.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaTransferListData,
   RecursicaTransferListItem,
@@ -90,6 +95,13 @@ interface RecursicaTransferListPaneView {
  */
 @Component({
   selector: "rec-transfer-list",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null" },
   imports: [
     NgTemplateOutlet,
     WithReadOnlyWrapperComponent,
@@ -192,6 +204,11 @@ interface RecursicaTransferListPaneView {
     <ng-template #active>
       <div
         class="root"
+        role="group"
+        [attr.id]="id"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
         [attr.data-form-layout]="formLayout"
         [attr.data-disabled]="disabled ? 'true' : null"
         [attr.data-error]="error ? 'true' : null"
@@ -310,6 +327,8 @@ interface RecursicaTransferListPaneView {
   `,
 })
 export class TransferListComponent implements OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() data?: RecursicaTransferListData;
   @Input() defaultData: RecursicaTransferListData = [[], []];
   @Output() dataChange = new EventEmitter<RecursicaTransferListData>();

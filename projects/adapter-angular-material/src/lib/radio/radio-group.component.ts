@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
   forwardRef,
+  inject,
   signal,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
@@ -16,6 +17,10 @@ import {
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import { RecursicaLabelAlignment } from "../label/label.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -123,6 +128,12 @@ let nextGroupId = 0;
  */
 @Component({
   selector: "rec-radio-group",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   imports: [FormControlWrapperComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./radio-group.component.css",
@@ -150,6 +161,7 @@ let nextGroupId = 0;
   ],
   template: `
     <rec-form-control-wrapper
+      #fcw
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
@@ -170,6 +182,12 @@ let nextGroupId = 0;
       <div
         class="groupRoot"
         role="radiogroup"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="
+          aria.ariaLabelledby ?? (label && !aria.ariaLabel ? fcw.labelId : null)
+        "
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+        [attr.aria-required]="required ? 'true' : null"
         [attr.data-layout]="formLayout"
         [attr.aria-disabled]="effectiveDisabled ? 'true' : null"
       >
@@ -181,6 +199,8 @@ let nextGroupId = 0;
 export class RadioGroupComponent
   implements RecursicaOverStyled, ControlValueAccessor, OnInit
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() label?: string | TemplateRef<unknown>;
   @Input() description?: string | TemplateRef<unknown>;
   @Input() assistiveText?: string | TemplateRef<unknown>;

@@ -279,3 +279,31 @@ screenshotted to `.scratch/`:
 No golden-comparison automation exists in this adapter yet (same as every
 other component here) — comparisons above are manual visual review of the
 screenshots side by side with the reference PNGs, not pixel-diffed.
+
+## Passthrough
+
+`rec-checkbox` (aria and `id` inputs are host directives from `utils/recursica-aria.ts`; the host's own `aria-*` and `id` attributes are cleared):
+
+| Input                                  | Forwarded to                                 | Notes                                                                                                                                               |
+| -------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | Native `input` (read-only: the `span[role]`) | Both spellings are inputs.                                                                                                                          |
+| `ariaLabelledby` / `aria-labelledby`   | Same                                         |                                                                                                                                                     |
+| `ariaDescribedby` / `aria-describedby` | Same                                         | Not merged with anything: this component is not composed inside a form-control wrapper.                                                             |
+| `id` (existing)                        | Native `input` (read-only: the `span[role]`) | Kept as a hand-written input with a generated default; host `id` cleared with `[attr.id]="null"`. The wrapping `label` still associates by nesting. |
+| `inputTabIndex`                        | Native `input` `tabindex`                    | Named like Button's `buttonTabIndex`. No-op in read-only.                                                                                           |
+| `form`                                 | Native `input` `form`                        | No-op in read-only.                                                                                                                                 |
+
+`rec-checkbox-group` (aria inputs are the same host directive):
+
+| Input                                  | Forwarded to      | Notes                                                                                                            |
+| -------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | `div[role=group]` |                                                                                                                  |
+| `ariaLabelledby` / `aria-labelledby`   | `div[role=group]` | Defaults to the wrapper's label id (`labelId`) when `label` is set and no `ariaLabel`/`ariaLabelledby` is given. |
+| `ariaDescribedby` / `aria-describedby` | `div[role=group]` | Caller's ids only; the wrapper's assistive/error ids are not added.                                              |
+
+Withheld:
+
+- `checkbox-group` `id`: not in the audit's list for this group; the wrapper owns ids.
+- Material `disableRipple`, `color`, `appearance`: tokens own styling (not used here).
+- `tabindex` on the host or the group div: focus belongs to the native inputs.
+- `title`, `data-*`: skipped by default per the audit.

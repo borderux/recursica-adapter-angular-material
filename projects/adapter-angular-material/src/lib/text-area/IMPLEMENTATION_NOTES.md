@@ -108,3 +108,26 @@ above and the `id`-accessor fallback are both reasoned from the compiled
 source and Angular's documented input-binding behavior, not confirmed by
 running them. Flagged in the channel; not silently lowering the bar those
 earlier components were held to.
+
+## Passthrough
+
+Forwarded through the shared `RecursicaAriaLabelling` host directive (`utils/recursica-aria.ts`); the host's own aria attributes and `id` are cleared so nothing is duplicated on the `rec-*` element.
+
+| Input                                                            | Forwarded to                                                   | Notes                                                                                 |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby` | inner `<textarea>` (both autosize branches)                    | Host directive on the public component and passed to the inner `*-control` component. |
+| `ariaDescribedby` / `aria-describedby`                           | inner `<textarea>` (both autosize branches) `aria-describedby` | Merged with the form-control wrapper's ids (caller's first), never replaced.          |
+| `id`                                                             | inner `<textarea>` (both autosize branches)                    | Existing input kept; host `id` attribute nulled so the id is not duplicated.          |
+| `inputTabIndex`                                                  | inner `<textarea>` (both autosize branches) `tabindex`         | Named after Button's `buttonTabIndex`.                                                |
+| `form`                                                           | inner `<textarea>` (both autosize branches) `form`             | Host `form` attribute nulled.                                                         |
+| `maxLength`                                                      | inner `<textarea>` `maxlength`                                 |                                                                                       |
+| `minLength`                                                      | inner `<textarea>` `minlength`                                 |                                                                                       |
+| `autocomplete`                                                   | inner `<textarea>` `autocomplete`                              |                                                                                       |
+| `spellcheck`                                                     | inner `<textarea>` `spellcheck`                                |                                                                                       |
+| `inputMode`                                                      | inner `<textarea>` `inputmode`                                 |                                                                                       |
+
+Withheld:
+
+- `name`, `required`, `placeholder` already existed; unchanged.
+- Material `appearance`, `color`, `floatLabel`, `subscriptSizing`, `hideRequiredMarker`, `errorStateMatcher`: tokens own styling.
+- `resize` and `rows`: tokens own them (`minRows`/`maxRows` already exist for autosize).

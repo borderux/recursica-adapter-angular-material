@@ -28,8 +28,6 @@ const meta: Meta<ButtonComponent> = {
     loaderVariant: { control: "radio", options: ["oval", "bars", "dots"] },
     useRecursicaLoader: { control: "boolean" },
     disabled: { control: "boolean" },
-    disableRipple: { control: "boolean" },
-    disabledInteractive: { control: "boolean" },
     overStyled: { control: "boolean" },
     overClass: { control: "text" },
   },
@@ -60,8 +58,6 @@ function withLabel(label: string): string {
       [loaderVariant]="loaderVariant"
       [useRecursicaLoader]="useRecursicaLoader"
       [disabled]="disabled"
-      [disableRipple]="disableRipple"
-      [disabledInteractive]="disabledInteractive"
     >
       ${label}
     </rec-button>
@@ -165,6 +161,22 @@ export const IconOnly: Story = {
     template: `
       ${searchIconTemplate}
       <rec-button [icon]="searchIcon" [iconOnly]="true" ariaLabel="Search"></rec-button>
+    `,
+  }),
+};
+
+/** Passthrough check: aria and id land on the inner native button, not on `rec-button`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-button
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      >
+        Accessible
+      </rec-button>
+      <span id="a11y-desc" hidden>Description</span>
     `,
   }),
 };

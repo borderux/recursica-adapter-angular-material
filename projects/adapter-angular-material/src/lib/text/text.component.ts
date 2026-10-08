@@ -1,9 +1,15 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaTextVariant =
   | "body"
@@ -49,6 +55,13 @@ export type RecursicaTextEmphasis = "high" | "low";
  */
 @Component({
   selector: "rec-text",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./text.component.css",
   imports: [NgTemplateOutlet],
@@ -56,6 +69,10 @@ export type RecursicaTextEmphasis = "high" | "low";
     @switch (component) {
       @case ("span") {
         <span
+          [attr.id]="elementId.id ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           class="root"
           [class]="resolvedTypographyClass"
           [style]="resolvedOverStyle.style"
@@ -67,6 +84,10 @@ export type RecursicaTextEmphasis = "high" | "low";
       }
       @case ("label") {
         <label
+          [attr.id]="elementId.id ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.for]="htmlFor ?? null"
           class="root"
           [class]="resolvedTypographyClass"
@@ -79,6 +100,10 @@ export type RecursicaTextEmphasis = "high" | "low";
       }
       @case ("div") {
         <div
+          [attr.id]="elementId.id ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           class="root"
           [class]="resolvedTypographyClass"
           [style]="resolvedOverStyle.style"
@@ -90,6 +115,10 @@ export type RecursicaTextEmphasis = "high" | "low";
       }
       @default {
         <p
+          [attr.id]="elementId.id ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           class="root"
           [class]="resolvedTypographyClass"
           [style]="resolvedOverStyle.style"
@@ -104,6 +133,9 @@ export type RecursicaTextEmphasis = "high" | "low";
   `,
 })
 export class TextComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() variant: RecursicaTextVariant = "body";
 
   /** `for` of the inner `<label>`; only used when `component="label"`. */

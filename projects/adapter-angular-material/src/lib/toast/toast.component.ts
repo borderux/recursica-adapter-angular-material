@@ -6,11 +6,18 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaToastVariant = "default" | "error" | "success";
 
@@ -55,6 +62,14 @@ export type RecursicaToastVariant = "default" | "error" | "success";
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./toast.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.title]": "null" },
   template: `
     <div
       class="root"
@@ -62,6 +77,11 @@ export type RecursicaToastVariant = "default" | "error" | "success";
       [style]="resolvedOverStyle.style"
       [attr.data-variant]="variant"
       [attr.role]="resolvedRole"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.aria-live]="ariaLive ?? null"
     >
       @if (icon) {
         <span class="iconWrapper" aria-hidden="true">
@@ -78,7 +98,7 @@ export type RecursicaToastVariant = "default" | "error" | "success";
         <button
           type="button"
           class="closeButton"
-          aria-label="Close"
+          [attr.aria-label]="closeButtonLabel"
           (click)="onCloseClick()"
         >
           <svg
@@ -101,6 +121,9 @@ export type RecursicaToastVariant = "default" | "error" | "success";
   `,
 })
 export class ToastComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() variant: RecursicaToastVariant = "default";
 
   /** Title displayed above the message body — matches the reference's `title` prop. */
@@ -117,6 +140,12 @@ export class ToastComponent implements RecursicaOverStyled {
 
   /** Whether the close button is visible. @default true — matches the reference. */
   @Input() withCloseButton = true;
+
+  /** Accessible name of the close button, e.g. for localisation. */
+  @Input() closeButtonLabel = "Close";
+
+  /** `aria-live` of the inner `div.root`; unset leaves the live-region behaviour to its `role`. */
+  @Input() ariaLive?: "off" | "polite" | "assertive";
 
   /**
    * A caller-supplied `role` always wins. Otherwise the default depends on

@@ -76,8 +76,29 @@ export const InlineText: Story = {
  * its `href` here.
  */
 export const WithRouterLink: Story = {
-  decorators: [applicationConfig({ providers: [provideRouter([])] })],
+  decorators: [
+    applicationConfig({
+      providers: [provideRouter([{ path: "**", children: [] }])],
+    }),
+  ],
   render: () => ({
     template: `<rec-link [routerLink]="['/users', 42]" [queryParams]="{ tab: 'profile' }">User profile</rec-link>`,
+  }),
+};
+
+/** Passthrough check: aria and id land on the inner anchor, not on `rec-link`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-link
+        href="#"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      >
+        Accessible link
+      </rec-link>
+      <span id="a11y-desc" hidden>Description</span>
+    `,
   }),
 };

@@ -203,3 +203,20 @@ both before and after, and was never touched) via Playwright (chromium), screens
   `.deleteIcon` in the `InteractiveRemovable` story: the chip actually unmounts and a
   `[data-testid="removed"]` sentinel appears in its place, confirming `(remove)` fires for real
   clicks (not just a bound handler that's never exercised).
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to                | Notes                                      |
+| -------------------------------------------------------------------------------------------------------- | --------------------------- | ------------------------------------------ |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `span.label[role=checkbox]` | `ariaLabel` is needed for icon-only chips. |
+| `id`                                                                                                     | `span.label[role=checkbox]` |                                            |
+| `title`                                                                                                  | `span.label[role=checkbox]` | Host `title` is cleared.                   |
+
+Known anomaly: a non-interactive chip (no `checkedChange` or `remove` listener) keeps `aria-hidden="true"` on the labelled element, so a name given to it is not exposed.
+
+Withheld:
+
+- `tabindex` / `aria-hidden`: derived from `isInteractive` and `disabled`, left hard-coded
+- `role`: fixed to `checkbox`

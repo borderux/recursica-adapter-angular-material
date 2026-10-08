@@ -29,6 +29,8 @@ import { RecursicaTableCellVariant } from "./table-th.component";
   styleUrl: "./table-td.component.css",
   host: {
     role: "cell",
+    "[attr.colspan]": "colSpan ?? null",
+    "[attr.rowspan]": "rowSpan ?? null",
     "[attr.data-disabled]": "disabled ? 'true' : null",
     "[attr.data-currency]": "variant === 'currency' ? 'true' : null",
     "[class]": "resolvedOverStyle.class",
@@ -37,6 +39,11 @@ import { RecursicaTableCellVariant } from "./table-th.component";
   template: `<ng-content />`,
 })
 export class TableTdComponent implements RecursicaOverStyled {
+  /** Native `colspan`. Only effective on `td[recTableTd]`; no effect on `<rec-table-td>`. */
+  @Input() colSpan?: number;
+  /** Native `rowspan`. Only effective on `td[recTableTd]`; no effect on `<rec-table-td>`. */
+  @Input() rowSpan?: number;
+
   @Input() disabled = false;
   @Input() variant: RecursicaTableCellVariant = "default";
 

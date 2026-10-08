@@ -74,3 +74,15 @@ export const HeaderlessAndFooterless: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-card aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id" role="group">
+        <rec-card-header aria-label="A11Y-LABEL-HEADER" id="a11y-id-header">Header</rec-card-header>
+        <rec-card-content aria-label="A11Y-LABEL-CONTENT" id="a11y-id-content">Content</rec-card-content>
+        <rec-card-footer aria-label="A11Y-LABEL-FOOTER" id="a11y-id-footer">Footer</rec-card-footer>
+      </rec-card>
+    `,
+  }),
+};

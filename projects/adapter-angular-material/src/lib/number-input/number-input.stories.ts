@@ -127,3 +127,16 @@ export const HiddenControls: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-number-input
+        label="Amount"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-number-input>
+    `,
+  }),
+};

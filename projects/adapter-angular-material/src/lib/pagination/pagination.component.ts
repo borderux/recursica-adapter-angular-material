@@ -8,6 +8,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import { ButtonComponent } from "../button/button.component";
@@ -15,6 +16,12 @@ import type {
   RecursicaButtonSize,
   RecursicaButtonVariant,
 } from "../button/button.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { injectRecursicaManifest } from "../utils/recursica-manifest";
 import {
   RecursicaOverStyled,
@@ -83,11 +90,21 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
   selector: "rec-pagination",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./pagination.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   imports: [NgTemplateOutlet, ButtonComponent],
   template: `
     <nav
       class="root"
-      aria-label="Pagination"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? 'Pagination'"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
     >
@@ -98,7 +115,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
             type: 'first',
             page: 1,
             isDisabled: currentValue <= 1,
-            label: 'First page',
+            label: firstLabel,
           }"
         />
       }
@@ -109,7 +126,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
             type: 'prev',
             page: currentValue - 1,
             isDisabled: currentValue <= 1,
-            label: 'Previous page',
+            label: previousLabel,
           }"
         />
       }
@@ -123,7 +140,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
           <rec-button
             [variant]="pageRole(item === currentValue).variant"
             [size]="pageRole(item === currentValue).size"
-            [ariaLabel]="'Page ' + item"
+            [ariaLabel]="pageLabel(item)"
             [ariaCurrent]="item === currentValue ? 'page' : undefined"
             [disabled]="disabled"
             (click)="setPage(item)"
@@ -140,7 +157,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
             type: 'next',
             page: currentValue + 1,
             isDisabled: currentValue >= total,
-            label: 'Next page',
+            label: nextLabel,
           }"
         />
       }
@@ -151,7 +168,7 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
             type: 'last',
             page: total,
             isDisabled: currentValue >= total,
-            label: 'Last page',
+            label: lastLabel,
           }"
         />
       }
@@ -234,6 +251,9 @@ const LABELS: Record<RecursicaPaginationIconType, string> = {
   `,
 })
 export class PaginationComponent implements RecursicaOverStyled, OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() total = 0;
   @Input() value?: number;
   @Input() defaultValue = 1;
@@ -245,6 +265,17 @@ export class PaginationComponent implements RecursicaOverStyled, OnInit {
   @Input() withControls = true;
   @Input() withLabels = false;
   @Input() disabled = false;
+
+  /** Accessible name of a page button, e.g. for localisation. */
+  @Input() pageLabel: (page: number) => string = (page) => `Page ${page}`;
+  /** Accessible name of the first-page button (`withEdges`). */
+  @Input() firstLabel = "First page";
+  /** Accessible name of the previous-page button. */
+  @Input() previousLabel = "Previous page";
+  /** Accessible name of the next-page button. */
+  @Input() nextLabel = "Next page";
+  /** Accessible name of the last-page button (`withEdges`). */
+  @Input() lastLabel = "Last page";
 
   @Input() overStyled = false;
   @Input() overClass?: string;

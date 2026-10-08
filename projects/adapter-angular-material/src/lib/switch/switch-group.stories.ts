@@ -149,3 +149,14 @@ export const InteractiveMultiSelect: Story = {
     props: { value: [] as string[] },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-switch-group label="Accessible" aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+        <rec-switch value="1" label="Option 1"></rec-switch>
+        <rec-switch value="2" label="Option 2"></rec-switch>
+      </rec-switch-group>
+    `,
+  }),
+};

@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  inject,
   OnInit,
   Output,
   TemplateRef,
@@ -12,6 +13,10 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
 import { MatInput } from "@angular/material/input";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -132,6 +137,13 @@ let nextId = 0;
   imports: [MatInput, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./text-field.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null", "[attr.form]": "null" },
   providers: [
     {
       provide: RECURSICA_FORM_CONTROL,
@@ -167,7 +179,13 @@ let nextId = 0;
         [attr.autocomplete]="autocomplete ?? null"
         [attr.maxlength]="maxLength ?? null"
         [attr.spellcheck]="spellcheck ?? null"
-        [attr.aria-describedby]="describedByAttr"
+        [attr.minlength]="minLength ?? null"
+        [attr.inputmode]="inputMode ?? null"
+        [attr.form]="form ?? null"
+        [attr.tabindex]="inputTabIndex ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.describedBy(describedByAttr)"
         [value]="currentValue"
         (input)="onInput($event)"
         (blur)="onBlur()"
@@ -202,6 +220,18 @@ export class TextFieldComponent
   /** Native `spellcheck` of the inner `<input>`. */
   @Input() spellcheck?: boolean;
 
+  /** Native `minlength` of the inner `<input>`. */
+  @Input() minLength?: number;
+
+  /** Native `inputmode` of the inner `<input>`. */
+  @Input() inputMode?: string;
+
+  /** Native `form` of the inner `<input>` (id of the owning `<form>`). */
+  @Input() form?: string;
+
+  /** Native `tabindex` of the inner `<input>` (named like Button's `buttonTabIndex`). */
+  @Input() inputTabIndex?: number;
+
   @Input() disabled = false;
   @Input() required = false;
 
@@ -231,6 +261,8 @@ export class TextFieldComponent
 
   private readonly baseId = `rec-text-field-${nextId++}`;
   @Input() id = this.baseId;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   private describedByIds: string[] = [];
 

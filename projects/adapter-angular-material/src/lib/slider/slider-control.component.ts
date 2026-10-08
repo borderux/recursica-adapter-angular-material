@@ -115,7 +115,7 @@ export type RecursicaSliderValue = number | [number, number];
       }
 
       <div class="sliderWrapper">
-        <div class="track" [id]="id" [attr.aria-describedby]="describedByAttr">
+        <div class="track">
           <div
             class="trackFill"
             [style.left.%]="fillStartPercent"
@@ -133,14 +133,17 @@ export type RecursicaSliderValue = number | [number, number];
               type="range"
               class="thumbInput"
               data-thumb="start"
+              [id]="id"
               [min]="min"
               [max]="max"
               [step]="step"
               [disabled]="disabled"
               [value]="startValue"
               [attr.aria-label]="
-                accessibleName ? accessibleName + ' minimum' : 'Minimum value'
+                rangeName ? rangeName + ' minimum' : 'Minimum value'
               "
+              [attr.aria-labelledby]="ariaLabelledby ?? null"
+              [attr.aria-describedby]="describedByAttr"
               (input)="onRangeInput($event, 'start')"
             />
             <input
@@ -153,8 +156,10 @@ export type RecursicaSliderValue = number | [number, number];
               [disabled]="disabled"
               [value]="endValue"
               [attr.aria-label]="
-                accessibleName ? accessibleName + ' maximum' : 'Maximum value'
+                rangeName ? rangeName + ' maximum' : 'Maximum value'
               "
+              [attr.aria-labelledby]="ariaLabelledby ?? null"
+              [attr.aria-describedby]="describedByAttr"
               (input)="onRangeInput($event, 'end')"
             />
           } @else {
@@ -162,13 +167,16 @@ export type RecursicaSliderValue = number | [number, number];
               type="range"
               class="thumbInput"
               data-thumb="single"
+              [id]="id"
               [min]="min"
               [max]="max"
               [step]="step"
               [disabled]="disabled"
               [required]="required"
               [value]="endValue"
-              [attr.aria-label]="accessibleName ?? null"
+              [attr.aria-label]="ariaLabel ?? accessibleName ?? null"
+              [attr.aria-labelledby]="ariaLabelledby ?? null"
+              [attr.aria-describedby]="describedByAttr"
               (input)="onSingleInput($event)"
             />
           }
@@ -266,6 +274,19 @@ export class SliderControlComponent implements RecursicaFormControl {
    */
   @Input() accessibleName?: string;
 
+  /**
+   * Caller-supplied names, forwarded by `rec-slider`. They go on the range input(s); `ariaLabel` overrides
+   * `accessibleName`. In range mode `ariaLabel` is suffixed with " minimum"/" maximum" like `accessibleName`,
+   * and `ariaLabelledby`/`ariaDescribedby` are applied to both thumbs.
+   */
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
+  @Input() ariaDescribedby?: string;
+
+  get rangeName(): string | undefined {
+    return this.ariaLabel ?? this.accessibleName;
+  }
+
   private readonly baseId = `rec-slider-${nextId++}`;
   private _id?: string;
 
@@ -279,8 +300,12 @@ export class SliderControlComponent implements RecursicaFormControl {
 
   private describedByIds: string[] = [];
 
+  /** The caller's `ariaDescribedby` ids first, then the form-control wrapper's, merged and never replaced. */
   get describedByAttr(): string | null {
-    return this.describedByIds.length ? this.describedByIds.join(" ") : null;
+    const ids = [this.ariaDescribedby, ...this.describedByIds]
+      .filter(Boolean)
+      .join(" ");
+    return ids || null;
   }
 
   setDescribedByIds(ids: string[]): void {

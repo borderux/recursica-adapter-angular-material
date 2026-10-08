@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from "@angular/common";
 import {
   Component,
+  DoCheck,
   Input,
-  OnChanges,
   OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   isDevMode,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
@@ -18,6 +18,12 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaButtonVariant = "solid" | "outline" | "text";
 export type RecursicaButtonSize = "default" | "small";
@@ -112,6 +118,14 @@ const APPEARANCE_MAP: Record<
   selector: "rec-button",
   imports: [MatButtonModule, LoaderComponent, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.title]": "null" },
   styleUrl: "./button.component.css",
   template: `
     <button
@@ -125,9 +139,14 @@ const APPEARANCE_MAP: Record<
       [attr.data-content]="contentType"
       [attr.data-loading]="loading ? 'true' : null"
       [disabled]="disabled || loading"
-      [disableRipple]="disableRipple ?? false"
-      [attr.disabledInteractive]="disabledInteractive ? '' : null"
-      [attr.aria-label]="ariaLabel ?? null"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.aria-pressed]="ariaPressed ?? null"
+      [attr.title]="title ?? null"
+      [attr.name]="name ?? null"
+      [attr.value]="value ?? null"
       [tabIndex]="buttonTabIndex"
       [attr.aria-current]="ariaCurrent ?? null"
       [attr.aria-busy]="loading ? 'true' : null"
@@ -155,7 +174,10 @@ const APPEARANCE_MAP: Record<
     </button>
   `,
 })
-export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
+export class ButtonComponent implements RecursicaOverStyled, OnInit, DoCheck {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() variant: RecursicaButtonVariant = "solid";
   @Input() size: RecursicaButtonSize = "default";
 
@@ -180,8 +202,6 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
   @Input() useRecursicaLoader = true;
 
   @Input() disabled = false;
-  @Input() disableRipple?: boolean;
-  @Input() disabledInteractive?: boolean;
 
   /**
    * **Required whenever `iconOnly` is `true`.** An icon-only button has no
@@ -202,7 +222,20 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
    * reference's `process.env.NODE_ENV !== "production"` gate) when
    * `iconOnly` is `true` and this is falsy.
    */
-  @Input() ariaLabel?: string;
+  // `ariaLabel` / `ariaLabelledby` / `ariaDescribedby` and `id` come from the
+  // `RecursicaAriaLabelling` / `RecursicaElementId` host directives.
+
+  /** `aria-pressed` of the inner native button (toggle buttons). */
+  @Input() ariaPressed?: boolean | "true" | "false" | "mixed";
+
+  /** `title` of the inner native button. */
+  @Input() title?: string;
+
+  /** `name` of the inner native button (submitted with a form). */
+  @Input() name?: string;
+
+  /** `value` of the inner native button (submitted with a form). */
+  @Input() value?: string;
 
   /** Tab order of the inner native button — set to `-1` for a button that must stay out of the tab order (e.g. Tree's expand chevron). */
   @Input() buttonTabIndex?: number;
@@ -281,18 +314,33 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
    * (`docs/COMPONENT_DEV_GUIDE.md`'s "Lifecycle pattern" bullet).
    */
   ngOnInit(): void {
+    this.checked = true;
+    this.lastIconOnly = this.iconOnly;
+    this.lastAriaLabel = this.aria.ariaLabel;
     this.checkIconOnlyAccessibility();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const iconOnlyChanged =
-      changes["iconOnly"] && !changes["iconOnly"].firstChange;
-    const ariaLabelChanged =
-      changes["ariaLabel"] && !changes["ariaLabel"].firstChange;
-    if (iconOnlyChanged || ariaLabelChanged) {
+  /**
+   * Host-directive inputs (`ariaLabel`) do not appear in this component's
+   * `SimpleChanges`, so the re-check on a changed `iconOnly`/`ariaLabel`
+   * runs here, comparing against the values last seen.
+   */
+  ngDoCheck(): void {
+    const ariaLabel = this.aria.ariaLabel;
+    if (!this.checked) return;
+    if (
+      this.lastIconOnly !== this.iconOnly ||
+      this.lastAriaLabel !== ariaLabel
+    ) {
+      this.lastIconOnly = this.iconOnly;
+      this.lastAriaLabel = ariaLabel;
       this.checkIconOnlyAccessibility();
     }
   }
+
+  private checked = false;
+  private lastIconOnly = false;
+  private lastAriaLabel?: string;
 
   /**
    * Runtime enforcement of `ariaLabel`'s "required whenever `iconOnly` is
@@ -302,7 +350,7 @@ export class ButtonComponent implements RecursicaOverStyled, OnInit, OnChanges {
    * React reference's `process.env.NODE_ENV !== "production"` gate.
    */
   private checkIconOnlyAccessibility(): void {
-    if (isDevMode() && this.iconOnly && !this.ariaLabel) {
+    if (isDevMode() && this.iconOnly && !this.aria.ariaLabel) {
       console.warn(
         "[Recursica Button] Icon-only buttons must provide an accessible name. " +
           'Pass ariaLabel (e.g. ariaLabel="Submit").',

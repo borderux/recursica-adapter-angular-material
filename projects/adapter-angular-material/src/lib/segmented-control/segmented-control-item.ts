@@ -10,6 +10,8 @@ export interface RecursicaSegmentedControlItem {
   label?: string;
   icon?: TemplateRef<unknown>;
   disabled?: boolean;
+  /** Accessible name for the item's button; needed for icon-only items. */
+  ariaLabel?: string;
 }
 
 /** `data` accepts either a plain string (label defaults to the string itself) or a full `RecursicaSegmentedControlItem`. */

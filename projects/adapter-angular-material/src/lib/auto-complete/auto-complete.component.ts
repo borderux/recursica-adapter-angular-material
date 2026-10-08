@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  inject,
   Output,
   TemplateRef,
   ViewEncapsulation,
@@ -17,6 +18,10 @@ import type { RecursicaLabelAlignment } from "../label/label.component";
 import type { RecursicaDropdownOption } from "../dropdown/dropdown-option";
 import { RecursicaDropdownData } from "../dropdown/dropdown-option";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
@@ -41,6 +46,13 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, AutoCompleteControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   providers: [recursicaValueAccessorProvider(AutoCompleteComponent)],
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null", "[attr.form]": "null" },
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -79,6 +91,16 @@ let nextId = 0;
         [required]="required"
         [error]="!!error"
         [name]="name"
+        [autocomplete]="autocomplete"
+        [maxLength]="maxLength"
+        [minLength]="minLength"
+        [spellcheck]="spellcheck"
+        [inputMode]="inputMode"
+        [form]="form"
+        [inputTabIndex]="inputTabIndex"
+        [ariaLabel]="aria.ariaLabel"
+        [ariaLabelledby]="aria.ariaLabelledby"
+        [ariaDescribedby]="aria.ariaDescribedby"
         [wrapItemText]="wrapItemText"
         [leftSection]="leftSection"
         [rightSection]="rightSection"
@@ -116,6 +138,23 @@ export class AutoCompleteComponent implements ControlValueAccessor, OnInit {
   @Input() error?: string;
 
   @Input() wrapItemText = false;
+
+  /** Native `autocomplete` of the inner `<input>`; defaults to `"off"`. */
+  @Input() autocomplete = "off";
+  /** Native `maxlength` of the inner `<input>`. */
+  @Input() maxLength?: number;
+  /** Native `minlength` of the inner `<input>`. */
+  @Input() minLength?: number;
+  /** Native `spellcheck` of the inner `<input>`. */
+  @Input() spellcheck?: boolean;
+  /** Native `inputmode` of the inner `<input>`. */
+  @Input() inputMode?: string;
+  /** Native `form` of the inner `<input>` (id of the owning `<form>`). */
+  @Input() form?: string;
+  /** Native `tabindex` of the inner `<input>`. */
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() leftSection?: TemplateRef<unknown>;
   @Input() rightSection?: TemplateRef<unknown>;

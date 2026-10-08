@@ -16,6 +16,10 @@ import {
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
+import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
@@ -137,6 +141,13 @@ let nextId = 0;
  */
 @Component({
   selector: "rec-radio",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null" },
   imports: [NgTemplateOutlet, FormControlLayoutComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./radio.component.css",
@@ -174,6 +185,10 @@ let nextId = 0;
                 [class.radioChecked]="checkedValue"
                 [attr.aria-checked]="checkedValue ? 'true' : 'false'"
                 role="radio"
+                [attr.id]="id"
+                [attr.aria-label]="aria.ariaLabel ?? null"
+                [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+                [attr.aria-describedby]="aria.ariaDescribedby ?? null"
               ></span>
               @if (checkedValue) {
                 <svg
@@ -205,6 +220,11 @@ let nextId = 0;
                 type="radio"
                 class="radio"
                 [id]="id"
+                [attr.aria-label]="aria.ariaLabel ?? null"
+                [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+                [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+                [attr.tabindex]="inputTabIndex ?? null"
+                [attr.form]="form ?? null"
                 [checked]="checkedValue"
                 [disabled]="effectiveDisabled"
                 [required]="required"
@@ -241,6 +261,8 @@ let nextId = 0;
   `,
 })
 export class RadioComponent implements RecursicaOverStyled, OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() label?: string | TemplateRef<unknown>;
 
   /** Controlled `checked`. Leave unbound for uncontrolled (see class doc comment). Ignored when this radio is a value-bound member of a `<rec-radio-group>`. */
@@ -264,6 +286,10 @@ export class RadioComponent implements RecursicaOverStyled, OnInit {
    * `RADIO_GROUP_CONTEXT`, wins — see `effectiveName`).
    */
   @Input() name?: string;
+  /** `tabindex` of the inner native input (named like Button's `buttonTabIndex`: `tabindex` itself would land on the host). */
+  @Input() inputTabIndex?: number;
+  /** `form` attribute of the inner native input: associates it with a `<form>` by id. */
+  @Input() form?: string;
 
   /**
    * Simplified read-only display — see class doc comment's "Known gap"

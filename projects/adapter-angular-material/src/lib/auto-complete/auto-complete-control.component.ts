@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  inject,
   Output,
   TemplateRef,
   ViewChild,
@@ -16,6 +17,10 @@ import {
   RecursicaDropdownOption,
   normalizeDropdownOption,
 } from "../dropdown/dropdown-option";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -105,6 +110,12 @@ let nextId = 0;
   imports: [OverlayModule, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./auto-complete.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   providers: [
     {
       provide: RECURSICA_FORM_CONTROL,
@@ -139,7 +150,16 @@ let nextId = 0;
           isOpen && filteredOptions.length > 0 ? panelId : null
         "
         [attr.aria-activedescendant]="activeDescendantId"
-        [attr.aria-describedby]="describedByAttr"
+        [attr.autocomplete]="autocomplete ?? null"
+        [attr.maxlength]="maxLength ?? null"
+        [attr.minlength]="minLength ?? null"
+        [attr.spellcheck]="spellcheck ?? null"
+        [attr.inputmode]="inputMode ?? null"
+        [attr.form]="form ?? null"
+        [attr.tabindex]="inputTabIndex ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.describedBy(describedByAttr)"
         [placeholder]="placeholder ?? ''"
         [disabled]="disabled"
         [required]="required"
@@ -221,6 +241,16 @@ export class AutoCompleteControlComponent implements RecursicaFormControl {
   @Input() required = false;
   @Input() error = false;
   @Input() wrapItemText = false;
+
+  @Input() autocomplete = "off";
+  @Input() maxLength?: number;
+  @Input() minLength?: number;
+  @Input() spellcheck?: boolean;
+  @Input() inputMode?: string;
+  @Input() form?: string;
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() leftSection?: TemplateRef<unknown>;
   @Input() rightSection?: TemplateRef<unknown>;

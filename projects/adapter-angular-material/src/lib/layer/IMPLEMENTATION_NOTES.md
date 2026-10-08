@@ -83,3 +83,17 @@ there was tried first and failed with a webpack loader error), the
 check per layer (0–3) and per theme (light/dark), confirming e.g. layer 1's
 `border-width` resolves to a real `2px` (not `0px`) and light vs. dark
 correctly inverts background/text color.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to | Notes     |
+| -------------------------------------------------------------------------------------------------------- | ------------ | --------- | --------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `div.root`   |           |
+| `id`                                                                                                     | `div.root`   |           |
+| `role`                                                                                                   | `div.root`   | `"region" | "group"`. |
+
+Withheld:
+
+- `class` / `style`: React's open surface is not copied

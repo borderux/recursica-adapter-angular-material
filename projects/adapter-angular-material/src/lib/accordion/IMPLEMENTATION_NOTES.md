@@ -354,3 +354,20 @@ instance) via Playwright (chromium):
 `npx tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json`
 and `npx eslint 'projects/adapter-angular-material/src/lib/accordion/**/*.ts'`
 both run clean.
+
+## Passthrough
+
+| Input                                                          | Forwarded to                            | Notes                                                                                                                                         |
+| -------------------------------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rec-accordion` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `div.root`                              | Host directive.                                                                                                                               |
+| `rec-accordion` `id`                                           | `div.root` `id`                         | `RecursicaElementId`. Also the prefix for control/panel ids when set.                                                                         |
+| `rec-accordion-control` `ariaLabel`, `ariaDescribedby`         | `button.control`                        | Host directive exposing only these two.                                                                                                       |
+| `rec-accordion-control` `headingLevel`                         | wraps `button.control` in `<h2>`-`<h6>` | Optional; the button stays the control. A string value is coerced to a number.                                                                |
+| `rec-accordion-panel` `ariaLabel`, `ariaDescribedby`           | `div.panel[role=region]`                | Host directive. `aria-labelledby` stays the control id, except it is dropped when `ariaLabel` is given (labelledby would override the label). |
+
+Control and panel ids are now `<prefix>-control-<value>` / `<prefix>-panel-<value>`, where `<prefix>` is the root `id`, else `rec-accordion-<n>` (per-instance counter). Whitespace in a `value` becomes `-`. `AccordionContext` gained `controlId(value)`/`panelId(value)`; `AccordionItemContext` gained `controlId`/`panelId`.
+
+Withheld:
+
+- `aria-expanded`, `aria-controls`, control/panel ids: derived from state.
+- `variant`: canonical prop, not added in this pass.

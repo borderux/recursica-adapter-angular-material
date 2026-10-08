@@ -1,9 +1,13 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 
 export type RecursicaHeadingOrder = 1 | 2 | 3 | 4 | 5 | 6;
 export type RecursicaHeadingColor = "default" | "warning" | "alert" | "success";
@@ -52,6 +56,12 @@ export type RecursicaHeadingEmphasis = "high" | "low";
  */
 @Component({
   selector: "rec-heading",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./heading.component.css",
@@ -66,6 +76,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -79,6 +92,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -92,6 +108,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -105,6 +124,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -118,6 +140,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -131,6 +156,9 @@ export type RecursicaHeadingEmphasis = "high" | "low";
           [attr.data-color]="color"
           [attr.data-emphasis]="emphasis"
           [attr.id]="headingId ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.ariaDescribedby ?? null"
           [attr.tabindex]="headingTabIndex ?? null"
         >
           <ng-container [ngTemplateOutlet]="content" />
@@ -140,6 +168,8 @@ export type RecursicaHeadingEmphasis = "high" | "low";
   `,
 })
 export class HeadingComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() order: RecursicaHeadingOrder = 1;
 
   /** `id` of the rendered `h1`–`h6` (for linking, or for moving focus after a route change). */

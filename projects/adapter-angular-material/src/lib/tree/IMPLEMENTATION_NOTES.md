@@ -109,3 +109,16 @@ announcement of the `role="tree"`/`"treeitem"`/`"group"` structure were
 reasoned from the code and ARIA spec behavior, not click- or
 screen-reader-verified. The roving-tabindex gap above is a known,
 unbuilt simplification, not an oversight.
+
+## Passthrough
+
+| Input                                          | Forwarded to                         | Notes                                                                                             |
+| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `ul[role=tree]`                      | Host directive.                                                                                   |
+| `id`                                           | `ul[role=tree]` `id`                 | `RecursicaElementId`; host `id` is cleared.                                                       |
+| node `ariaLabel` (`RecursicaTreeNode`)         | `rec-tree-node` host `aria-label`    | The host is the `treeitem`, so this is the one place the value is on a `rec-*` element by design. |
+| node `disabled` (`RecursicaTreeNode`)          | `rec-tree-node` host `aria-disabled` | Also stops the node from being selected by click or Enter/Space. Expanding is unchanged.          |
+
+Withheld:
+
+- `aria-selected`, `aria-expanded`, roving `tabindex`: derived from state.

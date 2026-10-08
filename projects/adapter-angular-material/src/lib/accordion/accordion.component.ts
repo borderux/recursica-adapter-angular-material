@@ -6,12 +6,19 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { ACCORDION_CONTEXT, AccordionContext } from "./accordion-context";
 
 /**
@@ -58,14 +65,27 @@ import { ACCORDION_CONTEXT, AccordionContext } from "./accordion-context";
  * normalized back to the public `value`/`defaultValue`/`valueChange`
  * contract (`string | string[] | null`) at the input/output boundary only.
  */
+let nextAccordionId = 0;
+
 @Component({
   selector: "rec-accordion",
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   styleUrl: "./accordion.component.css",
   providers: [{ provide: ACCORDION_CONTEXT, useExisting: AccordionComponent }],
   template: `
     <div
       class="root"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
     >
@@ -76,6 +96,12 @@ import { ACCORDION_CONTEXT, AccordionContext } from "./accordion-context";
 export class AccordionComponent
   implements AccordionContext, RecursicaOverStyled, OnInit
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
+  /** Per-instance prefix so two accordions using the same `value`s never share ids; the `id` input wins when set. */
+  private readonly uid = `rec-accordion-${nextAccordionId++}`;
+
   /** `RecursicaAccordionProps.multiple` — allow more than one item open at once. When this
    * flips from `true` to `false` with more than one item open, only the first (by open order)
    * stays open — same "collapse to the first" behavior Mantine's own Accordion applies. */
@@ -122,6 +148,18 @@ export class AccordionComponent
     return this.value !== undefined
       ? this.normalize(this.value)
       : this._uncontrolledOpen();
+  }
+
+  private idFor(kind: string, value: string): string {
+    return `${this.elementId.id || this.uid}-${kind}-${value.trim().replace(/\s+/g, "-")}`;
+  }
+
+  controlId(value: string): string {
+    return this.idFor("control", value);
+  }
+
+  panelId(value: string): string {
+    return this.idFor("panel", value);
   }
 
   isOpen(value: string): boolean {

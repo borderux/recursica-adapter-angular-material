@@ -121,3 +121,9 @@ export const WithLeadingIconSelected: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `<rec-chip aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id" (checkedChange)="$event">Chip</rec-chip>`,
+  }),
+};

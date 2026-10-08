@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  inject,
   Output,
   TemplateRef,
   ViewEncapsulation,
@@ -15,6 +16,10 @@ import type {
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
@@ -72,6 +77,13 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, TextAreaControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   providers: [recursicaValueAccessorProvider(TextAreaComponent)],
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null", "[attr.form]": "null" },
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -109,6 +121,16 @@ let nextId = 0;
         [required]="required"
         [error]="!!error"
         [name]="name"
+        [maxLength]="maxLength"
+        [minLength]="minLength"
+        [autocomplete]="autocomplete"
+        [spellcheck]="spellcheck"
+        [inputMode]="inputMode"
+        [form]="form"
+        [inputTabIndex]="inputTabIndex"
+        [ariaLabel]="aria.ariaLabel"
+        [ariaLabelledby]="aria.ariaLabelledby"
+        [ariaDescribedby]="aria.ariaDescribedby"
         [autosize]="autosize"
         [minRows]="minRows"
         [maxRows]="maxRows"
@@ -138,6 +160,23 @@ export class TextAreaComponent implements ControlValueAccessor, OnInit {
    * required.
    */
   @Input() error?: string;
+
+  /** Native `maxlength` of the inner `<textarea>`. */
+  @Input() maxLength?: number;
+  /** Native `minlength` of the inner `<textarea>`. */
+  @Input() minLength?: number;
+  /** Native `autocomplete` of the inner `<textarea>`. */
+  @Input() autocomplete?: string;
+  /** Native `spellcheck` of the inner `<textarea>`. */
+  @Input() spellcheck?: boolean;
+  /** Native `inputmode` of the inner `<textarea>`. */
+  @Input() inputMode?: string;
+  /** Native `form` of the inner `<textarea>` (id of the owning `<form>`). */
+  @Input() form?: string;
+  /** Native `tabindex` of the inner `<textarea>`. */
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() autosize = false;
   @Input() minRows?: number;

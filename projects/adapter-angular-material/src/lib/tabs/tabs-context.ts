@@ -18,6 +18,10 @@ export interface TabsContext {
   readonly activateTabWithKeyboard: boolean;
   /** Activates the tab identified by `value` — called on click and on roving-focus keyboard navigation. */
   select(value: string): void;
+  /** DOM id of the tab button for `value`, unique per `<rec-tabs>` instance. */
+  tabId(value: string): string;
+  /** DOM id of the panel for `value`, unique per `<rec-tabs>` instance. */
+  panelId(value: string): string;
 }
 
 export const TABS_CONTEXT = new InjectionToken<TabsContext>(

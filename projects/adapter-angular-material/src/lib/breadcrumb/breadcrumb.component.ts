@@ -1,15 +1,27 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export interface RecursicaBreadcrumbItem {
   label: string;
   href?: string;
   /** Angular Router target (same value `RouterLink` accepts); wins over `href`. */
   routerLink?: string | readonly unknown[];
+  /** Native anchor `target` of this crumb's `<a>` (not used on the current page crumb). */
+  target?: string;
+  /** Native anchor `rel`; defaults to `noopener noreferrer` when `target` is `"_blank"`. */
+  rel?: string;
+  /** `aria-label` of this crumb's `<a>`. */
+  ariaLabel?: string;
 }
 
 /**
@@ -72,13 +84,23 @@ export interface RecursicaBreadcrumbItem {
   selector: "rec-breadcrumb",
   imports: [RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   styleUrl: "./breadcrumb.component.css",
   template: `
     <nav
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
-      aria-label="Breadcrumb"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? 'Breadcrumb'"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
     >
       <ol class="list">
         @for (item of items; track $index; let isLast = $last) {
@@ -88,11 +110,23 @@ export interface RecursicaBreadcrumbItem {
             } @else if (
               item.routerLink !== undefined && item.routerLink !== null
             ) {
-              <a class="link" [routerLink]="item.routerLink">{{
-                item.label
-              }}</a>
+              <a
+                class="link"
+                [routerLink]="item.routerLink"
+                [target]="item.target"
+                [attr.rel]="itemRel(item)"
+                [attr.aria-label]="item.ariaLabel ?? null"
+                >{{ item.label }}</a
+              >
             } @else if (item.href) {
-              <a class="link" [href]="item.href">{{ item.label }}</a>
+              <a
+                class="link"
+                [href]="item.href"
+                [attr.target]="item.target ?? null"
+                [attr.rel]="itemRel(item)"
+                [attr.aria-label]="item.ariaLabel ?? null"
+                >{{ item.label }}</a
+              >
             } @else {
               <span class="crumb">{{ item.label }}</span>
             }
@@ -106,12 +140,20 @@ export interface RecursicaBreadcrumbItem {
   `,
 })
 export class BreadcrumbComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() items: RecursicaBreadcrumbItem[] = [];
   @Input() separator = ">";
 
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
+
+  protected itemRel(item: RecursicaBreadcrumbItem): string | null {
+    if (item.rel) return item.rel;
+    return item.target === "_blank" ? "noopener noreferrer" : null;
+  }
 
   get resolvedOverStyle(): {
     class: string | null;

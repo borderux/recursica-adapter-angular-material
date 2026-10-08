@@ -162,6 +162,10 @@ function clamp(value: number, min: number, max: number): number {
           [disabled]="disabled"
           [required]="required"
           [attr.name]="name ?? null"
+          [attr.tabindex]="inputTabIndex ?? null"
+          [attr.form]="form ?? null"
+          [attr.aria-label]="ariaLabel ?? null"
+          [attr.aria-labelledby]="ariaLabelledby ?? null"
           [attr.aria-describedby]="describedByAttr"
           [value]="fieldText"
           (blur)="onFieldBlur($event)"
@@ -171,6 +175,7 @@ function clamp(value: number, min: number, max: number): number {
         class="amPmSelect"
         [data]="amPmData"
         [value]="isPM ? 'PM' : 'AM'"
+        ariaLabel="AM or PM"
         [disabled]="disabled"
         [error]="error"
         [overStyled]="true"
@@ -194,6 +199,14 @@ export class TimePickerControlComponent implements RecursicaFormControl {
 
   @Input() placeholder?: string;
   @Input() name?: string;
+  @Input() inputTabIndex?: number;
+  @Input() form?: string;
+
+  /** Passed down from `rec-time-picker`'s `RecursicaAriaLabelling` host directive. */
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
+  /** Caller's ids; merged with the form-control wrapper's ids in `describedByAttr`. */
+  @Input() ariaDescribedby?: string;
   @Input() disabled = false;
   @Input() required = false;
   @Input() error = false;
@@ -217,7 +230,8 @@ export class TimePickerControlComponent implements RecursicaFormControl {
   private describedByIds: string[] = [];
 
   get describedByAttr(): string | null {
-    return this.describedByIds.length ? this.describedByIds.join(" ") : null;
+    const ids = [this.ariaDescribedby, ...this.describedByIds].filter(Boolean);
+    return ids.length ? ids.join(" ") : null;
   }
 
   setDescribedByIds(ids: string[]): void {

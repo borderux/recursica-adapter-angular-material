@@ -107,3 +107,14 @@ export const ReadOnly: Story = {
     props: { value: ["disabledNode"] as string[] },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-checkbox-group label="Accessible" aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+        <rec-checkbox value="1" label="Option 1"></rec-checkbox>
+        <rec-checkbox value="2" label="Option 2"></rec-checkbox>
+      </rec-checkbox-group>
+    `,
+  }),
+};

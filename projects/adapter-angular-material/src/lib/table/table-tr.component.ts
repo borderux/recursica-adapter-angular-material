@@ -35,6 +35,7 @@ import {
   host: {
     role: "row",
     "[attr.data-selected]": "selected ? 'true' : null",
+    "[attr.aria-selected]": "selected ? 'true' : null",
     "[attr.data-disabled]": "disabled ? 'true' : null",
     "[class]": "resolvedOverStyle.class",
     "[style]": "resolvedOverStyle.style",

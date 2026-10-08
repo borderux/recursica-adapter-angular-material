@@ -58,3 +58,18 @@ export const CustomSeparator: Story = {
     `,
   }),
 };
+
+/** Passthrough check: aria and id land on the inner `nav`, not on `rec-breadcrumb`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-breadcrumb
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+        [items]="[{ label: 'Home', href: '#' }, { label: 'Current' }]"
+      ></rec-breadcrumb>
+      <span id="a11y-desc" hidden>Description</span>
+    `,
+  }),
+};

@@ -1,4 +1,10 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 /**
  * Recursica `LayoutGrid` — Angular Material adapter. Replaces the old `Grid`, following the
@@ -35,11 +41,26 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
  */
 @Component({
   selector: "rec-layout-grid",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: {
+    // A static `align="…"` would otherwise stay on the host as the legacy HTML `align` attribute, which Chrome maps to `text-align`.
+    "[attr.align]": "null",
+  },
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./layout-grid.component.css",
   template: `
     <div
       class="root"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.data-grow]="grow ? '' : null"
       [style.justify-content]="justify ?? null"
       [style.align-items]="align ?? null"
@@ -49,6 +70,9 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
   `,
 })
 export class LayoutGridComponent {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   /** Let columns grow to fill the remaining width of their row. */
   @Input() grow = false;
   /** `justify-content` for the row of columns. */

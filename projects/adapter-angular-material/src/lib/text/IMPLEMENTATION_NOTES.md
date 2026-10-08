@@ -47,3 +47,14 @@ developer's own 6006 instance).
 **Not done, same flag as every component built this session**: no
 browser/Playwright tooling available, so the actual rendered typography
 was reasoned from the CSS, not visually verified.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                            | Notes                                        |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------- | -------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | rendered `p` / `span` / `label` / `div` | Via `RecursicaAriaLabelling`.                |
+| `id`                                                                                                     | rendered element                        | Via `RecursicaElementId`; host `id` cleared. |
+
+Withheld:
+
+- `size`, `inherit`, `inline`, `gradient`: tokens own them or not applicable

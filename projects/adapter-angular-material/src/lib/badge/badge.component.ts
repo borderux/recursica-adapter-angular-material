@@ -1,8 +1,14 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaBadgeVariant =
   | "alert"
@@ -51,10 +57,23 @@ export type RecursicaBadgeVariant =
  */
 @Component({
   selector: "rec-badge",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.role]": "null" },
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./badge.component.css",
   template: `
     <div
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.role]="role ?? null"
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
@@ -65,6 +84,12 @@ export type RecursicaBadgeVariant =
   `,
 })
 export class BadgeComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
+  /** Optional live-region role for the inner root. Only `"status"` is offered. */
+  @Input() role?: "status";
+
   @Input() variant: RecursicaBadgeVariant = "primary-color";
 
   @Input() overStyled = false;

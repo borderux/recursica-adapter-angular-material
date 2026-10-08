@@ -47,3 +47,17 @@ server (port 6007, isolated from the developer's own 6006 instance).
 **Not done, same flag as every component built this session**: no
 browser/Playwright tooling available, so the actual rendered token colors
 were reasoned from the code, not visually verified.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to | Notes                  |
+| -------------------------------------------------------------------------------------------------------- | ------------ | ---------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `div.root`   |                        |
+| `id`                                                                                                     | `div.root`   |                        |
+| `role`                                                                                                   | `div.root`   | Typed `"status"` only. |
+
+Withheld:
+
+- Other `role` values: only a live-region status makes sense for a badge

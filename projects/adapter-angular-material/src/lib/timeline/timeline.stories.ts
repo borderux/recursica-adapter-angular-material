@@ -79,3 +79,17 @@ export const BulletVariants: Story = {
     `,
   }),
 };
+
+/** Passthrough check: root aria and id on the root div; item aria-label and id on `div.item`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-timeline [active]="0" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id">
+        <rec-timeline-item title="Commit created" timestamp="Yesterday" datetime="2026-10-07" aria-label="A11Y-LABEL-ITEM" id="a11y-id-item">
+          You pushed 3 new commits.
+        </rec-timeline-item>
+      </rec-timeline>
+      <span id="a11y-desc" hidden>Description</span>
+    `,
+  }),
+};

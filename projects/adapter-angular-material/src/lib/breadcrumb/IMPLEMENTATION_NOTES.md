@@ -67,3 +67,14 @@ visually verified.
 `RecursicaBreadcrumbItem` accepts `routerLink` (the value `RouterLink` takes).
 It wins over `href`, renders the crumb as a `RouterLink` anchor, and the last
 crumb stays non-interactive as before.
+
+## Passthrough
+
+| Input                               | Forwarded to             | Notes                                                                                                                                                       |
+| ----------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`          | inner `nav` `aria-label` | Host directive; defaults to "Breadcrumb".                                                                                                                   |
+| `ariaLabelledby`, `ariaDescribedby` | inner `nav`              | Host directive.                                                                                                                                             |
+| `id`                                | inner `nav` `id`         | `RecursicaElementId`; host `id` is cleared.                                                                                                                 |
+| item `target`, `rel`, `ariaLabel`   | the crumb's `a`          | Both `href` and `routerLink` branches. `rel` defaults to `noopener noreferrer` when `target` is `_blank`. Not applied to the current-page crumb (a `span`). |
+
+Withheld: none for this component.

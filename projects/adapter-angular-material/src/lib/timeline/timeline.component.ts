@@ -6,12 +6,19 @@ import {
   OnDestroy,
   QueryList,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { TIMELINE_CONTEXT, TimelineContext } from "./timeline-context";
 import { TimelineItemComponent } from "./timeline-item.component";
 
@@ -48,11 +55,22 @@ import { TimelineItemComponent } from "./timeline-item.component";
 @Component({
   selector: "rec-timeline",
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   styleUrl: "./timeline.component.css",
   providers: [{ provide: TIMELINE_CONTEXT, useExisting: TimelineComponent }],
   template: `
     <div
       class="root"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
     >
@@ -63,6 +81,9 @@ import { TimelineItemComponent } from "./timeline-item.component";
 export class TimelineComponent
   implements TimelineContext, RecursicaOverStyled, AfterContentInit, OnDestroy
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() active = -1;
 
   @Input() overStyled = false;

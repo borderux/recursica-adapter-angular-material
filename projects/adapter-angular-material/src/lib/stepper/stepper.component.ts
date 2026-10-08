@@ -8,12 +8,19 @@ import {
   Output,
   QueryList,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { STEPPER_CONTEXT, StepperContext } from "./stepper-context";
 import { StepComponent } from "./stepper-step.component";
 
@@ -80,11 +87,22 @@ export type RecursicaStepperOrientation = "horizontal" | "vertical";
 @Component({
   selector: "rec-stepper",
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   styleUrl: "./stepper.component.css",
   providers: [{ provide: STEPPER_CONTEXT, useExisting: StepperComponent }],
   template: `
     <div
       class="root"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.data-size]="size"
       [attr.data-orientation]="orientation"
       [class]="resolvedOverStyle.class"
@@ -99,6 +117,9 @@ export type RecursicaStepperOrientation = "horizontal" | "vertical";
 export class StepperComponent
   implements StepperContext, RecursicaOverStyled, AfterContentInit, OnDestroy
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   /** `RecursicaStepperProps` (Mantine-inherited) `active` — index of the active step. */
   @Input() active = 0;
 

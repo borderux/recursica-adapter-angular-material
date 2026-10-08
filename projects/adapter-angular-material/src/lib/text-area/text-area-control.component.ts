@@ -2,11 +2,16 @@ import {
   Component,
   EventEmitter,
   Input,
+  inject,
   Output,
   ViewEncapsulation,
 } from "@angular/core";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatInput } from "@angular/material/input";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -56,6 +61,12 @@ let nextId = 0;
   imports: [MatInput, CdkTextareaAutosize],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./text-area.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   providers: [
     {
       provide: RECURSICA_FORM_CONTROL,
@@ -80,7 +91,16 @@ let nextId = 0;
           [disabled]="disabled"
           [required]="required"
           [attr.name]="name ?? null"
-          [attr.aria-describedby]="describedByAttr"
+          [attr.maxlength]="maxLength ?? null"
+          [attr.minlength]="minLength ?? null"
+          [attr.autocomplete]="autocomplete ?? null"
+          [attr.spellcheck]="spellcheck ?? null"
+          [attr.inputmode]="inputMode ?? null"
+          [attr.form]="form ?? null"
+          [attr.tabindex]="inputTabIndex ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.describedBy(describedByAttr)"
           [value]="value ?? ''"
           (input)="onInput($event)"
           (blur)="blurred.emit()"
@@ -94,7 +114,16 @@ let nextId = 0;
           [disabled]="disabled"
           [required]="required"
           [attr.name]="name ?? null"
-          [attr.aria-describedby]="describedByAttr"
+          [attr.maxlength]="maxLength ?? null"
+          [attr.minlength]="minLength ?? null"
+          [attr.autocomplete]="autocomplete ?? null"
+          [attr.spellcheck]="spellcheck ?? null"
+          [attr.inputmode]="inputMode ?? null"
+          [attr.form]="form ?? null"
+          [attr.tabindex]="inputTabIndex ?? null"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.describedBy(describedByAttr)"
           [value]="value ?? ''"
           (input)="onInput($event)"
           (blur)="blurred.emit()"
@@ -115,6 +144,16 @@ export class TextAreaControlComponent implements RecursicaFormControl {
 
   /** Visual-only error flag — mirrors `TextField`'s identical `error` input. */
   @Input() error = false;
+
+  @Input() maxLength?: number;
+  @Input() minLength?: number;
+  @Input() autocomplete?: string;
+  @Input() spellcheck?: boolean;
+  @Input() inputMode?: string;
+  @Input() form?: string;
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() autosize = false;
   @Input() minRows?: number;

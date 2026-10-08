@@ -124,3 +124,14 @@ export const ReactiveForms: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-radio-group label="Accessible" aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+        <rec-radio value="1" label="Option 1"></rec-radio>
+        <rec-radio value="2" label="Option 2"></rec-radio>
+      </rec-radio-group>
+    `,
+  }),
+};

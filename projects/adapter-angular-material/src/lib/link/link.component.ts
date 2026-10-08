@@ -4,6 +4,7 @@ import {
   Input,
   TemplateRef,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import {
   type Params,
@@ -16,6 +17,12 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 /**
  * Recursica `Link` — Angular Material adapter.
@@ -75,6 +82,14 @@ import {
   selector: "rec-link",
   imports: [NgTemplateOutlet, RouterLink, RouterLinkActive],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.title]": "null" },
   styleUrl: "./link.component.css",
   template: `
     @if (routerLink !== undefined && routerLink !== null) {
@@ -92,7 +107,13 @@ import {
         [state]="state"
         [relativeTo]="relativeTo"
         [target]="target"
-        [attr.aria-label]="ariaLabel ?? null"
+        [attr.id]="elementId.id ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+        [attr.title]="title ?? null"
+        [attr.rel]="resolvedRel"
+        [attr.tabindex]="linkTabIndex ?? null"
         [attr.aria-current]="ariaCurrent ?? null"
         [attr.data-has-icon]="icon ? '' : null"
         routerLinkActive
@@ -106,8 +127,15 @@ import {
         [class]="resolvedOverStyle.class"
         [style]="resolvedOverStyle.style"
         [attr.href]="href ?? null"
+        [attr.download]="download ?? null"
         [attr.target]="target ?? null"
-        [attr.aria-label]="ariaLabel ?? null"
+        [attr.id]="elementId.id ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+        [attr.title]="title ?? null"
+        [attr.rel]="resolvedRel"
+        [attr.tabindex]="linkTabIndex ?? null"
         [attr.aria-current]="ariaCurrent ?? null"
         [attr.data-has-icon]="icon ? '' : null"
       >
@@ -125,6 +153,9 @@ import {
   `,
 })
 export class LinkComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   /** Native anchor `href` — see class doc comment for why this is an explicit `@Input()`. */
   @Input() href?: string;
 
@@ -150,8 +181,21 @@ export class LinkComponent implements RecursicaOverStyled {
   /** Native anchor `target`, e.g. `"_blank"`. */
   @Input() target?: string;
 
-  /** `aria-label` of the inner `<a>` (e.g. for an icon-only link). */
-  @Input() ariaLabel?: string;
+  // `ariaLabel` (e.g. for an icon-only link), `ariaLabelledby`,
+  // `ariaDescribedby` and `id` come from the host directives and land on the
+  // inner `<a>`.
+
+  /** `title` of the inner `<a>`. */
+  @Input() title?: string;
+
+  /** `rel` of the inner `<a>`. Defaults to `noopener noreferrer` when `target="_blank"`. */
+  @Input() rel?: string;
+
+  /** `download` of the inner `<a>`; only applies to the `href` branch (an empty string downloads under the default name). */
+  @Input() download?: string;
+
+  /** `tabindex` of the inner `<a>`. */
+  @Input() linkTabIndex?: number;
 
   /** `aria-current` of the inner `<a>`, e.g. `"page"` for the active navigation link. */
   @Input() ariaCurrent?: string;
@@ -162,6 +206,11 @@ export class LinkComponent implements RecursicaOverStyled {
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
+
+  get resolvedRel(): string | null {
+    if (this.rel) return this.rel;
+    return this.target === "_blank" ? "noopener noreferrer" : null;
+  }
 
   get resolvedOverStyle(): {
     class: string | null;

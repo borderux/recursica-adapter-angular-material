@@ -111,3 +111,17 @@ browser/Playwright tooling available, so real thumb dragging, keyboard
 stepping, the dual-range-input pointer-events interaction, and mark/label
 positioning at real viewport sizes were reasoned from the code, not
 click-verified. `tooltipLabel` is a known, unbuilt gap (see above).
+
+## Passthrough
+
+| Input                                  | Forwarded to                                                | Notes                                                                                                                                      |
+| -------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ariaLabel` / `aria-label`             | `input[type="range"]`                                       | Overrides the label-derived `accessibleName`, which stays as the fallback. In range mode it is suffixed " minimum" / " maximum" per thumb. |
+| `ariaLabelledby` / `aria-labelledby`   | `input[type="range"]`                                       | Both thumbs in range mode.                                                                                                                 |
+| `ariaDescribedby` / `aria-describedby` | `input[type="range"]`                                       | Merged with the form-control wrapper's ids (caller's first). Both thumbs in range mode.                                                    |
+| `id`                                   | first `input[type="range"]` (the start thumb in range mode) | Moved off the track div, which is not labelable; the wrapper label's `for` now resolves. Host `id` is cleared.                             |
+
+Withheld:
+
+- `tabindex`: native range inputs are already focusable; not requested for this component.
+- `name`, `form`, `autocomplete` and the other text-input attributes: not text-like.

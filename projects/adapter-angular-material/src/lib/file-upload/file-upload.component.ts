@@ -12,6 +12,7 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { ButtonComponent } from "../button/button.component";
 import { ChipComponent } from "../chip/chip.component";
@@ -25,6 +26,10 @@ import type {
 } from "../form-control-layout/form-control-layout.component";
 import { FormControlWrapperComponent } from "../form-control-wrapper/form-control-wrapper.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -77,6 +82,13 @@ let nextId = 0;
  */
 @Component({
   selector: "rec-file-upload",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null" },
   imports: [
     NgTemplateOutlet,
     FormControlWrapperComponent,
@@ -109,6 +121,10 @@ let nextId = 0;
       <div
         class="root"
         [id]="id"
+        [attr.role]="aria.ariaLabel || aria.ariaLabelledby ? 'group' : null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
         [attr.data-disabled]="disabled ? 'true' : null"
         [attr.data-error]="effectiveError ? 'true' : null"
       >
@@ -196,6 +212,8 @@ let nextId = 0;
   `,
 })
 export class FileUploadComponent implements RecursicaOverStyled, OnChanges {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() files: RecursicaFileUploadItem[] = [];
   @Output() filesAdded = new EventEmitter<File[]>();
   @Output() fileRemove = new EventEmitter<string>();

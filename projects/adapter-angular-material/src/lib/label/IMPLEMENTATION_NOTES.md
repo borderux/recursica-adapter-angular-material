@@ -31,3 +31,14 @@ model. There's no supported way to place it as an independent left column
 Material's internal DOM structure via `::ng-deep` with no stability
 contract, the same class of fragility that led the genesis adapter to build
 its own `FormControlWrapper` instead of Mantine's `Input.Wrapper`.
+
+## Passthrough
+
+| Input | Forwarded to    | Notes                                                                                                                                              |
+| ----- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`  | Inner `<label>` | `RecursicaElementId` host directive; host `id` cleared. `FormControlWrapper` binds its `labelId` here, so the id now sits on the `<label>` itself. |
+
+Withheld:
+
+- `ariaLabel`, `ariaLabelledby`, `ariaDescribedby`: a label is the accessible name for its control, not something to name.
+- `title`, `data-*`: skipped by default.

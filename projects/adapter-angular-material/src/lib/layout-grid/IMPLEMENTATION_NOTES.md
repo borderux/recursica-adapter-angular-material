@@ -49,3 +49,19 @@ now flex items whose basis is
 
 A single `Default` story, matching the Mantine adapter: 12 single-column cells (two rows at the
 default 6 columns).
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to         | Notes |
+| -------------------------------------------------------------------------------------------------------- | -------------------- | ----- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | inner `div.root` row |       |
+| `id`                                                                                                     | inner `div.root` row |       |
+
+`rec-layout-grid` now nulls the host `align` attribute so a static `align` no longer leaks to the host.
+
+Withheld:
+
+- `class` / `style`: React's open surface is not copied
+- `rec-layout-grid-col`: host is the element, no passthrough

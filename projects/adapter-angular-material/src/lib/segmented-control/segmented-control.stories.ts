@@ -73,3 +73,19 @@ export const WithIcons: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-segmented-control
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+        [data]="[
+          { value: 'one', label: 'One', ariaLabel: 'A11Y-LABEL-ITEM' },
+          { value: 'two', label: 'Two' }
+        ]"
+      ></rec-segmented-control>
+    `,
+  }),
+};

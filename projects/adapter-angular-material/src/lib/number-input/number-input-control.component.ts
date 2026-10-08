@@ -3,12 +3,17 @@ import {
   Component,
   EventEmitter,
   Input,
+  inject,
   Output,
   TemplateRef,
   ViewEncapsulation,
   forwardRef,
 } from "@angular/core";
 import { MatInput } from "@angular/material/input";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RECURSICA_FORM_CONTROL,
   RecursicaFormControl,
@@ -74,6 +79,12 @@ let nextId = 0;
   imports: [MatInput, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./number-input.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   providers: [
     {
       provide: RECURSICA_FORM_CONTROL,
@@ -107,7 +118,13 @@ let nextId = 0;
         [max]="max ?? null"
         [step]="step ?? 1"
         [attr.name]="name ?? null"
-        [attr.aria-describedby]="describedByAttr"
+        [attr.autocomplete]="autocomplete ?? null"
+        [attr.inputmode]="inputMode ?? null"
+        [attr.form]="form ?? null"
+        [attr.tabindex]="inputTabIndex ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.describedBy(describedByAttr)"
         [value]="value ?? ''"
         (input)="onInput($event)"
         (blur)="onBlur($event)"
@@ -185,6 +202,13 @@ export class NumberInputControlComponent implements RecursicaFormControl {
   @Input() max?: number;
   @Input() step?: number;
   @Input() hideControls = false;
+
+  @Input() autocomplete?: string;
+  @Input() inputMode?: string;
+  @Input() form?: string;
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() leftSection?: TemplateRef<unknown>;
   @Input() rightSection?: TemplateRef<unknown>;

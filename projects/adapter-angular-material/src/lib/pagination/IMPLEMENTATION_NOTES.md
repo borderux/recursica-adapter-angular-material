@@ -112,3 +112,14 @@ browser/Playwright tooling available, so actual click-through paging,
 ellipsis-range recalculation on click, and disabled-state boundary
 behavior were reasoned from the ported algorithm and code, not
 click-verified.
+
+## Passthrough
+
+| Input                                                   | Forwarded to                  | Notes                                                              |
+| ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------ |
+| `ariaLabel`/`ariaLabelledby`/`ariaDescribedby`          | `nav.root`                    | Host directive; `ariaLabel` defaults to "Pagination".              |
+| `id`                                                    | `nav.root` `id`               | `RecursicaElementId`; host `id` is cleared.                        |
+| `pageLabel`                                             | page buttons' `aria-label`    | `(page: number) => string`, default `Page ${page}`.                |
+| `firstLabel`, `previousLabel`, `nextLabel`, `lastLabel` | control buttons' `aria-label` | Defaults: "First page", "Previous page", "Next page", "Last page". |
+
+Withheld: none for this component. The visible `withLabels` text ("First", "Prev", "Next", "Last") is still fixed English.

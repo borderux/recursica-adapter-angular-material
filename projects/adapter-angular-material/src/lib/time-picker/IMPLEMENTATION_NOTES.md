@@ -90,3 +90,20 @@ from the developer's own 6006 instance — confirmed untouched throughout).
 browser/Playwright tooling available this session, so the blur-parse
 logic, the AM/PM `rec-dropdown` sync, and the visual result are all
 reasoned from the code, not click-verified.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                    | Notes                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | Inner time `<input>`            | `RecursicaAriaLabelling` host directive on the public component; the host's own attributes are cleared. Describedby is merged with the form-control wrapper's ids (caller's first). |
+| `id`                                                                                                     | Inner time `<input>`            | Existing input kept; host `id` attribute cleared.                                                                                                                                   |
+| `inputTabIndex`                                                                                          | Inner time `<input>` `tabindex` | Named like Button's `buttonTabIndex`.                                                                                                                                               |
+| `form`                                                                                                   | Inner time `<input>` `form`     | Id of the owning form.                                                                                                                                                              |
+| (fixed)                                                                                                  | AM/PM `rec-dropdown`            | Always `ariaLabel="AM or PM"`; not caller-configurable.                                                                                                                             |
+
+In `readOnly` mode there is no inner input, so these are no-ops.
+
+Withheld:
+
+- `placeholder`: fixed by `withSeconds`.
+- `autocomplete`, `minlength`, `maxlength`, `spellcheck`, `inputmode`: not added; the field is a parsed-on-blur time mask.

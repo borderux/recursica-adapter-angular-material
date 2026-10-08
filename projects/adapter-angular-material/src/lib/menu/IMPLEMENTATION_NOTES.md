@@ -86,3 +86,19 @@ dropped.
 `Button`'s `icon`. `MatMenuItem`'s own template has only a single icon
 slot (no leading/trailing split the way Recursica's tokens expect), so
 `MenuItemComponent` renders its own wrapper spans instead of relying on it.
+
+## Passthrough
+
+| Input                                                                                | Forwarded to                                                        | Notes                                                    |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| `rec-menu` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` (and hyphenated spellings) | `mat-menu` `aria-label`/`aria-labelledby`/`aria-describedby` inputs | Land on the overlay panel `role="menu"`. Host directive. |
+| `rec-menu-item` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby`                       | inner `button[mat-menu-item]`                                       | Host directive.                                          |
+| `rec-menu-item` `title`                                                              | inner `button[mat-menu-item]` `title`                               | Host `title` attribute is cleared.                       |
+| `rec-menu-label` `id`                                                                | inner `div.root` `id`                                               | `RecursicaElementId`; host `id` is cleared.              |
+
+Withheld:
+
+- `disableRipple` (menu item): Material-only; removed from the public API.
+- `hasBackdrop` (menu): Material-only; removed from the public API. The panel keeps `hasBackdrop` fixed to `true`, as before.
+- `maxHeight`: canonical prop, not added in this pass (separate step).
+- The trigger aria (`aria-haspopup`/`aria-expanded`/`aria-controls` from `recMenuTriggerFor`) is handled separately.

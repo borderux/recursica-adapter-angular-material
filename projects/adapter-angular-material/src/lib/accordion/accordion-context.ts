@@ -21,6 +21,10 @@ export interface AccordionContext {
   isOpen(value: string): boolean;
   /** Toggles the item identified by `value`, respecting `multiple`. */
   toggle(value: string): void;
+  /** DOM id of the control button for `value`, unique per `<rec-accordion>` instance. */
+  controlId(value: string): string;
+  /** DOM id of the panel for `value`, unique per `<rec-accordion>` instance. */
+  panelId(value: string): string;
   /** Root-level default chevron override (`AccordionComponent.chevron`), applies to every
    * item unless a specific `<rec-accordion-control>` overrides it with its own `chevron`. */
   readonly chevron?: TemplateRef<unknown>;
@@ -50,6 +54,8 @@ export interface AccordionItemContext {
    * inheritance; does not by itself block interaction. See `accordion-control.component.ts`. */
   readonly disabled: boolean;
   readonly chevron?: TemplateRef<unknown>;
+  readonly controlId: string;
+  readonly panelId: string;
   toggle(): void;
 }
 

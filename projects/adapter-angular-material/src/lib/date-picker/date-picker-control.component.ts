@@ -159,6 +159,10 @@ let nextId = 0;
         [min]="min ?? null"
         [max]="max ?? null"
         [attr.name]="name ?? null"
+        [attr.tabindex]="inputTabIndex ?? null"
+        [attr.form]="form ?? null"
+        [attr.aria-label]="ariaLabel ?? null"
+        [attr.aria-labelledby]="ariaLabelledby ?? null"
         [attr.aria-describedby]="describedByAttr"
         [value]="value ?? null"
         (dateChange)="onDateChange($event)"
@@ -196,6 +200,14 @@ export class DatePickerControlComponent implements RecursicaFormControl {
 
   @Input() placeholder?: string;
   @Input() name?: string;
+  @Input() inputTabIndex?: number;
+  @Input() form?: string;
+
+  /** Passed down from `rec-date-picker`'s `RecursicaAriaLabelling` host directive. */
+  @Input() ariaLabel?: string;
+  @Input() ariaLabelledby?: string;
+  /** Caller's ids; merged with the form-control wrapper's ids in `describedByAttr`. */
+  @Input() ariaDescribedby?: string;
   @Input() disabled = false;
   @Input() required = false;
 
@@ -229,7 +241,8 @@ export class DatePickerControlComponent implements RecursicaFormControl {
   private describedByIds: string[] = [];
 
   get describedByAttr(): string | null {
-    return this.describedByIds.length ? this.describedByIds.join(" ") : null;
+    const ids = [this.ariaDescribedby, ...this.describedByIds].filter(Boolean);
+    return ids.length ? ids.join(" ") : null;
   }
 
   setDescribedByIds(ids: string[]): void {

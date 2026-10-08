@@ -6,6 +6,7 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
@@ -15,6 +16,10 @@ import type {
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
@@ -67,7 +72,14 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, SliderControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./slider.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   host: {
+    "[attr.id]": "null",
     "[style.--form-control-margin-bottom]":
       "'var(--recursica_ui-kit_components_slider_variants_layouts_' + formLayout + '_properties_top-bottom-margin)'",
   },
@@ -100,6 +112,9 @@ let nextId = 0;
       <rec-slider-control
         [id]="id"
         [accessibleName]="labelText"
+        [ariaLabel]="aria.ariaLabel"
+        [ariaLabelledby]="aria.ariaLabelledby"
+        [ariaDescribedby]="aria.ariaDescribedby"
         [value]="currentValue"
         [min]="min"
         [max]="max"
@@ -123,6 +138,8 @@ let nextId = 0;
   `,
 })
 export class SliderComponent implements ControlValueAccessor, OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() value?: RecursicaSliderValue;
   @Input() defaultValue?: RecursicaSliderValue;
   @Output() valueChange = new EventEmitter<RecursicaSliderValue>();

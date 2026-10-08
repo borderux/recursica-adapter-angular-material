@@ -9,6 +9,10 @@ import {
 } from "@angular/core";
 import { FocusKeyManager } from "@angular/cdk/a11y";
 import { Subscription } from "rxjs";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { TabComponent } from "./tabs-tab.component";
 import { TABS_CONTEXT } from "./tabs-context";
 
@@ -43,12 +47,21 @@ import { TABS_CONTEXT } from "./tabs-context";
 @Component({
   selector: "rec-tabs-list",
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   styleUrl: "./tabs-list.component.css",
   template: `
     <div
       class="list"
       role="tablist"
       tabindex="-1"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.aria-orientation]="ctx?.orientation ?? 'horizontal'"
       (keydown)="onKeydown($event)"
       (focusin)="onFocusIn($event)"
@@ -65,6 +78,7 @@ export class TabsListComponent implements AfterContentInit, OnDestroy {
   private changeSubscription?: Subscription;
 
   readonly ctx = inject(TABS_CONTEXT, { optional: true });
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   ngAfterContentInit(): void {
     const vertical = this.ctx?.orientation === "vertical";

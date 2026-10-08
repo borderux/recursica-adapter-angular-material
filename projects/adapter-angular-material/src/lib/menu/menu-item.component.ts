@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import {
   MatMenuItem,
@@ -17,6 +18,10 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { MenuComponent } from "./menu.component";
 
 /**
@@ -116,6 +121,13 @@ import { MenuComponent } from "./menu.component";
   selector: "rec-menu-item",
   imports: [MatMenuModule, NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.title]": "null" },
   styleUrl: "./menu-item.component.css",
   template: `
     <button
@@ -124,7 +136,10 @@ import { MenuComponent } from "./menu.component";
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
       [disabled]="disabled"
-      [disableRipple]="disableRipple ?? false"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.title]="title ?? null"
       [attr.data-selected]="selected ? '' : null"
       [matMenuTriggerFor]="subMenu ? subMenu.matMenuPanel : null"
       #trigger="matMenuTrigger"
@@ -148,8 +163,12 @@ import { MenuComponent } from "./menu.component";
 export class MenuItemComponent
   implements RecursicaOverStyled, AfterViewInit, OnChanges
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() disabled = false;
-  @Input() disableRipple?: boolean;
+
+  /** `title` of the inner `button[mat-menu-item]`. */
+  @Input() title?: string;
 
   /** Visually marks this item as the current selection (`data-selected`) — matching the genesis adapter's own `Menu.Item`. */
   @Input() selected = false;

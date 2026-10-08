@@ -3,6 +3,7 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import { RecursicaAriaLabelling } from "../utils/recursica-aria";
 import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
 
 /**
@@ -32,13 +33,26 @@ import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
   selector: "rec-accordion-panel",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./accordion-panel.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: [
+        "ariaLabel",
+        "aria-label",
+        "ariaDescribedby",
+        "aria-describedby",
+      ],
+    },
+  ],
   template: `
     <div
       class="panel"
       [class.panelOpen]="isOpen"
       role="region"
       [id]="panelId"
-      [attr.aria-labelledby]="controlId"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabel ? null : controlId"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.inert]="isOpen ? null : ''"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
@@ -50,6 +64,8 @@ import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
   `,
 })
 export class AccordionPanelComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
@@ -63,11 +79,11 @@ export class AccordionPanelComponent implements RecursicaOverStyled {
   }
 
   get panelId(): string {
-    return `rec-accordion-panel-${this.itemCtx?.value ?? ""}`;
+    return this.itemCtx?.panelId ?? "";
   }
 
   get controlId(): string {
-    return `rec-accordion-control-${this.itemCtx?.value ?? ""}`;
+    return this.itemCtx?.controlId ?? "";
   }
 
   get resolvedOverStyle(): {
