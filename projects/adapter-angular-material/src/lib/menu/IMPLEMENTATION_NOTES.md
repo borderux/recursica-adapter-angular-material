@@ -89,7 +89,7 @@ slot (no leading/trailing split the way Recursica's tokens expect), so
 
 ## `maxHeight`
 
-`rec-menu` `[maxHeight]` (`string | number`, number = px) mirrors the React Menu's `maxHeight`: a per-instance override of the token dropdown `max-height`, with `overflow-y: auto` so items scroll. Mechanism: the panel is created in a CDK overlay with no stable element to bind a style to, so each `rec-menu` gets a unique `panelClass` (`rec-menu-mh-N`) whose rule sets `--rec-menu-max-height` in a small `<style>` element appended to `document.head` (updated on change, removed on destroy). `menu-overlay.css` reads `max-height: var(--rec-menu-max-height, <token>)` and sets `overflow-y: auto`. Deviation from React: React applies inline style on the dropdown; here it is a class-scoped custom property, with the same visible result. Under a strict CSP the injected `<style>` needs a nonce / `style-src` allowance.
+`rec-menu` `[maxHeight]` (`string | number`, number = px) mirrors the React Menu's `maxHeight`: a per-instance override of the token dropdown `max-height`, with `overflow-y: auto` so items scroll. Mechanism: the panel is created in a CDK overlay on every open, so there is no element to bind a style to. `MenuComponent` runs `afterEveryRender` and, while it has a `maxHeight` and its panel (`MatMenu.panelId`) is on the page, sets `max-height` and `overflow-y` on it with `element.style.setProperty`. That is a DOM-API style write, so it needs no `style-src` allowance under a strict CSP (an injected `<style>` element would). A first version injected a per-instance stylesheet; this replaced it. Clearing `maxHeight` removes the inline values on the next render. Works for submenus too, since each `rec-menu` applies its own.
 
 ## Passthrough
 
