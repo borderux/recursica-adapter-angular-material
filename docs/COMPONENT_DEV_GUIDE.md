@@ -38,6 +38,59 @@ For the core architectural philosophy, read [`PHILOSOPHY.md`](./PHILOSOPHY.md) (
 - **Form controls are Angular's own concern — see "Forms integration" below for the resolved standard.** Every form-shaped component implements `ControlValueAccessor` itself; don't default to local component state (a `value`/`(valueChange)` pair with no forms integration) the way a React `useState`-based wrapper naturally would.
 - **`MatFormField` covers text-like/selectable controls only, not choice controls.** `MatInput`/`MatSelect`/`MatDatepickerInput`/`MatChipGrid` all implement `MatFormFieldControl<T>` and can plug into `<mat-form-field>` for label/hint/error layout; `MatCheckbox`/`MatRadioButton`/`MatSlideToggle` do not, and are never placed inside one in Material's own design. A `FormControlWrapper`/`FormControlLayout` (mirroring the genesis adapter's own architecture) is required for both control families, and `MatFormField` is also structurally stacked-only (no side-by-side label option) — see `docs/ADAPTER_INTEGRATION_REPORT.md` Q7/Q8 for the full evidence before implementing either family.
 
+## Component API: explicit inputs, passthrough and accessibility
+
+The canonical guide's §3.5 (`@recursica/adapter-common` `docs/COMPONENT_DEV_GUIDE.md`) sets the policy: which native attributes a component forwards, to which element, and which it never exposes. This section is the Angular mechanics.
+
+**There is no `...rest`.** In React a wrapper spreads unknown props onto the base component. In Angular a component's API is exactly its declared `@Input()`s and `@Output()`s, and a native attribute written on `<rec-x aria-label="Save">` lands on the `rec-x` **host**, not on the native element inside the template. So:
+
+- A passthrough exists only if the component declares an input and binds it on the inner element (`[attr.aria-label]="…"`). Anything not declared is silently unavailable.
+- "Removing" a library prop is not declaring it (see "Component structure"). That does not hide anything native from the host.
+
+**Use the shared host directives, not hand-written inputs.** `src/lib/utils/recursica-aria.ts`:
+
+- `RecursicaAriaLabelling` adds `ariaLabel`/`aria-label`, `ariaLabelledby`/`aria-labelledby` and `ariaDescribedby`/`aria-describedby` (both spellings are inputs, so the natural HTML spelling works and the camelCase one older components shipped still works) and clears the host's own attributes so the name is not duplicated on an element with no role.
+- `RecursicaElementId` adds `id` and clears the host `id`.
+
+```ts
+@Component({
+  selector: "rec-thing",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  template: `<button
+    [attr.id]="elementId.id ?? null"
+    [attr.aria-label]="aria.ariaLabel ?? null"
+  >
+    …
+  </button>`,
+})
+export class ThingComponent {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+}
+```
+
+To accept only some inputs, list only those names in `inputs`. A component that already has an `id` input with a generated default keeps it and adds `host: { "[attr.id]": "null" }`.
+
+**Rules that follow from the host/inner split:**
+
+- Forward to the element that carries the semantics: the `<input>`, the `<button>`, the `role="dialog"` node. For a form control composed of a public component and an inner `*-control` component, the directive goes on the public component and the values are passed down to the control through inputs.
+- A form control's `aria-describedby` must be merged with the form-control wrapper's ids: use `aria.describedBy(wrapperIds)`. The wrapper rewrites its own ids on every change-detection pass, so a caller's value must never replace them.
+- An input named like a native attribute (`title`, `role`, `id`, `tabindex`) also leaves a static attribute on the host. Null it in `host` (`"[attr.title]": "null"`) or give the input a different name (Button's `buttonTabIndex`).
+- Overlays render outside the component (CDK portal), so host attributes cannot reach them. Forward through the overlay's own config (`MatDialogConfig.ariaLabel`/`ariaLabelledBy`/`ariaDescribedBy`, `role`, …) or onto the panel template's root element.
+- Trigger components (menu, popover, hover-card) put `aria-haspopup`/`aria-expanded`/`aria-controls`/`aria-describedby` on the real focusable child of the trigger, never on a wrapper or on a `rec-button` host.
+- `host` bindings of a host directive and consumer bindings on the same attribute can conflict: document the supported spellings (`aria-label="…"`, `[aria-label]="…"`, `ariaLabel`, `[ariaLabel]`), and do not tell integrators to use `[attr.aria-label]` on a `rec-*` element.
+- Hard-coded English strings rendered for assistive technology ("Close", "Clear selection", pagination labels) are defaults of inputs, never literals, so integrators can translate them.
+
+**Verify where it landed.** Add an `Accessibility` story that sets the standard attributes on the component (literal values `aria-label="A11Y-LABEL"`, `aria-describedby="a11y-desc"`, `id="a11y-id"`), and check in a browser that each appears on exactly one inner native element and on no `rec-*` host.
+
+**Parity with the canonical props.** A component's inputs must cover the Recursica props in `adapter-common`'s `Recursica<Name>Props` (renaming is allowed when Angular's idiom demands it, such as an `@Output` for an `onX` callback; record every difference in the component's `IMPLEMENTATION_NOTES.md`). Check this by hand when building or reviewing a component: open the canonical props file next to the component and tick off each prop, then the standard passthrough list above.
+
 ## The generic styling escape hatch — resolved: `RecursicaOverStyled`
 
 Every component wrapping a Material element with a protected look implements `RecursicaOverStyled` (`src/lib/utils/recursica-over-styled.ts`): `overStyled?: boolean`, `overClass?: string`, `overStyle?: Record<string, string>`. Forward `overClass`/`overStyle` onto the wrapped Material element only when `overStyled` is `true` — use the shared `resolveOverStyle()` helper rather than re-implementing the check per component. `Layer`/`RecursicaThemeProvider` (and, once built, `Flex`/`Stack`/`Group`/`Grid`) don't implement this — they're styling plumbing, not a component with a look to protect. Also prefix every override selector with `:host-context([data-recursica-theme])` for a real (not absolute) specificity edge against casual consumer overrides — see `docs/STYLING_SYSTEM.md` §4/§6 and `../OVERSTYLING.md` for the full rationale and live verification.
