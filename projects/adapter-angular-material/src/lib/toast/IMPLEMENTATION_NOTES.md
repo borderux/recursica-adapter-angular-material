@@ -209,3 +209,16 @@ matched `--..._error_..._colors_button`'s real resolved value `#f6d5d8`.
 `npx tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json`
 both clean. Throwaway Playwright scripts and screenshots deleted after
 verification; shared Storybook instance left running (not killed).
+
+## Passthrough
+
+| Input                                          | Forwarded to                 | Notes                                       |
+| ---------------------------------------------- | ---------------------------- | ------------------------------------------- |
+| `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | inner `div.root`             | Host directive.                             |
+| `id`                                           | inner `div.root` `id`        | `RecursicaElementId`; host `id` is cleared. |
+| `ariaLive`                                     | inner `div.root` `aria-live` | `"off" \| "polite" \| "assertive"`.         |
+| `closeButtonLabel`                             | close button `aria-label`    | Default "Close".                            |
+
+The `title` input no longer leaves a native `title` attribute (tooltip) on the host: the host binds `[attr.title]` to `null`.
+
+Withheld: none for this component.

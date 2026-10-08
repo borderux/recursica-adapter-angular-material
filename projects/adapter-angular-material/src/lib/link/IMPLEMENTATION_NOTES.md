@@ -160,3 +160,17 @@ dependency; `Router` is root-provided, so apps that never call `provideRouter`
 still work as long as they do not set `routerLink`. Verified in Storybook that
 `routerLink` + `queryParams` resolve to `/users/42?tab=profile`.
 Not verified: the active-route `aria-current` (needs real routes).
+
+## Passthrough
+
+| Input                               | Forwarded to           | Notes                                                                                          |
+| ----------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`          | inner `a` `aria-label` | Migrated to the `RecursicaAriaLabelling` host directive; both `a` branches.                    |
+| `ariaLabelledby`, `ariaDescribedby` | inner `a`              | Host directive.                                                                                |
+| `id`                                | inner `a` `id`         | `RecursicaElementId`; host `id` is cleared.                                                    |
+| `title`                             | inner `a` `title`      | Host `title` attribute is cleared.                                                             |
+| `rel`                               | inner `a` `rel`        | Both branches. Defaults to `noopener noreferrer` when `target="_blank"` and no `rel` is given. |
+| `download`                          | inner `a` `download`   | `href` branch only.                                                                            |
+| `linkTabIndex`                      | inner `a` `tabindex`   | Named like Button's `buttonTabIndex` to avoid the host attribute.                              |
+
+Withheld: none for this component.

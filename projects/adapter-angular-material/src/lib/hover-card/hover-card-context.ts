@@ -20,6 +20,8 @@ export interface HoverCardContext {
   readonly position: RecursicaHoverCardPosition;
   readonly withBeak: boolean;
   readonly disabled: boolean;
+  /** Generated id of the panel element (the trigger's `aria-describedby`). */
+  readonly panelId: string;
   registerOrigin(el: ElementRef<HTMLElement>): void;
   registerDropdownTemplate(template: TemplateRef<unknown> | null): void;
   requestOpen(): void;

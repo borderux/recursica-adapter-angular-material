@@ -13,6 +13,8 @@ import {
 } from "../utils/recursica-over-styled";
 import { TABS_CONTEXT, TabsContext } from "./tabs-context";
 
+let nextTabsId = 0;
+
 export type RecursicaTabsVariant = "default" | "outline" | "pills";
 export type RecursicaTabsOrientation = "horizontal" | "vertical";
 
@@ -115,6 +117,21 @@ export class TabsComponent implements TabsContext, RecursicaOverStyled, OnInit {
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
+
+  /** Per-instance prefix so two `<rec-tabs>` using the same `value`s never share ids. */
+  private readonly uid = nextTabsId++;
+
+  private idFor(kind: string, value: string): string {
+    return `rec-${kind}-${this.uid}-${value.trim().replace(/\s+/g, "-")}`;
+  }
+
+  tabId(value: string): string {
+    return this.idFor("tab", value);
+  }
+
+  panelId(value: string): string {
+    return this.idFor("tabpanel", value);
+  }
 
   private readonly _uncontrolledValue = signal<string | null>(null);
 

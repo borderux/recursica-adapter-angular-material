@@ -68,3 +68,9 @@ export const Emphasis: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `<rec-heading [order]="2" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" headingId="a11y-id">Heading</rec-heading>`,
+  }),
+};

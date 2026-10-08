@@ -1,6 +1,8 @@
 import {
   AfterViewInit,
   Component,
+  Injector,
+  afterNextRender,
   EventEmitter,
   Input,
   OnChanges,
@@ -12,7 +14,12 @@ import {
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import { Overlay } from "@angular/cdk/overlay";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { ModalScrollDividerDirective } from "./modal-scroll-divider.directive";
 
 let nextId = 0;
@@ -98,6 +105,14 @@ let nextId = 0;
   imports: [ModalScrollDividerDirective],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./modal.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  // `title` is a modal input; keep it from also being a native tooltip on the host.
+  host: { "[attr.title]": "null" },
   template: `
     <ng-template #contentTpl>
       <div
@@ -107,13 +122,13 @@ let nextId = 0;
         @if (title || withCloseButton) {
           <div class="header">
             @if (title) {
-              <h2 class="title">{{ title }}</h2>
+              <h2 class="title" [id]="titleId">{{ title }}</h2>
             }
             @if (withCloseButton) {
               <button
                 type="button"
                 class="close"
-                aria-label="Close"
+                [attr.aria-label]="closeButtonLabel"
                 (click)="requestClose()"
               >
                 <svg
@@ -155,11 +170,36 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() closeOnClickOutside = true;
   @Input() fullScreen = false;
 
+  /** Accessible name of the close button. */
+  @Input() closeButtonLabel = "Close";
+
+  /** `alertdialog` for an interruption that needs an explicit response. */
+  @Input() role: "dialog" | "alertdialog" = "dialog";
+
+  /**
+   * Press `Escape` to close. Independent of `closeOnClickOutside` (Mantine's
+   * own split) — see `IMPLEMENTATION_NOTES.md`.
+   */
+  @Input() closeOnEscape = true;
+
+  /** Keep `Tab` focus inside the modal. */
+  @Input() trapFocus = true;
+
+  /** Return focus to the element that opened the modal when it closes. */
+  @Input() returnFocus = true;
+
+  /** Block page scrolling behind the modal while it is open. */
+  @Input() lockScroll = true;
+
   @ViewChild("contentTpl")
   private readonly contentTemplate!: TemplateRef<unknown>;
 
   private readonly dialog = inject(MatDialog);
+  private readonly overlay = inject(Overlay);
+  private readonly injector = inject(Injector);
+  private readonly aria = inject(RecursicaAriaLabelling);
   private readonly id = `rec-modal-${nextId++}`;
+  protected readonly titleId = `${this.id}-title`;
   private dialogRef?: MatDialogRef<unknown>;
   private viewInitialized = false;
 
@@ -196,9 +236,38 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
       // Mantine's default (non-centered) placement: top-aligned, 5dvh from the top edge.
       position: { top: "5dvh" },
       hasBackdrop: this.withOverlay,
-      disableClose: !this.closeOnClickOutside,
+      // Closing is decided here, not by MatDialog: its single `disableClose` flag would tie
+      // Escape to `closeOnClickOutside`. See the `keydownEvents`/`backdropClick` handlers below.
+      disableClose: true,
+      role: this.role,
+      ariaModal: true,
+      // Name: the caller's, else the visible title.
+      ariaLabel: this.aria.ariaLabel ?? null,
+      ariaLabelledBy:
+        this.aria.ariaLabelledby ??
+        (this.aria.ariaLabel || !this.title ? null : this.titleId),
+      ariaDescribedBy: this.aria.ariaDescribedby ?? null,
+      restoreFocus: this.returnFocus,
+      scrollStrategy: this.lockScroll
+        ? this.overlay.scrollStrategies.block()
+        : this.overlay.scrollStrategies.noop(),
       autoFocus: "dialog",
     });
+    const ref = this.dialogRef;
+    ref.keydownEvents().subscribe((event) => {
+      if (event.key === "Escape" && this.closeOnEscape) {
+        event.preventDefault();
+        ref.close();
+      }
+    });
+    ref.backdropClick().subscribe(() => {
+      if (this.closeOnClickOutside) {
+        ref.close();
+      }
+    });
+    if (!this.trapFocus) {
+      this.releaseFocusTrap();
+    }
     this.dialogRef.afterClosed().subscribe(() => {
       this.dialogRef = undefined;
       if (this.opened) {
@@ -207,6 +276,21 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
       }
       this.closed.emit();
     });
+  }
+
+  /**
+   * MatDialog always renders the CDK focus-trap sentinels around its container, so a
+   * non-trapping modal removes them (same approach the earlier Panel used).
+   */
+  private releaseFocusTrap(): void {
+    afterNextRender(
+      () =>
+        document
+          .getElementById(this.id)
+          ?.parentElement?.querySelectorAll(".cdk-focus-trap-anchor")
+          .forEach((anchor) => anchor.remove()),
+      { injector: this.injector },
+    );
   }
 
   requestClose(): void {

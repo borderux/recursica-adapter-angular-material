@@ -38,3 +38,22 @@ destroyed by CDK on every show/hide; the only reference is the private
 `MatTooltip._tooltipInstance`, which this adapter won't depend on).
 `overClass` is forwarded into the same `matTooltipClass` binding used for
 `.rec-tooltip`/the beak.
+
+## Delays and keyboard focus (round 2)
+
+- `showDelay`/`hideDelay` are renamed `openDelay`/`closeDelay` (the names
+  Mantine and HoverCard use). The old names remain as `@deprecated` inputs that
+  set the same value, so nothing breaks. No aria inputs are added to Tooltip.
+  The `WithDelays` story uses the new names.
+- Audit claim "keyboard focus on a child button does not open the tooltip": real.
+  `MatTooltip.ngAfterViewInit` calls `FocusMonitor.monitor(elementRef)` with no
+  `checkChildren`, and its element is the wrapper span, so focus on the projected
+  button is never reported (`tooltip2.mjs`, `ngAfterViewInit`). Fix: `focusin`/
+  `focusout` on the span call `MatTooltip.show()`/`hide(0)` when the focus target
+  is a descendant; `show()` only for `:focus-visible` (keyboard), matching
+  Material's own `origin === 'keyboard'` rule.
+- `aria-describedby`: `MatTooltip` sets it on the span (not focusable). The first
+  focusable descendant (`firstFocusable`, `utils/recursica-trigger-aria.ts`) is
+  now also described via `AriaDescriber.describe(child, label, "tooltip")`,
+  which reuses the same message element; the span keeps its own as a fallback.
+  Re-evaluated in `ngAfterViewChecked` when the child or label changes.

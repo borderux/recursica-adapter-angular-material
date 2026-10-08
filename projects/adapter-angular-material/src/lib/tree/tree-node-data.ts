@@ -9,4 +9,8 @@ export interface RecursicaTreeNode {
   value: string;
   label: string;
   children?: RecursicaTreeNode[];
+  /** `aria-label` of this node's `treeitem` (the `rec-tree-node` host). */
+  ariaLabel?: string;
+  /** Sets `aria-disabled` on the node and blocks selecting it. */
+  disabled?: boolean;
 }

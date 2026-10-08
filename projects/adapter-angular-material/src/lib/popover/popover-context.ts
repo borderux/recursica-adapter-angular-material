@@ -18,6 +18,10 @@ export interface PopoverContext {
   readonly position: RecursicaPopoverPosition;
   readonly withBeak: boolean;
   readonly disabled: boolean;
+  /** Whether the panel is currently open (drives the trigger's `aria-expanded`). */
+  readonly isOpen: boolean;
+  /** Generated id of the panel element (the trigger's `aria-controls`). */
+  readonly panelId: string;
   registerOrigin(el: ElementRef<HTMLElement>): void;
   registerDropdownTemplate(template: TemplateRef<unknown> | null): void;
   requestToggle(): void;

@@ -88,3 +88,9 @@ export const ContentsOnly: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `<rec-layer [layer]="1" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id" role="region">Layer content</rec-layer>`,
+  }),
+};

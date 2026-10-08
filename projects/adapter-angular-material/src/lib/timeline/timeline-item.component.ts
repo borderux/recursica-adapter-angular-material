@@ -6,6 +6,11 @@ import {
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import {
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { TIMELINE_CONTEXT } from "./timeline-context";
 
 export type RecursicaTimelineBulletVariant =
@@ -61,9 +66,18 @@ export type RecursicaTimelineBulletVariant =
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./timeline-item.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: ["ariaLabel", "aria-label"],
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   template: `
     <div
       class="item"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
       [attr.data-variant]="bulletVariant"
       [attr.data-active]="isActive ? '' : null"
       [attr.data-last]="isLast ? '' : null"
@@ -83,7 +97,13 @@ export type RecursicaTimelineBulletVariant =
             <div class="description">
               <ng-container [ngTemplateOutlet]="content" />
             </div>
-            <div class="timestamp">{{ timestamp }}</div>
+            @if (datetime) {
+              <time class="timestamp" [attr.datetime]="datetime">{{
+                timestamp
+              }}</time>
+            } @else {
+              <div class="timestamp">{{ timestamp }}</div>
+            }
           } @else {
             <ng-container [ngTemplateOutlet]="content" />
           }
@@ -93,8 +113,14 @@ export type RecursicaTimelineBulletVariant =
   `,
 })
 export class TimelineItemComponent {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() title?: string;
   @Input() timestamp?: string;
+
+  /** Machine-readable value for the timestamp: renders it as `<time datetime>`. Only used when `timestamp` is set. */
+  @Input() datetime?: string;
   @Input() bulletVariant: RecursicaTimelineBulletVariant = "default";
   @Input() bullet?: TemplateRef<unknown>;
 

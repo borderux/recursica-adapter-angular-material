@@ -6,7 +6,12 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
+import {
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -46,11 +51,15 @@ export type RecursicaLabelAlignment = "left" | "right";
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./label.component.css",
+  hostDirectives: [
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   template: `
     <label
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
+      [attr.id]="elementId.id ?? null"
       [attr.for]="htmlFor"
       [attr.data-size]="labelSize"
       [attr.data-alignment]="labelAlignment"
@@ -93,6 +102,9 @@ export type RecursicaLabelAlignment = "left" | "right";
   `,
 })
 export class LabelComponent implements RecursicaOverStyled {
+  /** `id` of the inner `<label>` (the host `id` is cleared). */
+  protected readonly elementId = inject(RecursicaElementId);
+
   /** The `id` of the control this label describes — sets the native `for` attribute. */
   @Input() htmlFor?: string;
 

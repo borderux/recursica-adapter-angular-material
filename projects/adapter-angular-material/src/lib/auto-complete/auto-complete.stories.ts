@@ -329,3 +329,18 @@ export const EditableReadOnly: Story = {
     props: { data: ["Option 1", "Option 2"] },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-auto-complete
+        label="Country Selection"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+        [data]="data"
+      ></rec-auto-complete>
+    `,
+    props: { data: COUNTRY_DATA },
+  }),
+};

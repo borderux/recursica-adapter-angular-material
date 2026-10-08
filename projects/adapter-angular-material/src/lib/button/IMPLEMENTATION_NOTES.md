@@ -201,3 +201,20 @@ composed `<rec-loader>` ring visible inside the button, label hidden) and
 `/tmp/recursica-angular-material-button-icon-only.png` (icon-only pill with
 a real projected SVG icon). Server killed after verification — not left
 running.
+
+## Passthrough
+
+| Input                                  | Forwarded to                      | Notes                                                                                                                                   |
+| -------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | inner `button` `aria-label`       | Migrated to the `RecursicaAriaLabelling` host directive. The icon-only dev warning reads `aria.ariaLabel` and re-checks in `ngDoCheck`. |
+| `ariaLabelledby` / `aria-labelledby`   | inner `button` `aria-labelledby`  | Host directive.                                                                                                                         |
+| `ariaDescribedby` / `aria-describedby` | inner `button` `aria-describedby` | Host directive.                                                                                                                         |
+| `id`                                   | inner `button` `id`               | `RecursicaElementId` host directive; host `id` is cleared.                                                                              |
+| `title`                                | inner `button` `title`            | Host `title` attribute is cleared.                                                                                                      |
+| `ariaPressed`                          | inner `button` `aria-pressed`     | Toggle buttons.                                                                                                                         |
+| `name`, `value`                        | inner `button` `name`, `value`    | For form submission.                                                                                                                    |
+
+Withheld:
+
+- `disableRipple`, `disabledInteractive`: Material-only inputs; removed from the public API (the `disabledInteractive` attribute binding had no effect).
+- Step/roving `tabindex` beyond `buttonTabIndex`: unchanged.

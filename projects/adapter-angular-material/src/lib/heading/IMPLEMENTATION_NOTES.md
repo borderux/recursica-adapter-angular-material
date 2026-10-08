@@ -48,3 +48,23 @@ developer's own 6006 instance).
 **Not done, same flag as every component built this session**: no
 browser/Playwright tooling available, so the actual rendered typography
 was reasoned from the CSS, not visually verified.
+
+## Heading is the only component that renders `h1` to `h6`
+
+Recursica and Forge define and style the heading levels, so `rec-heading` renders
+`h1` to `h6` with fixed styles and no variants are added to it. `rec-text` must
+never render a heading element (its `component` input throws for `h1` to `h6`).
+To get a heading in the document outline, use `rec-heading`.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to                          | Notes                                                              |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | rendered `h1`-`h6` (all six branches) | `headingId` / `headingTabIndex` already existed and are unchanged. |
+
+Withheld:
+
+- `role`: would change heading semantics
+- `size`, `lineClamp`: owned by tokens

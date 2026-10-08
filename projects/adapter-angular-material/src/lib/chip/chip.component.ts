@@ -7,12 +7,19 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 /**
  * Recursica `Chip` — Angular Material adapter.
@@ -111,6 +118,14 @@ import {
  */
 @Component({
   selector: "rec-chip",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.title]": "null" },
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./chip.component.css",
@@ -125,13 +140,17 @@ import {
     >
       <span
         class="label"
-        role="checkbox"
+        [attr.role]="isInteractive ? 'checkbox' : null"
+        [attr.id]="elementId.id ?? null"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+        [attr.title]="title ?? null"
         [attr.aria-checked]="isInteractive ? checkedValue : null"
-        [attr.aria-disabled]="disabled ? true : null"
-        [attr.aria-hidden]="!isInteractive ? true : null"
+        [attr.aria-disabled]="isInteractive && disabled ? true : null"
         [attr.data-checked]="checkedValue ? '' : null"
         [attr.data-disabled]="disabled ? '' : null"
-        [attr.tabindex]="isInteractive && !disabled ? 0 : -1"
+        [attr.tabindex]="isInteractive ? (disabled ? -1 : 0) : null"
         (click)="onClick($event)"
         (keydown)="onKeydown($event)"
       >
@@ -187,6 +206,12 @@ import {
   `,
 })
 export class ChipComponent implements RecursicaOverStyled, OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
+  /** Native `title` of the inner label span (`role=checkbox` when interactive, plain text otherwise). */
+  @Input() title?: string;
+
   /** `RecursicaChipProps.error` — applies the error-state token variant. */
   @Input() error = false;
 

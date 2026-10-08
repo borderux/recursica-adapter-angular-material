@@ -179,3 +179,36 @@ export const WithIcons: Story = {
     `,
   }),
 };
+
+/** Passthrough check: aria lands on the open `role=menu` panel; item aria on the item button; label id on its inner div. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-button id="a11y-trigger" variant="solid" [recMenuTriggerFor]="menu" [recMenuInitiallyOpen]="true">Toggle Menu</rec-button>
+      <rec-menu #menu aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+        <rec-menu-label id="a11y-id-label">Application</rec-menu-label>
+        <rec-menu-item aria-label="A11Y-LABEL-ITEM" aria-describedby="a11y-desc-item" title="A11Y-TITLE-ITEM">Settings</rec-menu-item>
+      </rec-menu>
+      <span id="a11y-desc" hidden>Description</span>
+      <span id="a11y-desc-item" hidden>Item description</span>
+    `,
+  }),
+};
+
+export const WithMaxHeight: Story = {
+  render: () => ({
+    template: `
+        <rec-button variant="solid" [recMenuTriggerFor]="menu" [recMenuInitiallyOpen]="true">Scrolling menu (150px)</rec-button>
+        <rec-menu #menu maxHeight="150px">
+          <rec-menu-item>Item 1</rec-menu-item>
+          <rec-menu-item>Item 2</rec-menu-item>
+          <rec-menu-item>Item 3</rec-menu-item>
+          <rec-menu-item>Item 4</rec-menu-item>
+          <rec-menu-item>Item 5</rec-menu-item>
+          <rec-menu-item>Item 6</rec-menu-item>
+          <rec-menu-item>Item 7</rec-menu-item>
+          <rec-menu-item>Item 8</rec-menu-item>
+        </rec-menu>
+    `,
+  }),
+};

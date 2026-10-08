@@ -354,3 +354,23 @@ instance) via Playwright (chromium):
 `npx tsc --noEmit -p projects/adapter-angular-material/tsconfig.lib.json`
 and `npx eslint 'projects/adapter-angular-material/src/lib/accordion/**/*.ts'`
 both run clean.
+
+## `variant`
+
+`rec-accordion` `[variant]` (`"default" | string`, default `"default"`) is rendered as `data-variant` on `div.root`. React maps `"default"` to Mantine's `unstyled` variant (`mapVariant` in `Accordion.tsx`) purely to switch off Mantine's built-in variant CSS; `Accordion.module.css` has no variant-specific selectors or tokens, so all Recursica styling is the same for every value. There is nothing equivalent to switch off here (no Mantine), so `"default"` and any custom string render identically; `data-variant` is a hook for consumer theming. No new tokens were added. Deviation: React passes a non-default string through to Mantine, whose own built-in styles (contained, separated, filled) then apply; those do not exist in this adapter.
+
+## Passthrough
+
+| Input                                                          | Forwarded to                            | Notes                                                                                                                                         |
+| -------------------------------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rec-accordion` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `div.root`                              | Host directive.                                                                                                                               |
+| `rec-accordion` `id`                                           | `div.root` `id`                         | `RecursicaElementId`. Also the prefix for control/panel ids when set.                                                                         |
+| `rec-accordion-control` `ariaLabel`, `ariaDescribedby`         | `button.control`                        | Host directive exposing only these two.                                                                                                       |
+| `rec-accordion-control` `headingLevel`                         | wraps `button.control` in `<h2>`-`<h6>` | Optional; the button stays the control. A string value is coerced to a number.                                                                |
+| `rec-accordion-panel` `ariaLabel`, `ariaDescribedby`           | `div.panel[role=region]`                | Host directive. `aria-labelledby` stays the control id, except it is dropped when `ariaLabel` is given (labelledby would override the label). |
+
+Control and panel ids are now `<prefix>-control-<value>` / `<prefix>-panel-<value>`, where `<prefix>` is the root `id`, else `rec-accordion-<n>` (per-instance counter). Whitespace in a `value` becomes `-`. `AccordionContext` gained `controlId(value)`/`panelId(value)`; `AccordionItemContext` gained `controlId`/`panelId`.
+
+Withheld:
+
+- `aria-expanded`, `aria-controls`, control/panel ids: derived from state.

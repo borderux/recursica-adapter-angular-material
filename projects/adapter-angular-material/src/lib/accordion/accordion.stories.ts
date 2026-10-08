@@ -170,3 +170,41 @@ export const Disabled: Story = {
     `,
   }),
 };
+
+/** Passthrough check: root aria and id on the root div; control aria on `button.control`; panel aria on `div.panel`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-accordion defaultValue="item-1" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id">
+        <rec-accordion-item value="item-1">
+          <rec-accordion-control headingLevel="3" aria-label="A11Y-LABEL-CONTROL" aria-describedby="a11y-desc-control">Billing</rec-accordion-control>
+          <rec-accordion-panel aria-label="A11Y-LABEL-PANEL" aria-describedby="a11y-desc-panel">Billing details</rec-accordion-panel>
+        </rec-accordion-item>
+      </rec-accordion>
+      <span id="a11y-desc" hidden>Description</span>
+      <span id="a11y-desc-control" hidden>Control description</span>
+      <span id="a11y-desc-panel" hidden>Panel description</span>
+    `,
+  }),
+};
+
+export const Variants: Story = {
+  render: () => ({
+    template: `
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <rec-accordion variant="default" defaultValue="a">
+          <rec-accordion-item value="a">
+            <rec-accordion-control>Default variant</rec-accordion-control>
+            <rec-accordion-panel>Uses the Recursica accordion tokens.</rec-accordion-panel>
+          </rec-accordion-item>
+        </rec-accordion>
+        <rec-accordion variant="custom" defaultValue="b">
+          <rec-accordion-item value="b">
+            <rec-accordion-control>Custom variant (data-variant="custom")</rec-accordion-control>
+            <rec-accordion-panel>No dedicated styling; same tokens, exposed as a theming hook.</rec-accordion-panel>
+          </rec-accordion-item>
+        </rec-accordion>
+      </div>
+    `,
+  }),
+};

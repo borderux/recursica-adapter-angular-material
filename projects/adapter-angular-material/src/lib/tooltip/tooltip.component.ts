@@ -1,17 +1,23 @@
+import { AriaDescriber } from "@angular/cdk/a11y";
 import {
+  AfterViewChecked,
   AfterViewInit,
   Component,
+  ElementRef,
   Input,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import {
   MatTooltip,
   MatTooltipModule,
   TooltipPosition,
 } from "@angular/material/tooltip";
+import { firstFocusable } from "../utils/recursica-trigger-aria";
 import { RecursicaOverStyled } from "../utils/recursica-over-styled";
 
 export type RecursicaTooltipPosition = "top" | "bottom" | "left" | "right";
@@ -110,22 +116,47 @@ const POSITION_MAP: Record<RecursicaTooltipPosition, TooltipPosition> = {
       [matTooltip]="label"
       [matTooltipDisabled]="disabled"
       [matTooltipPosition]="materialPosition"
-      [matTooltipShowDelay]="showDelay ?? 0"
-      [matTooltipHideDelay]="hideDelay ?? 0"
+      [matTooltipShowDelay]="openDelay ?? 0"
+      [matTooltipHideDelay]="closeDelay ?? 0"
       [matTooltipClass]="tooltipClasses"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
     >
       <ng-content />
     </span>
   `,
 })
 export class TooltipComponent
-  implements RecursicaOverStyled, AfterViewInit, OnChanges
+  implements
+    RecursicaOverStyled,
+    AfterViewInit,
+    AfterViewChecked,
+    OnChanges,
+    OnDestroy
 {
   @Input() label = "";
   @Input() position: RecursicaTooltipPosition = "top";
   @Input() disabled = false;
-  @Input() showDelay?: number;
-  @Input() hideDelay?: number;
+  /** Delay in ms before the tooltip opens. */
+  @Input() openDelay?: number;
+  /** Delay in ms before the tooltip closes. */
+  @Input() closeDelay?: number;
+
+  /** @deprecated Use `openDelay`. Kept so existing templates keep working. */
+  @Input() set showDelay(value: number | undefined) {
+    this.openDelay = value;
+  }
+  get showDelay(): number | undefined {
+    return this.openDelay;
+  }
+
+  /** @deprecated Use `closeDelay`. Kept so existing templates keep working. */
+  @Input() set hideDelay(value: number | undefined) {
+    this.closeDelay = value;
+  }
+  get hideDelay(): number | undefined {
+    return this.closeDelay;
+  }
 
   /** Visual beak/arrow pointing at the trigger. Defaults to `true`, matching the mantine-adapter's own default. */
   @Input() withBeak = true;
@@ -148,6 +179,10 @@ export class TooltipComponent
 
   @ViewChild("tooltip") private readonly tooltip?: MatTooltip;
   private viewInitialized = false;
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly ariaDescriber = inject(AriaDescriber);
+  private describedChild: HTMLElement | null = null;
+  private describedLabel = "";
 
   get materialPosition(): TooltipPosition {
     return POSITION_MAP[this.position];
@@ -164,6 +199,60 @@ export class TooltipComponent
   ngAfterViewInit(): void {
     this.viewInitialized = true;
     this.applyOpened();
+  }
+
+  /**
+   * `MatTooltip` monitors focus on its own element only (the wrapper span, no
+   * `checkChildren`), so keyboard focus on the projected button never reaches it. Focus
+   * moving into/out of a child shows/hides the tooltip here, for keyboard focus only
+   * (`:focus-visible`), as `MatTooltip` itself does for focus on its element.
+   */
+  onFocusIn(event: FocusEvent): void {
+    const target = event.target as HTMLElement;
+    if (target === event.currentTarget) return;
+    let visible = true;
+    try {
+      visible = target.matches(":focus-visible");
+    } catch {
+      // `:focus-visible` unsupported: treat as keyboard focus.
+    }
+    if (visible) this.tooltip?.show();
+  }
+
+  onFocusOut(event: FocusEvent): void {
+    if (event.target === event.currentTarget) return;
+    this.tooltip?.hide(0);
+  }
+
+  /**
+   * `MatTooltip` puts `aria-describedby` on the wrapper span, which is not focusable. When the
+   * content has a real focusable element, it is described too (the span keeps its own as a
+   * fallback); both point at the same message element.
+   */
+  ngAfterViewChecked(): void {
+    const label = this.disabled ? "" : this.label;
+    const child = label ? firstFocusable(this.host.nativeElement) : null;
+    if (child === this.describedChild && label === this.describedLabel) return;
+    if (this.describedChild) {
+      this.ariaDescriber.removeDescription(
+        this.describedChild,
+        this.describedLabel,
+        "tooltip",
+      );
+    }
+    this.describedChild = child;
+    this.describedLabel = label;
+    if (child) this.ariaDescriber.describe(child, label, "tooltip");
+  }
+
+  ngOnDestroy(): void {
+    if (this.describedChild) {
+      this.ariaDescriber.removeDescription(
+        this.describedChild,
+        this.describedLabel,
+        "tooltip",
+      );
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

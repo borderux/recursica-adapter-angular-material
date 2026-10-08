@@ -313,3 +313,20 @@ composed look), and the source-of-truth's own `Tabs.List`/`Tabs.Tab`/
 open gap flagged honestly here rather than silently matched or silently
 dropped without a note. Follow-up if per-tab overstyling turns out to be
 needed in practice.
+
+## Passthrough
+
+| Input                                                           | Forwarded to                    | Notes                                                                                                                                                                       |
+| --------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rec-tabs-list` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby`  | `div.list[role=tablist]`        | Host directive.                                                                                                                                                             |
+| `rec-tabs-tab` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby`   | `button[role=tab]`              | Host directive.                                                                                                                                                             |
+| `rec-tabs-tab` `title`                                          | `button[role=tab]` `title`      | Host `title` attribute is cleared.                                                                                                                                          |
+| `rec-tabs-panel` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `div[role=tabpanel]`            | `aria-labelledby` defaults to the tab id; the default is dropped when the caller gives `ariaLabel` but no `ariaLabelledby` (labelledby would otherwise override the label). |
+| `rec-tabs-panel` `panelTabIndex`                                | `div[role=tabpanel]` `tabindex` | Named to avoid the host attribute.                                                                                                                                          |
+
+Tab and panel ids are now `rec-tab-<n>-<value>` / `rec-tabpanel-<n>-<value>`, where `<n>` is a per-`rec-tabs` instance counter, so two tab sets with the same values do not collide. Whitespace in a `value` becomes `-`. `TabsContext` gained `tabId(value)` and `panelId(value)`.
+
+Withheld:
+
+- `aria-selected`, `aria-controls`, roving `tabindex`, tab and panel ids: derived from state.
+- `keepMounted`: not added in this pass.

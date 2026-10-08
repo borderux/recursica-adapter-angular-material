@@ -35,3 +35,13 @@ export const Default: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-layout-grid aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id">
+        ${swatch(1)}
+      </rec-layout-grid>
+    `,
+  }),
+};

@@ -261,3 +261,18 @@ reference images (`recursica-adapter-mantine-v8/test/golden/ui-kit-stepper--*.pn
 No console errors or Angular template errors observed across any story (`Default`/`Small`/
 `Vertical`/`LayoutStressTest`/`OverStyledEscapeHatch`), checked via a real Playwright `console`/
 `pageerror` listener across all five, not just the visual screenshots.
+
+## Passthrough
+
+| Input                                                        | Forwarded to       | Notes                                       |
+| ------------------------------------------------------------ | ------------------ | ------------------------------------------- |
+| `rec-stepper` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `div.root`         | Host directive.                             |
+| `rec-stepper` `id`                                           | `div.root` `id`    | `RecursicaElementId`; host `id` is cleared. |
+| `rec-stepper-step` `ariaLabel`, `ariaDescribedby`            | `button.step`      | Host directive exposing only these two.     |
+| `rec-stepper-step` `id`                                      | `button.step` `id` | `RecursicaElementId`.                       |
+
+Withheld:
+
+- Step `tabindex`: derived from whether the step is clickable.
+- Step `ariaCurrent`: derived from the step state.
+- Step `ariaLabelledby`: not exposed (the visible label already names the step).

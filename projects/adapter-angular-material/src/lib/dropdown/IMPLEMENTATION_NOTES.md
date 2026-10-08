@@ -254,3 +254,24 @@ screenshotted to `.scratch/`:
 No golden-comparison automation exists in this adapter yet (same as every other component here)
 — comparisons above are manual visual review of the screenshots side by side with the reference
 PNGs, not pixel-diffed.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                                                          | Notes                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `button[role=combobox]`, or the read-only display div when `readOnly` | `RecursicaAriaLabelling` host directive on the public component; the host's own attributes are cleared. Describedby is merged with the form-control wrapper's ids (caller's first). |
+| `id`                                                                                                     | `button[role=combobox]` (or the read-only display div)                | Existing input kept; host `id` attribute cleared.                                                                                                                                   |
+| `inputTabIndex`                                                                                          | Combobox button `tabindex`                                            | Named like Button's `buttonTabIndex`.                                                                                                                                               |
+| `form`                                                                                                   | Combobox button `form`                                                | Id of the owning form. No hidden input exists, so `name` still never submits.                                                                                                       |
+
+`ariaLabel` was already an input; it is now supplied by the directive (same name, plus the hyphenated spelling).
+
+Withheld:
+
+- `debugForceOpen`: stories-only, left as is and not part of the contract.
+- Material `appearance`, `color`, `panelClass`, `disableRipple`: tokens own them.
+
+## Round 2: `containerWidth`, `clearLabel`
+
+- `containerWidth` (`string | number`, canonical): bound as the host's `style.width` (numbers become px, strings pass through), with `display: block` set on the host only while it is set so the width applies. React puts the width on its wrapper (default `100%`); unset here keeps the previous behaviour. The `.root` token `max-width` still caps the trigger. `withAsterisk` is left to the wrapper. Story: `ContainerWidth`.
+- `clearLabel` (default "Clear selection"): `aria-label` of the clear button. Story: `CustomLabels`.

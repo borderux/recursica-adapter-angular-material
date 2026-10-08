@@ -13,6 +13,12 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaAvatarVariant = "solid" | "outline" | "ghost";
 export type RecursicaAvatarSize = "default" | "small" | "large";
@@ -91,11 +97,22 @@ export type RecursicaAvatarSize = "default" | "small" | "large";
  */
 @Component({
   selector: "rec-avatar",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./avatar.component.css",
   template: `
     <div
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
@@ -159,6 +176,9 @@ export type RecursicaAvatarSize = "default" | "small" | "large";
   `,
 })
 export class AvatarComponent implements RecursicaOverStyled, AfterViewInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() src?: string;
   @Input() alt?: string;
 

@@ -82,3 +82,28 @@ twice — the process was alive at the end of the call that started it, then
 gone, with no crash logged, by the next call). All Storybook verification
 in this session had to start the server and check it within a single
 continuous shell call.
+
+## Passthrough
+
+Forwarded through the shared `RecursicaAriaLabelling` host directive (`utils/recursica-aria.ts`); the host's own aria attributes and `id` are cleared so nothing is duplicated on the `rec-*` element.
+
+| Input                                                            | Forwarded to                                   | Notes                                                                                 |
+| ---------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby` | inner `<input type=number>`                    | Host directive on the public component and passed to the inner `*-control` component. |
+| `ariaDescribedby` / `aria-describedby`                           | inner `<input type=number>` `aria-describedby` | Merged with the form-control wrapper's ids (caller's first), never replaced.          |
+| `id`                                                             | inner `<input type=number>`                    | Existing input kept; host `id` attribute nulled so the id is not duplicated.          |
+| `inputTabIndex`                                                  | inner `<input type=number>` `tabindex`         | Named after Button's `buttonTabIndex`.                                                |
+| `form`                                                           | inner `<input type=number>` `form`             | Host `form` attribute nulled.                                                         |
+| `autocomplete`                                                   | inner `<input>` `autocomplete`                 |                                                                                       |
+| `inputMode`                                                      | inner `<input>` `inputmode`                    |                                                                                       |
+
+Withheld:
+
+- `name`, `required`, `placeholder` already existed; unchanged.
+- Material `appearance`, `color`, `floatLabel`, `subscriptSizing`, `hideRequiredMarker`, `errorStateMatcher`: tokens own styling.
+- `minlength`, `maxlength`, `spellcheck`: not valid on `type=number`.
+- Hard-coded `Increment`/`Decrement` button labels are unchanged (out of scope).
+
+## Round 2: translatable button labels
+
+`incrementLabel` / `decrementLabel` (defaults "Increment" / "Decrement") set the `aria-label` of the stepper buttons. Added on `rec-number-input` and passed to `rec-number-input-control`. Story: `CustomLabels`.

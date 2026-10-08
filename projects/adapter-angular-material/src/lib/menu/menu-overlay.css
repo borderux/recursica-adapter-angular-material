@@ -24,7 +24,9 @@
   --mat-menu-container-color: var(--recursica_ui-kit_components_menu_properties_colors_background-color);
   min-width: var(--recursica_ui-kit_components_menu_properties_min-width);
   max-width: var(--recursica_ui-kit_components_menu_properties_max-width);
+  /* A per-instance `maxHeight` input overrides this inline on the open panel (menu.component.ts). */
   max-height: var(--recursica_ui-kit_components_menu_properties_max-height);
+  overflow-y: auto;
 }
 
 [data-recursica-theme] .mat-mdc-menu-panel.rec-menu .mat-mdc-menu-content {

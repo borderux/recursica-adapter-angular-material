@@ -65,3 +65,16 @@ compiling with zero webpack errors in a live Storybook dev server (port
 browser/Playwright tooling available, so the broken-image fallback and the
 actual rendered token values were reasoned from the code, not
 click/visually verified.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                    | Forwarded to | Notes                                                 |
+| -------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `div.root`   | Name the avatar; `alt`/`src` already go to the `img`. |
+| `id`                                                                                                     | `div.root`   |                                                       |
+
+Withheld:
+
+- `role`: image/icon/text modes differ, no single role fits

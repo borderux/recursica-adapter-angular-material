@@ -106,3 +106,32 @@ export const ReadOnly: Story = {
     readOnly: true,
   },
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-transfer-list
+        label="Assign users"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-transfer-list>
+    `,
+  }),
+};
+
+/** Translated strings: pane labels, empty text, filter labels and move-button names. */
+export const CustomLabels: Story = {
+  args: {
+    label: "Affecter des utilisateurs",
+    sourceLabel: "Disponibles",
+    targetLabel: "Sélectionnés",
+    searchPlaceholder: "Filtrer...",
+    emptyLabel: "Aucun élément",
+    filterLabel: (pane: string) => `Filtrer ${pane.toLowerCase()}`,
+    moveAllLabel: (destination: string) => `Tout déplacer vers ${destination}`,
+    moveSelectedLabel: (destination: string) =>
+      `Déplacer la sélection vers ${destination}`,
+    defaultData: [SAMPLE_DATA[0], []],
+  },
+};

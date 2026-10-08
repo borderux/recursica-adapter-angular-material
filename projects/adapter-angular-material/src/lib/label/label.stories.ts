@@ -134,3 +134,10 @@ export const OverStyledEscapeHatch: Story = {
     template: `<rec-label [overStyled]="overStyled" [overStyle]="overStyle">Over-styled label</rec-label>`,
   }),
 };
+
+/** Passthrough check: `id` lands on the inner label element only. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `<rec-label id="a11y-id">Label</rec-label>`,
+  }),
+};

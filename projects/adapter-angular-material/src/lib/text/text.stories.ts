@@ -80,3 +80,32 @@ export const Emphasis: Story = {
     `,
   }),
 };
+
+/** `component` renders Text as an inline `span`, a `label` or a `div`; `h1` to `h6` throw (use `rec-heading`). */
+export const AsElement: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-text>Default is a block paragraph.</rec-text>
+        <div>Inline text: <rec-text component="span" emphasis="low">a span inside a line</rec-text>.</div>
+        <rec-text component="label">A label</rec-text>
+      </rec-stack>
+    `,
+  }),
+};
+
+/**
+ * `aria-label`, `aria-labelledby`, `aria-describedby` and `id` are forwarded to the rendered
+ * element, in either spelling, static or bound. The host `rec-text` keeps none of them.
+ */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-text id="a11y-id" aria-label="A11Y-LABEL" aria-describedby="a11y-desc">Static attributes</rec-text>
+        <rec-text ariaLabel="Camel label" ariaDescribedby="a11y-desc" component="span">Camel case inputs</rec-text>
+        <span id="a11y-desc" hidden>Description</span>
+      </rec-stack>
+    `,
+  }),
+};

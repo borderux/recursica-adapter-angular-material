@@ -159,3 +159,22 @@ export const OverStyledEscapeHatch: Story = {
     `,
   }),
 };
+
+/** Passthrough check: list aria on the tablist; tab and panel aria on `role=tab` / `role=tabpanel`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-tabs defaultValue="one">
+        <rec-tabs-list aria-label="A11Y-LABEL" aria-describedby="a11y-desc">
+          <rec-tabs-tab value="one" aria-label="A11Y-LABEL-TAB" aria-describedby="a11y-desc-tab">One</rec-tabs-tab>
+          <rec-tabs-tab value="two">Two</rec-tabs-tab>
+        </rec-tabs-list>
+        <rec-tabs-panel value="one" aria-label="A11Y-LABEL-PANEL" aria-describedby="a11y-desc-panel">Panel one</rec-tabs-panel>
+        <rec-tabs-panel value="two">Panel two</rec-tabs-panel>
+      </rec-tabs>
+      <span id="a11y-desc" hidden>Description</span>
+      <span id="a11y-desc-tab" hidden>Tab description</span>
+      <span id="a11y-desc-panel" hidden>Panel description</span>
+    `,
+  }),
+};

@@ -13,14 +13,28 @@ pre-existing global utility-class family `Heading` consumes (confirmed:
 `subtitle`/`subtitle-small` all already exist in
 `recursica_variables_scoped.css`).
 
-## No polymorphism, no `weight` input from the stub's own guess
+## `component`: `p` (default), `span`, `label`, `div`
 
-Same reasoning as `Avatar`/`Badge`/`Heading` for skipping
-`createPolymorphicComponent` — no other component in this adapter offers
-it. The stub's own first-pass guess included a `weight: string` input; the
-real reference has no such prop (confirmed by reading `Text.tsx`
-directly — weight is fully owned by the `variant`'s own typography class),
-so it isn't built here either.
+`rec-text` renders a `<p>` by default. The `component` input switches the root
+to `span` (inline text), `label` or `div`, so Text does not produce invalid
+markup such as a `<p>` inside a `<p>` or a `<button>`. A custom element cannot
+change its own tag, so the template renders one root per allowed element from a
+shared content template. Typography, `color` and `emphasis` apply the same on
+every element.
+
+The stub's first-pass guess also included a `weight: string` input; the real
+reference has no such prop (weight is owned by the `variant`'s typography
+class), so it isn't built.
+
+## Text never renders `h1` to `h6`
+
+Heading levels belong to `rec-heading` alone: Recursica and Forge define and
+style `h1` to `h6`, and `rec-heading` renders them with fixed styles. Text covers
+all other text, and its variants can extend the Recursica definitions. So
+`component="h1"` to `component="h6"` throws
+(`rec-text cannot render <h2>. Use <rec-heading> for semantic h1-h6.`), as does
+any element outside `p`, `span`, `label` and `div`. This matches the React
+adapter's `Text`.
 
 ## Verification
 
@@ -33,3 +47,14 @@ developer's own 6006 instance).
 **Not done, same flag as every component built this session**: no
 browser/Playwright tooling available, so the actual rendered typography
 was reasoned from the CSS, not visually verified.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                            | Notes                                        |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------- | -------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | rendered `p` / `span` / `label` / `div` | Via `RecursicaAriaLabelling`.                |
+| `id`                                                                                                     | rendered element                        | Via `RecursicaElementId`; host `id` cleared. |
+
+Withheld:
+
+- `size`, `inherit`, `inline`, `gradient`: tokens own them or not applicable

@@ -1,4 +1,10 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 /**
  * Recursica `Layer` — Angular Material adapter.
@@ -25,11 +31,24 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
  */
 @Component({
   selector: "rec-layer",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
+  host: { "[attr.role]": "null" },
   imports: [],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./layer.component.css",
   template: `
     <div
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.role]="role ?? null"
       class="root"
       [class.contents]="contentsOnly"
       [attr.data-recursica-layer]="contentsOnly ? null : layer"
@@ -39,6 +58,12 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
   `,
 })
 export class LayerComponent {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
+  /** Optional role for the inner root. `class` and `style` are not forwarded. */
+  @Input() role?: "region" | "group";
+
   /**
    * Layer (0–3). Sets `data-recursica-layer` on the root so descendants use
    * this layer's styles.

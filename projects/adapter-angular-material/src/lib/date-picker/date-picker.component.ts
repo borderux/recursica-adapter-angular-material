@@ -6,6 +6,7 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  inject,
   signal,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
@@ -15,6 +16,10 @@ import type {
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
@@ -55,6 +60,13 @@ const READ_ONLY_FORMAT: Intl.DateTimeFormatOptions = {
   imports: [WithReadOnlyWrapperComponent, DatePickerControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   providers: [recursicaValueAccessorProvider(DatePickerComponent)],
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null" },
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -90,6 +102,11 @@ const READ_ONLY_FORMAT: Intl.DateTimeFormatOptions = {
         [required]="required"
         [error]="!!error"
         [name]="name"
+        [inputTabIndex]="inputTabIndex"
+        [form]="form"
+        [ariaLabel]="aria.ariaLabel"
+        [ariaLabelledby]="aria.ariaLabelledby"
+        [ariaDescribedby]="aria.ariaDescribedby"
         [min]="min"
         [max]="max"
         [leftSection]="leftSection"
@@ -106,6 +123,12 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
   @Input() placeholder?: string;
   @Input() name?: string;
+
+  /** `tabindex` of the inner `<input>` (named like Button's `buttonTabIndex`: `tabindex` would also match the host). */
+  @Input() inputTabIndex?: number;
+
+  /** `form` attribute of the inner `<input>`: id of the form it belongs to. */
+  @Input() form?: string;
   @Input() disabled = false;
   @Input() required = false;
   @Input() readOnly = false;
@@ -140,6 +163,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
   @Input() overStyled = false;
   @Input() overClass?: string;
   @Input() overStyle?: Record<string, string>;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   private readonly baseId = `rec-date-picker-${nextId++}`;
   @Input() id = this.baseId;

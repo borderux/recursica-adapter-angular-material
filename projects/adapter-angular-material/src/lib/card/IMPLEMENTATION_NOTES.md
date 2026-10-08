@@ -41,3 +41,19 @@ always the sole child of its own component's single-element template, never
 a sibling among other `<rec-card-section>`s; `:host()` correctly tests this
 component's own host element's position among _its_ siblings inside
 `<rec-card>`'s projected content.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                                                           | Forwarded to           | Notes                                    |
+| --------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------- | ---------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` (card) | `mat-card`             |                                          |
+| `id` (card)                                                                                                     | `mat-card`             |                                          |
+| `role` (card)                                                                                                   | `mat-card`             | `"group"                                 | "region"`. |
+| `ariaLabel`, `ariaLabelledby` + `id` (header, content, footer, section)                                         | each part's `div.root` | No `ariaDescribedby` or `role` on parts. |
+
+Withheld:
+
+- `tabindex`: card is not interactive
+- `appearance`: Material styling is owned by tokens

@@ -212,3 +212,19 @@ Screenshots saved: `/tmp/recursica-angular-material-loader-default.png`
 (3 real dots, middle one visibly out of phase) — all real red/pink brand
 color, real layer-0 surface background, not placeholders. Server killed
 after verification — not left running.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                | Forwarded to                  | Notes                                                                                                             |
+| ---------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`                           | `span.root[role=progressbar]` | Migrated to the directive. Default `"Loading"` applies only when neither `ariaLabel` nor `ariaLabelledby` is set. |
+| `ariaLabelledby`, `ariaDescribedby` (and hyphenated) | `span.root`                   |                                                                                                                   |
+| `id`                                                 | `span.root`                   |                                                                                                                   |
+
+Known anomaly, not fixed: `variant="oval"` has `role=progressbar` on both `span.root` and the inner `mat-progress-spinner`.
+
+Withheld:
+
+- `mat-progress-spinner` `color` / `mode` / `value`: Loader has no determinate mode

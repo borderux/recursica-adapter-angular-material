@@ -20,9 +20,7 @@
 }
 
 :host-context([data-recursica-theme]) .root {
-  border-radius: var(
-    --recursica_ui-kit_components_table_properties_border-radius
-  );
+  border-radius: var(--recursica_ui-kit_components_table_properties_border-radius);
   border: var(--recursica_ui-kit_components_table_properties_border-size) solid
     var(--recursica_ui-kit_components_table_properties_colors_border-color);
 }

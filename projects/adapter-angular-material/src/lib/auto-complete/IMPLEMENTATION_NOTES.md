@@ -99,3 +99,26 @@ browser/Playwright tooling available, so the CDK overlay actually opening
 on focus, the mousedown/blur race-condition fix actually working, and the
 keyboard nav are all reasoned from the code and Angular's documented event
 ordering, not click-verified.
+
+## Passthrough
+
+Forwarded through the shared `RecursicaAriaLabelling` host directive (`utils/recursica-aria.ts`); the host's own aria attributes and `id` are cleared so nothing is duplicated on the `rec-*` element.
+
+| Input                                                            | Forwarded to                                     | Notes                                                                                 |
+| ---------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby` | inner `<input role=combobox>`                    | Host directive on the public component and passed to the inner `*-control` component. |
+| `ariaDescribedby` / `aria-describedby`                           | inner `<input role=combobox>` `aria-describedby` | Merged with the form-control wrapper's ids (caller's first), never replaced.          |
+| `id`                                                             | inner `<input role=combobox>`                    | Existing input kept; host `id` attribute nulled so the id is not duplicated.          |
+| `inputTabIndex`                                                  | inner `<input role=combobox>` `tabindex`         | Named after Button's `buttonTabIndex`.                                                |
+| `form`                                                           | inner `<input role=combobox>` `form`             | Host `form` attribute nulled.                                                         |
+| `maxLength`                                                      | inner `<input>` `maxlength`                      |                                                                                       |
+| `minLength`                                                      | inner `<input>` `minlength`                      |                                                                                       |
+| `spellcheck`                                                     | inner `<input>` `spellcheck`                     |                                                                                       |
+| `inputMode`                                                      | inner `<input>` `inputmode`                      |                                                                                       |
+| `autocomplete`                                                   | inner `<input>` `autocomplete`                   | Now an input; defaults to `off`.                                                      |
+
+Withheld:
+
+- `name`, `required`, `placeholder` already existed; unchanged.
+- Material `appearance`, `color`, `floatLabel`, `subscriptSizing`, `hideRequiredMarker`, `errorStateMatcher`: tokens own styling.
+- `aria-controls`, `aria-expanded`, `aria-activedescendant`: derived from overlay state.

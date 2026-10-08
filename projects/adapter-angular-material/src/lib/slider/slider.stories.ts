@@ -213,3 +213,60 @@ export const FormLayouts: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-slider
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+        [defaultValue]="40"
+      ></rec-slider>
+    `,
+  }),
+};
+
+/** `changeEnd` fires once per commit (thumb released / key step), not per drag tick. */
+export const OnChangeEnd: Story = {
+  render: () => ({
+    props: {
+      commits: 0,
+      last: "none",
+      onEnd(v: number | [number, number]) {
+        this["commits"]++;
+        this["last"] = JSON.stringify(v);
+      },
+    },
+    template: `
+      <rec-slider label="Volume" [defaultValue]="30" (changeEnd)="onEnd($event)"></rec-slider>
+      <rec-slider label="Range" [defaultValue]="[20, 80]" (changeEnd)="onEnd($event)"></rec-slider>
+      <p data-testid="commits">Commits: {{ commits }} (last: {{ last }})</p>
+    `,
+  }),
+};
+
+/** `tooltipLabel` formats the readout and `aria-valuetext` (function per thumb, or a static string). */
+export const TooltipLabel: Story = {
+  render: () => ({
+    props: {
+      size: (v: number) => ["XS", "S", "M", "L", "XL"][v] ?? `${v}`,
+      percent: (v: number) => `${v}%`,
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 32px">
+        <rec-slider label="T-shirt size" [min]="0" [max]="4" [defaultValue]="2" [tooltipLabel]="size"></rec-slider>
+        <rec-slider label="Coverage" [defaultValue]="[20, 80]" [tooltipLabel]="percent"></rec-slider>
+      </div>
+    `,
+  }),
+};
+
+/** Translated accessible names for the range thumbs and their number fields. */
+export const CustomLabels: Story = {
+  render: () => ({
+    template: `
+      <rec-slider [defaultValue]="[20, 80]" [showInput]="true" minimumLabel="Valeur minimale" maximumLabel="Valeur maximale"></rec-slider>
+    `,
+  }),
+};

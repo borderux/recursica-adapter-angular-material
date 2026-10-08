@@ -1,4 +1,9 @@
 import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
+import {
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { STEPPER_CONTEXT } from "./stepper-context";
 
 export type RecursicaStepState = "completed" | "progress" | "upcoming";
@@ -38,11 +43,26 @@ export type RecursicaStepState = "completed" | "progress" | "upcoming";
 @Component({
   selector: "rec-stepper-step",
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: [
+        "ariaLabel",
+        "aria-label",
+        "ariaDescribedby",
+        "aria-describedby",
+      ],
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   styleUrl: "./stepper-step.component.css",
   template: `
     <button
       type="button"
       class="step"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.data-completed]="state === 'completed' ? '' : null"
       [attr.data-progress]="state === 'progress' ? '' : null"
       [attr.data-allow-click]="isClickable ? '' : null"
@@ -103,6 +123,9 @@ export type RecursicaStepState = "completed" | "progress" | "upcoming";
   `,
 })
 export class StepComponent {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   /** Mantine's `StepperStepProps.label` — rendered after the icon. Plain string only, see IMPLEMENTATION_NOTES.md for the `StepFragmentComponent` render-prop gap. */
   @Input() label?: string;
 

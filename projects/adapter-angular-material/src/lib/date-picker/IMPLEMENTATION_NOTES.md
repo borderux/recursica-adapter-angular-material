@@ -141,3 +141,20 @@ arrays (matching `tooltip-overlay.css`/`menu-overlay.css`/
 `menu-overlay.css` entirely (present in `angular.json` but never documented
 for consuming apps) — added alongside this component's own new line, since
 it's the same one-line gap in the same list I was already editing.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                  | Notes                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | Inner `<input matDatepicker>` | `RecursicaAriaLabelling` host directive on the public component; the host's own attributes are cleared. Describedby is merged with the form-control wrapper's ids (caller's first). |
+| `id`                                                                                                     | Inner `<input matDatepicker>` | Existing input kept; host `id` attribute cleared.                                                                                                                                   |
+| `inputTabIndex`                                                                                          | Inner `<input>` `tabindex`    | Named like Button's `buttonTabIndex`.                                                                                                                                               |
+| `form`                                                                                                   | Inner `<input>` `form`        | Id of the owning form.                                                                                                                                                              |
+
+In `readOnly` mode there is no inner input, so these are no-ops.
+
+Withheld:
+
+- `opened`: public but stories-only (forces the calendar open).
+- Material `appearance`, `color`, `touchUi`, `xPosition`/`yPosition`, `dateClass`, `calendarHeaderComponent`, `panelClass`: tokens and the adapter own them.
+- `autocomplete`, `minlength`, `maxlength`, `spellcheck`, `inputmode`: not meaningful for a masked date input.

@@ -1,3 +1,4 @@
+import { DOCUMENT } from "@angular/common";
 import {
   AfterContentInit,
   Component,
@@ -6,10 +7,16 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  afterEveryRender,
   forwardRef,
+  inject,
 } from "@angular/core";
 import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { RecursicaOverStyled } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { MenuItemComponent } from "./menu-item.component";
 
 export type RecursicaMenuPositionX = "before" | "after";
@@ -75,6 +82,12 @@ export type RecursicaMenuPositionY = "above" | "below";
   selector: "rec-menu",
   imports: [MatMenuModule],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   styleUrl: "./menu.component.css",
   template: `
     <mat-menu
@@ -83,17 +96,29 @@ export type RecursicaMenuPositionY = "above" | "below";
       [xPosition]="xPosition"
       [yPosition]="yPosition"
       [overlapTrigger]="overlapTrigger"
-      [hasBackdrop]="hasBackdrop ?? true"
+      [hasBackdrop]="true"
+      [aria-label]="aria.ariaLabel ?? ''"
+      [aria-labelledby]="aria.ariaLabelledby ?? ''"
+      [aria-describedby]="aria.ariaDescribedby ?? ''"
     >
       <ng-content />
     </mat-menu>
   `,
 })
 export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() xPosition: RecursicaMenuPositionX = "after";
   @Input() yPosition: RecursicaMenuPositionY = "below";
   @Input() overlapTrigger = false;
-  @Input() hasBackdrop?: boolean;
+
+  /**
+   * `RecursicaMenuProps.maxHeight` — per-instance override of the token
+   * `max-height` on the dropdown panel; the panel scrolls (`overflow-y:
+   * auto`) when items exceed it. A number is treated as pixels, a string is
+   * used as a CSS length verbatim. Leave unset for the token default.
+   */
+  @Input() maxHeight?: string | number;
 
   @ContentChildren(forwardRef(() => MenuItemComponent))
   private readonly items?: QueryList<MenuItemComponent>;
@@ -115,11 +140,53 @@ export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
     return this.panel;
   }
 
+  private readonly doc = inject(DOCUMENT);
+  private appliedMaxHeight = false;
+
+  constructor() {
+    // The panel is created in a CDK overlay on every open, so there is no element to bind a
+    // style to. After each render, if this menu's panel is on the page, set `max-height` on it
+    // through the DOM API (not an injected stylesheet, so no CSP allowance is needed).
+    afterEveryRender(() => this.applyMaxHeight());
+  }
+
   /** Forwarded to `MatMenu`'s `panelClass` — see class doc comment's global-CSS note. */
   get panelClasses(): string {
     const classes = ["rec-menu"];
     if (this.overStyled && this.overClass) classes.push(this.overClass);
     return classes.join(" ");
+  }
+
+  private get hasMaxHeight(): boolean {
+    return (
+      this.maxHeight !== undefined &&
+      this.maxHeight !== null &&
+      this.maxHeight !== ""
+    );
+  }
+
+  /**
+   * Sets `max-height` (and `overflow-y: auto`) on this menu's open panel from the `maxHeight`
+   * input; a number is px, a string is a CSS length. Unset: the token default in
+   * `menu-overlay.css` applies. A no-op while the panel is closed.
+   */
+  private applyMaxHeight(): void {
+    if (!this.hasMaxHeight && !this.appliedMaxHeight) return;
+    const panel = this.doc.getElementById(this.panel.panelId);
+    if (!panel) return;
+    if (this.hasMaxHeight) {
+      const value =
+        typeof this.maxHeight === "number"
+          ? `${this.maxHeight}px`
+          : String(this.maxHeight);
+      panel.style.setProperty("max-height", value);
+      panel.style.setProperty("overflow-y", "auto");
+      this.appliedMaxHeight = true;
+    } else {
+      panel.style.removeProperty("max-height");
+      panel.style.removeProperty("overflow-y");
+      this.appliedMaxHeight = false;
+    }
   }
 
   /** Rebuilds `MatMenu._directDescendantItems` from this menu's own `<rec-menu-item>`s, in DOM order. */

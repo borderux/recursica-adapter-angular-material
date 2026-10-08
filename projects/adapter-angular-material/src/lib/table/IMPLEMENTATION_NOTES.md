@@ -219,3 +219,21 @@ Storybook (`ColumnSpan` story): a `colspan="2"` header measured the width of
 the two columns it spans, and a `colspan="3"` cell the full row. The
 `@angular-eslint/component-selector` rule is turned off for these two files
 only, since it requires element selectors.
+
+## Passthrough
+
+Host aria and `id` attributes are cleared by host directives (`RecursicaAriaLabelling`, `RecursicaElementId`); the values are forwarded to the inner element.
+
+| Input                                                                        | Forwarded to               | Notes                                                                                                                              |
+| ---------------------------------------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----- | ---------- | ----------------------------------------- |
+| `ariaLabel`, `ariaLabelledby` (migrated), `ariaDescribedby` (and hyphenated) | inner `<table>`            |                                                                                                                                    |
+| `id`                                                                         | inner `<table>`            |                                                                                                                                    |
+| `colSpan`, `rowSpan` (th, td)                                                | host `colspan` / `rowspan` | Only work on `th[recTableTh]` / `td[recTableTd]`, where the host is a real cell. No effect on `<rec-table-th>` / `<rec-table-td>`. |
+| `scope` (th)                                                                 | host `scope`               | `"col"                                                                                                                             | "row" | "colgroup" | "rowgroup"`. Same native-form-only limit. |
+
+Note: `selected` (tr) only sets `data-selected` (styling). `aria-selected` is deliberately not set: it is only valid on rows in a `grid`/`treegrid`, and this table is a plain `table`.
+
+Withheld:
+
+- `role`: hard-coded per part
+- `striped`, `highlightOnHover`, `withTableBorder`, `withColumnBorders`, `stickyHeader`, `verticalSpacing`, `horizontalSpacing`: tokens own them

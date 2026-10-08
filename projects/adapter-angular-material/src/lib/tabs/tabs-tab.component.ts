@@ -9,6 +9,10 @@ import {
   inject,
 } from "@angular/core";
 import type { FocusableOption } from "@angular/cdk/a11y";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import { TABS_CONTEXT } from "./tabs-context";
 
 /**
@@ -31,10 +35,21 @@ import { TABS_CONTEXT } from "./tabs-context";
  * slots — same translation as `Button`'s `icon` / `MenuItem`'s
  * `leftSection`/`rightSection`.
  */
+function sanitize(value: string): string {
+  return value.trim().replace(/\s+/g, "-");
+}
+
 @Component({
   selector: "rec-tabs-tab",
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.title]": "null" },
   styleUrl: "./tabs-tab.component.css",
   template: `
     <button
@@ -43,6 +58,10 @@ import { TABS_CONTEXT } from "./tabs-context";
       class="tab"
       role="tab"
       [id]="tabId"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+      [attr.title]="title ?? null"
       [attr.aria-selected]="isActive"
       [attr.aria-controls]="panelId"
       [attr.aria-disabled]="disabled ? true : null"
@@ -72,6 +91,9 @@ export class TabComponent implements FocusableOption {
 
   @Input() disabled = false;
 
+  /** `title` of the inner `button[role=tab]`. */
+  @Input() title?: string;
+
   @Input() leftSection?: TemplateRef<unknown>;
   @Input() rightSection?: TemplateRef<unknown>;
 
@@ -79,6 +101,7 @@ export class TabComponent implements FocusableOption {
   private readonly buttonRef!: ElementRef<HTMLButtonElement>;
 
   private readonly ctx = inject(TABS_CONTEXT, { optional: true });
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   /** Exposed so `TabsListComponent` can match a native `focusin` target back to this component — see its own `onFocusIn()`. */
   get nativeElement(): HTMLButtonElement {
@@ -90,11 +113,13 @@ export class TabComponent implements FocusableOption {
   }
 
   get tabId(): string {
-    return `rec-tab-${this.value}`;
+    return this.ctx?.tabId(this.value) ?? `rec-tab-${sanitize(this.value)}`;
   }
 
   get panelId(): string {
-    return `rec-tabpanel-${this.value}`;
+    return (
+      this.ctx?.panelId(this.value) ?? `rec-tabpanel-${sanitize(this.value)}`
+    );
   }
 
   onClick(): void {

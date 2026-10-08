@@ -14,6 +14,7 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
 import {
@@ -24,6 +25,12 @@ import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
 } from "../utils/recursica-value-accessor";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import {
   RecursicaSegmentedControlData,
   RecursicaSegmentedControlItem,
@@ -116,6 +123,13 @@ let nextId = 0;
  */
 @Component({
   selector: "rec-segmented-control",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./segmented-control.component.css",
@@ -125,6 +139,10 @@ let nextId = 0;
       #root
       class="root"
       role="radiogroup"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
       [attr.data-orientation]="orientation"
@@ -138,6 +156,7 @@ let nextId = 0;
           role="radio"
           class="control"
           [id]="controlId(i)"
+          [attr.aria-label]="item.ariaLabel ?? null"
           [attr.aria-checked]="item.value === currentValue ? 'true' : 'false'"
           [attr.data-active]="item.value === currentValue ? '' : null"
           [tabindex]="isRovingTabStop(item) ? 0 : -1"
@@ -167,6 +186,9 @@ export class SegmentedControlComponent
     AfterViewInit,
     OnDestroy
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() data: RecursicaSegmentedControlData = [];
   @Input() value?: string;
   @Output() valueChange = new EventEmitter<string>();

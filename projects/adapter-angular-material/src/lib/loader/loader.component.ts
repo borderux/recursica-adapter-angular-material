@@ -6,12 +6,19 @@ import {
   OnChanges,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 export type RecursicaLoaderVariant = "oval" | "bars" | "dots";
 export type RecursicaLoaderSize =
@@ -89,6 +96,13 @@ const FALLBACK_PX: Record<
  */
 @Component({
   selector: "rec-loader",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   imports: [MatProgressSpinnerModule],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./loader.component.css",
@@ -101,7 +115,12 @@ const FALLBACK_PX: Record<
       [attr.data-size]="resolvedSize"
       [attr.data-animate]="animate ? 'true' : 'false'"
       role="progressbar"
-      [attr.aria-label]="ariaLabel ?? 'Loading'"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="
+        aria.ariaLabel ?? (aria.ariaLabelledby ? null : 'Loading')
+      "
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
     >
       @if (variant === "bars") {
         <span class="barsLoader">
@@ -130,6 +149,15 @@ const FALLBACK_PX: Record<
 export class LoaderComponent
   implements RecursicaOverStyled, AfterViewInit, OnChanges
 {
+  /**
+   * Accessible name for the `role="progressbar"` wrapper (`ariaLabel` /
+   * `ariaLabelledby` / `ariaDescribedby` via `RecursicaAriaLabelling`).
+   * `aria-label` defaults to `"Loading"` only when neither `ariaLabel` nor
+   * `ariaLabelledby` is given.
+   */
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() variant: RecursicaLoaderVariant = "oval";
 
   /** `sm`/`md`/`lg` (short aliases) or the generic `RecursicaSize` scale. */
@@ -137,9 +165,6 @@ export class LoaderComponent
 
   /** `false` freezes the loader's animation (e.g. deterministic snapshots). Defaults to `true`. */
   @Input() animate = true;
-
-  /** Accessible name for the `role="progressbar"` wrapper. Defaults to `"Loading"`. */
-  @Input() ariaLabel?: string;
 
   @Input() overStyled = false;
   @Input() overClass?: string;

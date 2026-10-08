@@ -109,3 +109,20 @@ announcement of the `role="tree"`/`"treeitem"`/`"group"` structure were
 reasoned from the code and ARIA spec behavior, not click- or
 screen-reader-verified. The roving-tabindex gap above is a known,
 unbuilt simplification, not an oversight.
+
+## `toggleLabel` (i18n)
+
+`rec-tree` `[toggleLabel]` (default `"Toggle subtree"`) is the accessible name of every node's expand/collapse toggle button, previously hard-coded in `tree-node.component.ts`. It is exposed on `TreeContext` (`TREE_CONTEXT`), the existing tree-to-node mechanism, so every depth of the recursive tree reads it; a node rendered outside a tree falls back to the default. Deviation from React, which hard-codes `aria-label="Toggle subtree"` (`Tree.tsx:83`); the default is identical, the input is added for localization.
+
+## Passthrough
+
+| Input                                          | Forwarded to                         | Notes                                                                                             |
+| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `ul[role=tree]`                      | Host directive.                                                                                   |
+| `id`                                           | `ul[role=tree]` `id`                 | `RecursicaElementId`; host `id` is cleared.                                                       |
+| node `ariaLabel` (`RecursicaTreeNode`)         | `rec-tree-node` host `aria-label`    | The host is the `treeitem`, so this is the one place the value is on a `rec-*` element by design. |
+| node `disabled` (`RecursicaTreeNode`)          | `rec-tree-node` host `aria-disabled` | Also stops the node from being selected by click or Enter/Space. Expanding is unchanged.          |
+
+Withheld:
+
+- `aria-selected`, `aria-expanded`, roving `tabindex`: derived from state.

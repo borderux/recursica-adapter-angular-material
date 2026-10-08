@@ -79,3 +79,15 @@ browser/Playwright tooling available, so the actual connector-line
 positioning/alignment across bullet variants, and the visual active/
 inactive color transitions, were reasoned from the code and CSS, not
 click- or screenshot-verified.
+
+## Passthrough
+
+| Input                                                         | Forwarded to            | Notes                                                                                   |
+| ------------------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------- |
+| `rec-timeline` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` | `div.root`              | Host directive.                                                                         |
+| `rec-timeline` `id`                                           | `div.root` `id`         | `RecursicaElementId`.                                                                   |
+| `rec-timeline-item` `ariaLabel`                               | `div.item` `aria-label` | Host directive exposing only `ariaLabel`/`aria-label`.                                  |
+| `rec-timeline-item` `id`                                      | `div.item` `id`         | `RecursicaElementId`.                                                                   |
+| `rec-timeline-item` `datetime`                                | `<time datetime>`       | Renders the timestamp as `<time>` instead of `<div>` when set (and `timestamp` is set). |
+
+Withheld: none for this component. The item's existing `title` input still collides with the native host attribute (not part of this pass).

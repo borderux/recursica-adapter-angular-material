@@ -1,8 +1,14 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, inject } from "@angular/core";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 
 /**
  * Recursica `Table` — Angular Material adapter.
@@ -27,35 +33,23 @@ import {
  * decision `Card`/`Flex`/`Grid` already made for structural, non-interactive
  * primitives elsewhere in this adapter.
  *
- * ## Sub-components are `rec-table-*` elements styled `display: table-*` — not real `<tr>`/`<th>`/`<td>` tags
+ * ## Sub-components: `rec-table-*` elements by default, native `th`/`td` selectors for the cell parts
  *
- * A first instinct here (rejected) was an attribute selector on the real
- * semantic tag (`tr[recTableTr]`, `td[recTableTd]`, matching `MatRow`'s
- * own `selector: 'mat-row, tr[mat-row]'`), reasoning that a `<rec-table-tr>`
- * custom element nested between `<rec-table-tbody>` and `<rec-table-td>`
- * would trigger browser HTML-parsing "foster parenting" the way invalid
- * markup text would. That reasoning doesn't survive contact with two real
- * findings: (1) this repo's own `eslint.config.mjs` enforces
- * `@angular-eslint/component-selector: { type: "element", prefix: "rec" }`
- * repo-wide for real, published components (no exemption the way
- * `form-control-wrapper.stories.ts`'s own `input[recDemoFormControl]`
- * demo-only control gets) — attribute selectors on native tags are
- * flagged by `eslint`, confirmed live, not assumed; and (2) foster
- * parenting is a *parsing*-algorithm quirk (tokenizing HTML text into a
- * DOM tree) that doesn't apply to Angular's runtime DOM construction at
- * all (`createElement`/`appendChild` calls, no text-parsing pass). The
- * real constraint is CSS table *layout*, solved directly: every
- * sub-component's own `:host` declares the matching table-participant
- * `display` value (`table-header-group`/`table-row-group`/
- * `table-footer-group`/`table-row`/`table-cell`) — the CSS table-layout
- * algorithm's anonymous-box generation keys off computed `display`
- * values, not tag names, so this lays out identically to a real
- * `<table>` regardless of the underlying custom-element tag. Each
- * sub-component's own `host: { role: '...' }` restores the implicit ARIA
- * semantics (`rowgroup`/`row`/`columnheader`/`cell`) a real `<thead>`/
- * `<tr>`/`<th>`/`<td>` would have carried automatically — a CSS `display`
- * override does not imply an ARIA role the way it implies layout
- * participation, so this is set explicitly rather than assumed to follow.
+ * Every sub-component is a `rec-table-*` element styled `display:
+ * table-*` (`table-header-group`/`table-row-group`/`table-footer-group`/
+ * `table-row`/`table-cell`): the CSS table-layout algorithm keys off
+ * computed `display`, not tag names, so this lays out like a real
+ * `<table>`. Each sub-component's `host: { role: '...' }` restores the
+ * implicit ARIA semantics (`rowgroup`/`row`/`columnheader`/`cell`) a real
+ * `<thead>`/`<tr>`/`<th>`/`<td>` would carry, since a CSS `display`
+ * override does not imply an ARIA role.
+ *
+ * The repo's `eslint.config.mjs` enforces element-type component selectors
+ * with the `rec` prefix, so the row/group parts stay `rec-table-*` only.
+ * `TableThComponent` and `TableTdComponent` additionally accept the native
+ * attribute forms `th[recTableTh]` and `td[recTableTd]`, where the host IS
+ * a real `th`/`td`; the cell-only inputs `colSpan`, `rowSpan` and `scope`
+ * only take effect in that form (see `IMPLEMENTATION_NOTES.md`).
  *
  * ## Styling: each sub-component owns its own scoped `:host` CSS, not shared descendant selectors
  *
@@ -85,6 +79,13 @@ import {
  */
 @Component({
   selector: "rec-table",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./table.component.css",
   template: `
@@ -92,19 +93,19 @@ import {
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
-      [attr.aria-label]="ariaLabel ?? null"
-      [attr.aria-labelledby]="ariaLabelledby ?? null"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
     >
       <ng-content />
     </table>
   `,
 })
 export class TableComponent implements RecursicaOverStyled {
-  /** `aria-label` of the inner `<table>` — a static attribute on `<rec-table>` lands on the host, not the table. */
-  @Input() ariaLabel?: string;
-
-  /** `aria-labelledby` of the inner `<table>` — the id of the element that names it. */
-  @Input() ariaLabelledby?: string;
+  /** `ariaLabel`, `ariaLabelledby`, `ariaDescribedby` and `id` land on the inner `<table>`, not the host. */
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
 
   @Input() overStyled = false;
   @Input() overClass?: string;

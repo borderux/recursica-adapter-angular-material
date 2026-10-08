@@ -86,3 +86,39 @@ dropped.
 `Button`'s `icon`. `MatMenuItem`'s own template has only a single icon
 slot (no leading/trailing split the way Recursica's tokens expect), so
 `MenuItemComponent` renders its own wrapper spans instead of relying on it.
+
+## `maxHeight`
+
+`rec-menu` `[maxHeight]` (`string | number`, number = px) mirrors the React Menu's `maxHeight`: a per-instance override of the token dropdown `max-height`, with `overflow-y: auto` so items scroll. Mechanism: the panel is created in a CDK overlay on every open, so there is no element to bind a style to. `MenuComponent` runs `afterEveryRender` and, while it has a `maxHeight` and its panel (`MatMenu.panelId`) is on the page, sets `max-height` and `overflow-y` on it with `element.style.setProperty`. That is a DOM-API style write, so it needs no `style-src` allowance under a strict CSP (an injected `<style>` element would). A first version injected a per-instance stylesheet; this replaced it. Clearing `maxHeight` removes the inline values on the next render. Works for submenus too, since each `rec-menu` applies its own.
+
+## Passthrough
+
+| Input                                                                                | Forwarded to                                                        | Notes                                                    |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| `rec-menu` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` (and hyphenated spellings) | `mat-menu` `aria-label`/`aria-labelledby`/`aria-describedby` inputs | Land on the overlay panel `role="menu"`. Host directive. |
+| `rec-menu-item` `ariaLabel`/`ariaLabelledby`/`ariaDescribedby`                       | inner `button[mat-menu-item]`                                       | Host directive.                                          |
+| `rec-menu-item` `title`                                                              | inner `button[mat-menu-item]` `title`                               | Host `title` attribute is cleared.                       |
+| `rec-menu-label` `id`                                                                | inner `div.root` `id`                                               | `RecursicaElementId`; host `id` is cleared.              |
+
+Withheld:
+
+- `disableRipple` (menu item): Material-only; removed from the public API.
+- `hasBackdrop` (menu): Material-only; removed from the public API. The panel keeps `hasBackdrop` fixed to `true`, as before.
+- The trigger aria (`aria-haspopup`/`aria-expanded`/`aria-controls` from `recMenuTriggerFor`) is handled separately.
+
+## Trigger aria on a `rec-button` host (round 2)
+
+`recMenuTriggerFor` composes `MatMenuTrigger` as a host directive, whose host
+bindings write `aria-haspopup`/`aria-expanded`/`aria-controls` on whatever
+element carries the directive. On `<rec-button [recMenuTriggerFor]>` that is the
+`<rec-button>` host, not the focused inner `<button>`. When the host is a
+`rec-button` (`inject(ButtonComponent, { optional: true, self: true })`), the
+directive now sets the Button's `ariaHasPopup` (`"menu"` when a menu is
+attached), `ariaExpanded` (`trigger.menuOpen`) and `ariaControls`
+(`menu.panelId` while open) inputs in `ngDoCheck`, which runs before the
+Button's view is refreshed, so they render on the inner button in the same
+pass. Button uses default change detection (not OnPush), so nothing else is
+needed. Material's host bindings rewrite the three attributes whenever their
+value changes, so `ngAfterViewChecked` removes them from the host again. Any
+other host element keeps Material's behaviour unchanged. The `Accessibility`
+story's trigger is a `rec-button` (`id="a11y-trigger"`).

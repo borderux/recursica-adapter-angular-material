@@ -301,3 +301,22 @@ native `readonly` (via `matInput`) genuinely blocks a real typing attempt.
 No golden-comparison automation exists in this adapter yet (same as every
 other component here) — comparisons above are manual visual review of the
 screenshots side by side with the reference PNGs, not pixel-diffed.
+
+## Passthrough
+
+Forwarded through the shared `RecursicaAriaLabelling` host directive (`utils/recursica-aria.ts`); the host's own aria attributes and `id` are cleared so nothing is duplicated on the `rec-*` element.
+
+| Input                                                            | Forwarded to                       | Notes                                                                        |
+| ---------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby` | inner `<input>`                    | Host directive on the public component.                                      |
+| `ariaDescribedby` / `aria-describedby`                           | inner `<input>` `aria-describedby` | Merged with the form-control wrapper's ids (caller's first), never replaced. |
+| `id`                                                             | inner `<input>`                    | Existing input kept; host `id` attribute nulled so the id is not duplicated. |
+| `inputTabIndex`                                                  | inner `<input>` `tabindex`         | Named after Button's `buttonTabIndex`.                                       |
+| `form`                                                           | inner `<input>` `form`             | Host `form` attribute nulled.                                                |
+| `minLength`                                                      | inner `<input>` `minlength`        | Added; `maxLength`, `autocomplete`, `spellcheck` already existed.            |
+| `inputMode`                                                      | inner `<input>` `inputmode`        |                                                                              |
+
+Withheld:
+
+- `name`, `required`, `placeholder` already existed; unchanged.
+- Material `appearance`, `color`, `floatLabel`, `subscriptSizing`, `hideRequiredMarker`, `errorStateMatcher`: tokens own styling.

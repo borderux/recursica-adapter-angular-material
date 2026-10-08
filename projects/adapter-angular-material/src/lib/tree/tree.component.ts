@@ -13,6 +13,12 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "../utils/recursica-aria";
 import { TREE_CONTEXT, TreeContext } from "./tree-context";
 import { RecursicaTreeNode } from "./tree-node-data";
 import { TreeNodeComponent } from "./tree-node.component";
@@ -80,11 +86,22 @@ import { TreeNodeComponent } from "./tree-node.component";
   imports: [TreeNodeComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./tree.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+    { directive: RecursicaElementId, inputs: RECURSICA_ELEMENT_ID_INPUTS },
+  ],
   providers: [{ provide: TREE_CONTEXT, useExisting: TreeComponent }],
   template: `
     <ul
       class="root"
       role="tree"
+      [attr.id]="elementId.id ?? null"
+      [attr.aria-label]="aria.ariaLabel ?? null"
+      [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+      [attr.aria-describedby]="aria.ariaDescribedby ?? null"
       [attr.aria-multiselectable]="multiple ? 'true' : null"
       [attr.data-disabled]="disabled ? '' : null"
       [class]="resolvedOverStyle.class"
@@ -97,6 +114,9 @@ import { TreeNodeComponent } from "./tree-node.component";
   `,
 })
 export class TreeComponent implements TreeContext, RecursicaOverStyled, OnInit {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+  protected readonly elementId = inject(RecursicaElementId);
+
   @Input() data: RecursicaTreeNode[] = [];
 
   /** `"*"` expands every node with a `children` array; an array expands only the listed values. Uncontrolled-only, matching the reference. */
@@ -105,6 +125,9 @@ export class TreeComponent implements TreeContext, RecursicaOverStyled, OnInit {
 
   @Input() multiple = false;
   @Input() disabled = false;
+
+  /** Accessible name of each node's expand/collapse toggle button (i18n). Passed to nodes via `TREE_CONTEXT`. */
+  @Input() toggleLabel = "Toggle subtree";
 
   @Output() nodeExpand = new EventEmitter<string>();
   @Output() nodeCollapse = new EventEmitter<string>();

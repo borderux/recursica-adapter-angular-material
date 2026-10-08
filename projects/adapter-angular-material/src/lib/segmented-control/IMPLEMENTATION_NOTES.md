@@ -93,3 +93,16 @@ browser/Playwright tooling available, so the actual sliding-indicator
 animation, `offsetLeft`/`offsetWidth` measurement accuracy at real
 viewport sizes, and arrow-key roving-tabindex behavior were reasoned from
 the code, not click-verified.
+
+## Passthrough
+
+| Input                                                                                                    | Forwarded to                       | Notes                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`, `ariaLabelledby` / `aria-labelledby`, `ariaDescribedby` / `aria-describedby` | `div[role="radiogroup"]`           | Via the `RecursicaAriaLabelling` host directive. The control has no visible label, so one of these is how it gets a name. |
+| `id`                                                                                                     | `div[role="radiogroup"]`           | Via `RecursicaElementId`; the host `id` is cleared.                                                                       |
+| `data[].ariaLabel`                                                                                       | that item's `button[role="radio"]` | For icon-only items.                                                                                                      |
+
+Withheld:
+
+- `tabindex`: the item buttons use a roving tabindex managed by the component.
+- Item ids (`controlId`): derived per instance.

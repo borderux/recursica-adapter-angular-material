@@ -74,6 +74,8 @@ import { RecursicaTreeNode } from "./tree-node-data";
     "[attr.aria-expanded]":
       "hasChildren ? (isExpanded ? 'true' : 'false') : null",
     "[attr.aria-selected]": "isSelected ? 'true' : 'false'",
+    "[attr.aria-label]": "node.ariaLabel ?? null",
+    "[attr.aria-disabled]": "node.disabled ? 'true' : null",
     "[style.--tree-level]": "level",
     "(click)": "onRowClick($event)",
     "(keydown)": "onKeydown($event)",
@@ -97,7 +99,7 @@ import { RecursicaTreeNode } from "./tree-node-data";
           variant="text"
           size="small"
           [iconOnly]="true"
-          ariaLabel="Toggle subtree"
+          [ariaLabel]="context?.toggleLabel ?? 'Toggle subtree'"
           [buttonTabIndex]="-1"
           [icon]="expandGlyph"
         />
@@ -155,6 +157,7 @@ export class TreeNodeComponent {
     // This host sits inside its parent node's host (the subtree is nested) — without this the
     // click would bubble and also select every ancestor, the last one winning.
     event.stopPropagation();
+    if (this.node.disabled) return;
     this.context?.select(this.node.value);
   }
 
@@ -170,6 +173,7 @@ export class TreeNodeComponent {
       case "Enter":
       case " ":
         event.preventDefault();
+        if (this.node.disabled) return;
         this.context?.select(this.node.value);
         return;
       case "ArrowDown":

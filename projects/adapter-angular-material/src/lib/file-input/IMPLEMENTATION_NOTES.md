@@ -84,3 +84,17 @@ developer's own 6006 instance).
 browser/Playwright tooling available, so real drag-and-drop, the roving
 chip-delete-icon focus, and the accept/maxSize/maxFiles validation logic
 are all reasoned from the code, not click-verified.
+
+## Passthrough
+
+| Input                                  | Forwarded to              | Notes                                                                          |
+| -------------------------------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| `ariaLabel` / `aria-label`             | `div[role="button"].root` | Defaults to `browseLabel` when the caller gives none.                          |
+| `ariaLabelledby` / `aria-labelledby`   | `div[role="button"].root` | Per ARIA, takes precedence over the `aria-label` on the same element.          |
+| `ariaDescribedby` / `aria-describedby` | `div[role="button"].root` | The component has no wrapper-provided describedby wiring, so nothing to merge. |
+| `id`                                   | `div[role="button"].root` | Existing input kept; the host `id` is now cleared.                             |
+
+Withheld:
+
+- `tabindex`: the root is a fixed tab stop (0 when interactive, -1 otherwise).
+- `name`, `form`, `autocomplete` and other text-input attributes: the native input is hidden and not text-like.

@@ -92,3 +92,26 @@ export const ReactiveForms: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-checkbox label="Accessible" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id"></rec-checkbox>
+    `,
+  }),
+};
+
+/** `description` + `error` (string and TemplateRef); error also sets `aria-invalid`. */
+export const WithDescriptionAndError: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <rec-checkbox label="With description" description="Helper text under the label."></rec-checkbox>
+        <rec-checkbox label="With error" error="This field is required."></rec-checkbox>
+        <rec-checkbox label="With both" description="Helper text." error="Something is wrong."></rec-checkbox>
+        <ng-template #tpl><strong>Rich</strong> description</ng-template>
+        <rec-checkbox label="Rich template" [description]="tpl"></rec-checkbox>
+      </div>
+    `,
+  }),
+};

@@ -284,3 +284,40 @@ export const ReactiveForms: Story = {
     `,
   }),
 };
+
+/** Passthrough check: aria and id values land on the inner combobox button only. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-form-control-wrapper label="Country">
+        <rec-dropdown
+          [data]="${COUNTRIES_NG_LIST}"
+          aria-label="A11Y-LABEL"
+          aria-describedby="a11y-desc"
+          id="a11y-id"
+        ></rec-dropdown>
+      </rec-form-control-wrapper>
+    `,
+  }),
+};
+
+/** `containerWidth` accepts a CSS length string or a number (px). */
+export const ContainerWidth: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <rec-dropdown aria-label="Fixed 200px" [containerWidth]="200" [data]="['One', 'Two', 'Three']" placeholder="200 (number)"></rec-dropdown>
+        <rec-dropdown aria-label="Half width" containerWidth="50%" [data]="['One', 'Two', 'Three']" placeholder="50% (string)"></rec-dropdown>
+      </div>
+    `,
+  }),
+};
+
+/** Translated clear-button name. */
+export const CustomLabels: Story = {
+  render: () => ({
+    template: `
+      <rec-dropdown aria-label="Fruit" [clearable]="true" clearLabel="Effacer la sélection" [data]="['One', 'Two', 'Three']" value="Two"></rec-dropdown>
+    `,
+  }),
+};

@@ -134,3 +134,39 @@ export const EditableReadOnly: Story = {
     `,
   }),
 };
+
+/** Passthrough check: aria and id values land on the inner time input only. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-time-picker
+        label="Meeting Time"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-time-picker>
+    `,
+  }),
+};
+
+/** `minTime` / `maxTime`: typed times are clamped on blur; a bound value outside the range is flagged invalid. */
+export const MinMaxTime: Story = {
+  render: () => ({
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <rec-time-picker
+          label="Office hours (09:00 - 17:30): type 8:00 AM or 11:00 PM and tab away"
+          minTime="09:00"
+          maxTime="17:30"
+          defaultValue="10:00"
+        ></rec-time-picker>
+        <rec-time-picker
+          label="Out of range value (flagged invalid)"
+          minTime="09:00"
+          maxTime="17:30"
+          value="20:15"
+        ></rec-time-picker>
+      </div>
+    `,
+  }),
+};

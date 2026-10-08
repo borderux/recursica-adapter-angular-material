@@ -91,3 +91,30 @@ browser/Playwright tooling available, so the actual checkbox-toggle/
 transfer-button/search-filter interaction flow and real screen-reader
 announcement of the `role="group"` blocks were reasoned from the code, not
 click- or screen-reader-verified.
+
+## Passthrough
+
+| Input                                  | Forwarded to                    | Notes                                                                                                      |
+| -------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | `div.root` (now `role="group"`) | Active (non-read-only) view only; the read-only view has no group element.                                 |
+| `ariaLabelledby` / `aria-labelledby`   | `div.root`                      | Not defaulted to the label: the wrapper's `labelId` is not reachable from here.                            |
+| `ariaDescribedby` / `aria-describedby` | `div.root`                      | No wrapper-provided describedby wiring on this control, so nothing to merge.                               |
+| `id`                                   | `div.root`                      | Existing input kept (still also the prefix for the search and checkbox ids); the host `id` is now cleared. |
+
+Withheld:
+
+- `tabindex`: the root is a container; the inner controls are the tab stops.
+- `name`, `form`, `autocomplete` and other text-input attributes: not a native input.
+
+## Round 2: translatable strings
+
+Every hard-coded English string is now an input; defaults reproduce the previous text. The pane titles (`sourceLabel` / `targetLabel`) and `searchPlaceholder` already existed.
+
+| Input                            | Default                           | Used for                                          |
+| -------------------------------- | --------------------------------- | ------------------------------------------------- |
+| `emptyLabel`                     | "No items"                        | empty pane text                                   |
+| `filterLabel(pane)`              | `Filter ${pane.toLowerCase()}`    | visually hidden label of each pane's filter field |
+| `moveAllLabel(destination)`      | `Move all to ${destination}`      | aria-label of the two "move all" buttons          |
+| `moveSelectedLabel(destination)` | `Move selected to ${destination}` | aria-label of the two "move selected" buttons     |
+
+The functions receive the label of the pane the items move to (or of the pane being filtered), so word order can differ per language. Story: `CustomLabels`.

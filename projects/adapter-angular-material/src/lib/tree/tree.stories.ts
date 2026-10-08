@@ -91,6 +91,14 @@ export const Disabled: Story = {
   },
 };
 
+export const CustomToggleLabel: Story = {
+  args: {
+    data: sampleData,
+    initialExpandedValues: ["documents"],
+    toggleLabel: "Alternar subárbol",
+  },
+};
+
 export const LayerOne: Story = {
   render: () => ({
     template: `
@@ -99,5 +107,20 @@ export const LayerOne: Story = {
       </rec-layer>
     `,
     props: { data: sampleData },
+  }),
+};
+
+/** Passthrough check: aria and id land on the inner `ul[role=tree]`, not on `rec-tree`. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-tree
+        [data]="[{ value: 'a', label: 'Node A' }, { value: 'b', label: 'Node B' }]"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-tree>
+      <span id="a11y-desc" hidden>Description</span>
+    `,
   }),
 };

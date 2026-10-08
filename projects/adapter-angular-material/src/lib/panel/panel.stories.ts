@@ -95,29 +95,19 @@ export const LongTitle: Story = {
   }),
 };
 
-/**
- * Non-modal side panel: no overlay, no focus trap, no scroll lock, and
- * focus is not returned on close. The page beside it stays usable.
- * `closeOnEscape` still closes it.
- */
-export const NonModal: Story = {
+export const WrapHeaderText: Story = {
   render: () => ({
     template: `
       <rec-panel
-        title="Details"
+        title="This is a ridiculously long panel title designed to wrap onto several lines because wrapHeaderText is false"
         placement="right"
-        [withOverlay]="false"
-        [trapFocus]="false"
-        [lockScroll]="false"
-        [returnFocus]="false"
-        [closeOnClickOutside]="false"
+        [wrapHeaderText]="false"
         [opened]="opened"
         (openedChange)="opened = $event"
       >
-        The page behind this panel stays interactive and scrollable.
+        With wrapHeaderText false the title wraps instead of truncating.
       </rec-panel>
-      <rec-button variant="solid" (click)="opened = !opened">Toggle panel</rec-button>
-      <input aria-label="Page input" placeholder="Still focusable" />
+      <rec-button variant="solid" (click)="opened = true">Open Wrapping Title Panel</rec-button>
     `,
     props: { opened: true },
   }),

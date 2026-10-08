@@ -11,6 +11,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   forwardRef,
+  inject,
 } from "@angular/core";
 import { ConnectedPosition, OverlayModule } from "@angular/cdk/overlay";
 import { ControlValueAccessor } from "@angular/forms";
@@ -26,6 +27,10 @@ import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
 } from "../utils/recursica-value-accessor";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaDropdownData,
   RecursicaDropdownOption,
@@ -187,6 +192,17 @@ let nextId = 0;
     },
     recursicaValueAccessorProvider(DropdownComponent),
   ],
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: {
+    "[attr.id]": "null",
+    "[style.width]": "resolvedContainerWidth",
+    "[style.display]": "containerWidth != null ? 'block' : null",
+  },
   template: `
     <div
       class="root"
@@ -209,7 +225,9 @@ let nextId = 0;
           class="input readOnlyDisplay"
           [id]="id"
           aria-readonly="true"
-          [attr.aria-describedby]="describedByAttr"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.aria-describedby]="aria.describedBy(describedByAttr)"
         >
           @if (leftSection) {
             <span class="section" data-position="left">
@@ -238,8 +256,11 @@ let nextId = 0;
           [attr.aria-controls]="isOpen ? panelId : null"
           [attr.aria-activedescendant]="activeDescendantId"
           [attr.aria-required]="required ? 'true' : null"
-          [attr.aria-describedby]="describedByAttr"
-          [attr.aria-label]="ariaLabel ?? null"
+          [attr.aria-describedby]="aria.describedBy(describedByAttr)"
+          [attr.aria-label]="aria.ariaLabel ?? null"
+          [attr.aria-labelledby]="aria.ariaLabelledby ?? null"
+          [attr.tabindex]="inputTabIndex ?? null"
+          [attr.form]="form ?? null"
           [disabled]="disabled"
           (click)="toggle()"
           (keydown)="onTriggerKeydown($event)"
@@ -262,7 +283,7 @@ let nextId = 0;
                 class="clearButton"
                 role="button"
                 tabindex="0"
-                aria-label="Clear selection"
+                [attr.aria-label]="clearLabel"
                 (click)="clear($event)"
                 (keydown)="onClearKeydown($event)"
               >
@@ -379,6 +400,19 @@ export class DropdownComponent
   @Input() disabled = false;
   @Input() required = false;
   @Input() clearable = false;
+  /** Accessible name of the clear button (default "Clear selection"). */
+  @Input() clearLabel = "Clear selection";
+
+  /** Width of the whole dropdown (canonical `containerWidth`): a CSS length string, or a number in px. Unset keeps the default (fills the container, up to the token max-width). */
+  @Input() containerWidth?: string | number;
+
+  get resolvedContainerWidth(): string | null {
+    const w = this.containerWidth;
+    if (w == null || w === "") {
+      return null;
+    }
+    return typeof w === "number" ? `${w}px` : w;
+  }
 
   /**
    * `"small"` sizes the field to the small Button height (for dense layouts such as a status dropdown
@@ -387,8 +421,12 @@ export class DropdownComponent
    */
   @Input() size: "default" | "small" = "default";
 
-  /** `aria-label` of the inner combobox button — use when there is no visible label. */
-  @Input() ariaLabel?: string;
+  /** `tabindex` of the inner combobox button (named like Button's `buttonTabIndex`). */
+  @Input() inputTabIndex?: number;
+
+  /** `form` attribute of the inner combobox button: id of the form it belongs to. */
+  @Input() form?: string;
+
   @Input() wrapItemText = false;
 
   /**
@@ -428,6 +466,9 @@ export class DropdownComponent
 
   @ViewChild("trigger")
   private readonly triggerRef?: ElementRef<HTMLButtonElement>;
+
+  /** `ariaLabel`/`ariaLabelledby`/`ariaDescribedby` of the inner combobox button (or the read-only display div). */
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   private readonly baseId = `rec-dropdown-${nextId++}`;
   @Input() id = this.baseId;

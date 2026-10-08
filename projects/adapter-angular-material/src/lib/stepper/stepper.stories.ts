@@ -177,3 +177,17 @@ export const OverStyledEscapeHatch: Story = {
     `,
   }),
 };
+
+/** Passthrough check: root aria and id on the stepper root div; step aria and id on the first step's button. */
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-stepper [active]="0" aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id">
+        <rec-stepper-step label="One" aria-label="A11Y-LABEL-STEP" aria-describedby="a11y-desc-step" id="a11y-id-step" />
+        <rec-stepper-step label="Two" />
+      </rec-stepper>
+      <span id="a11y-desc" hidden>Description</span>
+      <span id="a11y-desc-step" hidden>Step description</span>
+    `,
+  }),
+};

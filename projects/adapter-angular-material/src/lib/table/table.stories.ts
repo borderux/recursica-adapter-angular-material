@@ -194,3 +194,23 @@ export const ColumnSpan: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-table aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id">
+        <rec-table-thead>
+          <rec-table-tr>
+            <th recTableTh scope="col" colSpan="2">Header</th>
+          </rec-table-tr>
+        </rec-table-thead>
+        <rec-table-tbody>
+          <rec-table-tr [selected]="true">
+            <td recTableTd>One</td>
+            <td recTableTd>Two</td>
+          </rec-table-tr>
+        </rec-table-tbody>
+      </rec-table>
+    `,
+  }),
+};

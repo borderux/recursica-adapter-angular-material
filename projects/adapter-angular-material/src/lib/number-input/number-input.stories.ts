@@ -127,3 +127,30 @@ export const HiddenControls: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-number-input
+        label="Amount"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-number-input>
+    `,
+  }),
+};
+
+/** Translated increment / decrement button names. */
+export const CustomLabels: Story = {
+  render: () => ({
+    template: `
+      <rec-number-input
+        label="Quantité"
+        [defaultValue]="3"
+        incrementLabel="Augmenter"
+        decrementLabel="Diminuer"
+      ></rec-number-input>
+    `,
+  }),
+};

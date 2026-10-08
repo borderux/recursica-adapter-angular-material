@@ -242,3 +242,40 @@ via Playwright (chromium), screenshotted to `.scratch/`:
 No golden-comparison automation exists in this adapter yet (same as every
 other component here) — comparisons above are manual visual review of the
 screenshots side by side with the reference PNGs, not pixel-diffed.
+
+## Passthrough
+
+`rec-switch` (aria and `id` inputs are host directives from `utils/recursica-aria.ts`; the host's own `aria-*` and `id` attributes are cleared):
+
+| Input                                  | Forwarded to                                 | Notes                                                                                                                                               |
+| -------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | Native `input` (read-only: the `span[role]`) | Both spellings are inputs.                                                                                                                          |
+| `ariaLabelledby` / `aria-labelledby`   | Same                                         |                                                                                                                                                     |
+| `ariaDescribedby` / `aria-describedby` | Same                                         | Not merged with anything: this component is not composed inside a form-control wrapper.                                                             |
+| `id` (existing)                        | Native `input` (read-only: the `span[role]`) | Kept as a hand-written input with a generated default; host `id` cleared with `[attr.id]="null"`. The wrapping `label` still associates by nesting. |
+| `inputTabIndex`                        | Native `input` `tabindex`                    | Named like Button's `buttonTabIndex`. No-op in read-only.                                                                                           |
+| `form`                                 | Native `input` `form`                        | No-op in read-only.                                                                                                                                 |
+
+`rec-switch-group` (aria inputs are the same host directive):
+
+| Input                                  | Forwarded to      | Notes                                                                                                            |
+| -------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | `div[role=group]` |                                                                                                                  |
+| `ariaLabelledby` / `aria-labelledby`   | `div[role=group]` | Defaults to the wrapper's label id (`labelId`) when `label` is set and no `ariaLabel`/`ariaLabelledby` is given. |
+| `ariaDescribedby` / `aria-describedby` | `div[role=group]` | Caller's ids only; the wrapper's assistive/error ids are not added.                                              |
+
+Withheld:
+
+- `switch-group` `id`: not in the audit's list for this group; the wrapper owns ids.
+- Material `disableRipple`, `color`, `appearance`: tokens own styling (not used here).
+- `tabindex` on the host or the group div: focus belongs to the native inputs.
+- `title`, `data-*`: skipped by default per the audit.
+
+## Description and error (round 2)
+
+`description` and `error` (`string | TemplateRef`) are inputs on `rec-switch`, matching the canonical props. The React adapter forwards them to Mantine's native description/error with no Recursica tokens of its own, so there is nothing to copy token-for-token; here they render with the shared `rec-assistive-element` (help variant for the description, error variant with its icon and `role="alert"` for the error), which carries the design system's assistive-text tokens.
+
+- Placement: under the control, outside the `<label>` (so the text is not folded into the accessible name), indented past the control by control size + label gap (`.assistive` in `switch.component.css`). Both render when both are set, as in Mantine.
+- Wiring: the inner input gets `aria-describedby` = caller's `aria-describedby` + the description id + the error id (`aria.describedBy(...)`), and `aria-invalid="true"` when `error` is set. Ids are `<id>-description` / `<id>-error`.
+- No invalid visual state: React defines none for the atomic control (its CSS has no error rule), so none is added. The groups keep using the form-control wrapper and are unchanged.
+- Story: `WithDescriptionAndError`.

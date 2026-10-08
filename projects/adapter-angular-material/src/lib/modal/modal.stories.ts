@@ -83,3 +83,43 @@ export const ScrollingContent: Story = {
     props: { opened: true },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-modal
+        title="Accessible modal"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        [opened]="opened"
+        (openedChange)="opened = $event"
+      >
+        <p id="a11y-desc">Description referenced by the dialog.</p>
+        <rec-modal-footer>
+          <rec-button variant="solid" (click)="opened = false">Close</rec-button>
+        </rec-modal-footer>
+      </rec-modal>
+    `,
+    props: { opened: true },
+  }),
+};
+
+export const NonDismissibleByOutsideClick: Story = {
+  render: () => ({
+    template: `
+      <rec-modal
+        title="Outside click is ignored"
+        [closeOnClickOutside]="false"
+        [opened]="opened"
+        (openedChange)="opened = $event"
+      >
+        Clicking the backdrop does nothing; press Escape to close.
+        <rec-modal-footer>
+          <rec-button variant="solid" (click)="opened = false">Close</rec-button>
+        </rec-modal-footer>
+      </rec-modal>
+      <rec-button variant="solid" (click)="opened = true">Open Modal</rec-button>
+    `,
+    props: { opened: true },
+  }),
+};

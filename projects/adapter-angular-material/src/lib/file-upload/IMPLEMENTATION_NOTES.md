@@ -59,3 +59,17 @@ server (port 6007, isolated from the developer's own 6006 instance).
 browser/Playwright tooling available, so real drag-and-drop, the roving
 chip-delete-icon focus, and the accept/maxSize/maxFiles validation logic
 are all reasoned from the code, not click-verified.
+
+## Passthrough
+
+| Input                                  | Forwarded to | Notes                                                                                                                                                       |
+| -------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel` / `aria-label`             | `div.root`   | The root has no role of its own, so it gets `role="group"` only while an `ariaLabel` or `ariaLabelledby` is set (a name on a generic div is not announced). |
+| `ariaLabelledby` / `aria-labelledby`   | `div.root`   | Same conditional `role="group"`.                                                                                                                            |
+| `ariaDescribedby` / `aria-describedby` | `div.root`   | No wrapper-provided describedby wiring, so nothing to merge.                                                                                                |
+| `id`                                   | `div.root`   | Existing input kept; the host `id` is now cleared.                                                                                                          |
+
+Withheld:
+
+- `tabindex`: the root is not a control; the Browse button and chip delete icons are the tab stops.
+- `name`, `form`, `autocomplete` and other text-input attributes: the native input is hidden and not text-like.

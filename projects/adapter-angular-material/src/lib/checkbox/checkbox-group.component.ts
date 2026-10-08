@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
   forwardRef,
+  inject,
   signal,
 } from "@angular/core";
 import { ControlValueAccessor } from "@angular/forms";
@@ -16,6 +17,10 @@ import {
   RecursicaFormLayout,
 } from "../form-control-layout/form-control-layout.component";
 import { RecursicaLabelAlignment } from "../label/label.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaOverStyled,
   resolveOverStyle,
@@ -127,6 +132,12 @@ import {
  */
 @Component({
   selector: "rec-checkbox-group",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
   imports: [FormControlWrapperComponent],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./checkbox-group.component.css",
@@ -151,6 +162,7 @@ import {
   ],
   template: `
     <rec-form-control-wrapper
+      #fcw
       class="root"
       [class]="resolvedOverStyle.class"
       [style]="resolvedOverStyle.style"
@@ -171,6 +183,11 @@ import {
       <div
         class="groupRoot"
         role="group"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-labelledby]="
+          aria.ariaLabelledby ?? (label && !aria.ariaLabel ? fcw.labelId : null)
+        "
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
         [attr.data-layout]="formLayout"
         [attr.aria-disabled]="effectiveDisabled ? 'true' : null"
       >
@@ -182,6 +199,8 @@ import {
 export class CheckboxGroupComponent
   implements RecursicaOverStyled, ControlValueAccessor, OnInit
 {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
   @Input() label?: string | TemplateRef<unknown>;
   @Input() description?: string | TemplateRef<unknown>;
   @Input() assistiveText?: string | TemplateRef<unknown>;

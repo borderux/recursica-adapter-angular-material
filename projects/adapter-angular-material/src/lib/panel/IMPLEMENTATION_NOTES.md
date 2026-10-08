@@ -96,37 +96,33 @@ close-button/backdrop/Escape behavior were reasoned from the code (and
 from `Modal`'s own already-working `MatDialog` foundation), not
 click-verified.
 
-## Modal vs non-modal: `trapFocus`, `lockScroll`, `returnFocus`, `closeOnEscape`
+## Always non-modal, with no props to change it
 
-`Panel` follows Mantine Drawer's behaviour (the reference), where "modal" is
-not one switch but four independent ones. A panel can be a true modal drawer
-(the defaults) or a non-modal side panel the page stays usable beside:
+Decision (Matt Massey, 2026-10-08), matching the React adapter's Panel
+(`PANEL_IMPLEMENTATION_NOTES.md` §10): the page behind a panel stays usable. A
+panel is never modal and has no inputs to make it so.
 
-| Input                 | Default | What it controls                                                                                                                    |
-| --------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `withOverlay`         | `true`  | The dimmed backdrop.                                                                                                                |
-| `trapFocus`           | `true`  | `Tab` wraps inside the panel, and the container is `aria-modal`. `false` gives `aria-modal="false"` and lets `Tab` leave the panel. |
-| `lockScroll`          | `true`  | Blocks page scrolling behind it (CDK block scroll strategy). `false` uses the no-op strategy.                                       |
-| `returnFocus`         | `true`  | Restores focus to the element that opened it when it closes.                                                                        |
-| `closeOnEscape`       | `true`  | `Escape` closes it.                                                                                                                 |
-| `closeOnClickOutside` | `true`  | A press outside closes it (backdrop click, or a document pointer press when there is no overlay).                                   |
+- **No overlay:** `hasBackdrop: false`.
+- **No focus trap:** `MatDialog` has no switch for its focus trap (the CDK
+  container always renders two `cdk-focus-trap-anchor` sentinels), so the panel
+  removes them after the first render. With no sentinels `Tab` leaves the panel
+  into the page and back. This depends on CDK's class name; re-check it on CDK
+  major upgrades.
+- **No `aria-modal`:** `ariaModal: false`, and no `aria-hidden` on the rest of
+  the page.
+- **No scroll lock:** the `noop` scroll strategy.
+- **Focus returns** to the opener on close (`restoreFocus: true`).
+- **`Escape` always closes it.** Clicking the page behind never does.
+  `MatDialog`'s own `disableClose` is turned on so closing goes through the one
+  Escape handler (`keydownEvents()`).
 
-**`closeOnEscape` and `closeOnClickOutside` are independent.** Earlier,
-`disableClose: !closeOnClickOutside` was passed to `MatDialog`, whose single
-`disableClose` flag also swallows `Escape`, so turning off outside-click
-closing silently turned off Escape too. `MatDialog` now always gets
-`disableClose: true`, and the panel decides itself from `keydownEvents()`,
-`backdropClick()` and (with no backdrop) a capturing `pointerdown` listener.
+The earlier `withOverlay`, `closeOnClickOutside`, `closeOnEscape`, `trapFocus`,
+`lockScroll` and `returnFocus` inputs were removed. Previously
+`closeOnClickOutside=false` also turned off Escape, because `MatDialog` has one
+`disableClose` flag for both. Initial focus still lands on the panel container
+(`autoFocus: "dialog"`), which has to take focus for assistive technology to
+announce the panel.
 
-**How `trapFocus="false"` works.** `MatDialog` has no switch for its focus
-trap: the CDK dialog container always wraps itself in two
-`cdk-focus-trap-anchor` sentinels. A non-trapping panel removes them after the
-first render. With no sentinels `Tab` moves on into the page and back. This
-depends on CDK's anchor class name, so re-check it on CDK major upgrades.
-Initial focus still lands on the panel container (`autoFocus: "dialog"`),
-as the container has to take focus for screen readers to announce the panel.
+## `wrapHeaderText`
 
-A fully non-modal panel is therefore
-`[withOverlay]="false" [trapFocus]="false" [lockScroll]="false" [returnFocus]="false"`
-(see the `NonModal` story). Verified in Storybook: no backdrop, no sentinels,
-`aria-modal="false"`, the page input accepts typing, and `Escape` closes it.
+`rec-panel` `[wrapHeaderText]` (default `true`, as in React). React picks `styles.titleTruncate` when `true` and `styles.title` when `false`. Reading `Panel.module.css`: `.titleTruncate` composes `.title` and adds `white-space: nowrap`, clipped overflow with `text-overflow: ellipsis`, `flex: 1`, `min-width: 0`; plain `.title` has only the typography tokens, so it wraps. So the name is inverted from the behaviour: `true` = single line with ellipsis, `false` = wraps. Here the truncation rules in `panel-overlay.css` apply only to `.title[data-truncate]`, which the template sets when `wrapHeaderText` is true; `false` omits it and the title wraps. The existing `flex: 1 1 auto; min-width: 0` stays in both cases (harmless when wrapping; keeps the close button at the end). No new tokens. Overlay behaviour is unchanged.

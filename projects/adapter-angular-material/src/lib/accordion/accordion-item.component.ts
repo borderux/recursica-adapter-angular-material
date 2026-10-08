@@ -84,6 +84,20 @@ export class AccordionItemComponent
     return this.ctx?.isOpen(this.value) ?? false;
   }
 
+  get controlId(): string {
+    return (
+      this.ctx?.controlId(this.value) ??
+      `rec-accordion-control-${this.value.trim().replace(/\s+/g, "-")}`
+    );
+  }
+
+  get panelId(): string {
+    return (
+      this.ctx?.panelId(this.value) ??
+      `rec-accordion-panel-${this.value.trim().replace(/\s+/g, "-")}`
+    );
+  }
+
   get chevron() {
     return this.ctx?.chevron;
   }

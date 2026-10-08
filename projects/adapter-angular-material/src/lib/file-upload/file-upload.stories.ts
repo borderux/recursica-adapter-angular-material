@@ -253,3 +253,16 @@ export const MaxFilesRestriction: Story = {
     },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-file-upload
+        label="Attachments"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-file-upload>
+    `,
+  }),
+};

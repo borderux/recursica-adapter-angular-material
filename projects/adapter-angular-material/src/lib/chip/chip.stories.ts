@@ -121,3 +121,16 @@ export const WithLeadingIconSelected: Story = {
     `,
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `<rec-chip aria-label="A11Y-LABEL" aria-describedby="a11y-desc" id="a11y-id" (checkedChange)="$event">Chip</rec-chip>`,
+  }),
+};
+
+/** Non-interactive chip: not aria-hidden, no role, label/id/title exposed as plain text. */
+export const NonInteractiveLabelExposed: Story = {
+  render: () => ({
+    template: `<rec-chip id="static-chip" aria-label="Static status chip" title="Static chip title">Status: Active</rec-chip>`,
+  }),
+};

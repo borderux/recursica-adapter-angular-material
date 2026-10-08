@@ -5,6 +5,7 @@ import {
 } from "../utils/recursica-over-styled";
 
 export type RecursicaTableSorted = "asc" | "desc" | false;
+export type RecursicaTableScope = "col" | "row" | "colgroup" | "rowgroup";
 export type RecursicaTableCellVariant = "default" | "currency";
 
 /**
@@ -30,6 +31,9 @@ export type RecursicaTableCellVariant = "default" | "currency";
     "[attr.data-sorted]": "sorted ? 'true' : null",
     "[attr.data-disabled]": "disabled ? 'true' : null",
     "[attr.data-currency]": "variant === 'currency' ? 'true' : null",
+    "[attr.colspan]": "colSpan ?? null",
+    "[attr.rowspan]": "rowSpan ?? null",
+    "[attr.scope]": "scope ?? null",
     "[attr.aria-sort]":
       "sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : null",
     "[class]": "resolvedOverStyle.class",
@@ -67,6 +71,13 @@ export type RecursicaTableCellVariant = "default" | "currency";
   `,
 })
 export class TableThComponent implements RecursicaOverStyled {
+  /** Native `colspan`. Only effective on `th[recTableTh]`; no effect on `<rec-table-th>`. */
+  @Input() colSpan?: number;
+  /** Native `rowspan`. Only effective on `th[recTableTh]`; no effect on `<rec-table-th>`. */
+  @Input() rowSpan?: number;
+  /** Native `scope`. Only effective on `th[recTableTh]`; no effect on `<rec-table-th>`. */
+  @Input() scope?: RecursicaTableScope;
+
   @Input() sorted: RecursicaTableSorted = false;
   @Input() disabled = false;
   @Input() variant: RecursicaTableCellVariant = "default";

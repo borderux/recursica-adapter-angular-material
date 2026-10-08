@@ -1,5 +1,11 @@
 export type { RecursicaOverStyled } from "./utils/recursica-over-styled";
 export { resolveOverStyle } from "./utils/recursica-over-styled";
+export {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RECURSICA_ELEMENT_ID_INPUTS,
+  RecursicaAriaLabelling,
+  RecursicaElementId,
+} from "./utils/recursica-aria";
 export { InDevelopmentStubComponent } from "./in-development-stub/in-development-stub.component";
 export { LayerComponent } from "./layer/layer.component";
 export { ThemeProviderComponent } from "./theme-provider/theme-provider.component";

@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  inject,
   Output,
   TemplateRef,
   ViewEncapsulation,
@@ -15,6 +16,10 @@ import type {
 } from "../form-control-layout/form-control-layout.component";
 import type { RecursicaLabelAlignment } from "../label/label.component";
 import { WithReadOnlyWrapperComponent } from "../read-only-field/with-read-only-wrapper.component";
+import {
+  RECURSICA_ARIA_LABELLING_INPUTS,
+  RecursicaAriaLabelling,
+} from "../utils/recursica-aria";
 import {
   RecursicaValueAccessor,
   recursicaValueAccessorProvider,
@@ -56,6 +61,13 @@ let nextId = 0;
   imports: [WithReadOnlyWrapperComponent, NumberInputControlComponent],
   encapsulation: ViewEncapsulation.Emulated,
   providers: [recursicaValueAccessorProvider(NumberInputComponent)],
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: RECURSICA_ARIA_LABELLING_INPUTS,
+    },
+  ],
+  host: { "[attr.id]": "null", "[attr.form]": "null" },
   template: `
     <rec-with-read-only-wrapper
       [readOnly]="readOnly"
@@ -93,10 +105,19 @@ let nextId = 0;
         [required]="required"
         [error]="!!error"
         [name]="name"
+        [autocomplete]="autocomplete"
+        [inputMode]="inputMode"
+        [form]="form"
+        [inputTabIndex]="inputTabIndex"
+        [ariaLabel]="aria.ariaLabel"
+        [ariaLabelledby]="aria.ariaLabelledby"
+        [ariaDescribedby]="aria.ariaDescribedby"
         [min]="min"
         [max]="max"
         [step]="step"
         [hideControls]="hideControls"
+        [incrementLabel]="incrementLabel"
+        [decrementLabel]="decrementLabel"
         [leftSection]="leftSection"
         [rightSection]="rightSection"
         (valueChange)="onValueChange($event)"
@@ -128,6 +149,21 @@ export class NumberInputComponent implements ControlValueAccessor, OnInit {
   @Input() max?: number;
   @Input() step?: number;
   @Input() hideControls = false;
+  /** Accessible name of the increment button (default "Increment"). */
+  @Input() incrementLabel = "Increment";
+  /** Accessible name of the decrement button (default "Decrement"). */
+  @Input() decrementLabel = "Decrement";
+
+  /** Native `autocomplete` of the inner `<input>`. */
+  @Input() autocomplete?: string;
+  /** Native `inputmode` of the inner `<input>`. */
+  @Input() inputMode?: string;
+  /** Native `form` of the inner `<input>` (id of the owning `<form>`). */
+  @Input() form?: string;
+  /** Native `tabindex` of the inner `<input>`. */
+  @Input() inputTabIndex?: number;
+
+  protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() leftSection?: TemplateRef<unknown>;
   @Input() rightSection?: TemplateRef<unknown>;

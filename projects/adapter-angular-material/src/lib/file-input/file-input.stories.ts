@@ -202,3 +202,16 @@ export const MaxFilesRestriction: Story = {
     },
   }),
 };
+
+export const Accessibility: Story = {
+  render: () => ({
+    template: `
+      <rec-file-input
+        label="Resume"
+        aria-label="A11Y-LABEL"
+        aria-describedby="a11y-desc"
+        id="a11y-id"
+      ></rec-file-input>
+    `,
+  }),
+};

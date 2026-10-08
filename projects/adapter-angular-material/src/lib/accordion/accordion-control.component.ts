@@ -10,6 +10,7 @@ import {
   RecursicaOverStyled,
   resolveOverStyle,
 } from "../utils/recursica-over-styled";
+import { RecursicaAriaLabelling } from "../utils/recursica-aria";
 import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
 
 /**
@@ -58,44 +59,88 @@ import { ACCORDION_ITEM_CONTEXT } from "./accordion-context";
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./accordion-control.component.css",
+  hostDirectives: [
+    {
+      directive: RecursicaAriaLabelling,
+      inputs: [
+        "ariaLabel",
+        "aria-label",
+        "ariaDescribedby",
+        "aria-describedby",
+      ],
+    },
+  ],
   template: `
-    <button
-      type="button"
-      class="control"
-      [id]="controlId"
-      [attr.aria-expanded]="isOpen"
-      [attr.aria-controls]="panelId"
-      [attr.data-active]="isOpen ? '' : null"
-      [disabled]="isDisabled"
-      [class]="resolvedOverStyle.class"
-      [style]="resolvedOverStyle.style"
-      (click)="onClick()"
-    >
-      @if (leftIcon) {
-        <span class="iconLeftWrapper" aria-hidden="true">
-          <ng-container [ngTemplateOutlet]="leftIcon" />
-        </span>
+    @switch (headingLevel) {
+      @case (2) {
+        <h2 class="heading"><ng-container [ngTemplateOutlet]="buttonTpl" /></h2>
       }
-      <span class="label"><ng-content /></span>
-      <span class="chevron" aria-hidden="true">
-        @if (resolvedChevron) {
-          <ng-container [ngTemplateOutlet]="resolvedChevron" />
-        } @else {
-          <svg viewBox="0 0 24 24" fill="none" width="100%" height="100%">
-            <path
-              d="M6 9l6 6 6-6"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+      @case (3) {
+        <h3 class="heading"><ng-container [ngTemplateOutlet]="buttonTpl" /></h3>
+      }
+      @case (4) {
+        <h4 class="heading"><ng-container [ngTemplateOutlet]="buttonTpl" /></h4>
+      }
+      @case (5) {
+        <h5 class="heading"><ng-container [ngTemplateOutlet]="buttonTpl" /></h5>
+      }
+      @case (6) {
+        <h6 class="heading"><ng-container [ngTemplateOutlet]="buttonTpl" /></h6>
+      }
+      @default {
+        <ng-container [ngTemplateOutlet]="buttonTpl" />
+      }
+    }
+    <ng-template #buttonTpl>
+      <button
+        type="button"
+        class="control"
+        [id]="controlId"
+        [attr.aria-label]="aria.ariaLabel ?? null"
+        [attr.aria-describedby]="aria.ariaDescribedby ?? null"
+        [attr.aria-expanded]="isOpen"
+        [attr.aria-controls]="panelId"
+        [attr.data-active]="isOpen ? '' : null"
+        [disabled]="isDisabled"
+        [class]="resolvedOverStyle.class"
+        [style]="resolvedOverStyle.style"
+        (click)="onClick()"
+      >
+        @if (leftIcon) {
+          <span class="iconLeftWrapper" aria-hidden="true">
+            <ng-container [ngTemplateOutlet]="leftIcon" />
+          </span>
         }
-      </span>
-    </button>
+        <span class="label"><ng-content /></span>
+        <span class="chevron" aria-hidden="true">
+          @if (resolvedChevron) {
+            <ng-container [ngTemplateOutlet]="resolvedChevron" />
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none" width="100%" height="100%">
+              <path
+                d="M6 9l6 6 6-6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          }
+        </span>
+      </button>
+    </ng-template>
   `,
 })
 export class AccordionControlComponent implements RecursicaOverStyled {
+  protected readonly aria = inject(RecursicaAriaLabelling);
+
+  /** When set (2-6), the button is wrapped in an `<h2>`-`<h6>` so the control appears in the heading outline. */
+  @Input({
+    transform: (value: number | string | null | undefined) =>
+      value == null || value === "" ? undefined : Number(value),
+  })
+  headingLevel?: number;
+
   @Input() leftIcon?: TemplateRef<unknown>;
 
   /** Overrides the resolved default chevron (own input > item/root context > built-in SVG) for
@@ -126,11 +171,11 @@ export class AccordionControlComponent implements RecursicaOverStyled {
   }
 
   get controlId(): string {
-    return `rec-accordion-control-${this.itemCtx?.value ?? ""}`;
+    return this.itemCtx?.controlId ?? "";
   }
 
   get panelId(): string {
-    return `rec-accordion-panel-${this.itemCtx?.value ?? ""}`;
+    return this.itemCtx?.panelId ?? "";
   }
 
   onClick(): void {
