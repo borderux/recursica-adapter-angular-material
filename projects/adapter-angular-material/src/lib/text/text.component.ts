@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, Input, ViewEncapsulation } from "@angular/core";
 import {
   RecursicaOverStyled,
@@ -11,6 +12,11 @@ export type RecursicaTextVariant =
   | "overline"
   | "subtitle"
   | "subtitle-small";
+/** Elements `rec-text` can render. Never `h1` to `h6` — those belong to `rec-heading`. */
+export type RecursicaTextElement = "p" | "span" | "label" | "div";
+const TEXT_ELEMENTS: readonly string[] = ["p", "span", "label", "div"];
+const HEADING_ELEMENTS = /^h[1-6]$/i;
+
 export type RecursicaTextColor = "default" | "warning" | "alert" | "success";
 export type RecursicaTextEmphasis = "high" | "low";
 
@@ -27,37 +33,101 @@ export type RecursicaTextEmphasis = "high" | "low";
  * `subtitle`/`subtitle-small` all already exist in this adapter's own
  * `recursica_variables_scoped.css`).
  *
- * ## No polymorphism, no `weight` input from the stub's own guess
+ * ## `component`: `p` (default), `span`, `label` or `div` — never `h1` to `h6`
  *
- * The reference wraps itself in Mantine's `createPolymorphicComponent` so
- * callers can render as `<span>`/`<label>`/etc. via a `component` prop —
- * skipped here, matching `Avatar`/`Badge`/`Heading`'s identical omission
- * (no other component in this adapter offers polymorphism either). The
- * stub's own first-pass guess included a `weight: string` input; the real
- * reference has no such prop (confirmed by reading `Text.tsx` directly —
- * weight is fully owned by the `variant`'s own typography class, not a
- * separate override), so it isn't built here either, per
- * `docs/CREATING_AN_ADAPTER.md` step 10's own instruction that the real
- * audit supersedes the stub's guess.
+ * The reference's `component` prop (Mantine polymorphism) is offered as a
+ * `component` input limited to those four elements, so Text can sit inline
+ * (`span`), name a control (`label`), or be a block (`div`) without
+ * producing invalid markup such as a `<p>` inside a `<p>`. A custom element
+ * cannot swap its own tag, so the template renders one root per allowed
+ * element from a shared content template. `h1` to `h6` throw, matching the
+ * React adapter: semantic headings are `rec-heading`'s alone (see
+ * `IMPLEMENTATION_NOTES.md`). Any other value throws too.
+ *
+ * No `weight` input from the stub's own guess: the real reference has no
+ * such prop (weight is owned by the `variant`'s typography class).
  */
 @Component({
   selector: "rec-text",
   encapsulation: ViewEncapsulation.Emulated,
   styleUrl: "./text.component.css",
+  imports: [NgTemplateOutlet],
   template: `
-    <p
-      class="root"
-      [class]="resolvedTypographyClass"
-      [style]="resolvedOverStyle.style"
-      [attr.data-color]="color"
-      [attr.data-emphasis]="emphasis"
-    >
-      <ng-content />
-    </p>
+    @switch (component) {
+      @case ("span") {
+        <span
+          class="root"
+          [class]="resolvedTypographyClass"
+          [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
+        >
+          <ng-container [ngTemplateOutlet]="content" />
+        </span>
+      }
+      @case ("label") {
+        <label
+          [attr.for]="htmlFor ?? null"
+          class="root"
+          [class]="resolvedTypographyClass"
+          [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
+        >
+          <ng-container [ngTemplateOutlet]="content" />
+        </label>
+      }
+      @case ("div") {
+        <div
+          class="root"
+          [class]="resolvedTypographyClass"
+          [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
+        >
+          <ng-container [ngTemplateOutlet]="content" />
+        </div>
+      }
+      @default {
+        <p
+          class="root"
+          [class]="resolvedTypographyClass"
+          [style]="resolvedOverStyle.style"
+          [attr.data-color]="color"
+          [attr.data-emphasis]="emphasis"
+        >
+          <ng-container [ngTemplateOutlet]="content" />
+        </p>
+      }
+    }
+    <ng-template #content><ng-content /></ng-template>
   `,
 })
 export class TextComponent implements RecursicaOverStyled {
   @Input() variant: RecursicaTextVariant = "body";
+
+  /** `for` of the inner `<label>`; only used when `component="label"`. */
+  @Input() htmlFor?: string;
+
+  /** Element rendered as the root. `h1` to `h6` throw — use `rec-heading`. */
+  @Input()
+  set component(value: RecursicaTextElement) {
+    if (HEADING_ELEMENTS.test(value)) {
+      throw new Error(
+        `rec-text cannot render <${value}>. Use <rec-heading> for semantic h1-h6.`,
+      );
+    }
+    if (!TEXT_ELEMENTS.includes(value)) {
+      throw new Error(
+        `rec-text cannot render <${value}>. Use one of: ${TEXT_ELEMENTS.join(", ")}.`,
+      );
+    }
+    this._component = value;
+  }
+  get component(): RecursicaTextElement {
+    return this._component;
+  }
+  private _component: RecursicaTextElement = "p";
 
   /** Semantic text color, bound to the active layer's text-element tokens via `data-color` —
    * same brand-layer mapping `heading.component.ts` uses. */

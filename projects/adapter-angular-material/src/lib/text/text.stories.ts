@@ -80,3 +80,16 @@ export const Emphasis: Story = {
     `,
   }),
 };
+
+/** `component` renders Text as an inline `span`, a `label` or a `div`; `h1` to `h6` throw (use `rec-heading`). */
+export const AsElement: Story = {
+  render: () => ({
+    template: `
+      <rec-stack gap="16px">
+        <rec-text>Default is a block paragraph.</rec-text>
+        <div>Inline text: <rec-text component="span" emphasis="low">a span inside a line</rec-text>.</div>
+        <rec-text component="label">A label</rec-text>
+      </rec-stack>
+    `,
+  }),
+};
