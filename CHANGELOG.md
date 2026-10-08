@@ -1,5 +1,17 @@
 # @recursica/adapter-angular-material
 
+## 0.8.0
+
+### Minor Changes
+
+- 308c627: Modal gets `closeOnEscape`, `trapFocus`, `returnFocus`, `lockScroll`, `role`, `closeButtonLabel` and an accessible name. Popover, hover-card, tooltip and the menu trigger put their aria state on the real focusable child; popover no longer swallows the first outside click; tooltip delays are `openDelay`/`closeDelay` (`showDelay`/`hideDelay` are deprecated aliases). Add checkbox, radio and switch `description` and `error`, slider `changeEnd` and `tooltipLabel`, time-picker `minTime`/`maxTime`, dropdown `containerWidth`, menu `maxHeight`, accordion `variant`, panel `wrapHeaderText`, and translatable labels (number-input, dropdown, slider, transfer-list, tree). A non-interactive chip is no longer `aria-hidden`; table rows no longer set `aria-selected`.
+- 4a75879: Add the standard accessibility passthrough (`ariaLabel`/`aria-label`, `ariaLabelledby`/`aria-labelledby`, `ariaDescribedby`/`aria-describedby`, `id`) to the components that wrap a native element, forwarded to the inner element. Tabs and accordion ids are now per instance. Button no longer exposes `disableRipple` or `disabledInteractive`, Menu no longer exposes `hasBackdrop`, and Menu item no longer exposes `disableRipple`.
+- 8015216: Add Text `component` input (`p`, `span`, `label`, `div`); `h1` to `h6` throw, use Heading.
+
+### Patch Changes
+
+- ed2e269: Add Introduction stories (Welcome, Adapters, Version Info) to the Storybook, listing the Angular Material adapter alongside Mantine and MUI.
+
 ## 0.7.0
 
 ### Minor Changes
