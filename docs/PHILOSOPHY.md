@@ -4,6 +4,10 @@ Recursica's component architecture isn't just a wrapper; it's a strict enforcing
 
 This document serves as the governing framework for why `adapter-angular-material`'s components are built the way they are.
 
+## Why an Adapter?
+
+Most companies already have an existing component library or use an existing UI kit, and switching to a different kit means painful refactoring. Rather than replace Angular Material, this adapter adapts to its API surface while enforcing the behaviors and styling Recursica defines for a consistent UX. You don't ship two separate UI kits, and you can migrate to Recursica systematically, over time.
+
 ## 1. Strict Separation of Props (The Unified Recursica Prop Layer)
 
 Recursica has a **single universal API surface** internally, regardless of which underlying UI kit backs a given adapter.
