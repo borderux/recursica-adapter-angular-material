@@ -2,6 +2,10 @@
 
 An Angular library built with TypeScript and **Angular Material 20+** (`@angular/material`/`@angular/cdk`). This package serves as a UI kit for Recursica applications, providing reusable Angular components, centralized theme configuration, and a Storybook environment for development — built with the Angular CLI/`ng-packagr`, not Vite, and using `@storybook/angular`, not `@storybook/react-vite`.
 
+## Storybook
+
+View the Storybook at [https://borderux.github.io/recursica-adapter-angular-material/](https://borderux.github.io/recursica-adapter-angular-material/).
+
 ## Using Theme Forge to update styles
 
 You can publish new themes by creating pull requests directly from [https://forge.recursica.com](https://forge.recursica.com). Your pull request will have a preview build you can review your style changes with.
