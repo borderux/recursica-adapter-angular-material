@@ -12,9 +12,7 @@
 # 4. When that PR is merged, runs `npm run release` (`changeset publish`), which
 #    bumps the version, publishes to npm, and creates a GitHub release
 #
-# Requires a repo secret named RELEASE_PAT (a GitHub PAT with contents+PR write
-# access) and npm Trusted Publishing (OIDC) configured for this package — neither
-# is set up yet for this repo.
+# Requires npm Trusted Publishing (OIDC) configured for this package.
 
 name: Release
 
@@ -76,24 +74,5 @@ jobs:
         with:
           publish: npm run release
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
-
-      # changesets/action tags a single-package repo's release as `v<version>`.
-      # @recursica/adapter-tester's source-of-truth divergence check fetches this
-      # repo's golden baseline from a `<package.json name>@<version>` tag instead
-      # (the multi-package-monorepo tag format), so every adapter's divergence
-      # check silently no-ops until this second tag also exists.
-      - name: Tag release for adapter-tester compatibility
-        if: steps.changesets.outputs.published == 'true'
-        run: |
-          git remote set-url origin "https://x-access-token:${{ secrets.RELEASE_PAT }}@github.com/${{ github.repository }}.git"
-          echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -c '.[]' | while read -r pkg; do
-            name=$(echo "$pkg" | jq -r '.name')
-            version=$(echo "$pkg" | jq -r '.version')
-            tag="${name}@${version}"
-            git tag "$tag"
-            git push origin "$tag"
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
