@@ -1,5 +1,12 @@
 # @recursica/adapter-angular-material
 
+## 0.8.1
+
+### Patch Changes
+
+- d09cfe3: Add a "Why an Adapter?" section to PHILOSOPHY.md.
+- ee539fc: Add the Storybook link to the README and rewrite PHILOSOPHY.md without React comparisons.
+
 ## 0.8.0
 
 ### Minor Changes
