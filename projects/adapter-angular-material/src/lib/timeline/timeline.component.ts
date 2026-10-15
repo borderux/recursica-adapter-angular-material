@@ -84,6 +84,11 @@ export class TimelineComponent
   protected readonly aria = inject(RecursicaAriaLabelling);
   protected readonly elementId = inject(RecursicaElementId);
 
+  /**
+   * Index of the last active (completed) item; items `0..active` are active. The default `-1`
+   * (same as Mantine) leaves every item upcoming. To show a finished history, bind
+   * `[active]="items.length - 1"`.
+   */
   @Input() active = -1;
 
   @Input() overStyled = false;

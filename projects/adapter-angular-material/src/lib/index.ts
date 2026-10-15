@@ -90,6 +90,7 @@ export { TreeComponent } from "./tree/tree.component";
 export { DatePickerComponent } from "./date-picker/date-picker.component";
 export { BreadcrumbComponent } from "./breadcrumb/breadcrumb.component";
 export { FileInputComponent } from "./file-input/file-input.component";
+export type { RecursicaFileUploadItem } from "./file-input/file-input-item";
 export { FileUploadComponent } from "./file-upload/file-upload.component";
 export { NumberInputComponent } from "./number-input/number-input.component";
 export { TimelineComponent } from "./timeline/timeline.component";

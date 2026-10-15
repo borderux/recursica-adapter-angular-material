@@ -22,6 +22,12 @@
   box-shadow: var(--recursica_ui-kit_components_menu_properties_elevation);
   background-color: var(--recursica_ui-kit_components_menu_properties_colors_background-color);
   --mat-menu-container-color: var(--recursica_ui-kit_components_menu_properties_colors_background-color);
+  /* Material's item label tokens would otherwise apply the theme's label-large type to `.mat-mdc-menu-item-text`. */
+  --mat-menu-item-label-text-font: var(--recursica_ui-kit_components_menu-item_properties_text_font-family);
+  --mat-menu-item-label-text-size: var(--recursica_ui-kit_components_menu-item_properties_text_font-size);
+  --mat-menu-item-label-text-weight: var(--recursica_ui-kit_components_menu-item_properties_text_font-weight);
+  --mat-menu-item-label-text-line-height: var(--recursica_ui-kit_components_menu-item_properties_text_line-height);
+  --mat-menu-item-label-text-tracking: var(--recursica_ui-kit_components_menu-item_properties_text_letter-spacing);
   min-width: var(--recursica_ui-kit_components_menu_properties_min-width);
   max-width: var(--recursica_ui-kit_components_menu_properties_max-width);
   /* A per-instance `maxHeight` input overrides this inline on the open panel (menu.component.ts). */

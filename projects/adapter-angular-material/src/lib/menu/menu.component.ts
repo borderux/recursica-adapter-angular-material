@@ -1,6 +1,7 @@
 import { DOCUMENT } from "@angular/common";
 import {
   AfterContentInit,
+  AfterViewInit,
   Component,
   ContentChildren,
   Input,
@@ -105,7 +106,9 @@ export type RecursicaMenuPositionY = "above" | "below";
     </mat-menu>
   `,
 })
-export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
+export class MenuComponent
+  implements RecursicaOverStyled, AfterContentInit, AfterViewInit
+{
   protected readonly aria = inject(RecursicaAriaLabelling);
 
   @Input() xPosition: RecursicaMenuPositionX = "after";
@@ -211,5 +214,14 @@ export class MenuComponent implements RecursicaOverStyled, AfterContentInit {
     this.items?.changes.subscribe((list: QueryList<MenuItemComponent>) =>
       list.forEach((item) => item.setEnclosingMenu(this)),
     );
+  }
+
+  /**
+   * Re-sync after the inner `mat-menu`'s own `ngAfterContentInit`, which resets
+   * `_directDescendantItems` from its (empty) projected-content query. Items rendered by `@for`
+   * sync earlier than that reset and would otherwise be wiped, breaking arrow-key navigation.
+   */
+  ngAfterViewInit(): void {
+    this.syncItems();
   }
 }

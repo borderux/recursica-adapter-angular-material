@@ -91,3 +91,9 @@ click- or screenshot-verified.
 | `rec-timeline-item` `datetime`                                | `<time datetime>`       | Renders the timestamp as `<time>` instead of `<div>` when set (and `timestamp` is set). |
 
 Withheld: none for this component. The item's existing `title` input still collides with the native host attribute (not part of this pass).
+
+## `active` default and completed history
+
+`active` defaults to `-1` (every item upcoming), matching Mantine. For a history where every
+item is complete, bind `[active]="items.length - 1"`; no "all active" value exists, to stay
+aligned with Mantine.

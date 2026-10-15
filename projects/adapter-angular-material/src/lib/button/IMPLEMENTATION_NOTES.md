@@ -218,3 +218,11 @@ Withheld:
 
 - `disableRipple`, `disabledInteractive`: Material-only inputs; removed from the public API (the `disabledInteractive` attribute binding had no effect).
 - Step/roving `tabindex` beyond `buttonTabIndex`: unchanged.
+
+## Material state layer and ripple
+
+`button.component.css` zeroes Material's `hover`/`focus` state-layer opacity tokens for the
+filled, outlined, text and icon-button appearances, and sets their `ripple-color` to
+`--recursica_brand_states_hover_color`. The adapter's own `::after` overlay is the only hover
+treatment. Without it, an app's Material theme paints its primary colour over every hover. Storybook
+loads no Material theme, so this is only visible with the `SETUP.md` theme loaded.

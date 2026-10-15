@@ -212,3 +212,18 @@ export const WithMaxHeight: Story = {
     `,
   }),
 };
+
+/** Regression check for arrow-key navigation: items from `@for`. Focus the trigger, press Enter, then ArrowDown; focus must land on "Item 1". */
+export const WithRepeatedItems: Story = {
+  render: () => ({
+    props: { items: ["Item 1", "Item 2", "Item 3"] },
+    template: `
+        <rec-button variant="solid" [recMenuTriggerFor]="menu">Repeated items</rec-button>
+        <rec-menu #menu>
+          @for (item of items; track item) {
+            <rec-menu-item>{{ item }}</rec-menu-item>
+          }
+        </rec-menu>
+    `,
+  }),
+};
