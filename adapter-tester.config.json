@@ -25,6 +25,9 @@
     },
     "ui-kit-menu--with-max-height": {
       "exclude": true
+    },
+    "ui-kit-accordion--default": {
+      "sourceOfTruthThreshold": 200
     }
   }
 }
