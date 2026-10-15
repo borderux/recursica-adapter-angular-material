@@ -98,3 +98,9 @@ Withheld:
 
 - `tabindex`: the root is a fixed tab stop (0 when interactive, -1 otherwise).
 - `name`, `form`, `autocomplete` and other text-input attributes: the native input is hidden and not text-like.
+
+## Clear button name
+
+The clear-all `rec-button` is named with `[ariaLabel]="clearLabel"`; `[attr.aria-label]` on a
+`rec-*` host does not reach the inner button. `RecursicaFileUploadItem` is exported from the
+package entry point because `files` requires it.

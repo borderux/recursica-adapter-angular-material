@@ -122,3 +122,20 @@ needed. Material's host bindings rewrite the three attributes whenever their
 value changes, so `ngAfterViewChecked` removes them from the host again. Any
 other host element keeps Material's behaviour unchanged. The `Accessibility`
 story's trigger is a `rec-button` (`id="a11y-trigger"`).
+
+## Arrow-key navigation with `@for`-rendered items
+
+`MenuComponent.ngAfterViewInit` calls `syncItems()`. Items created inside an embedded view
+(`@for`) call `setEnclosingMenu` -> `syncItems` before the inner `mat-menu` runs its own
+`ngAfterContentInit`, which resets `_directDescendantItems` from its empty projected-content
+query, so ArrowDown never reached the items. Re-syncing after the view init fixes it. Static items
+were unaffected, which is why earlier checks missed it. Deviation from the repo's usual
+regression coverage: there is no test runner and no Storybook `play` support installed, so
+the `WithRepeatedItems` story is the regression check; open it and press Enter then ArrowDown on
+the trigger, focus must move to the first item.
+
+## Item label typography
+
+`menu-overlay.css` sets the five `--mat-menu-item-label-text-*` tokens (font, size, weight,
+line-height, tracking) from the `menu-item` text tokens, so `.mat-mdc-menu-item-text` no longer
+uses the Material theme's label-large type.
