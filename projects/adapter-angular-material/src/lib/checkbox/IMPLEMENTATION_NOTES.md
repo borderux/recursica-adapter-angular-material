@@ -316,3 +316,14 @@ Withheld:
 - Wiring: the inner input gets `aria-describedby` = caller's `aria-describedby` + the description id + the error id (`aria.describedBy(...)`), and `aria-invalid="true"` when `error` is set. Ids are `<id>-description` / `<id>-error`.
 - No invalid visual state: React defines none for the atomic control (its CSS has no error rule), so none is added. The groups keep using the form-control wrapper and are unchanged.
 - Story: `WithDescriptionAndError`.
+
+## Native input accessibility contract (verified)
+
+Verified against the rendered DOM in Storybook (`Accessibility`, `WithDescriptionAndError` and group stories), no deviations:
+
+- `aria-label`, `aria-labelledby` and `aria-describedby` (both spellings) land on the real `<input>`; the host carries none of them (`RecursicaAriaLabelling` clears them) and its `id` is cleared too, so ids are not duplicated.
+- The input always has an `id` (`rec-checkbox-N` when the consumer passes none) and sits inside the `<label>`, so `input.labels` holds the label with no consumer `id`.
+- Description and error ids are merged after the caller's `aria-describedby`; `error` sets `aria-invalid`.
+- A missing `name` never throws: it is omitted.
+- Read-only mode renders a `role` element instead of an input and carries the same attributes.
+- Tests: this adapter has no test runner (`docs/COMPONENT_DEV_GUIDE.md`), so the check is a real-browser DOM probe, not a unit test.
