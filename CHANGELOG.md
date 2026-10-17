@@ -1,5 +1,12 @@
 # @recursica/adapter-angular-material
 
+## 0.8.2
+
+### Patch Changes
+
+- 570758e: Fix Button CSS where the Material hover-layer reset was nested inside the hover overlay rule and never applied, and apply the theme line-height to default and small buttons.
+- 50b91f0: Fix Menu arrow-key navigation with `@for` items and Menu item typography, remove Material's purple hover layer on Button, name the FileInput clear button, and export `RecursicaFileUploadItem`.
+
 ## 0.8.1
 
 ### Patch Changes
