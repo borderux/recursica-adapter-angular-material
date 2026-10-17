@@ -75,6 +75,7 @@
   font-size: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-size);
   font-style: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-style);
   font-weight: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_font-weight);
+  line-height: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_line-height);
   letter-spacing: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_letter-spacing);
   text-decoration: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-decoration);
   text-transform: var(--recursica_ui-kit_components_button_variants_sizes_default_properties_text_text-transform);
@@ -257,6 +258,7 @@
   font-size: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-size);
   font-style: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-style);
   font-weight: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_font-weight);
+  line-height: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_line-height);
   letter-spacing: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_letter-spacing);
   text-decoration: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-decoration);
   text-transform: var(--recursica_ui-kit_components_button_variants_sizes_small_properties_text_text-transform);
@@ -444,27 +446,27 @@
   cursor: not-allowed;
 }
 
+/* Material's own hover/focus state layer and ripple are replaced by the overlay below; zero them
+ * so the theme's primary colour never shows through. Covers every matButton appearance. */
+.root {
+  --mat-button-filled-hover-state-layer-opacity: 0;
+  --mat-button-filled-focus-state-layer-opacity: 0;
+  --mat-button-outlined-hover-state-layer-opacity: 0;
+  --mat-button-outlined-focus-state-layer-opacity: 0;
+  --mat-button-text-hover-state-layer-opacity: 0;
+  --mat-button-text-focus-state-layer-opacity: 0;
+  --mat-icon-button-hover-state-layer-opacity: 0;
+  --mat-icon-button-focus-state-layer-opacity: 0;
+}
+:host-context([data-recursica-theme]) .root {
+  --mat-button-filled-ripple-color: var(--recursica_brand_states_hover_color);
+  --mat-button-outlined-ripple-color: var(--recursica_brand_states_hover_color);
+  --mat-button-text-ripple-color: var(--recursica_brand_states_hover_color);
+  --mat-icon-button-ripple-color: var(--recursica_brand_states_hover_color);
+}
+
 /* Hover overlay — same generic brand state tokens/technique as the React reference. */
 .root::after {
-  /* Material's own hover/focus state layer and ripple are replaced by the overlay below; zero them
- * so the theme's primary colour never shows through. Covers every matButton appearance. */
-  .root {
-    --mat-button-filled-hover-state-layer-opacity: 0;
-    --mat-button-filled-focus-state-layer-opacity: 0;
-    --mat-button-outlined-hover-state-layer-opacity: 0;
-    --mat-button-outlined-focus-state-layer-opacity: 0;
-    --mat-button-text-hover-state-layer-opacity: 0;
-    --mat-button-text-focus-state-layer-opacity: 0;
-    --mat-icon-button-hover-state-layer-opacity: 0;
-    --mat-icon-button-focus-state-layer-opacity: 0;
-  }
-  :host-context([data-recursica-theme]) .root {
-    --mat-button-filled-ripple-color: var(--recursica_brand_states_hover_color);
-    --mat-button-outlined-ripple-color: var(--recursica_brand_states_hover_color);
-    --mat-button-text-ripple-color: var(--recursica_brand_states_hover_color);
-    --mat-icon-button-ripple-color: var(--recursica_brand_states_hover_color);
-  }
-
   content: "";
   position: absolute;
   inset: 0;
