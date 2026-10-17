@@ -55,6 +55,18 @@ Every Recursica adapter offers an explicit, greppable escape hatch for styling a
 
 Prefer design-system inputs and tokens first. See [OVERSTYLING.md](OVERSTYLING.md) for why it works this way in Angular and what it can and cannot prevent.
 
+### Modal and Panel header
+
+`rec-modal` and `rec-panel` always render a header with a required `title` and an icon-only Close button (`aria-label` "Close"; pass `closeButtonAriaLabel` to translate it). There is no input to hide the Close button. The footer is optional.
+
+Angular has no required outputs, so the Close button's equivalent of `onClose` is `(closed)` (or `(openedChange)` / `[(opened)]`); the component throws on open if neither has a listener. Both also fire on `Escape`.
+
+```html
+<rec-modal title="Settings" [(opened)]="open"> ... </rec-modal>
+```
+
+Projecting an element with `recModalHeader` (or `recPanelHeader`) replaces the whole default header. Avoid it: you must supply the title and Close button yourself, plus `aria-label` or `aria-labelledby` on the component, or it throws on open.
+
 ## 5. Fallback Behavior for Missing Components
 
 If the adapter does not yet implement a required component (see `llms.txt` for the current component list), the preferred approach is to pause integration, navigate into the `adapter-angular-material` package, and natively build the missing wrapper component following the `CONTRIBUTING.md` guidelines. If this is not possible, then utilize the underlying Angular Material component/directive directly using the project's preferred styling approach (check `SETUP.md` for details).

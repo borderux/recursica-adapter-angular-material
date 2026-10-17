@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  ContentChild,
   Injector,
   afterNextRender,
   EventEmitter,
@@ -20,6 +21,7 @@ import {
   RECURSICA_ARIA_LABELLING_INPUTS,
   RecursicaAriaLabelling,
 } from "../utils/recursica-aria";
+import { ModalHeaderDirective } from "./modal-header.directive";
 import { ModalScrollDividerDirective } from "./modal-scroll-divider.directive";
 
 let nextId = 0;
@@ -119,36 +121,32 @@ let nextId = 0;
         class="root rec-modal-panel-content"
         [attr.data-full-screen]="fullScreen ? '' : null"
       >
-        @if (title || withCloseButton) {
+        <ng-content select="[recModalHeader]">
           <div class="header">
-            @if (title) {
-              <h2 class="title" [id]="titleId">{{ title }}</h2>
-            }
-            @if (withCloseButton) {
-              <button
-                type="button"
-                class="close"
-                [attr.aria-label]="closeButtonLabel"
-                (click)="requestClose()"
+            <h2 class="title" [id]="titleId">{{ title }}</h2>
+            <button
+              type="button"
+              class="close"
+              [attr.aria-label]="closeButtonAriaLabel"
+              (click)="requestClose()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="100%"
+                height="100%"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="100%"
-                  height="100%"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            }
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </div>
-        }
+        </ng-content>
         <div class="bodyWrapper">
           <div class="scrollArea" recModalScrollDivider>
             <ng-content />
@@ -164,14 +162,14 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() openedChange = new EventEmitter<boolean>();
   @Output() closed = new EventEmitter<void>();
 
-  @Input() title?: string;
-  @Input() withCloseButton = true;
+  /** Header title. Required. */
+  @Input({ required: true }) title!: string;
   @Input() withOverlay = true;
   @Input() closeOnClickOutside = true;
   @Input() fullScreen = false;
 
-  /** Accessible name of the close button. */
-  @Input() closeButtonLabel = "Close";
+  /** Accessible name of the Close button, for localization. */
+  @Input() closeButtonAriaLabel = "Close";
 
   /** `alertdialog` for an interruption that needs an explicit response. */
   @Input() role: "dialog" | "alertdialog" = "dialog";
@@ -190,6 +188,13 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   /** Block page scrolling behind the modal while it is open. */
   @Input() lockScroll = true;
+
+  /**
+   * A projected `[recModalHeader]` element replaces the whole default header. Discouraged: the
+   * adapter can then no longer guarantee a title or a Close button.
+   */
+  @ContentChild(ModalHeaderDirective)
+  private readonly customHeader?: ModalHeaderDirective;
 
   @ViewChild("contentTpl")
   private readonly contentTemplate!: TemplateRef<unknown>;
@@ -229,6 +234,21 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (this.dialogRef) {
       return;
     }
+    // Angular has no required outputs; the Close button must reach the caller.
+    if (!this.closed.observed && !this.openedChange.observed) {
+      throw new Error(
+        "rec-modal requires a (closed) or (openedChange) listener: its Close button must reach the caller.",
+      );
+    }
+    if (
+      this.customHeader &&
+      !this.aria.ariaLabel &&
+      !this.aria.ariaLabelledby
+    ) {
+      throw new Error(
+        "rec-modal with a custom [recModalHeader] requires aria-label or aria-labelledby: the default title is not rendered.",
+      );
+    }
     this.dialogRef = this.dialog.open(this.contentTemplate, {
       id: this.id,
       panelClass: "rec-modal-panel",
@@ -245,7 +265,7 @@ export class ModalComponent implements OnChanges, AfterViewInit, OnDestroy {
       ariaLabel: this.aria.ariaLabel ?? null,
       ariaLabelledBy:
         this.aria.ariaLabelledby ??
-        (this.aria.ariaLabel || !this.title ? null : this.titleId),
+        (this.aria.ariaLabel || this.customHeader ? null : this.titleId),
       ariaDescribedBy: this.aria.ariaDescribedby ?? null,
       restoreFocus: this.returnFocus,
       scrollStrategy: this.lockScroll

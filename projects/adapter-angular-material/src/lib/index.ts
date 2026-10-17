@@ -35,6 +35,7 @@ export { AutoCompleteComponent } from "./auto-complete/auto-complete.component";
 export { TimePickerComponent } from "./time-picker/time-picker.component";
 export { ModalComponent } from "./modal/modal.component";
 export { ModalFooterComponent } from "./modal/modal-footer.component";
+export { ModalHeaderDirective } from "./modal/modal-header.directive";
 export { CheckboxComponent } from "./checkbox/checkbox.component";
 export { CheckboxGroupComponent } from "./checkbox/checkbox-group.component";
 export {
@@ -79,6 +80,7 @@ export { HoverCardDropdownComponent } from "./hover-card/hover-card-dropdown.com
 export { PaginationComponent } from "./pagination/pagination.component";
 export { PanelComponent } from "./panel/panel.component";
 export { PanelFooterComponent } from "./panel/panel-footer.component";
+export { PanelHeaderDirective } from "./panel/panel-header.directive";
 export { TableComponent } from "./table/table.component";
 export { TableTheadComponent } from "./table/table-thead.component";
 export { TableTbodyComponent } from "./table/table-tbody.component";
