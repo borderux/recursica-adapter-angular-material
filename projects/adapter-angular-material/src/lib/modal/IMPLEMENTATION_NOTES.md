@@ -137,3 +137,14 @@ consuming app configuring `provideAnimations()`/`BrowserAnimationsModule`
 is `providedIn: 'root'`, no required module import), but the animation
 itself may degrade to instant without it. Not a new adapter-wide
 requirement beyond what any Material-based Angular app already needs.
+
+## Required header with an always-present Close button (2026-10-16)
+
+Contract (`RecursicaModalProps`, adapter-common 1.3.0): `title` and `onClose` required, `withCloseButton` removed, `closeButtonAriaLabel`, optional `header`.
+
+- `title` is `@Input({ required: true })`; `withCloseButton` is gone, so the header (title `<h2>` plus Close button) always renders. The Close button was already the icon-only Button-token style, so no CSS changed.
+- `closeButtonLabel` renamed to `closeButtonAriaLabel` (default "Close") to match the contract. Breaking for callers of the old name.
+- `header` is a content slot, not an input: an element with `recModalHeader` replaces the default header (`<ng-content select="[recModalHeader]">` with the default header as fallback content). Discouraged in the directive's JSDoc.
+- Deviation, `onClose`: Angular has no required outputs. `(closed)` is the equivalent (it fires after close, from `afterClosed()`, for the Close button, Escape and backdrop alike), and `(openedChange)` also counts. `openDialog()` throws if neither has a listener. This is runtime, not compile-time, enforcement.
+- Deviation, custom header: the title `<h2>` is not rendered, so `aria-labelledby` no longer points at it. A custom header without `aria-label`/`aria-labelledby` throws on open rather than leaving a dangling reference.
+- Stories already started opened with the header visible, so they are unchanged and no goldens changed.

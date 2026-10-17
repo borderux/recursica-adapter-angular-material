@@ -126,3 +126,14 @@ announce the panel.
 ## `wrapHeaderText`
 
 `rec-panel` `[wrapHeaderText]` (default `true`, as in React). React picks `styles.titleTruncate` when `true` and `styles.title` when `false`. Reading `Panel.module.css`: `.titleTruncate` composes `.title` and adds `white-space: nowrap`, clipped overflow with `text-overflow: ellipsis`, `flex: 1`, `min-width: 0`; plain `.title` has only the typography tokens, so it wraps. So the name is inverted from the behaviour: `true` = single line with ellipsis, `false` = wraps. Here the truncation rules in `panel-overlay.css` apply only to `.title[data-truncate]`, which the template sets when `wrapHeaderText` is true; `false` omits it and the title wraps. The existing `flex: 1 1 auto; min-width: 0` stays in both cases (harmless when wrapping; keeps the close button at the end). No new tokens. Overlay behaviour is unchanged.
+
+## Required header with an always-present Close button (2026-10-16)
+
+Contract (`RecursicaPanelProps`, adapter-common 1.3.0): `title` and `onClose` required, `closeButtonAriaLabel`, optional `header`; the footer is optional. Same decisions as `Modal` (see its notes):
+
+- `title` is `@Input({ required: true })`; `withCloseButton` is removed and the header always renders. The Close button already used the Button-token style, so no CSS changed.
+- `closeButtonLabel` renamed to `closeButtonAriaLabel` (default "Close"). Breaking for callers of the old name.
+- `header` is a content slot: an element with `recPanelHeader` replaces the default header (`<ng-content>` fallback content).
+- Deviation, `onClose`: no required outputs in Angular. `(closed)` is the equivalent (fires after the 200ms slide-out, for Close button and Escape), and `(openedChange)` also counts; `openPanel()` throws if neither has a listener.
+- Deviation, custom header: requires `ariaLabel` or `ariaLabelledby`, else it throws on open (no title `<h2>` to label the dialog).
+- Stories already started opened with the header visible; goldens unchanged.

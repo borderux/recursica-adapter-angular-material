@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  ContentChild,
   DOCUMENT,
   EventEmitter,
   Injector,
@@ -22,6 +23,7 @@ import {
   OverlayRef,
 } from "@angular/cdk/overlay";
 import { TemplatePortal } from "@angular/cdk/portal";
+import { PanelHeaderDirective } from "./panel-header.directive";
 
 export type RecursicaPanelPlacement = "left" | "right" | "top" | "bottom";
 
@@ -112,46 +114,42 @@ let nextId = 0;
         [attr.data-placement]="placement"
         [attr.aria-label]="ariaLabel ?? null"
         [attr.aria-labelledby]="
-          ariaLabelledby ?? (!ariaLabel && title ? titleId : null)
+          ariaLabelledby ?? (!ariaLabel && !customHeader ? titleId : null)
         "
         [attr.aria-describedby]="ariaDescribedby ?? null"
       >
-        @if (title || withCloseButton) {
+        <ng-content select="[recPanelHeader]">
           <div class="header">
-            @if (title) {
-              <h2
-                class="title"
-                [id]="titleId"
-                [attr.data-truncate]="wrapHeaderText ? '' : null"
+            <h2
+              class="title"
+              [id]="titleId"
+              [attr.data-truncate]="wrapHeaderText ? '' : null"
+            >
+              {{ title }}
+            </h2>
+            <button
+              type="button"
+              class="close"
+              [attr.aria-label]="closeButtonAriaLabel"
+              (click)="requestClose()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="100%"
+                height="100%"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
               >
-                {{ title }}
-              </h2>
-            }
-            @if (withCloseButton) {
-              <button
-                type="button"
-                class="close"
-                [attr.aria-label]="closeButtonLabel"
-                (click)="requestClose()"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="100%"
-                  height="100%"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            }
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </div>
-        }
+        </ng-content>
         <div class="bodyWrapper">
           <div class="scrollArea">
             <ng-content />
@@ -167,9 +165,9 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() openedChange = new EventEmitter<boolean>();
   @Output() closed = new EventEmitter<void>();
 
-  @Input() title?: string;
+  /** Header title. Required. */
+  @Input({ required: true }) title!: string;
   @Input() placement: RecursicaPanelPlacement = "right";
-  @Input() withCloseButton = true;
 
   /**
    * `RecursicaPanelProps.wrapHeaderText` (default `true`, same as React). Despite the name,
@@ -187,8 +185,15 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   /** `aria-describedby` of the panel. */
   @Input() ariaDescribedby?: string;
 
-  /** Accessible name of the close button. */
-  @Input() closeButtonLabel = "Close";
+  /** Accessible name of the Close button, for localization. */
+  @Input() closeButtonAriaLabel = "Close";
+
+  /**
+   * A projected `[recPanelHeader]` element replaces the whole default header. Discouraged: the
+   * adapter can then no longer guarantee a title or a Close button.
+   */
+  @ContentChild(PanelHeaderDirective)
+  protected readonly customHeader?: PanelHeaderDirective;
 
   @ViewChild("contentTpl")
   private readonly contentTemplate!: TemplateRef<unknown>;
@@ -231,6 +236,17 @@ export class PanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   private openPanel(): void {
     if (this.overlayRef) {
       return;
+    }
+    // Angular has no required outputs; the Close button must reach the caller.
+    if (!this.closed.observed && !this.openedChange.observed) {
+      throw new Error(
+        "rec-panel requires a (closed) or (openedChange) listener: its Close button must reach the caller.",
+      );
+    }
+    if (this.customHeader && !this.ariaLabel && !this.ariaLabelledby) {
+      throw new Error(
+        "rec-panel with a custom [recPanelHeader] requires ariaLabel or ariaLabelledby: the default title is not rendered.",
+      );
     }
     this.closing = false;
     this.opener = this.document.activeElement as HTMLElement | null;
