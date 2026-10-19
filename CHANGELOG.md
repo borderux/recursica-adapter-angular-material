@@ -1,5 +1,11 @@
 # @recursica/adapter-angular-material
 
+## 0.9.0
+
+### Minor Changes
+
+- c58fe9a: Panel and Modal now require `title` and a `(closed)` or `(openedChange)` listener and always render a header with a Close button (`aria-label` "Close"); `withCloseButton` is removed and `closeButtonLabel` is renamed `closeButtonAriaLabel`.
+
 ## 0.8.2
 
 ### Patch Changes
